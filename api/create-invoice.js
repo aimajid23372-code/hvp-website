@@ -38,6 +38,11 @@ module.exports = async (req, res) => {
       }
     }
 
+    // ইনপুটটি ইমেইল নাকি ফোন নাম্বার তা চেক করা হচ্ছে
+    const isEmail = contact.includes('@');
+    const cus_email = isEmail ? contact : 'student@hvb.com';
+    const cus_phone = isEmail ? '01000000000' : contact;
+
     // ZiniPay Request
     const zpRes = await fetch('https://api.zinipay.com/v1/payment/create', {
       method: 'POST',
@@ -48,7 +53,8 @@ module.exports = async (req, res) => {
       body: JSON.stringify({
         amount,
         cus_name: name,
-        cus_email: contact,
+        cus_email: cus_email,
+        cus_phone: cus_phone,
         webhook_url: `${process.env.SITE_URL}/api/zinipay-webhook`,
       }),
     });
