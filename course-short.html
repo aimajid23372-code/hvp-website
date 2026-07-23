@@ -251,7 +251,7 @@
 
 <div class="overlay" id="payModal">
   <div class="modal">
-    <button class="close" onclick="document.getElementById('payModal').classList.remove('active')">✕</button>
+    <button class="close" onclick="closePayModal()">✕</button>
     <div id="payStep">
       <h3>Short Video Course</h3>
       <div class="price-tag mono" id="modalPrice">৪৯৯ ৳</div>
@@ -428,10 +428,17 @@ Understood? If you understand, reply ONLY with this exact sentence:
     if(attempt < 20){
       setTimeout(function(){ checkOrderStatus(invoiceId, attempt + 1); }, 3000);
     } else {
+      localStorage.removeItem(PENDING_KEY);
       document.getElementById('checkingMsg').innerHTML =
         '<h3>⏳ এখনো কনফার্ম হয়নি</h3>' +
-        '<p style="color:var(--muted); margin-top:8px; font-size:0.9em;">পেমেন্ট সফল হয়ে থাকলে কিছুক্ষণ পর পেজ রিফ্রেশ করুন, অথবা khadimulhasanshuvo@gmail.com-এ যোগাযোগ করুন।</p>';
+        '<p style="color:var(--muted); margin-top:8px; font-size:0.9em;">পেমেন্ট সফল হয়ে থাকলে কিছুক্ষণ পর পেজ রিফ্রেশ করুন, অথবা khadimulhasanshuvo@gmail.com-এ যোগাযোগ করুন। পেমেন্ট বাতিল করে থাকলে নিচের বাটনে চাপুন।</p>' +
+        '<button type="button" class="submit-btn" style="margin-top:14px;" onclick="closePayModal()">ঠিক আছে, বন্ধ করুন</button>';
     }
+  }
+
+  function closePayModal(){
+    localStorage.removeItem(PENDING_KEY);
+    document.getElementById('payModal').classList.remove('active');
   }
 
   window.addEventListener('DOMContentLoaded', function(){
@@ -446,148 +453,12 @@ Understood? If you understand, reply ONLY with this exact sentence:
 </script>
 
 <script>
-  const BASE_PRICE = 499;
-  const promoCodes = { 'HVB10': 10, 'WELCOME50': 50 };
-  const bnDigits = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
-  function toBn(n){ return String(n).split('').map(d => bnDigits[d] || d).join(''); }
-  
-  function applyPromo(){
-    const code = document.getElementById('promoInput').value.trim().toUpperCase();
-    const msg = document.getElementById('promoMsg');
-    if(promoCodes[code]){
-      const discount = promoCodes[code];
-      const newPrice = Math.round(BASE_PRICE - (BASE_PRICE*discount/100));
-      document.getElementById('modalPrice').textContent = toBn(newPrice) + ' ৳';
-      msg.textContent = '✅ ' + discount + '% ছাড় প্রয়োগ হয়েছে! (পেমেন্ট পেজে দেখানো হবে)';
-      msg.className = 'promo-msg success';
-    } else {
-      msg.textContent = '❌ ভুল প্রোমো কোড';
-      msg.className = 'promo-msg error';
-    }
-  }
-
-  function copyPrompt(elId, btn){
-    const text = document.getElementById(elId).innerText;
-    navigator.clipboard.writeText(text).then(function(){
-      const old = btn.textContent;
-      btn.textContent = 'Copied ✓';
-      setTimeout(function(){ btn.textContent = old; }, 2000);
-    });
-  }
-
-  const COURSE_KEY = "short";
-  const PENDING_KEY = 'hvb_pending_invoice_' + COURSE_KEY;
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const refCode = urlParams.get('ref');
-  if(refCode){ localStorage.setItem('hvb_ref', refCode); }
-
-  function closeModal() {
-    document.getElementById('payModal').classList.remove('active');
-    localStorage.removeItem(PENDING_KEY); 
-    document.getElementById('payStep').style.display = 'block';
-    document.getElementById('checkingMsg').classList.remove('active');
-    document.getElementById('confirmMsg').classList.remove('active');
-    const btn = document.getElementById('submitBtn');
-    btn.disabled = false;
-    btn.textContent = 'এগিয়ে যান পেমেন্টে →';
-  }
-
-  async function submitTrx(e){
-    e.preventDefault();
-    const btn = document.getElementById('submitBtn');
-    const errEl = document.getElementById('payError');
-    errEl.textContent = '';
-    btn.disabled = true;
-    btn.textContent = 'অপেক্ষা করুন...';
-
-    const promoCode = document.getElementById('promoInput').value.trim();
-    const name = document.getElementById('custName').value.trim();
-    const contact = document.getElementById('custContact').value.trim();
-    const ref = localStorage.getItem('hvb_ref') || '';
-
-    try {
-      const res = await fetch('/api/create-invoice', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ course: COURSE_KEY, name, contact, promoCode, ref })
-      });
-      const data = await res.json();
-      if(!res.ok || !data.payment_url){
-        throw new Error(data.error || 'Payment gateway error');
-      }
-      localStorage.setItem(PENDING_KEY, data.invoice_id);
-      window.location.href = data.payment_url;
-    } catch(err){
-      errEl.textContent = '⚠️ কিছু একটা সমস্যা হয়েছে, আবার চেষ্টা করুন।';
-      btn.disabled = false;
-      btn.textContent = 'এগিয়ে যান পেমেন্টে →';
-    }
-    return false;
-  }
-
-  async function checkOrderStatus(invoiceId, attempt){
-    attempt = attempt || 0;
-    try {
-      const res = await fetch('/api/order-status?invoice_id=' + encodeURIComponent(invoiceId));
-      const data = await res.json();
-      if(data.status === 'paid'){
-        localStorage.removeItem(PENDING_KEY);
-        document.getElementById('payModal').classList.add('active');
-        document.getElementById('payStep').style.display = 'none';
-        document.getElementById('checkingMsg').classList.remove('active');
-        document.getElementById('confirmMsg').classList.add('active');
-        return;
-      }
-    } catch(err){ }
-
-    if(attempt < 8){ 
-      setTimeout(function(){ checkOrderStatus(invoiceId, attempt + 1); }, 3000);
-    } else {
-      document.getElementById('checkingMsg').innerHTML =
-        '<h3>⚠️ পেমেন্ট কনফার্ম হয়নি</h3>' +
-        '<p style="color:var(--muted); margin-top:8px; font-size:0.9em;">আপনার পেমেন্টটি সফল হয়নি অথবা আপনি বাতিল করেছেন।</p>' +
-        '<button type="button" onclick="closeModal()" style="margin-top:15px; padding:10px 20px; background:var(--surface-2); border:1px solid var(--cyan); color:var(--text); border-radius:6px; cursor:pointer; font-weight:bold;">আবার চেষ্টা করুন</button>';
-      localStorage.removeItem(PENDING_KEY);
-    }
-  }
-
-  window.addEventListener('DOMContentLoaded', function(){
-    const urlParams = new URLSearchParams(window.location.search);
-    const payStatus = urlParams.get('pay');
-    const pendingInvoice = localStorage.getItem(PENDING_KEY);
-
-    if(payStatus) {
-        window.history.replaceState({}, document.title, window.location.pathname);
-    }
-
-    if (payStatus === 'success' && pendingInvoice) {
-        document.getElementById('payModal').classList.add('active');
-        document.getElementById('payStep').style.display = 'none';
-        document.getElementById('checkingMsg').classList.add('active');
-        document.getElementById('checkingMsg').innerHTML =
-          '<h3>⏳ পেমেন্ট কনফার্ম করা হচ্ছে...</h3>' +
-          '<p style="color:var(--muted); margin-top:8px; font-size:0.9em;">দয়া করে কয়েক সেকেন্ড অপেক্ষা করুন।</p>';
-        checkOrderStatus(pendingInvoice, 0);
-    } else if (payStatus === 'cancel') {
-        document.getElementById('payModal').classList.add('active');
-        document.getElementById('payStep').style.display = 'none';
-        document.getElementById('checkingMsg').classList.add('active');
-        document.getElementById('checkingMsg').innerHTML =
-          '<h3>⚠️ পেমেন্ট বাতিল করা হয়েছে</h3>' +
-          '<p style="color:var(--muted); margin-top:8px; font-size:0.9em;">আপনি পেমেন্ট প্রক্রিয়াটি সম্পূর্ণ করেননি।</p>' +
-          '<button type="button" onclick="closeModal()" style="margin-top:15px; padding:10px 20px; background:var(--surface-2); border:1px solid var(--cyan); color:var(--text); border-radius:6px; cursor:pointer; font-weight:bold;">ঠিক আছে</button>';
-        localStorage.removeItem(PENDING_KEY);
-    } else {
-        localStorage.removeItem(PENDING_KEY);
-    }
-  });
-
   document.addEventListener('click', function(e){
     const wrap = document.querySelector('.dots-wrap');
     const menu = document.getElementById('dotsMenu');
     if(wrap && menu && !wrap.contains(e.target)) menu.classList.remove('active');
   });
 </script>
+
 </body>
 </html>
