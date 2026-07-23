@@ -64,6 +64,8 @@
     width:56px; height:56px; border-radius:50%; background:rgba(255,255,255,0.06);
     border:1px solid rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; font-size:1.3em;
   }
+  .thumb{ flex-direction:column; gap:10px; }
+  .thumb-label{ color:var(--muted); font-size:0.82em; }
 
   h2.h{ font-family:'Sora',sans-serif; font-size:1.2em; font-weight:700; margin:34px 0 14px; }
   .desc p{ color:var(--muted); margin-bottom:14px; }
@@ -114,6 +116,19 @@
   .modal .close{ position:absolute; top:14px; right:16px; background:none; border:none; color:var(--muted); font-size:1.3em; cursor:pointer; }
   .modal h3{ font-size:1.1em; margin-bottom:6px; font-family:'Sora',sans-serif; }
   .modal .price-tag{ color:var(--cyan); font-weight:700; margin-bottom:18px; }
+  .promo-box{ display:flex; gap:8px; margin-bottom:6px; }
+  .promo-input{
+    flex:1; padding:10px 12px; background:var(--bg); border:1px solid var(--line);
+    border-radius:6px; color:var(--text); font-size:0.9em; font-family:'Hind Siliguri';
+  }
+  .promo-input:focus{ outline:none; border-color:var(--cyan); }
+  .promo-btn{
+    background:var(--surface-2); border:1px solid var(--cyan); color:var(--cyan);
+    padding:0 16px; border-radius:6px; cursor:pointer; font-weight:600; font-size:0.85em;
+  }
+  .promo-msg{ font-size:0.8em; margin-bottom:14px; min-height:1em; }
+  .promo-msg.success{ color:var(--cyan); }
+  .promo-msg.error{ color:#F87171; }
   .pay-steps{ background:var(--surface-2); border:1px solid var(--line); border-radius:8px; padding:16px; font-size:0.9em; color:var(--muted); margin-bottom:18px; }
   .pay-steps li{ margin-bottom:8px; margin-left:18px; }
   .pay-steps b{ color:var(--text); }
@@ -128,6 +143,26 @@
   .submit-btn{ width:100%; background:var(--grad); color:#0A0D14; border:none; padding:13px; font-weight:700; border-radius:6px; cursor:pointer; font-size:1em; }
   .confirm-msg{ display:none; text-align:center; padding:20px 0; color:var(--cyan); }
   .confirm-msg.active{ display:block; }
+  .confirm-note{ color:var(--muted); font-size:0.9em; margin:10px 0 20px; text-align:left; }
+  .deliver-block{ text-align:left; margin-bottom:18px; }
+  .deliver-label{ display:block; font-weight:600; font-size:0.9em; margin-bottom:8px; color:var(--text); }
+  .deliver-link{
+    display:inline-block; background:var(--grad); color:#0A0D14; font-weight:700;
+    padding:9px 18px; border-radius:6px; font-size:0.88em; margin-right:8px;
+  }
+  .prompt-box{
+    background:var(--bg); border:1px solid var(--line); border-radius:8px;
+    padding:12px; position:relative;
+  }
+  .prompt-box pre{
+    max-height:160px; overflow-y:auto; font-family:'JetBrains Mono', monospace;
+    font-size:0.72em; color:var(--muted); white-space:pre-wrap; word-break:break-word;
+    margin-bottom:10px; line-height:1.5;
+  }
+  .copy-btn{
+    background:var(--surface-2); border:1px solid var(--cyan); color:var(--cyan);
+    padding:7px 14px; border-radius:6px; font-size:0.8em; cursor:pointer; font-weight:600;
+  }
 
   @media (max-width:600px){
     .wrap{ padding:24px 16px 110px; }
@@ -162,7 +197,10 @@
   <span class="badge">জনপ্রিয়</span>
   <h1>Long + Short Video Course — সম্পূর্ণ প্যাকেজ</h1>
 
-  <div class="thumb"><div class="play">▶</div></div>
+  <div class="thumb">
+    <div class="play">▶</div>
+    <span class="thumb-label">কোর্স প্রিভিউ শীঘ্রই আসছে</span>
+  </div>
 
   <div class="desc">
     <p>এই প্যাকেজে আপনি দুই ধরনের ভিডিওই বানানো শিখবেন — <b>Long ভিডিও</b> (আমাদের নিজের আইডিতে থাকা ২-৫ মিনিটের ভিডিওর মতো) এবং <b>Short ভিডিও</b> (৩৫ সেকেন্ডের নিচের ভাইরাল-স্টাইলের ভিডিও)। স্ক্রিপ্ট, প্রম্পট, ভয়েস, এডিটিং — সবকিছু AI দিয়ে, একদম বিগিনার ধরে নিয়ে শেখানো হয়।</p>
@@ -218,38 +256,269 @@
     <button class="close" onclick="document.getElementById('payModal').classList.remove('active')">✕</button>
     <div id="payStep">
       <h3>Long + Short Video Course</h3>
-      <div class="price-tag mono">৯৫০ ৳</div>
-      <div class="pay-steps">
-        <b>পেমেন্ট করার নিয়ম:</b>
-        <ol>
-          <li><b>bKash/Nagad</b> অ্যাপে যান বা <b>*247#</b> ডায়াল করুন</li>
-          <li>"Send Money" সিলেক্ট করুন</li>
-          <li>নাম্বার দিন: <span class="num-box">01XXXXXXXXX</span></li>
-          <li>পরিমাণ: <b>৯৫০ টাকা</b> পাঠান</li>
-          <li>নিচে আপনার Transaction ID ও তথ্য দিন</li>
-        </ol>
+      <div class="price-tag mono" id="modalPrice">৯৫০ ৳</div>
+      <div class="promo-box">
+        <input type="text" id="promoInput" class="promo-input" placeholder="প্রোমো কোড থাকলে দিন">
+        <button type="button" class="promo-btn" onclick="applyPromo()">Apply</button>
       </div>
+      <div id="promoMsg" class="promo-msg"></div>
+      <p style="color:var(--muted); font-size:0.85em; margin-bottom:14px;">নাম ও যোগাযোগ দিয়ে এগিয়ে যান — পরের পেজে bKash/Nagad/Rocket দিয়ে নিরাপদে পেমেন্ট করবেন।</p>
       <form onsubmit="return submitTrx(event)">
-        <div class="form-group"><label>আপনার নাম</label><input type="text" required placeholder="পূর্ণ নাম লিখুন"></div>
-        <div class="form-group"><label>ফোন নাম্বার / ইমেইল</label><input type="text" required placeholder="যোগাযোগের নাম্বার/ইমেইল"></div>
-        <div class="form-group"><label>Transaction ID</label><input type="text" required placeholder="যেমন: 8N7A5X2K1P"></div>
-        <button type="submit" class="submit-btn">সাবমিট করুন</button>
+        <div class="form-group"><label>আপনার নাম</label><input type="text" id="custName" required placeholder="পূর্ণ নাম লিখুন"></div>
+        <div class="form-group"><label>ফোন নাম্বার / ইমেইল</label><input type="text" id="custContact" required placeholder="যোগাযোগের নাম্বার/ইমেইল"></div>
+        <button type="submit" class="submit-btn" id="submitBtn">এগিয়ে যান পেমেন্টে →</button>
       </form>
+      <p id="payError" style="color:#F87171; font-size:0.85em; margin-top:10px;"></p>
+    </div>
+    <div class="confirm-msg" id="checkingMsg">
+      <h3>⏳ পেমেন্ট যাচাই করা হচ্ছে...</h3>
+      <p style="color:var(--muted); margin-top:8px; font-size:0.9em;">একটু অপেক্ষা করুন, স্বয়ংক্রিয়ভাবে যাচাই হচ্ছে।</p>
     </div>
     <div class="confirm-msg" id="confirmMsg">
-      <h3>✅ পাওয়া গেছে!</h3>
-      <p style="color:var(--muted); margin-top:8px; font-size:0.9em;">আপনার পেমেন্ট যাচাই করে ২৪ ঘণ্টার মধ্যে কোর্স এক্সেস পাঠানো হবে।</p>
+      <h3>✅ ধন্যবাদ! আপনার কোর্স রেডি</h3>
+      <p class="confirm-note">সম্পূর্ণ কোর্সে ভিডিও বানানোর প্রতিটা ধাপ বিস্তারিতভাবে দেখানো আছে — ভালোভাবে দেখুন।</p>
+
+      <div class="deliver-block">
+        <span class="deliver-label">📁 Course Links</span>
+        <a href="https://drive.google.com/file/d/1tlqjP7Z4SFp9bl_rDiVnJVt-7T1hLNjw/view?usp=drivesdk" target="_blank" rel="noopener" class="deliver-link">Long Video Course →</a>
+        <a href="https://drive.google.com/file/d/1PWf8xibrr63QRHC0JL4F5MQ2_ABuct70/view?usp=drivesdk" target="_blank" rel="noopener" class="deliver-link">Short Video Course →</a>
+      </div>
+
+      <div class="deliver-block">
+        <span class="deliver-label">🤖 Master Chatting Prompt — Long Video</span>
+        <div class="prompt-box">
+          <pre id="longPromptText">SYSTEM DIRECTIVE: long video 2.0
+
+YOUR PERSONA:
+You are my ultimate &quot;Master Viral Video Producer&quot;. Communicate with me entirely in highly engaging, fluent Bengali. Address me respectfully as &quot;ওস্তাদ&quot; (Ostad). You are an absolute master of hyper-realistic 3D animation prompts, Veo 3.1 engine constraints, and Facebook/TikTok viral psychology. Your only goal is to generate million-view, never-seen-before masterpieces. You must never be repetitive. Every time a new concept is requested, you must provide a completely fresh style of storytelling, titles, descriptions, and thumbnails.
+
+CRITICAL RULE - THE &quot;CODE BLOCK&quot; LAW (FAILURE IS NOT AN OPTION):
+Every single generated component MUST be inside its OWN separate text code block (using triple backticks) so I get a &quot;Copy&quot; button for each item individually.
+- The Character Details MUST be in its own separate code block.
+- EVERY SINGLE CLIP MUST be in its own separate code block.
+- The Titles &amp; Hashtags MUST be in their own separate code block.
+- The Thumbnail Prompts MUST be in their own separate code block.
+NEVER output raw text outside of code blocks except for your initial conversational greeting and final outro.
+
+STRICT ENGINE CONSTRAINTS (VEO 3.1):
+1. 8-Second Limit: Every clip is restricted to exactly 8 seconds.
+2. Word Count Strictness: Because audio is 3x speed, BENGALI DIALOGUE MUST BE EXACTLY 26 TO 30 WORDS per clip. Count the words manually. Never exceed 30 words. Never go below 26 words. The dialogue must completely fill the 8-second timeframe at fast speed.
+3. NO NARRATORS: The story must be driven entirely by the characters in the frame. No background narrator.
+4. RELIGIOUS FILTER (CRITICAL): STRICTLY PROHIBITED to use any Hindu names, visual concepts, references, or dialogue (e.g., NEVER use words like &quot;ভগবান&quot;, &quot;ঈশ্বর&quot;, &quot;পূজা&quot;). Make the story secular and purely entertaining. IF, and ONLY IF, a religious context is absolutely unavoidable for the story&#x27;s moral or extreme emotional plea, you MUST ONLY use Islamic concepts (e.g., Allah, Alhamdulillah, Dua). Do not overuse this; only use it if strictly necessary for the scene.
+
+VISUAL &amp; CHARACTER RULES:
+1. Quality: &quot;Monster level hyper-realistic 3D surrealism&quot;, 16k resolution, Unreal Engine 5 cinematic render. Flawless color grading, and breathtaking lighting.
+2. Characters: Anthropomorphic fruits/vegetables (or objects). They keep their exact fruit shape but have expressive human-like eyes and mouths. ZERO HUMAN SKIN.
+3. HEIGHT &amp; SIZE CONSISTENCY (CRITICAL): You must explicitly define character heights logically based on human age, STRICTLY IGNORING the real-world size of the fruits/vegetables. For example, an adult Strawberry and an adult Banana MUST be the exact same standard human adult height. Child characters must be appropriately small like human children. Never make a character small just because it&#x27;s a small fruit in reality. No random height variations!
+4. EXTREME CHARACTER DETAILING &amp; ISOLATION: Provide FULL, EXHAUSTIVE details. State their exact height, body shape, exact skin color, exact clothing color, fabric, and facial vibe. Only provide ONE CHARACTER DETAILS block at the beginning.
+
+IMAGE-TO-VIDEO WORKFLOW DETAIL LEVEL (CRITICAL SEPARATION):
+- SCENE LOCATION (FOR STATIC BASE IMAGE): This section describes ONLY the static FIRST FRAME. Describe the environment, weather, cinematic color grading, lighting, props, camera angles, and the EXACT STATIC POSE and expression of the characters. NO MOVEMENT HERE.
+- ACTION (FOR VIDEO ANIMATION): This section describes ONLY the physical movement and animation that happens AFTER the first frame. Describe physical movements, extreme micro-expressions, physics, and camera movements. Make the animation highly dynamic to fit the 8-second timeframe.
+
+THE &quot;HOOK&quot; RULE (CLIP 1):
+The first clip MUST be an extreme &quot;Scroll-Stopper&quot; Hook. It must be intensely shocking, deeply emotional, highly suspenseful, or incredibly funny.
+
+THUMBNAIL &amp; TYPOGRAPHY RULES:
+1. Seamless Collage: Thumbnails must feature a seamless, dynamic storytelling collage. Multiple scenes/emotions must blend together using fog or lighting gradients. ABSOLUTELY NO hard split-screen lines or borders.
+2. Typography Lockup: Create ONE unified, tightly grouped 3D text block at the BOTTOM CENTER. No scattered text. Use high-contrast colors (e.g. Yellow text with sharp black borders) that are highly readable.
+3. Stickers: Do NOT scatter emojis randomly. Use ONE specific, highly detailed 3D sticker physically attached to the corner of the text block.
+
+STRICT OUTPUT FORMAT TEMPLATE:
+
+[Greeting in Bengali, acknowledging the Ostad and setting the hype]
+
+[PLACE THE FOLLOWING INSIDE A CODE BLOCK]
+CHARACTER DETAILS:
+[STRICT ISOLATION RULE: NEVER GENERATE ALL CHARACTERS IN A SINGLE SCENE. ONLY generate the specific characters explicitly named in the clip prompt.]
+1. [Name]: [Exact height (e.g., standard adult size), exact body shape, exact skin color, exact clothing color and style, and vibe. FULL DETAILS].
+
+[PLACE EACH CLIP INSIDE ITS OWN SEPARATE CODE BLOCK - Example below for Clip 1]
+CLIP 1: [Title]
+CAMERA ANGLE: [Dynamic cinematic angle].
+SCENE LOCATION (FIRST FRAME / BASE IMAGE): [4-5 sentences of extreme detail, lighting, color grading, and STATIC character pose. NO MOVEMENT]. Monster level 16k, UE5, ZERO HUMAN SKIN. [Explicitly state which exact characters are in this frame].
+ACTION (VIDEO MOVEMENT): [3-4 sentences of highly detailed physical movement, physics, and extreme facial expression changes. Make it dynamic].
+AUDIO &amp; SFX: [Specific sounds, impacts, and music].
+DIALOGUE SCRIPT (3x Speed - [Exact Count] words, 8 seconds): &quot;[Exactly 26-30 Bengali words. Must be impactful and fill the time. ONLY characters in frame speak]&quot;.
+AI VOICE INSTRUCTION: [CRITICAL: You must include this exact line: &quot;(Speak the dialogue extremely fast, 3x speed, full of intense emotion. Ensure ONLY the assigned character speaks this dialogue.)&quot;]
+
+(Repeat the above block for every single clip)
+
+[PLACE THE TITLES &amp; HASHTAGS INSIDE A CODE BLOCK]
+VIRAL DELIVERABLES:
+1. Titles: [5-6 Clickbait/Emotional Bengali titles. MUST be a fresh style every time].
+2. Hashtags: [10-15 Targeted viral hashtags].
+3. Description: [A short, engaging YouTube/TikTok description].
+
+[PLACE THE THUMBNAIL PROMPT INSIDE A SEPARATE CODE BLOCK]
+THUMBNAIL PROMPT:
+[1 Highly dramatic, extremely detailed English 16k UE5 prompt. Include instructions for a seamless blended collage (no hard lines), extreme facial expressions, and ONE unified 3D typography lockup at the bottom center with a specific 3D sticker attached].</pre>
+          <button type="button" class="copy-btn" onclick="copyPrompt('longPromptText', this)">Copy</button>
+        </div>
+      </div>
+
+      <div class="deliver-block">
+        <span class="deliver-label">🤖 Master Chatting Prompt — Short Video</span>
+        <div class="prompt-box">
+          <pre id="shortPromptText">Act as an Elite, World-Class AI Video Prompt Engineer specializing in hyper-viral, extremely funny 3D animations for TikTok, YouTube Shorts, and Facebook Reels. Your primary target audience is the mass population of Bangladesh (both rural and urban).
+I will give you a topic or concept. Your job is to generate highly detailed, perfect video generation prompts for 4 separate video clips based on my topic. You must act as a creative genius who knows exactly what makes a video hit millions of views.
+YOU MUST STRICTLY OBEY THE FOLLOWING RULES FOR EVERY RESPONSE. IF YOU BREAK ANY RULE, THE GENERATION FAILS:
+1. ABSOLUTE STRICT FORMATTING (THE &quot;COPY&quot; BOX RULE):
+You MUST output the prompts using exactly 5 separate Markdown Code Blocks (```text ... ```).
+- Block 1: Character Details
+- Block 2: CLIP 1
+- Block 3: CLIP 2
+- Block 4: CLIP 3
+- Block 5: CLIP 4
+2. NEXT-LEVEL VISUALS &amp; CONSTRAINTS (MONSTER LEVEL):
+- You must include this exact phrase in the environment/camera section of EVERY clip: &quot;Single continuous full-frame composition, strictly NO split-screen, NO multi-panel.&quot;
+- Visuals must be described with elite keywords: &quot;Extreme macro/microscopic photography, 8K resolution, Unreal Engine 5 cinematic render, Octane render, photorealistic textures, dynamic volumetric lighting, hyper-detailed.&quot;
+3. CHARACTER DESIGN (THE VIRAL FACTOR):
+Make the characters incredibly relatable but visually absurd. Give them extreme contrasts.
+- Example: A morbidly obese farm chicken wearing tight colorful underwear and sunglasses, OR an angry, muscular ginger root wearing a headband.
+- Expressions must be explicitly described as: &quot;Exaggerated, furious, crying, panicking, or ridiculously arrogant.&quot;
+4. DIALOGUE &amp; LANGUAGE (THE SECRET SAUCE):
+- ALL dialogues MUST be written in the Bengali alphabet (বাংলা অক্ষর).
+- The dialogues must be punchy, aggressive, and short (8-10 seconds of speech). The characters must complain, threaten, or mock each other hilariously.
+5. EXACT TEMPLATE YOU MUST FOLLOW INSIDE THE BLOCKS:
+[START OF BLOCK 1]
+**CHARACTER DETAILS:**
+**OVERALL VIBE:** Hyper-realistic, aggressively funny 3D animation.
+**CHARACTER DESCRIPTION:** [Highly detailed, funny, and absurd descriptions of the characters and their clothing]
+**ENVIRONMENTAL STYLE:** [Detailed environment]. Single full-frame composition, strictly NO split-screen, NO multi-panel. 8K resolution, ultra-photorealistic, Unreal Engine 5 cinematic render.
+**LIP-SYNC FOCUS:** Rapid-fire, highly expressive Dhakaiya Bengali slang. Mouth movements must be sharp and wildly exaggerated.
+[END OF BLOCK 1]
+[START OF BLOCK 2, 3, 4, 5 FOR EACH CLIP]
+**CLIP [X]: [Funny Title]**
+**SCENE LOCATION:** [Specific location details]. Single full screen frame.
+**ACTION:** [Describe the absurd, funny action, slapstick comedy, and highly exaggerated facial expressions in extreme detail]
+**AUDIO &amp; MUSIC CUE:** [Specific sound effects the type of comedic background music]
+**DIALOGUE SCRIPT (অনেক তাড়াতাড়ি সম্পূর্ন স্ক্রিপ্ট 2x স্পিডে বলছে):** &quot;[Insert Next-Level Bengali Dialogue Here]&quot;
+**CAMERA:** [Dynamic camera movement like whip-pan, extreme close-up, shaky cam]. Single continuous full-frame shot, absolutely NO split screen.
+[END OF BLOCK]
+Understood? If you understand, reply ONLY with this exact sentence:
+&quot;আমি প্রস্তুত ওস্তাদ! আপনার ভাইরাল ভিডিওর টপিক দিন, আমি পুরাই আগুন লেভেলের প্রম্পট বানাইয়া দিতাছি!&quot;</pre>
+          <button type="button" class="copy-btn" onclick="copyPrompt('shortPromptText', this)">Copy</button>
+        </div>
+      </div>
+
+      <div class="deliver-block">
+        <span class="deliver-label">💬 সাপোর্ট</span>
+        <p style="color:var(--muted); font-size:0.88em;">যেকোনো সমস্যায় মেইল করুন: <b>khadimulhasanshuvo@gmail.com</b></p>
+      </div>
+
+      <div class="deliver-block">
+        <span class="deliver-label">👥 HVB Premium Group</span>
+        <p style="color:var(--muted); font-size:0.88em; margin-bottom:8px;">এখানে কোর্স সম্পর্কে প্রতিনিয়তই নতুন আপডেট দেওয়া হয়।</p>
+        <a href="https://chat.whatsapp.com/KwqdfXmqNMtCkaM1pGeoYX" target="_blank" rel="noopener" class="deliver-link">গ্রুপে জয়েন করুন →</a>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-  function submitTrx(e){
+  const BASE_PRICE = 950;
+  const promoCodes = { 'HVB10': 10, 'WELCOME50': 50 };
+  const bnDigits = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+  function toBn(n){ return String(n).split('').map(d => bnDigits[d] || d).join(''); }
+  function applyPromo(){
+    const code = document.getElementById('promoInput').value.trim().toUpperCase();
+    const msg = document.getElementById('promoMsg');
+    if(promoCodes[code]){
+      const discount = promoCodes[code];
+      const newPrice = Math.round(BASE_PRICE - (BASE_PRICE*discount/100));
+      document.getElementById('modalPrice').textContent = toBn(newPrice) + ' ৳';
+      msg.textContent = '✅ ' + discount + '% ছাড় প্রয়োগ হয়েছে! (পেমেন্ট পেজে দেখানো হবে)';
+      msg.className = 'promo-msg success';
+    } else {
+      msg.textContent = '❌ ভুল প্রোমো কোড';
+      msg.className = 'promo-msg error';
+    }
+  }
+
+  function copyPrompt(elId, btn){
+    const text = document.getElementById(elId).innerText;
+    navigator.clipboard.writeText(text).then(function(){
+      const old = btn.textContent;
+      btn.textContent = 'Copied ✓';
+      setTimeout(function(){ btn.textContent = old; }, 2000);
+    });
+  }
+
+  const COURSE_KEY = "bundle";
+  const PENDING_KEY = 'hvb_pending_invoice_' + COURSE_KEY;
+
+  // ref= লিংক থেকে affiliate কোড ধরে রাখা
+  const urlParams = new URLSearchParams(window.location.search);
+  const refCode = urlParams.get('ref');
+  if(refCode){ localStorage.setItem('hvb_ref', refCode); }
+
+  async function submitTrx(e){
     e.preventDefault();
-    document.getElementById('payStep').style.display = 'none';
-    document.getElementById('confirmMsg').classList.add('active');
+    const btn = document.getElementById('submitBtn');
+    const errEl = document.getElementById('payError');
+    errEl.textContent = '';
+    btn.disabled = true;
+    btn.textContent = 'অপেক্ষা করুন...';
+
+    const promoCode = document.getElementById('promoInput').value.trim();
+    const name = document.getElementById('custName').value.trim();
+    const contact = document.getElementById('custContact').value.trim();
+    const ref = localStorage.getItem('hvb_ref') || '';
+
+    try {
+      const res = await fetch('/api/create-invoice', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ course: COURSE_KEY, name, contact, promoCode, ref })
+      });
+      const data = await res.json();
+      if(!res.ok || !data.payment_url){
+        throw new Error(data.error || 'Payment gateway error');
+      }
+      localStorage.setItem(PENDING_KEY, data.invoice_id);
+      window.location.href = data.payment_url;
+    } catch(err){
+      errEl.textContent = '⚠️ কিছু একটা সমস্যা হয়েছে, আবার চেষ্টা করুন। সমস্যা থাকলে khadimulhasanshuvo@gmail.com-এ জানান।';
+      btn.disabled = false;
+      btn.textContent = 'এগিয়ে যান পেমেন্টে →';
+    }
     return false;
   }
+
+  async function checkOrderStatus(invoiceId, attempt){
+    attempt = attempt || 0;
+    try {
+      const res = await fetch('/api/order-status?invoice_id=' + encodeURIComponent(invoiceId));
+      const data = await res.json();
+      if(data.status === 'paid'){
+        localStorage.removeItem(PENDING_KEY);
+        document.getElementById('payModal').classList.add('active');
+        document.getElementById('payStep').style.display = 'none';
+        document.getElementById('checkingMsg').classList.remove('active');
+        document.getElementById('confirmMsg').classList.add('active');
+        return;
+      }
+    } catch(err){ /* চুপচাপ retry করবে */ }
+
+    if(attempt < 20){
+      setTimeout(function(){ checkOrderStatus(invoiceId, attempt + 1); }, 3000);
+    } else {
+      document.getElementById('checkingMsg').innerHTML =
+        '<h3>⏳ এখনো কনফার্ম হয়নি</h3>' +
+        '<p style="color:var(--muted); margin-top:8px; font-size:0.9em;">পেমেন্ট সফল হয়ে থাকলে কিছুক্ষণ পর পেজ রিফ্রেশ করুন, অথবা khadimulhasanshuvo@gmail.com-এ যোগাযোগ করুন।</p>';
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', function(){
+    const pendingInvoice = localStorage.getItem(PENDING_KEY);
+    if(pendingInvoice){
+      document.getElementById('payModal').classList.add('active');
+      document.getElementById('payStep').style.display = 'none';
+      document.getElementById('checkingMsg').classList.add('active');
+      checkOrderStatus(pendingInvoice, 0);
+    }
+  });
 </script>
 
 <script>
