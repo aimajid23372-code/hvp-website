@@ -6,8 +6,8 @@ const supabase = createClient(
 );
 
 const COURSES = {
-  bundle: { title: 'Long + Short Video Course', amount: 950 },
-  short: { title: 'Short Video Course', amount: 499 },
+  bundle: { title: 'Long + Short Video Course', amount: 950, page: 'course-bundle.html' },
+  short: { title: 'Short Video Course', amount: 499, page: 'course-short.html' },
 };
 
 module.exports = async (req, res) => {
@@ -43,7 +43,12 @@ module.exports = async (req, res) => {
     const cus_email = isEmail ? contact : 'student@hvb.com';
     const cus_phone = isEmail ? '01000000000' : contact;
 
-    // ZiniPay Request (with cancel_url and success_url added)
+    // Advanced Routing (Success and Cancel detection)
+    const baseUrl = process.env.SITE_URL.replace(/\/$/, "");
+    const successUrl = `${baseUrl}/${courseInfo.page}?pay=success`;
+    const cancelUrl = `${baseUrl}/${courseInfo.page}?pay=cancel`;
+
+    // ZiniPay Request
     const zpRes = await fetch('https://api.zinipay.com/v1/payment/create', {
       method: 'POST',
       headers: {
@@ -55,18 +60,16 @@ module.exports = async (req, res) => {
         cus_name: name,
         cus_email: cus_email,
         cus_phone: cus_phone,
-        success_url: process.env.SITE_URL, 
-        cancel_url: process.env.SITE_URL,
-        webhook_url: `${process.env.SITE_URL}/api/zinipay-webhook`,
+        success_url: successUrl,
+        cancel_url: cancelUrl,
+        webhook_url: `${baseUrl}/api/zinipay-webhook`,
       }),
     });
 
     const zpData = await zpRes.json();
 
     if (!zpRes.ok) {
-      console.error("=== ZINIPAY REJECTED THE PAYMENT ===");
-      console.error("Error Status:", zpRes.status);
-      console.error("ZiniPay Response:", JSON.stringify(zpData));
+      console.error("=== ZINIPAY REJECTED ===", JSON.stringify(zpData));
       return res.status(502).json({ error: 'Payment gateway error', details: zpData });
     }
 
