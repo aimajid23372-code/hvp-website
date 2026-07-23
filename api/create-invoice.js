@@ -1,4 +1,3 @@
-// /api/create-invoice.js
 const { createClient } = require('@supabase/supabase-js');
 
 const supabase = createClient(
@@ -39,6 +38,7 @@ module.exports = async (req, res) => {
       }
     }
 
+    // ZiniPay Request
     const zpRes = await fetch('https://api.zinipay.com/v1/payment/create', {
       method: 'POST',
       headers: {
@@ -55,7 +55,12 @@ module.exports = async (req, res) => {
 
     const zpData = await zpRes.json();
 
+    // 502 Error Trigger with Logging
     if (!zpRes.ok) {
+      console.error("=== ZINIPAY REJECTED THE PAYMENT ===");
+      console.error("Error Status:", zpRes.status);
+      console.error("ZiniPay Response:", JSON.stringify(zpData));
+      console.error("Data Sent:", { amount, name, contact });
       return res.status(502).json({ error: 'Payment gateway error', details: zpData });
     }
 
@@ -72,7 +77,7 @@ module.exports = async (req, res) => {
 
     return res.status(200).json({ payment_url: zpData.payment_url, invoice_id: zpData.invoice_id });
   } catch (err) {
-    console.error(err);
+    console.error("=== SERVER ERROR ===", err);
     return res.status(500).json({ error: 'Server error' });
   }
 };
