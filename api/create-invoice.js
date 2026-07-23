@@ -38,12 +38,12 @@ module.exports = async (req, res) => {
       }
     }
 
-    // ইনপুটটি ইমেইল নাকি ফোন নাম্বার তা চেক করা হচ্ছে
+    // Email or Phone validation
     const isEmail = contact.includes('@');
     const cus_email = isEmail ? contact : 'student@hvb.com';
     const cus_phone = isEmail ? '01000000000' : contact;
 
-    // ZiniPay Request
+    // ZiniPay Request (with cancel_url and success_url added)
     const zpRes = await fetch('https://api.zinipay.com/v1/payment/create', {
       method: 'POST',
       headers: {
@@ -55,18 +55,18 @@ module.exports = async (req, res) => {
         cus_name: name,
         cus_email: cus_email,
         cus_phone: cus_phone,
+        success_url: process.env.SITE_URL, 
+        cancel_url: process.env.SITE_URL,
         webhook_url: `${process.env.SITE_URL}/api/zinipay-webhook`,
       }),
     });
 
     const zpData = await zpRes.json();
 
-    // 502 Error Trigger with Logging
     if (!zpRes.ok) {
       console.error("=== ZINIPAY REJECTED THE PAYMENT ===");
       console.error("Error Status:", zpRes.status);
       console.error("ZiniPay Response:", JSON.stringify(zpData));
-      console.error("Data Sent:", { amount, name, contact });
       return res.status(502).json({ error: 'Payment gateway error', details: zpData });
     }
 
