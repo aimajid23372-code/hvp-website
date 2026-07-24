@@ -446,12 +446,12 @@ Understood? If you understand, reply ONLY with this exact sentence:
   }
 
   const COURSE_KEY = "bundle";
-  const PENDING_KEY = 'hvb_pending_invoice_' + COURSE_KEY;
 
   // ref= লিংক থেকে affiliate কোড ধরে রাখা
   const urlParams = new URLSearchParams(window.location.search);
   const refCode = urlParams.get('ref');
-  if(refCode){ localStorage.setItem('hvb_ref', refCode); }
+  const affRef = refCode && !urlParams.get('ref')?.includes('-') ? refCode : null;
+  if(affRef){ localStorage.setItem('hvb_ref', affRef); }
 
   async function submitTrx(e){
     e.preventDefault();
@@ -465,18 +465,18 @@ Understood? If you understand, reply ONLY with this exact sentence:
     const name = document.getElementById('custName').value.trim();
     const contact = document.getElementById('custContact').value.trim();
     const ref = localStorage.getItem('hvb_ref') || '';
+    const returnUrl = window.location.origin + window.location.pathname;
 
     try {
       const res = await fetch('/api/create-invoice', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ course: COURSE_KEY, name, contact, promoCode, ref })
+        body: JSON.stringify({ course: COURSE_KEY, name, contact, promoCode, ref, returnUrl })
       });
       const data = await res.json();
       if(!res.ok || !data.payment_url){
         throw new Error(data.error || 'Payment gateway error');
       }
-      localStorage.setItem(PENDING_KEY, data.invoice_id);
       window.location.href = data.payment_url;
     } catch(err){
       errEl.textContent = '⚠️ কিছু একটা সমস্যা হয়েছে, আবার চেষ্টা করুন। সমস্যা থাকলে khadimulhasanshuvo@gmail.com-এ জানান।';
@@ -486,14 +486,16 @@ Understood? If you understand, reply ONLY with this exact sentence:
     return false;
   }
 
-  async function checkOrderStatus(invoiceId, attempt){
+  function closePayModal(){
+    document.getElementById('payModal').classList.remove('active');
+  }
+
+  async function checkOrderStatus(orderRef, attempt){
     attempt = attempt || 0;
     try {
-      const res = await fetch('/api/order-status?invoice_id=' + encodeURIComponent(invoiceId));
+      const res = await fetch('/api/order-status?ref=' + encodeURIComponent(orderRef));
       const data = await res.json();
       if(data.status === 'paid'){
-        localStorage.removeItem(PENDING_KEY);
-        document.getElementById('payModal').classList.add('active');
         document.getElementById('payStep').style.display = 'none';
         document.getElementById('checkingMsg').classList.remove('active');
         document.getElementById('confirmMsg').classList.add('active');
@@ -501,29 +503,27 @@ Understood? If you understand, reply ONLY with this exact sentence:
       }
     } catch(err){ /* চুপচাপ retry করবে */ }
 
-    if(attempt < 20){
-      setTimeout(function(){ checkOrderStatus(invoiceId, attempt + 1); }, 3000);
+    if(attempt < 8){
+      setTimeout(function(){ checkOrderStatus(orderRef, attempt + 1); }, 2000);
     } else {
-      localStorage.removeItem(PENDING_KEY);
-      document.getElementById('checkingMsg').innerHTML =
-        '<h3>⏳ এখনো কনফার্ম হয়নি</h3>' +
-        '<p style="color:var(--muted); margin-top:8px; font-size:0.9em;">পেমেন্ট সফল হয়ে থাকলে কিছুক্ষণ পর পেজ রিফ্রেশ করুন, অথবা khadimulhasanshuvo@gmail.com-এ যোগাযোগ করুন। পেমেন্ট বাতিল করে থাকলে নিচের বাটনে চাপুন।</p>' +
-        '<button type="button" class="submit-btn" style="margin-top:14px;" onclick="closePayModal()">ঠিক আছে, বন্ধ করুন</button>';
+      // পেমেন্ট বাতিল হয়ে থাকলে বা কনফার্ম না হলে, চুপচাপ বন্ধ হয়ে যাবে —
+      // কোনো ভয় দেখানো মেসেজ বা বারবার চেক করার ঝামেলা নেই
+      document.getElementById('payModal').classList.remove('active');
     }
   }
 
-  function closePayModal(){
-    localStorage.removeItem(PENDING_KEY);
-    document.getElementById('payModal').classList.remove('active');
-  }
-
   window.addEventListener('DOMContentLoaded', function(){
-    const pendingInvoice = localStorage.getItem(PENDING_KEY);
-    if(pendingInvoice){
+    const orderRef = urlParams.get('ref');
+    // শুধু তখনই চেক করবো যখন সত্যিই পেমেন্ট থেকে ফিরে এসেছে (URL-এ ref আছে)
+    // এবং এটা affiliate ref না (affiliate ref সাধারণত ছোট/সরল কোড, আমাদের
+    // নিজস্ব ref সবসময় UUID ফরম্যাটে থাকে)
+    if(orderRef && orderRef.includes('-') && orderRef.length > 20){
       document.getElementById('payModal').classList.add('active');
       document.getElementById('payStep').style.display = 'none';
       document.getElementById('checkingMsg').classList.add('active');
-      checkOrderStatus(pendingInvoice, 0);
+      // URL পরিষ্কার করে দিচ্ছি, যাতে রিফ্রেশ/পরে ভিজিট করলে আবার চেক না হয়
+      history.replaceState({}, '', window.location.pathname);
+      checkOrderStatus(orderRef, 0);
     }
   });
 </script>
