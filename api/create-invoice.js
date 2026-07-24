@@ -1,8 +1,8 @@
 // /api/create-invoice.js
 // Vercel-এ /api/create-invoice নামে একটা এন্ডপয়েন্ট হয়ে যাবে
 // কাজ: promo code চেক করে, ZiniPay-তে invoice বানায়, এবং একটা নিজস্ব
-// reference (ourRef) তৈরি করে যাতে কাস্টমার পেমেন্ট থেকে ফিরে এলে
-// ঠিক সেই অর্ডারটাই চেক করা যায় (localStorage-এর দরকার নেই)
+// reference (ourRef) তৈরি করে যাতে কাস্টমার পেমেন্ট সফল হয়ে ফিরে এলে
+// ঠিক সেই অর্ডারটাই চেক করা যায় — বাতিল করলে কিছুই দেখাবে না
 
 const { createClient } = require('@supabase/supabase-js');
 const crypto = require('crypto');
@@ -46,13 +46,18 @@ module.exports = async (req, res) => {
       }
     }
 
-    // নিজস্ব reference — এটা দিয়েই পরে কাস্টমার ফিরে এলে অর্ডার খুঁজে বের করবো
-    const ourRef = crypto.randomUUID();
-    const finalReturnUrl = returnUrl ? `${returnUrl}?ref=${ourRef}` : undefined;
+    // ZiniPay-এর cus_email ও cus_phone দুটোই লাগে — ইউজার email/phone
+    // যেটাই দিক না কেন, এখান থেকে দুটো field-ই ভরে দিচ্ছি
+    const isEmail = contact.includes('@');
+    const cus_email = isEmail ? contact : 'student@hvb.com';
+    const cus_phone = isEmail ? '01000000000' : contact;
 
-    // ⚠️ NOTE: নিচের ZiniPay endpoint/field নামগুলো তাদের পাবলিক ডকুমেন্টেশন
-    // অনুযায়ী আন্দাজ করা। আসল API Key দিয়ে টেস্ট করার সময় ZiniPay Dashboard
-    // -> API Docs -এর "Create Invoice" অংশের সাথে মিলিয়ে নিতে হতে পারে।
+    // নিজস্ব reference — পেমেন্ট সফল হয়ে ফিরে এলে এটা দিয়েই অর্ডার খুঁজে বের করবো
+    const ourRef = crypto.randomUUID();
+    const successUrl = returnUrl ? `${returnUrl}?ref=${ourRef}` : process.env.SITE_URL;
+    // cancel_url-এ কোনো ref নেই — তাই বাতিল করে ফিরে এলে সাইট একদম স্বাভাবিক থাকবে
+    const cancelUrl = returnUrl || process.env.SITE_URL;
+
     const zpRes = await fetch('https://api.zinipay.com/v1/payment/create', {
       method: 'POST',
       headers: {
@@ -62,15 +67,18 @@ module.exports = async (req, res) => {
       body: JSON.stringify({
         amount,
         cus_name: name,
-        cus_email: contact,
+        cus_email,
+        cus_phone,
+        success_url: successUrl,
+        cancel_url: cancelUrl,
         webhook_url: `${process.env.SITE_URL}/api/zinipay-webhook`,
-        return_url: finalReturnUrl,
       }),
     });
 
     const zpData = await zpRes.json();
 
     if (!zpRes.ok) {
+      console.error('ZiniPay rejected the request:', zpRes.status, JSON.stringify(zpData));
       return res.status(502).json({ error: 'Payment gateway error', details: zpData });
     }
 
@@ -89,7 +97,7 @@ module.exports = async (req, res) => {
 
     return res.status(200).json({ payment_url: zpData.payment_url });
   } catch (err) {
-    console.error(err);
+    console.error('Server error:', err);
     return res.status(500).json({ error: 'Server error' });
   }
 };
