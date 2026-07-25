@@ -21,7 +21,6 @@
   }
   a{ color:inherit; text-decoration:none; }
   .mono{ font-family:'JetBrains Mono', monospace; letter-spacing:0.03em; }
-
   header{
     position:sticky; top:0; z-index:20; background:rgba(9,12,19,0.85); backdrop-filter:blur(10px);
     border-bottom:1px solid var(--line); padding:14px 24px;
@@ -33,11 +32,9 @@
   .brand-text b{ font-family:'Sora',sans-serif; font-size:1.02em; }
   .brand-text span{ font-size:0.65em; color:var(--muted); letter-spacing:0.06em; text-transform:uppercase; }
   .back-link{ color:var(--muted); font-size:0.9em; }
-
   .wrap{ max-width:700px; margin:0 auto; padding:44px 24px 90px; }
   h1{ font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.5em,5vw,2em); margin-bottom:12px; }
   p.lead{ color:var(--muted); margin-bottom:28px; }
-
   .lookup-box{ display:flex; gap:8px; margin-bottom:10px; }
   .lookup-input{
     flex:1; padding:13px 14px; background:var(--surface); border:1px solid var(--line);
@@ -51,8 +48,6 @@
   .lookup-msg{ font-size:0.88em; margin-bottom:20px; min-height:1.2em; }
   .lookup-msg.error{ color:#F87171; }
   .lookup-msg.info{ color:var(--muted); }
-
-  h2.h{ font-family:'Sora',sans-serif; font-size:1.1em; font-weight:700; margin:30px 0 12px; }
   .step-note{ color:var(--muted); font-size:0.85em; margin-bottom:10px; }
   .deliver-block{ text-align:left; margin-bottom:18px; }
   .deliver-label{ display:block; font-weight:600; font-size:0.9em; margin-bottom:8px; color:var(--text); }
@@ -78,7 +73,7 @@
     padding:20px; margin-bottom:20px;
   }
   .course-section h3{ font-family:'Sora',sans-serif; font-size:1.1em; margin-bottom:16px; }
-
+  .hidden-source{ display:none; }
   @media (max-width:600px){
     .wrap{ padding:30px 18px 70px; }
     .lookup-box{ flex-direction:column; }
@@ -97,7 +92,7 @@
 
 <div class="wrap">
   <h1>আমার কোর্স দেখুন</h1>
-  <p class="lead">আগে কোর্স কিনে থাকলে, পেমেন্টের সময় যে ফোন নাম্বার/ইমেইল দিয়েছিলেন সেটা দিন — আপনার কোর্স লিংক ও Prompt আবার দেখতে পাবেন। এটা যেকোনো সময়, যতবার খুশি ব্যবহার করতে পারবেন।</p>
+  <p class="lead">আগে কোর্স কিনে থাকলে, পেমেন্টের সময় যে ফোন নাম্বার/ইমেইল দিয়েছিলেন সেটা দিন — আপনার কোর্স লিংক ও Prompt আবার দেখতে পাবেন।</p>
 
   <div class="lookup-box">
     <input type="text" id="contactInput" class="lookup-input" placeholder="যে নাম্বার/ইমেইল দিয়ে কিনেছিলেন">
@@ -108,8 +103,10 @@
   <div id="resultsArea"></div>
 </div>
 
-<script>
-  const SHORT_PROMPT = `Act as an Elite, World-Class AI Video Prompt Engineer specializing in hyper-viral, extremely funny 3D animations for TikTok, YouTube Shorts, and Facebook Reels. Your primary target audience is the mass population of Bangladesh (both rural and urban).
+<!-- এই দুটো hidden pre ট্যাগে আসল prompt text রাখা আছে; JS backtick template literal
+     এর ভেতরে prompt টেক্সট বসালে ভেতরের ``` চিহ্নের কারণে স্ক্রিপ্ট ভেঙে যায়, তাই এই
+     নিরাপদ পদ্ধতি ব্যবহার করা হয়েছে -->
+<pre id="shortPromptSource" class="hidden-source">Act as an Elite, World-Class AI Video Prompt Engineer specializing in hyper-viral, extremely funny 3D animations for TikTok, YouTube Shorts, and Facebook Reels. Your primary target audience is the mass population of Bangladesh (both rural and urban).
 I will give you a topic or concept. Your job is to generate highly detailed, perfect video generation prompts for 4 separate video clips based on my topic. You must act as a creative genius who knows exactly what makes a video hit millions of views.
 YOU MUST STRICTLY OBEY THE FOLLOWING RULES FOR EVERY RESPONSE. IF YOU BREAK ANY RULE, THE GENERATION FAILS:
 1. ABSOLUTE STRICT FORMATTING (THE &quot;COPY&quot; BOX RULE):
@@ -146,8 +143,8 @@ Make the characters incredibly relatable but visually absurd. Give them extreme 
 **CAMERA:** [Dynamic camera movement like whip-pan, extreme close-up, shaky cam]. Single continuous full-frame shot, absolutely NO split screen.
 [END OF BLOCK]
 Understood? If you understand, reply ONLY with this exact sentence:
-&quot;আমি প্রস্তুত ওস্তাদ! আপনার ভাইরাল ভিডিওর টপিক দিন, আমি পুরাই আগুন লেভেলের প্রম্পট বানাইয়া দিতাছি!&quot;`;
-  const LONG_PROMPT = `SYSTEM DIRECTIVE: long video 2.0
+&quot;আমি প্রস্তুত ওস্তাদ! আপনার ভাইরাল ভিডিওর টপিক দিন, আমি পুরাই আগুন লেভেলের প্রম্পট বানাইয়া দিতাছি!&quot;</pre>
+<pre id="longPromptSource" class="hidden-source">SYSTEM DIRECTIVE: long video 2.0
 
 YOUR PERSONA:
 You are my ultimate &quot;Master Viral Video Producer&quot;. Communicate with me entirely in highly engaging, fluent Bengali. Address me respectfully as &quot;ওস্তাদ&quot; (Ostad). You are an absolute master of hyper-realistic 3D animation prompts, Veo 3.1 engine constraints, and Facebook/TikTok viral psychology. Your only goal is to generate million-view, never-seen-before masterpieces. You must never be repetitive. Every time a new concept is requested, you must provide a completely fresh style of storytelling, titles, descriptions, and thumbnails.
@@ -212,7 +209,9 @@ VIRAL DELIVERABLES:
 
 [PLACE THE THUMBNAIL PROMPT INSIDE A SEPARATE CODE BLOCK]
 THUMBNAIL PROMPT:
-[1 Highly dramatic, extremely detailed English 16k UE5 prompt. Include instructions for a seamless blended collage (no hard lines), extreme facial expressions, and ONE unified 3D typography lockup at the bottom center with a specific 3D sticker attached].`;
+[1 Highly dramatic, extremely detailed English 16k UE5 prompt. Include instructions for a seamless blended collage (no hard lines), extreme facial expressions, and ONE unified 3D typography lockup at the bottom center with a specific 3D sticker attached].</pre>
+
+<script>
   const SHORT_LINK = "https://drive.google.com/file/d/1PWf8xibrr63QRHC0JL4F5MQ2_ABuct70/view?usp=drivesdk";
   const LONG_LINK = "https://drive.google.com/file/d/1tlqjP7Z4SFp9bl_rDiVnJVt-7T1hLNjw/view?usp=drivesdk";
   const GROUP_LINK = "https://chat.whatsapp.com/KwqdfXmqNMtCkaM1pGeoYX?s=cl&p=a&ilr=0";
@@ -227,41 +226,39 @@ THUMBNAIL PROMPT:
   }
 
   function shortBlock(idx){
-    return `
-      <div class="course-section">
-        <h3>🎬 Short Video Course</h3>
-        <p class="step-note">১) প্রথমে নিচের Master Chatting Prompt কপি করুন, ২) তারপর কোর্স লিংকে ক্লিক করে ভিডিও দেখুন</p>
-        <div class="deliver-block">
-          <span class="deliver-label">🤖 Master Chatting Prompt</span>
-          <div class="prompt-box">
-            <pre id="shortPromptText${idx}">${SHORT_PROMPT}</pre>
-            <button type="button" class="copy-btn" onclick="copyPrompt('shortPromptText${idx}', this)">Copy</button>
-          </div>
-        </div>
-        <div class="deliver-block">
-          <span class="deliver-label">📁 Course Link</span>
-          <a href="${SHORT_LINK}" target="_blank" rel="noopener" class="deliver-link">কোর্স দেখুন →</a>
-        </div>
-      </div>`;
+    return '<div class="course-section">' +
+      '<h3>🎬 Short Video Course</h3>' +
+      '<p class="step-note">১) প্রথমে নিচের Master Chatting Prompt কপি করুন, ২) তারপর কোর্স লিংকে ক্লিক করে ভিডিও দেখুন</p>' +
+      '<div class="deliver-block">' +
+        '<span class="deliver-label">🤖 Master Chatting Prompt</span>' +
+        '<div class="prompt-box">' +
+          '<pre id="shortPromptText' + idx + '"></pre>' +
+          '<button type="button" class="copy-btn" onclick="copyPrompt(\'shortPromptText' + idx + '\', this)">Copy</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="deliver-block">' +
+        '<span class="deliver-label">📁 Course Link</span>' +
+        '<a href="' + SHORT_LINK + '" target="_blank" rel="noopener" class="deliver-link">কোর্স দেখুন →</a>' +
+      '</div>' +
+    '</div>';
   }
 
   function longBlock(idx){
-    return `
-      <div class="course-section">
-        <h3>🎬 Long Video Course</h3>
-        <p class="step-note">১) প্রথমে নিচের Master Chatting Prompt কপি করুন, ২) তারপর কোর্স লিংকে ক্লিক করে ভিডিও দেখুন</p>
-        <div class="deliver-block">
-          <span class="deliver-label">🤖 Master Chatting Prompt</span>
-          <div class="prompt-box">
-            <pre id="longPromptText${idx}">${LONG_PROMPT}</pre>
-            <button type="button" class="copy-btn" onclick="copyPrompt('longPromptText${idx}', this)">Copy</button>
-          </div>
-        </div>
-        <div class="deliver-block">
-          <span class="deliver-label">📁 Course Link</span>
-          <a href="${LONG_LINK}" target="_blank" rel="noopener" class="deliver-link">কোর্স দেখুন →</a>
-        </div>
-      </div>`;
+    return '<div class="course-section">' +
+      '<h3>🎬 Long Video Course</h3>' +
+      '<p class="step-note">১) প্রথমে নিচের Master Chatting Prompt কপি করুন, ২) তারপর কোর্স লিংকে ক্লিক করে ভিডিও দেখুন</p>' +
+      '<div class="deliver-block">' +
+        '<span class="deliver-label">🤖 Master Chatting Prompt</span>' +
+        '<div class="prompt-box">' +
+          '<pre id="longPromptText' + idx + '"></pre>' +
+          '<button type="button" class="copy-btn" onclick="copyPrompt(\'longPromptText' + idx + '\', this)">Copy</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="deliver-block">' +
+        '<span class="deliver-label">📁 Course Link</span>' +
+        '<a href="' + LONG_LINK + '" target="_blank" rel="noopener" class="deliver-link">কোর্স দেখুন →</a>' +
+      '</div>' +
+    '</div>';
   }
 
   async function lookupOrder(){
@@ -281,7 +278,7 @@ THUMBNAIL PROMPT:
       const res = await fetch('/api/lookup-order', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ contact })
+        body: JSON.stringify({ contact: contact })
       });
       const data = await res.json();
       const courses = data.courses || [];
@@ -297,17 +294,29 @@ THUMBNAIL PROMPT:
 
       let html = '';
       let idx = 0;
-      courses.forEach(c => {
-        if(c === 'short'){ html += shortBlock(idx++); }
-        if(c === 'bundle'){ html += shortBlock(idx++) + longBlock(idx++); }
+      const idsToFill = [];
+      courses.forEach(function(c){
+        if(c === 'short'){ html += shortBlock(idx); idsToFill.push(['short', idx]); idx++; }
+        if(c === 'bundle'){
+          html += shortBlock(idx); idsToFill.push(['short', idx]); idx++;
+          html += longBlock(idx); idsToFill.push(['long', idx]); idx++;
+        }
       });
-      html += `
-        <div class="course-section">
-          <span class="deliver-label">👥 HVB Premium Group</span>
-          <p style="color:var(--muted); font-size:0.88em; margin: 8px 0;">এখানে কোর্স সম্পর্কে প্রতিনিয়তই নতুন আপডেট দেওয়া হয়।</p>
-          <a href="${GROUP_LINK}" target="_blank" rel="noopener" class="deliver-link">গ্রুপে জয়েন করুন →</a>
-        </div>`;
+      html += '<div class="course-section">' +
+        '<span class="deliver-label">👥 HVB Premium Group</span>' +
+        '<p style="color:var(--muted); font-size:0.88em; margin: 8px 0;">এখানে কোর্স সম্পর্কে প্রতিনিয়তই নতুন আপডেট দেওয়া হয়।</p>' +
+        '<a href="' + GROUP_LINK + '" target="_blank" rel="noopener" class="deliver-link">গ্রুপে জয়েন করুন →</a>' +
+      '</div>';
       results.innerHTML = html;
+
+      // এখন hidden source থেকে আসল prompt টেক্সট কপি করে দিচ্ছি (backtick সমস্যা এড়াতে)
+      const shortSource = document.getElementById('shortPromptSource').textContent;
+      const longSource = document.getElementById('longPromptSource').textContent;
+      idsToFill.forEach(function(pair){
+        const type = pair[0], i = pair[1];
+        const target = document.getElementById(type + 'PromptText' + i);
+        if(target){ target.textContent = (type === 'short' ? shortSource : longSource); }
+      });
     } catch(err){
       msg.textContent = 'সমস্যা হয়েছে, আবার চেষ্টা করুন।';
       msg.className = 'lookup-msg error';
