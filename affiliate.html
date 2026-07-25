@@ -69,6 +69,27 @@
   .stat-row{ display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--line); font-size:0.92em; }
   .stat-row:last-child{ border-bottom:none; }
   .stat-row b{ color:var(--cyan); }
+  .dashboard{
+    background:var(--surface); border:1px solid var(--line); border-radius:14px;
+    padding:22px; margin-top:16px;
+  }
+  .dash-name{ font-family:'Sora',sans-serif; font-size:1.1em; font-weight:700; margin-bottom:16px; }
+  .dash-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+  .dash-box{ background:var(--surface-2); border:1px solid var(--line); border-radius:10px; padding:14px; text-align:center; }
+  .dash-box .num{ font-family:'Sora',sans-serif; font-weight:700; font-size:1.3em; color:var(--cyan); }
+  .dash-box .lbl{ color:var(--muted); font-size:0.78em; margin-top:4px; }
+  .dash-pending{
+    background:linear-gradient(135deg, rgba(94,234,212,0.12), rgba(167,139,250,0.14));
+    border:1px solid var(--cyan); border-radius:10px; padding:16px; text-align:center; margin-bottom:16px;
+  }
+  .dash-pending .num{ font-family:'Sora',sans-serif; font-weight:700; font-size:1.6em; color:var(--cyan); }
+  .dash-pending .lbl{ color:var(--muted); font-size:0.85em; margin-top:4px; }
+  .withdraw-btn{
+    width:100%; background:var(--grad); color:#0A0D14; border:none; padding:13px;
+    border-radius:8px; font-weight:700; cursor:pointer; font-size:0.95em;
+  }
+  .withdraw-note{ color:var(--muted); font-size:0.82em; text-align:center; margin-top:8px; }
+  .history-title{ font-family:'Sora',sans-serif; font-size:0.95em; margin:20px 0 10px; color:var(--muted); }
   @media (max-width:600px){ .wrap{ padding:30px 18px 70px; } }
 </style>
 </head>
@@ -174,6 +195,26 @@
     }
   }
 
+  async function requestWithdraw(){
+    const msg = document.getElementById('statsMsg');
+    try {
+      const res = await fetch('/api/withdraw-request', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ refCode: window._currentRefCode, password: window._currentPassword })
+      });
+      const data = await res.json();
+      if(!res.ok){
+        alert('⚠️ ' + (data.error || 'সমস্যা হয়েছে'));
+        return;
+      }
+      alert('✅ Withdraw রিকোয়েস্ট পাঠানো হয়েছে (' + data.amount + ' ৳)। ২৪-৪৮ ঘণ্টার মধ্যে টাকা পাঠানো হবে।');
+      checkStats();
+    } catch(err){
+      alert('সমস্যা হয়েছে, আবার চেষ্টা করুন।');
+    }
+  }
+
   async function checkStats(){
     const refCode = document.getElementById('statsRefCode').value.trim();
     const password = document.getElementById('statsPassword').value;
@@ -203,17 +244,29 @@
         const dateStr = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear();
         historyHtml += '<div class="stat-row"><span>' + dateStr + ' — ' + courseName + '</span><b>+' + o.commission + ' ৳</b></div>';
       });
+
+      const canWithdraw = data.pending >= 1000;
+      const withdrawSection = canWithdraw
+        ? '<button class="withdraw-btn" onclick="requestWithdraw()">💰 টাকা তুলুন (Withdraw Request পাঠান)</button>' +
+          '<p class="withdraw-note">রিকোয়েস্ট পাঠানোর পর ২৪-৪৮ ঘণ্টার মধ্যে আপনার bKash/Nagad নাম্বারে টাকা পাঠানো হবে।</p>'
+        : '<p class="withdraw-note">কমপক্ষে ১০০০ ৳ পাওনা হলে Withdraw করা যাবে। আর ' + (1000 - data.pending) + ' ৳ হলেই পারবেন।</p>';
+
       card.innerHTML =
-        '<div class="stat-card">' +
-        '<div class="stat-row"><span>নাম</span><b>' + data.name + '</b></div>' +
-        '<div class="stat-row"><span>মোট বিক্রি</span><b>' + data.totalOrders + ' টা কোর্স</b></div>' +
-        '<div class="stat-row"><span>মোট বিক্রির টাকা</span><b>' + data.totalSales + ' ৳</b></div>' +
-        '<div class="stat-row"><span>কমিশন রেট</span><b>' + data.commissionPercent + '%</b></div>' +
-        '<div class="stat-row"><span>মোট কমিশন</span><b>' + data.totalCommission + ' ৳</b></div>' +
-        '<div class="stat-row"><span>এ পর্যন্ত পেয়েছেন</span><b>' + data.paidOut + ' ৳</b></div>' +
-        '<div class="stat-row"><span>এখনো পাওনা</span><b style="color:var(--violet);">' + data.pending + ' ৳</b></div>' +
+        '<div class="dashboard">' +
+        '<div class="dash-name">👋 ' + data.name + '</div>' +
+        '<div class="dash-grid">' +
+        '<div class="dash-box"><div class="num">' + data.totalOrders + '</div><div class="lbl">মোট বিক্রি</div></div>' +
+        '<div class="dash-box"><div class="num">' + data.totalSales + ' ৳</div><div class="lbl">মোট বিক্রির টাকা</div></div>' +
+        '<div class="dash-box"><div class="num">' + data.commissionPercent + '%</div><div class="lbl">কমিশন রেট</div></div>' +
+        '<div class="dash-box"><div class="num">' + data.paidOut + ' ৳</div><div class="lbl">এ পর্যন্ত পেয়েছেন</div></div>' +
         '</div>' +
-        (historyHtml ? '<h3 style="margin-top:20px; font-family:\'Sora\',sans-serif; font-size:1em;">বিক্রির হিস্টোরি</h3><div class="stat-card">' + historyHtml + '</div>' : '');
+        '<div class="dash-pending"><div class="num">' + data.pending + ' ৳</div><div class="lbl">এখনো পাওনা (Pending)</div></div>' +
+        withdrawSection +
+        '</div>' +
+        (historyHtml ? '<div class="history-title">বিক্রির হিস্টোরি</div><div class="stat-card">' + historyHtml + '</div>' : '');
+
+      window._currentRefCode = refCode;
+      window._currentPassword = password;
     } catch(err){
       msg.textContent = 'সমস্যা হয়েছে, আবার চেষ্টা করুন।';
       msg.className = 'msg error';
