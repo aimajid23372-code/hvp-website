@@ -1,5 +1,5 @@
 // /api/affiliate-signup.js
-// নতুন affiliate সাইনআপ — পাসওয়ার্ড সহ (যাতে অন্য কেউ তার stats দেখতে না পারে)
+// নতুন affiliate সাইনআপ — পাসওয়ার্ড সহ, আর এখন insert error সঠিকভাবে ধরা হয়
 
 const { createClient } = require('@supabase/supabase-js');
 const crypto = require('crypto');
@@ -43,7 +43,7 @@ module.exports = async (req, res) => {
       return res.status(409).json({ error: 'এই ref code আগে থেকেই ব্যবহার হচ্ছে, অন্য একটা দিন' });
     }
 
-    await supabase.from('affiliates').insert({
+    const { error: insertErr } = await supabase.from('affiliates').insert({
       ref_code: cleanRef,
       name,
       contact,
@@ -53,9 +53,15 @@ module.exports = async (req, res) => {
       password_hash: hashPassword(password),
     });
 
+    // ⚠️ এখন insert error সঠিকভাবে চেক করা হচ্ছে — আগে এটা silently ignore হতো
+    if (insertErr) {
+      console.error('Insert error:', insertErr);
+      return res.status(500).json({ error: 'ডাটাবেসে সমস্যা: ' + insertErr.message });
+    }
+
     return res.status(200).json({ refCode: cleanRef });
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: 'Server error' });
+    console.error('Server error:', err);
+    return res.status(500).json({ error: 'Server error: ' + err.message });
   }
 };
