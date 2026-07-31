@@ -261,6 +261,42 @@ THUMBNAIL PROMPT:
     '</div>';
   }
 
+  // ---------- কোর্সগুলো স্ক্রিনে দেখানোর ফাংশন ----------
+  function renderCourses(courses){
+    const results = document.getElementById('resultsArea');
+    let html = '';
+    let idx = 0;
+    const idsToFill = [];
+    courses.forEach(function(c){
+      if(c === 'short'){
+        html += shortBlock(idx); idsToFill.push(['short', idx]); idx++;
+      }
+      if(c === 'long'){
+        html += longBlock(idx); idsToFill.push(['long', idx]); idx++;
+      }
+      if(c === 'bundle'){
+        html += shortBlock(idx); idsToFill.push(['short', idx]); idx++;
+        html += longBlock(idx); idsToFill.push(['long', idx]); idx++;
+      }
+    });
+    html += '<div class="course-section">' +
+      '<span class="deliver-label">👥 HVB Premium Group</span>' +
+      '<p style="color:var(--muted); font-size:0.88em; margin: 8px 0;">এখানে কোর্স সম্পর্কে প্রতিনিয়তই নতুন আপডেট দেওয়া হয়।</p>' +
+      '<a href="' + GROUP_LINK + '" target="_blank" rel="noopener" class="deliver-link">গ্রুপে জয়েন করুন →</a>' +
+    '</div>';
+    results.innerHTML = html;
+
+    const shortSource = document.getElementById('shortPromptSource').textContent;
+    const longSource = document.getElementById('longPromptSource').textContent;
+    idsToFill.forEach(function(pair){
+      const type = pair[0], i = pair[1];
+      const target = document.getElementById(type + 'PromptText' + i);
+      if(target){ target.textContent = (type === 'short' ? shortSource : longSource); }
+    });
+    try { results.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch(e){}
+  }
+
+  // ---------- নাম্বার/ইমেইল দিয়ে নিজের কোর্স খোঁজা ----------
   async function lookupOrder(){
     const contact = document.getElementById('contactInput').value.trim();
     const msg = document.getElementById('lookupMsg');
@@ -284,45 +320,85 @@ THUMBNAIL PROMPT:
       const courses = data.courses || [];
 
       if(courses.length === 0){
-        msg.textContent = 'এই নাম্বার/ইমেইল দিয়ে কোনো পেমেন্ট পাওয়া যায়নি। সঠিক নাম্বার দিয়েছেন কিনা চেক করুন, অথবা khadimulhasanshuvo@gmail.com-এ যোগাযোগ করুন।';
+        msg.innerHTML = 'এই নাম্বার/ইমেইল দিয়ে কোনো পেমেন্ট পাওয়া যায়নি। পেমেন্টের সময় যে নাম্বার/ইমেইল দিয়েছিলেন হুবহু সেটাই দিন। সমস্যা হলে khadimulhasanshuvo@gmail.com-এ যোগাযোগ করুন।';
         msg.className = 'lookup-msg error';
         return;
       }
 
+      try { localStorage.setItem('hvb_contact', contact); } catch(e){}
       msg.textContent = '✅ আপনার কোর্স পাওয়া গেছে!';
       msg.className = 'lookup-msg';
-
-      let html = '';
-      let idx = 0;
-      const idsToFill = [];
-      courses.forEach(function(c){
-        if(c === 'short'){ html += shortBlock(idx); idsToFill.push(['short', idx]); idx++; }
-        if(c === 'bundle'){
-          html += shortBlock(idx); idsToFill.push(['short', idx]); idx++;
-          html += longBlock(idx); idsToFill.push(['long', idx]); idx++;
-        }
-      });
-      html += '<div class="course-section">' +
-        '<span class="deliver-label">👥 HVB Premium Group</span>' +
-        '<p style="color:var(--muted); font-size:0.88em; margin: 8px 0;">এখানে কোর্স সম্পর্কে প্রতিনিয়তই নতুন আপডেট দেওয়া হয়।</p>' +
-        '<a href="' + GROUP_LINK + '" target="_blank" rel="noopener" class="deliver-link">গ্রুপে জয়েন করুন →</a>' +
-      '</div>';
-      results.innerHTML = html;
-
-      // এখন hidden source থেকে আসল prompt টেক্সট কপি করে দিচ্ছি (backtick সমস্যা এড়াতে)
-      const shortSource = document.getElementById('shortPromptSource').textContent;
-      const longSource = document.getElementById('longPromptSource').textContent;
-      idsToFill.forEach(function(pair){
-        const type = pair[0], i = pair[1];
-        const target = document.getElementById(type + 'PromptText' + i);
-        if(target){ target.textContent = (type === 'short' ? shortSource : longSource); }
-      });
+      renderCourses(courses);
     } catch(err){
       msg.textContent = 'সমস্যা হয়েছে, আবার চেষ্টা করুন।';
       msg.className = 'lookup-msg error';
     }
   }
+
+  // ---------- পেমেন্ট শেষে এখানে ফিরে আসার পর স্বয়ংক্রিয় অ্যাক্সেস ----------
+  async function checkPaidOrder(orderRef, attempt){
+    attempt = attempt || 0;
+    const msg = document.getElementById('lookupMsg');
+    try {
+      const res = await fetch('/api/order-status?ref=' + encodeURIComponent(orderRef));
+      const data = await res.json();
+      if(data.status === 'paid'){
+        msg.innerHTML = '✅ <b>পেমেন্ট সফল হয়েছে!</b> আপনার কোর্স খুলে দেওয়া হয়েছে — নিচে দেখুন।';
+        msg.className = 'lookup-msg';
+        if(data.contact){
+          try { localStorage.setItem('hvb_contact', data.contact); } catch(e){}
+          const input = document.getElementById('contactInput');
+          if(input) input.value = data.contact;
+        }
+        renderCourses(data.courses && data.courses.length ? data.courses : [data.course]);
+        return;
+      }
+      if(data.status === 'failed' || data.status === 'cancelled'){
+        msg.textContent = '❌ পেমেন্টটি সম্পন্ন হয়নি। আবার চেষ্টা করুন অথবা khadimulhasanshuvo@gmail.com-এ যোগাযোগ করুন।';
+        msg.className = 'lookup-msg error';
+        return;
+      }
+    } catch(err){ /* চুপচাপ আবার চেষ্টা করবে */ }
+
+    if(attempt < 12){
+      setTimeout(function(){ checkPaidOrder(orderRef, attempt + 1); }, 2500);
+    } else {
+      msg.innerHTML = 'পেমেন্ট যাচাই করতে একটু দেরি হচ্ছে। ১ মিনিট পর নিচে আপনার নাম্বার/ইমেইল দিয়ে "খুঁজুন" চাপুন। সমস্যা থাকলে khadimulhasanshuvo@gmail.com-এ জানান।';
+      msg.className = 'lookup-msg error';
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', function(){
+    const params = new URLSearchParams(window.location.search);
+    const orderRef = params.get('order');
+    const msg = document.getElementById('lookupMsg');
+    const saved = localStorage.getItem('hvb_contact');
+    if(saved){
+      const input = document.getElementById('contactInput');
+      if(input) input.value = saved;
+    }
+    if(orderRef){
+      msg.innerHTML = '⏳ <b>পেমেন্ট যাচাই করা হচ্ছে...</b> একটু অপেক্ষা করুন, পেজ বন্ধ করবেন না।';
+      msg.className = 'lookup-msg info';
+      history.replaceState({}, '', window.location.pathname);
+      checkPaidOrder(orderRef, 0);
+    } else if(saved){
+      lookupOrder();
+    }
+  });
 </script>
 
+<script>
+  // ---------- Affiliate ref ট্র্যাকিং (যেকোনো পেজে ?ref=code থাকলে ধরে রাখে) ----------
+  (function(){
+    try {
+      var r = (new URLSearchParams(window.location.search).get('ref') || '').trim().toLowerCase();
+      if(r && /^[a-z0-9]{3,30}$/.test(r)){
+        localStorage.setItem('hvb_ref', r);
+        localStorage.setItem('hvb_ref_at', String(Date.now()));
+      }
+    } catch(e){}
+  })();
+</script>
 </body>
 </html>
