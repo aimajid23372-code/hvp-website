@@ -1,3 +1,8 @@
+// /api/zinipay-webhook.js
+// ZiniPay পেমেন্ট শেষে এখানে কল করে। ZiniPay পাঠায় { invoice_id, status: "true" }
+// (আগের কোডে শুধু status === 'COMPLETED' চেক করা হতো, তাই কখনোই কাজ করতো না)
+// এখানে আবার ZiniPay-কে verify করে তবেই paid করা হয় — এটাই নিরাপদ।
+
 const { createClient } = require('@supabase/supabase-js');
 
 const supabase = createClient(
@@ -6,23 +11,40 @@ const supabase = createClient(
 );
 
 module.exports = async (req, res) => {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
   try {
-    const { invoice_id, status, transaction_id, payment_method } = req.body;
+    const body = req.body || {};
+    const query = req.query || {};
+    const invoiceId = body.invoice_id || query.invoice_id;
 
-    if (status === 'COMPLETED') {
+    if (!invoiceId) {
+      return res.status(200).json({ received: true, note: 'no invoice_id' });
+    }
+
+    const vr = await fetch('https://api.zinipay.com/v1/payment/verify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'zini-api-key': process.env.ZINIPAY_API_KEY,
+      },
+      body: JSON.stringify({ invoice_id: invoiceId }),
+    });
+    const verified = await vr.json();
+    const status = String((verified && verified.status) || '').toUpperCase();
+
+    if (vr.ok && status === 'COMPLETED') {
       await supabase
         .from('orders')
-        .update({ status: 'paid', transaction_id, payment_method })
-        .eq('invoice_id', invoice_id);
+        .update({
+          status: 'paid',
+          transaction_id: verified.transaction_id || null,
+          payment_method: verified.payment_method || null,
+        })
+        .eq('invoice_id', invoiceId);
     }
 
     return res.status(200).json({ received: true });
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: 'Server error' });
+    console.error('Webhook error:', err);
+    return res.status(200).json({ received: true });
   }
 };
