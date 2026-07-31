@@ -453,11 +453,14 @@ THUMBNAIL PROMPT:
 
   const COURSE_KEY = "bundle";
 
-  // ref= লিংক থেকে affiliate কোড ধরে রাখা
-  const urlParams = new URLSearchParams(window.location.search);
-  const refCode = urlParams.get('ref');
-  const affRef = refCode && !urlParams.get('ref')?.includes('-') ? refCode : null;
-  if(affRef){ localStorage.setItem('hvb_ref', affRef); }
+  // ref= লিংক থেকে affiliate কোড ধরে রাখা (৩০ দিন পর্যন্ত)
+  const refCode = (urlParams.get('ref') || '').trim().toLowerCase();
+  if(refCode && /^[a-z0-9]{3,30}$/.test(refCode)){
+    try {
+      localStorage.setItem('hvb_ref', refCode);
+      localStorage.setItem('hvb_ref_at', String(Date.now()));
+    } catch(e){}
+  }
 
   async function submitTrx(e){
     e.preventDefault();
@@ -496,40 +499,11 @@ THUMBNAIL PROMPT:
     document.getElementById('payModal').classList.remove('active');
   }
 
-  async function checkOrderStatus(orderRef, attempt){
-    attempt = attempt || 0;
-    try {
-      const res = await fetch('/api/order-status?ref=' + encodeURIComponent(orderRef));
-      const data = await res.json();
-      if(data.status === 'paid'){
-        document.getElementById('payStep').style.display = 'none';
-        document.getElementById('checkingMsg').classList.remove('active');
-        document.getElementById('confirmMsg').classList.add('active');
-        return;
-      }
-    } catch(err){ /* চুপচাপ retry করবে */ }
-
-    if(attempt < 8){
-      setTimeout(function(){ checkOrderStatus(orderRef, attempt + 1); }, 2000);
-    } else {
-      // পেমেন্ট বাতিল হয়ে থাকলে বা কনফার্ম না হলে, চুপচাপ বন্ধ হয়ে যাবে —
-      // কোনো ভয় দেখানো মেসেজ বা বারবার চেক করার ঝামেলা নেই
-      document.getElementById('payModal').classList.remove('active');
-    }
-  }
-
+  // পেমেন্ট শেষে ZiniPay সরাসরি my-courses.html?order=... পেজে পাঠিয়ে দেয়,
+  // সেখানেই "পেমেন্ট সফল" দেখিয়ে কোর্স খুলে দেওয়া হয়। তাই এখানে আর চেক লাগে না।
   window.addEventListener('DOMContentLoaded', function(){
-    const orderRef = urlParams.get('ref');
-    // শুধু তখনই চেক করবো যখন সত্যিই পেমেন্ট থেকে ফিরে এসেছে (URL-এ ref আছে)
-    // এবং এটা affiliate ref না (affiliate ref সাধারণত ছোট/সরল কোড, আমাদের
-    // নিজস্ব ref সবসময় UUID ফরম্যাটে থাকে)
-    if(orderRef && orderRef.includes('-') && orderRef.length > 20){
-      document.getElementById('payModal').classList.add('active');
-      document.getElementById('payStep').style.display = 'none';
-      document.getElementById('checkingMsg').classList.add('active');
-      // URL পরিষ্কার করে দিচ্ছি, যাতে রিফ্রেশ/পরে ভিজিট করলে আবার চেক না হয়
+    if(urlParams.get('cancelled')){
       history.replaceState({}, '', window.location.pathname);
-      checkOrderStatus(orderRef, 0);
     }
   });
 </script>
