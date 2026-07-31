@@ -274,5 +274,17 @@
   }
 </script>
 
+<script>
+  // ---------- Affiliate ref ট্র্যাকিং (যেকোনো পেজে ?ref=code থাকলে ধরে রাখে) ----------
+  (function(){
+    try {
+      var r = (new URLSearchParams(window.location.search).get('ref') || '').trim().toLowerCase();
+      if(r && /^[a-z0-9]{3,30}$/.test(r)){
+        localStorage.setItem('hvb_ref', r);
+        localStorage.setItem('hvb_ref_at', String(Date.now()));
+      }
+    } catch(e){}
+  })();
+</script>
 </body>
 </html>
