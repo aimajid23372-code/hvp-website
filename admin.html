@@ -64,9 +64,56 @@
   </div>
   <div id="msg" class="msg"></div>
   <div id="requestsArea"></div>
+
+  <h1 style="margin-top:40px;">অর্ডার খুঁজুন / কোর্স খুলে দিন</h1>
+  <div class="login-box">
+    <input type="text" id="orderQuery" placeholder="নাম্বার / ইমেইল / Invoice ID">
+    <button type="button" onclick="searchOrders()">খুঁজুন</button>
+  </div>
+  <div id="orderMsg" class="msg"></div>
+  <div id="ordersArea"></div>
 </div>
 
 <script>
+  async function adminApi(body){
+    const res = await fetch('/api/admin-orders', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(Object.assign({ adminPassword: document.getElementById('adminPassword').value }, body))
+    });
+    return await res.json();
+  }
+
+  async function searchOrders(){
+    const msg = document.getElementById('orderMsg');
+    const area = document.getElementById('ordersArea');
+    area.innerHTML = ''; msg.textContent = 'খোঁজা হচ্ছে...';
+    const data = await adminApi({ action:'search', query: document.getElementById('orderQuery').value.trim() });
+    if(data.error){ msg.textContent = data.error; return; }
+    const orders = data.orders || [];
+    if(!orders.length){ msg.textContent = 'কোনো অর্ডার পাওয়া যায়নি'; return; }
+    msg.textContent = orders.length + ' টি অর্ডার পাওয়া গেছে';
+    area.innerHTML = orders.map(function(o){
+      return '<div class="card">' +
+        '<div><b>কোর্স:</b> ' + (o.course || '-') + ' &nbsp; <b>স্ট্যাটাস:</b> ' + (o.status || '-') + '</div>' +
+        '<div><b>যোগাযোগ:</b> ' + (o.customer_contact || '-') + '</div>' +
+        '<div style="font-size:12px;opacity:.7"><b>Order ID:</b> ' + o.our_ref + '<br><b>Invoice ID:</b> ' + (o.invoice_id || 'নেই') + '</div>' +
+        (o.status === 'paid' ? '' :
+          '<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">' +
+          '<button class="approve-btn" onclick="orderAction(\'verify\',\'' + o.our_ref + '\')">🔍 ZiniPay-তে যাচাই করুন</button>' +
+          '<button class="approve-btn" onclick="orderAction(\'markPaid\',\'' + o.our_ref + '\')">✅ হাতে হাতে Paid করুন</button>' +
+          '</div>') +
+      '</div>';
+    }).join('');
+  }
+
+  async function orderAction(action, orderId){
+    const msg = document.getElementById('orderMsg');
+    msg.textContent = 'অপেক্ষা করুন...';
+    const data = await adminApi({ action: action, orderId: orderId });
+    msg.textContent = data.result || data.error || 'হয়ে গেছে';
+    searchOrders();
+  }
+
   async function loadRequests(){
     const pw = document.getElementById('adminPassword').value;
     const msg = document.getElementById('msg');
