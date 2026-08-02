@@ -43,7 +43,13 @@ module.exports = async (req, res) => {
 
     let query = supabase.from('orders').select('*');
 
-    if (contact.includes('@')) {
+    // Invoice ID / Order ID (UUID বা ZiniPay invoice id) দিয়েও খোঁজা যাবে
+    const looksLikeId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(contact)
+      || (!contact.includes('@') && /[a-z]/i.test(contact) && contact.length >= 10);
+
+    if (looksLikeId) {
+      query = query.or(`our_ref.eq.${contact},invoice_id.eq.${contact}`);
+    } else if (contact.includes('@')) {
       query = query.ilike('customer_contact', contact.toLowerCase());
     } else {
       const digits = contact.replace(/[^0-9]/g, '');
@@ -81,9 +87,11 @@ module.exports = async (req, res) => {
       }
     }
 
-    const courses = [...new Set(orders.filter(o => o.status === 'paid').map(o => o.course))];
+    const paid = orders.filter(o => o.status === 'paid');
+    const courses = [...new Set(paid.map(o => o.course))];
+    const contactOfPaid = paid.length ? paid[0].customer_contact : null;
 
-    return res.status(200).json({ courses });
+    return res.status(200).json({ courses, contact: contactOfPaid, found: orders.length });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'Server error' });
