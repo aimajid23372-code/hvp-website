@@ -91,10 +91,19 @@
   .withdraw-note{ color:var(--muted); font-size:0.82em; text-align:center; margin-top:8px; }
   .history-title{ font-family:'Sora',sans-serif; font-size:0.95em; margin:20px 0 10px; color:var(--muted); }
   @media (max-width:600px){ .wrap{ padding:30px 18px 70px; } }
+
+  /* Affiliate tutorial চলন্ত ব্যানার */
+  .hvb-marquee{ display:block; background:linear-gradient(90deg, rgba(94,234,212,.14), rgba(167,139,250,.16));
+    border-bottom:1px solid var(--line); overflow:hidden; white-space:nowrap; cursor:pointer; }
+  .hvb-marquee span{ display:inline-block; padding:9px 0; font-weight:600; font-size:.95em;
+    animation:hvbslide 18s linear infinite; }
+  .hvb-marquee:hover span{ animation-play-state:paused; }
+  @keyframes hvbslide{ from{ transform:translateX(100%);} to{ transform:translateX(-100%);} }
 </style>
 </head>
 <body>
 <script src="hvb-ref.js"></script>
+<script src="hvb-track.js"></script>
 
 <header>
   <a href="index.html" class="brand">
@@ -103,6 +112,9 @@
   </a>
   <a href="index.html" class="back-link">← Home</a>
 </header>
+
+<a class="hvb-marquee" href="affiliate-tutorial.html"><span>🎬 Affiliate থেকে ইনকাম করবেন কীভাবে? — এখানে চাপুন, টিউটোরিয়াল ভিডিও দেখুন &nbsp;•&nbsp; ফ্রিতে জয়েন করুন, প্রতি বিক্রিতে কমিশন নিন &nbsp;•&nbsp; ক্লিক করুন 👉</span></a>
+
 
 <div class="wrap">
   <h1>Affiliate Dashboard</h1>

@@ -49,10 +49,12 @@
 </head>
 <body>
 <script src="hvb-ref.js"></script>
+<script src="hvb-track.js"></script>
 
 <header>
   <img src="hvb-logo.png" alt="HVB">
   <b style="font-family:'Sora',sans-serif;">HVB Admin</b>
+  <a href="admin-analytics.html" style="margin-left:auto;font-size:.9em;background:linear-gradient(90deg,var(--cyan),var(--violet));color:#0A0D14;padding:7px 14px;border-radius:8px;font-weight:700;">📊 সব হিস্ট্রি দেখুন</a>
 </header>
 
 <div class="wrap">
@@ -72,6 +74,17 @@
   </div>
   <div id="orderMsg" class="msg"></div>
   <div id="ordersArea"></div>
+
+  <h1 style="margin-top:44px;">পুরোনো স্টুডেন্ট যোগ করুন</h1>
+  <p style="color:var(--muted);font-size:.9em;margin-bottom:10px;">
+    প্রতি লাইনে একজন — <b>নাম, নাম্বার, প্যাকেজ</b> এভাবে লিখুন। প্যাকেজ: <b>bundle</b> (Long+Short) বা <b>short</b>।<br>
+    উদাহরণ:<br>
+    <span style="font-family:monospace;">করিম, 01712345678, bundle<br>রহিম, 01898765432, short</span>
+  </p>
+  <textarea id="bulkStudents" rows="8" placeholder="করিম, 01712345678, bundle" style="width:100%;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--text);font-family:inherit;font-size:.95em;"></textarea>
+  <button type="button" onclick="bulkAdd()" class="approve-btn" style="margin-top:10px;">➕ সবাইকে যোগ করুন</button>
+  <div id="bulkMsg" class="msg" style="margin-top:10px;"></div>
+
 </div>
 
 <script>
@@ -81,6 +94,15 @@
       body: JSON.stringify(Object.assign({ adminPassword: document.getElementById('adminPassword').value }, body))
     });
     return await res.json();
+  }
+
+
+  async function bulkAdd(){
+    const msg = document.getElementById('bulkMsg');
+    msg.textContent = 'যোগ করা হচ্ছে...';
+    const data = await adminApi({ action:'bulkAdd', students: document.getElementById('bulkStudents').value });
+    msg.textContent = data.result || data.error || 'হয়ে গেছে';
+    if(data.result) document.getElementById('bulkStudents').value = '';
   }
 
   async function searchOrders(){

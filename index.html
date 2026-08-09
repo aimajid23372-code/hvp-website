@@ -185,10 +185,19 @@
     .hero{ padding:60px 20px 40px; }
     section{ padding:44px 20px; }
   }
+
+  /* Affiliate tutorial চলন্ত ব্যানার */
+  .hvb-marquee{ display:block; background:linear-gradient(90deg, rgba(94,234,212,.14), rgba(167,139,250,.16));
+    border-bottom:1px solid var(--line); overflow:hidden; white-space:nowrap; cursor:pointer; }
+  .hvb-marquee span{ display:inline-block; padding:9px 0; font-weight:600; font-size:.95em;
+    animation:hvbslide 18s linear infinite; }
+  .hvb-marquee:hover span{ animation-play-state:paused; }
+  @keyframes hvbslide{ from{ transform:translateX(100%);} to{ transform:translateX(-100%);} }
 </style>
 </head>
 <body>
 <script src="hvb-ref.js"></script>
+<script src="hvb-track.js"></script>
 
 <header>
   <div class="brand">
@@ -213,24 +222,28 @@
         <a href="free-lesson.html">Free Lesson</a>
         <a href="my-courses.html">আমার কোর্স</a>
         <a href="affiliate.html">Affiliate Program</a>
+        <a href="affiliate-tutorial.html">Affiliate Tutorial</a>
         <a href="index.html#about">About Us</a>
       </div>
     </div>
   </nav>
 </header>
 
+<a class="hvb-marquee" href="affiliate-tutorial.html"><span>🎬 Affiliate থেকে ইনকাম করবেন কীভাবে? — এখানে চাপুন, টিউটোরিয়াল ভিডিও দেখুন &nbsp;•&nbsp; ফ্রিতে জয়েন করুন, প্রতি বিক্রিতে কমিশন নিন &nbsp;•&nbsp; ক্লিক করুন 👉</span></a>
+
+
 <div class="hero">
   <div class="eyebrow"><span class="pulse"></span> Bangladesh's #1 AI Video Academy</div>
-  <h1>AI দিয়ে বানান <span class="grad-text">Trending</span> ও Professional ভিডিও — একদম নিজে থেকে</h1>
-  <p class="sub">আমাদের নিজের আইডিতে থাকা ভিডিও ও বর্তমান ভাইরাল ট্রেন্ড থেকেই শেখানো হয় — Script, Prompt, Editing সবকিছু AI দিয়ে, ধাপে ধাপে।</p>
+  <h1>ফোন হাতে নিয়েই বানান <span class="grad-text">ভাইরাল</span> ভিডিও — AI দিয়ে, একদম নিজে</h1>
+  <p class="sub">ক্যামেরা লাগবে না, এডিটিং জানা লাগবে না। যে ভিডিওগুলো এখন লাখ লাখ ভিউ পাচ্ছে, ঠিক সেগুলোই কীভাবে বানানো হয় — Script, Prompt থেকে Editing পর্যন্ত হাতে-কলমে দেখানো হয়, একদম শূন্য থেকে।</p>
   <div class="hero-actions">
-    <a href="#courses" class="btn-primary lg" style="display:inline-block;">কোর্স দেখুন</a>
-    <a href="free-lesson.html" class="btn-ghost" style="display:inline-block;">Free Lesson দেখুন</a>
+    <a href="#courses" class="btn-primary lg" style="display:inline-block;">🚀 আজই শুরু করুন</a>
+    <a href="free-lesson.html" class="btn-ghost" style="display:inline-block;">প্রথমে ফ্রি লেসন দেখুন</a>
   </div>
 
   <div class="trust-row">
-    <span>✅ <b>ইনস্ট্যান্ট এক্সেস</b></span>
-    <span>🔒 <b>নিরাপদ পেমেন্ট</b></span>
+    <span>⚡ <b>পেমেন্টের সাথে সাথেই কোর্স</b></span>
+    <span>♾️ <b>আজীবন এক্সেস</b></span>
     <span>🇧🇩 <b>bKash · Nagad · Rocket</b></span>
   </div>
 </div>
@@ -238,17 +251,17 @@
 <section id="courses">
   <div class="section-head">
     <span class="tag mono">// COURSES</span>
-    <h2>আমাদের কোর্সসমূহ</h2>
-    <p>প্রতিনিয়তই নতুন কোর্স যোগ হচ্ছে — এখনই শুরু করুন</p>
+    <h2>আপনার জন্য কোনটা?</h2>
+    <p>একবার কিনলেই আজীবন — নতুন আপডেট এলে সেটাও ফ্রি পাবেন।</p>
   </div>
   <div class="courses">
 
     <a class="course-card" href="course-bundle.html">
       <div class="course-thumb"><div class="play">▶</div></div>
       <div class="course-body">
-        <span class="badge">জনপ্রিয়</span>
+        <span class="badge">🔥 সবচেয়ে জনপ্রিয়</span>
         <h3>Long + Short Video Course</h3>
-        <p>২-৫ মিনিটের Long ভিডিও ও ৩৫ সেকেন্ডের নিচের Short ভিডিও — দুই ধরনের ভিডিও তৈরিই একসাথে শিখুন।</p>
+        <p>Short আর Long — দুইটাই একসাথে। YouTube-এর ২-৫ মিনিটের ভিডিও থেকে TikTok/Reels-এর ভাইরাল ক্লিপ, পুরো A থেকে Z। সবচেয়ে বেশি মানুষ এটাই নেয়।</p>
         <div class="course-footer">
           <span class="price">৯৫০ ৳</span>
           <button class="buy-btn">বিস্তারিত দেখুন</button>
@@ -261,7 +274,7 @@
       <div class="course-body">
         <span class="badge">শর্ট কোর্স</span>
         <h3>Short Video Course</h3>
-        <p>৩৫ সেকেন্ডের নিচের ভাইরাল-স্টাইলের Short ভিডিও দ্রুত বানানোর কৌশল।</p>
+        <p>কম খরচে শুরু করতে চান? ৩৫ সেকেন্ডের ভাইরাল Short ভিডিও বানানোর পুরো কৌশল — আজ শিখে কালই পোস্ট করতে পারবেন।</p>
         <div class="course-footer">
           <span class="price">৪৯৯ ৳</span>
           <button class="buy-btn">বিস্তারিত দেখুন</button>
@@ -275,28 +288,28 @@
 <section id="why">
   <div class="section-head">
     <span class="tag mono">// WHY HVB</span>
-    <h2>কেন HVB বেছে নিবেন</h2>
+    <h2>কেন হাজারো মানুষ HVB-তেই আসে</h2>
   </div>
   <div class="why">
     <div class="why-item">
       <div class="icon">🎯</div>
       <h4>সহজ, ধাপে ধাপে শেখানো</h4>
-      <p>একদম বিগিনার ধরে নিয়ে, উদাহরণ দিয়ে শেখানো হয়।</p>
+      <p>ধরে নিয়েছি আপনি কিছুই জানেন না। প্রতিটা ক্লিক, প্রতিটা প্রম্পট স্ক্রিনে দেখিয়ে বাংলায় বোঝানো।</p>
     </div>
     <div class="why-item">
       <div class="icon">⚡</div>
       <h4>Instant Access</h4>
-      <p>আমাদের কোর্স রেকর্ড করা — তাই পেমেন্ট করার সাথে সাথেই এক্সেস পেয়ে যাবেন।</p>
+      <p>কোনো অপেক্ষা নেই। পেমেন্ট শেষ হওয়ার ১০ সেকেন্ডের মধ্যেই কোর্স আপনার হাতে।</p>
     </div>
     <div class="why-item">
       <div class="icon">🤝</div>
       <h4>Full Support + Premium Group</h4>
-      <p>কোর্স কিনলে HVB Premium গ্রুপের লিংক পাবেন, যেখানে নিয়মিত আপডেট দেওয়া হয়। প্রয়োজনে সরাসরি আমাদের সাথেও কথা বলতে পারবেন।</p>
+      <p>আটকে গেলে একা থাকবেন না। HVB Premium গ্রুপে নিয়মিত নতুন ট্রিক, আর দরকারে সরাসরি আমাদের সাথে কথা।</p>
     </div>
     <div class="why-item">
       <div class="icon">🔒</div>
       <h4>লোকাল, নিরাপদ পেমেন্ট</h4>
-      <p>bKash, Nagad বা Rocket দিয়ে সরাসরি পেমেন্ট করুন।</p>
+      <p>bKash, Nagad, Rocket — যেটা আপনার হাতে আছে সেটা দিয়েই, কার্ড লাগবে না।</p>
     </div>
   </div>
 </section>
@@ -307,7 +320,7 @@
     <h2>About Us</h2>
   </div>
   <div class="why-item" style="max-width:640px; margin:0 auto;">
-    <p>HVB (Hyper Vision Bangla) একটা AI ভিডিও তৈরির শিক্ষামূলক প্ল্যাটফর্ম। আমরা বাংলাভাষী মানুষদের সহজভাবে AI টুলস ব্যবহার করে প্রফেশনাল মানের ভিডিও কনটেন্ট তৈরি করা শেখাই — এখানে আপনার প্রতিষ্ঠানের গল্প/মিশন যোগ করুন।</p>
+    <p>HVB (Hyper Vision Bangla) শুরু হয়েছিল একটা সহজ বিশ্বাস থেকে — ভালো ভিডিও বানাতে দামি ক্যামেরা বা বিদেশি কোর্স লাগে না, শুধু সঠিক পথটা জানা লাগে। আমরা নিজেরা যেসব ভিডিও বানিয়ে লাখ লাখ ভিউ পেয়েছি, ঠিক সেই পদ্ধতিগুলোই বাংলায়, সহজ করে শিখিয়ে দিই। আপনার ফোনটাই যথেষ্ট — বাকিটা আমরা দেখিয়ে দেব।</p>
   </div>
 </section>
 

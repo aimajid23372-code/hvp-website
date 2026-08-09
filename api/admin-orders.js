@@ -3,6 +3,7 @@
 // এবং দরকার হলে হাতে হাতে "paid" করে কোর্স খুলে দেওয়া।
 
 const { createClient } = require('@supabase/supabase-js');
+const crypto = require('crypto');
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
@@ -90,6 +91,47 @@ module.exports = async (req, res) => {
         .eq('our_ref', orderId);
       if (error) return res.status(500).json({ error: error.message });
       return res.status(200).json({ result: '✅ অর্ডারটি paid করা হয়েছে — কাস্টমার এখন কোর্স পাবেন।' });
+    }
+
+
+    if (action === 'bulkAdd') {
+      // পুরোনো স্টুডেন্ট যোগ করা — প্রতি লাইনে: নাম, নাম্বার, প্যাকেজ(bundle/short)
+      const lines = String(req.body.students || '')
+        .split('\n')
+        .map((l) => l.trim())
+        .filter(Boolean);
+      if (!lines.length) return res.status(400).json({ error: 'লিস্ট খালি' });
+
+      const rows = [];
+      const bad = [];
+      for (const line of lines) {
+        const parts = line.split(/[,\t;|]+/).map((x) => x.trim());
+        const name = parts[0] || '';
+        const contact = parts[1] || '';
+        let course = (parts[2] || 'bundle').toLowerCase();
+        if (course !== 'short') course = 'bundle';
+        if (!contact) {
+          bad.push(line);
+          continue;
+        }
+        rows.push({
+          customer_name: name || 'পুরোনো স্টুডেন্ট',
+          customer_contact: contact,
+          course,
+          amount: course === 'short' ? 499 : 950,
+          our_ref: crypto.randomUUID(),
+          status: 'paid',
+          payment_method: 'old-student',
+        });
+      }
+
+      if (!rows.length) return res.status(400).json({ error: 'কোনো সঠিক লাইন পাওয়া যায়নি' });
+
+      const { error } = await supabase.from('orders').insert(rows);
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json({
+        result: '✅ ' + rows.length + ' জন স্টুডেন্ট যোগ হয়েছে' + (bad.length ? ' (বাদ পড়েছে ' + bad.length + ' লাইন)' : ''),
+      });
     }
 
     return res.status(400).json({ error: 'Invalid action' });

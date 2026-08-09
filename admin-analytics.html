@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — সব হিস্ট্রি ও পরিসংখ্যান | HVB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Sora:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#090C13; --surface:#131826; --surface-2:#1A2133; --line:#242C42;
+    --text:#EAF0FF; --muted:#8891A8; --cyan:#5EEAD4; --violet:#A78BFA;
+    --grad: linear-gradient(90deg, var(--cyan), var(--violet));
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{ background:var(--bg); color:var(--text); font-family:'Hind Siliguri', sans-serif; line-height:1.6; }
+  a{ color:inherit; text-decoration:none; }
+  header{ position:sticky; top:0; z-index:5; background:rgba(9,12,19,0.92); border-bottom:1px solid var(--line);
+    padding:14px 20px; display:flex; align-items:center; gap:10px; }
+  header img{ width:32px; height:32px; border-radius:8px; }
+  .wrap{ max-width:1100px; margin:0 auto; padding:28px 18px 80px; }
+  h1{ font-family:'Sora',sans-serif; font-size:1.5em; margin-bottom:16px; }
+  h2{ font-family:'Sora',sans-serif; font-size:1.1em; margin:30px 0 12px; }
+  .login-box{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+  .login-box input, .login-box select{
+    flex:1; min-width:150px; padding:12px 14px; background:var(--surface); border:1px solid var(--line);
+    border-radius:8px; color:var(--text); font-size:0.95em; font-family:inherit;
+  }
+  .login-box button{ background:var(--grad); color:#0A0D14; border:none; padding:0 22px; border-radius:8px; font-weight:700; cursor:pointer; }
+  .cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; }
+  .stat{ background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:16px; }
+  .stat b{ display:block; font-family:'Sora',sans-serif; font-size:1.7em; color:var(--cyan); }
+  .stat span{ color:var(--muted); font-size:0.85em; }
+  table{ width:100%; border-collapse:collapse; font-size:0.86em; background:var(--surface);
+    border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+  th,td{ padding:9px 10px; text-align:left; border-bottom:1px solid var(--line); }
+  th{ color:var(--muted); font-weight:600; background:var(--surface-2); }
+  tr:last-child td{ border-bottom:none; }
+  .scroll{ overflow-x:auto; }
+  .bars{ display:flex; align-items:flex-end; gap:4px; height:120px; background:var(--surface);
+    border:1px solid var(--line); border-radius:12px; padding:12px; overflow-x:auto; }
+  .bar{ flex:0 0 18px; background:var(--grad); border-radius:4px 4px 0 0; min-height:3px; position:relative; }
+  .bar span{ position:absolute; bottom:-18px; left:50%; transform:translateX(-50%); font-size:9px; color:var(--muted); }
+  .msg{ font-size:0.9em; color:var(--muted); margin:10px 0; }
+  .pill{ background:var(--surface-2); border:1px solid var(--line); padding:2px 8px; border-radius:20px; font-size:0.8em; }
+  .paid{ color:#34D399; } .pending{ color:#FBBF24; }
+</style>
+</head>
+<body>
+<script src="hvb-ref.js"></script>
+<script src="hvb-track.js"></script>
+<header>
+  <img src="hvb-logo.png" alt="HVB">
+  <b style="font-family:'Sora',sans-serif;">HVB Admin</b>
+  <span style="margin-left:auto;font-size:.85em"><a href="admin.html" class="pill">অর্ডার / উইথড্র</a></span>
+</header>
+
+<div class="wrap">
+  <h1>📊 সব হিস্ট্রি — কে ঢুকল, কে কিনল</h1>
+  <div class="login-box">
+    <input type="password" id="pw" placeholder="Admin পাসওয়ার্ড">
+    <select id="days">
+      <option value="1">আজ</option>
+      <option value="7">গত ৭ দিন</option>
+      <option value="30" selected>গত ৩০ দিন</option>
+      <option value="90">গত ৯০ দিন</option>
+    </select>
+    <button type="button" onclick="load()">দেখুন</button>
+  </div>
+  <div id="msg" class="msg"></div>
+  <div id="out"></div>
+</div>
+
+<script>
+function esc(s){ return String(s==null?'':s).replace(/[<>&]/g, function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;'}[c];}); }
+function dt(s){ try{ var d=new Date(s); return d.toLocaleDateString('bn-BD')+' '+d.toLocaleTimeString('bn-BD',{hour:'2-digit',minute:'2-digit'}); }catch(e){ return s; } }
+
+async function load(){
+  var msg = document.getElementById('msg'), out = document.getElementById('out');
+  out.innerHTML=''; msg.textContent = 'লোড হচ্ছে...';
+  var res = await fetch('/api/admin-analytics', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ adminPassword: document.getElementById('pw').value, days: document.getElementById('days').value })
+  });
+  var d = await res.json();
+  if(d.error){ msg.textContent = '⚠️ ' + d.error; return; }
+  msg.textContent = '';
+
+  var s = d.summary;
+  var html = '<div class="cards">' +
+    stat(s.unique_visitors, 'আলাদা ভিজিটর') +
+    stat(s.total_hits, 'মোট ভিজিট') +
+    stat(s.payment_clicks, 'পেমেন্টে ক্লিক') +
+    stat(s.orders_total, 'মোট অর্ডার') +
+    stat(s.orders_paid, 'টাকা পেয়েছি') +
+    stat(s.affiliates_total, 'মোট Affiliate') +
+  '</div>';
+
+  // দিন অনুযায়ী গ্রাফ
+  var max = Math.max.apply(null, d.daily.map(function(x){return x.visitors;}).concat([1]));
+  html += '<h2>দিন অনুযায়ী ভিজিটর</h2><div class="bars">' + d.daily.map(function(x){
+    return '<div class="bar" title="'+x.day+' — '+x.visitors+' জন" style="height:'+Math.round(x.visitors/max*90)+'%"><span>'+x.day.slice(8)+'</span></div>';
+  }).join('') + '</div>';
+
+  html += '<h2>কোন পেজে কতবার</h2>' + table(['পেজ','ভিজিট'], d.topPages.map(function(p){ return [esc(p.page), p.hits]; }));
+
+  html += '<h2>কোন Affiliate লিংক থেকে কত ভিজিট</h2>' +
+    (d.topRefs.length ? table(['Ref code','ভিজিট'], d.topRefs.map(function(r){ return [esc(r.ref_code), r.hits]; }))
+                      : '<div class="msg">এখনো কোনো refer লিংক থেকে ভিজিট আসেনি।</div>');
+
+  html += '<h2>কে কখন ঢুকল (সর্বশেষ ২০০ জন)</h2>' + table(
+    ['ভিজিটর','কতবার','প্রথম','শেষ','মূল পেজ','Ref','পেমেন্টে ক্লিক'],
+    d.visitors.map(function(v){ return [
+      esc(v.visitor_id).slice(0,8), v.visits, dt(v.first), dt(v.last), esc(v.top_page||'-'), esc(v.ref_code||'-'), v.payment_click
+    ]; })
+  );
+
+  html += '<h2>অর্ডার হিস্ট্রি</h2>' + table(
+    ['তারিখ','নাম','যোগাযোগ','কোর্স','টাকা','স্ট্যাটাস','Ref'],
+    d.orders.map(function(o){ return [
+      dt(o.created_at), esc(o.customer_name), esc(o.customer_contact), esc(o.course), o.amount,
+      '<span class="'+(o.status==='paid'?'paid':'pending')+'">'+esc(o.status)+'</span>', esc(o.affiliate_ref||'-')
+    ]; })
+  );
+
+  html += '<h2>Affiliate লিস্ট</h2>' + table(
+    ['তারিখ','নাম','Ref code','যোগাযোগ'],
+    d.affiliates.map(function(a){ return [dt(a.created_at), esc(a.name), esc(a.ref_code), esc(a.contact)]; })
+  );
+
+  out.innerHTML = html;
+}
+
+function stat(n, label){ return '<div class="stat"><b>'+n+'</b><span>'+label+'</span></div>'; }
+function table(head, rows){
+  if(!rows.length) return '<div class="msg">কোনো তথ্য নেই।</div>';
+  return '<div class="scroll"><table><thead><tr>' + head.map(function(h){return '<th>'+h+'</th>';}).join('') +
+    '</tr></thead><tbody>' + rows.map(function(r){
+      return '<tr>' + r.map(function(c){ return '<td>'+c+'</td>'; }).join('') + '</tr>';
+    }).join('') + '</tbody></table></div>';
+}
+</script>
+</body>
+</html>
