@@ -38,6 +38,10 @@ module.exports = async (req, res) => {
       return res.status(401).json({ error: 'ভুল Admin পাসওয়ার্ড' });
     }
 
+    if (action === 'auth') {
+      return res.status(200).json({ ok: true });
+    }
+
     if (action === 'search') {
       const q = String(query || '').trim();
       if (!q) return res.status(400).json({ error: 'কিছু একটা লিখুন' });
