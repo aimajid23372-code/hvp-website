@@ -29,7 +29,7 @@ module.exports = async (req, res) => {
     const ip = String(ipRaw).split(',')[0].trim().slice(0, 60) || null;
     const ua = String(req.headers['user-agent'] || '').slice(0, 300) || null;
 
-    await supabase.from('site_events').insert({
+    const { error: insErr } = await supabase.from('site_events').insert({
       event,
       page,
       visitor_id: visitorId,
@@ -40,7 +40,8 @@ module.exports = async (req, res) => {
       meta: body.meta || null,
     });
 
-    return res.status(200).json({ ok: true });
+    if (insErr) console.error('track insert error:', insErr.message);
+    return res.status(200).json({ ok: true, stored: !insErr, error: insErr ? insErr.message : null });
   } catch (err) {
     console.error('track error:', err);
     return res.status(200).json({ ok: true });
