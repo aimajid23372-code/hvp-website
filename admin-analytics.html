@@ -48,7 +48,6 @@
 </head>
 <body>
 <script src="hvb-ref.js"></script>
-<script src="hvb-track.js"></script>
 <header>
   <img src="hvb-logo.png" alt="HVB">
   <b style="font-family:'Sora',sans-serif;">HVB Admin</b>
@@ -66,6 +65,17 @@
       <option value="90">গত ৯০ দিন</option>
     </select>
     <button type="button" onclick="load()">দেখুন</button>
+  </div>
+  <div class="stat" style="margin-bottom:16px">
+    <span style="color:var(--muted);font-size:.9em;line-height:1.8">
+      <b style="font-size:1em;color:var(--text)">এই পেজটা কীভাবে পড়বেন:</b><br>
+      • <b>আলাদা ভিজিটর</b> = কতজন <u>আলাদা মানুষ/ফোন</u> সাইটে ঢুকেছে। একজন ১০ বার ঢুকলেও এখানে ১ ধরা হয়।<br>
+      • <b>মোট ভিজিট</b> = সব মিলিয়ে কতবার পেজ খোলা হয়েছে (একই লোক বারবার ঢুকলে বাড়বে)।<br>
+      • <b>পেমেন্টে ক্লিক</b> = কতজন "কিনুন / পেমেন্ট" বাটনে চাপ দিয়েছে (কিনুক বা না কিনুক)।<br>
+      • সংখ্যা কম দেখালে ঘাবড়াবেন না — এই হিসাব <b>শুধু যেদিন থেকে ট্র্যাকিং চালু হয়েছে</b> তার পর থেকে গোনা হয়, তার আগের ভিজিট কোথাও জমা নেই।<br>
+      • Admin পেজে আপনার নিজের ঢোকা এখন আর গোনা হয় না, তাই সংখ্যা আসল ভিজিটরের।<br>
+      • কেউ ইনকগনিটো/অন্য ফোন/ব্রাউজারে ঢুকলে সে নতুন ভিজিটর হিসেবে গোনা হয়।
+    </span>
   </div>
   <div id="msg" class="msg"></div>
   <div id="out"></div>
