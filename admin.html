@@ -45,11 +45,13 @@
   .empty{ color:var(--muted); text-align:center; padding:40px 0; }
   .msg{ font-size:0.88em; margin-bottom:16px; }
   .msg.error{ color:#F87171; }
+  .card{ background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:12px; }
+  .hint{ color:var(--muted); font-size:.9em; margin:-10px 0 14px; }
+  .sec{ border-top:1px solid var(--line); margin-top:38px; padding-top:8px; }
 </style>
 </head>
 <body>
 <script src="hvb-ref.js"></script>
-<script src="hvb-track.js"></script>
 
 <header>
   <img src="hvb-logo.png" alt="HVB">
@@ -58,33 +60,49 @@
 </header>
 
 <div class="wrap">
-  <h1>Withdraw Requests</h1>
-
+  <h1>HVB Admin Panel</h1>
   <div class="login-box">
     <input type="password" id="adminPassword" placeholder="Admin পাসওয়ার্ড দিন">
-    <button type="button" onclick="loadRequests()">Load</button>
+    <button type="button" onclick="doLogin()">ঢুকুন</button>
   </div>
   <div id="msg" class="msg"></div>
-  <div id="requestsArea"></div>
 
-  <h1 style="margin-top:40px;">অর্ডার খুঁজুন / কোর্স খুলে দিন</h1>
-  <div class="login-box">
-    <input type="text" id="orderQuery" placeholder="নাম্বার / ইমেইল / Invoice ID">
-    <button type="button" onclick="searchOrders()">খুঁজুন</button>
+  <div id="panel" style="display:none">
+
+    <div class="sec">
+      <h1>১) Withdraw Requests — Affiliate-দের টাকা চাওয়ার লিস্ট</h1>
+      <p class="hint">যেসব Affiliate কমিশনের টাকা চেয়েছে তারা এখানে আসবে। টাকা bKash/Nagad-এ পাঠানোর পর "Approve" চাপুন।</p>
+      <div id="requestsArea"></div>
+    </div>
+
+    <div class="sec">
+      <h1>২) অর্ডার খুঁজুন / কোর্স খুলে দিন</h1>
+      <p class="hint">
+        কেউ যদি বলে "টাকা দিয়েছি কিন্তু কোর্স পাচ্ছি না" — তার <b>নাম্বার, ইমেইল বা Invoice ID</b> এখানে লিখে খুঁজুন।<br>
+        • <b>🔍 ZiniPay-তে যাচাই করুন</b> = ZiniPay-কে জিজ্ঞেস করবে টাকা সত্যিই এসেছে কিনা; এসে থাকলে নিজে থেকেই কোর্স খুলে দেবে।<br>
+        • <b>✅ হাতে হাতে Paid করুন</b> = আপনি নিজে নিশ্চিত হয়ে থাকলে জোর করে কোর্স খুলে দেবে (ZiniPay-তে না পাওয়া গেলে এটা ব্যবহার করুন)।
+      </p>
+      <div class="login-box">
+        <input type="text" id="orderQuery" placeholder="নাম্বার / ইমেইল / Invoice ID">
+        <button type="button" onclick="searchOrders()">খোঁজুন</button>
+      </div>
+      <div id="orderMsg" class="msg"></div>
+      <div id="ordersArea"></div>
+    </div>
+
+    <div class="sec">
+      <h1>৩) পুরোনো স্টুডেন্ট যোগ করুন</h1>
+      <p class="hint">
+        ওয়েবসাইট হওয়ার আগে যারা কোর্স কিনেছিল তাদের এখানে যোগ করুন — যোগ করলেই তারা My Courses-এ নিজের নাম্বার দিয়ে কোর্স পাবে।<br>
+        প্রতি লাইনে একজন — <b>নাম, নাম্বার, প্যাকেজ</b>। প্যাকেজ: <b>bundle</b> (Long+Short) বা <b>short</b>।<br>
+        <span style="font-family:monospace;">করিম, 01712345678, bundle<br>রহিম, 01898765432, short</span>
+      </p>
+      <textarea id="bulkStudents" rows="8" placeholder="করিম, 01712345678, bundle" style="width:100%;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--text);font-family:inherit;font-size:.95em;"></textarea>
+      <button type="button" onclick="bulkAdd()" class="approve-btn" style="margin-top:10px;">➕ সবাইকে যোগ করুন</button>
+      <div id="bulkMsg" class="msg" style="margin-top:10px;"></div>
+    </div>
+
   </div>
-  <div id="orderMsg" class="msg"></div>
-  <div id="ordersArea"></div>
-
-  <h1 style="margin-top:44px;">পুরোনো স্টুডেন্ট যোগ করুন</h1>
-  <p style="color:var(--muted);font-size:.9em;margin-bottom:10px;">
-    প্রতি লাইনে একজন — <b>নাম, নাম্বার, প্যাকেজ</b> এভাবে লিখুন। প্যাকেজ: <b>bundle</b> (Long+Short) বা <b>short</b>।<br>
-    উদাহরণ:<br>
-    <span style="font-family:monospace;">করিম, 01712345678, bundle<br>রহিম, 01898765432, short</span>
-  </p>
-  <textarea id="bulkStudents" rows="8" placeholder="করিম, 01712345678, bundle" style="width:100%;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--text);font-family:inherit;font-size:.95em;"></textarea>
-  <button type="button" onclick="bulkAdd()" class="approve-btn" style="margin-top:10px;">➕ সবাইকে যোগ করুন</button>
-  <div id="bulkMsg" class="msg" style="margin-top:10px;"></div>
-
 </div>
 
 <script>
@@ -96,6 +114,21 @@
     return await res.json();
   }
 
+
+  async function doLogin(){
+    var msg = document.getElementById('msg');
+    msg.className = 'msg'; msg.textContent = 'চেক করা হচ্ছে...';
+    var data = await adminApi({ action:'auth' });
+    if(data && data.ok){
+      msg.textContent = '';
+      document.getElementById('panel').style.display = 'block';
+      loadRequests();
+    } else {
+      document.getElementById('panel').style.display = 'none';
+      msg.className = 'msg error';
+      msg.textContent = '⚠️ ' + ((data && data.error) || 'ভুল পাসওয়ার্ড');
+    }
+  }
 
   async function bulkAdd(){
     const msg = document.getElementById('bulkMsg');
@@ -204,7 +237,7 @@
   }
 
   async function approveRequest(id, pw){
-    if(!confirm('নিশ্চিত করছেন যে আপনি নিজে bKash/Nagad দিয়ে টাকা পাঠিয়ে দিয়েছেন?')) return;
+    if(!confirm('নিশ্চিত করছেন যে আপনি নিজে bKash/Nagad দিয়ে টাকা পাॠিয়ে দিয়েছেন?')) return;
     try {
       const res = await fetch('/api/admin-withdrawals', {
         method: 'POST',
