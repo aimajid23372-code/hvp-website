@@ -122,7 +122,7 @@ module.exports = async (req, res) => {
           customer_name: name || 'পুরোনো স্টুডেন্ট',
           customer_contact: contact,
           course,
-          amount: course === 'short' ? 499 : ৮৫০,
+          amount: course === 'short' ? 499 : 950,
           our_ref: crypto.randomUUID(),
           status: 'paid',
           payment_method: 'old-student',
