@@ -11,7 +11,7 @@ const supabase = createClient(
 );
 
 const COURSES = {
-  bundle: { title: 'Long + Short Video Course', amount: ৮৫০ },
+  bundle: { title: 'Long + Short Video Course', amount: 950 },
   short: { title: 'Short Video Course', amount: 499 },
 };
 
