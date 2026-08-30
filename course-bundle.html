@@ -190,8 +190,7 @@
         <a href="free-lesson.html">Free Lesson</a>
         <a href="my-courses.html">আমার কোর্স</a>
         <a href="affiliate.html">Affiliate Program</a>
-        <a href="affiliate-tutorial.html">Affiliate Tutorial</a>
-        <a href="index.html#about">About Us</a>
+                <a href="about.html">About Us</a>
       </div>
     </div>
   </div>
@@ -588,5 +587,19 @@ THUMBNAIL PROMPT:
 
 
 <a class="hvb-msgr-float" href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" aria-label="Messenger-এ প্রশ্ন করুন"><i>💬</i> Messenger-এ প্রশ্ন করুন</a>
+
+<script>
+/* HVB scroll reveal */
+(function(){
+  var sel = 'section, .hvb-stats, .hvb-policy-box, .course-card, .why-item, .hvb-idcard, .hvb-contact-card, .payment-strip, .hvb-tut-cta';
+  var els = [];
+  document.querySelectorAll(sel).forEach(function(el){ el.classList.add('hvb-reveal'); els.push(el); });
+  if(!('IntersectionObserver' in window)){ els.forEach(function(e){ e.classList.add('is-in'); }); return; }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('is-in'); io.unobserve(en.target); } });
+  }, { threshold:0.08, rootMargin:'0px 0px -40px 0px' });
+  els.forEach(function(el){ io.observe(el); });
+})();
+</script>
 </body>
 </html>
