@@ -261,3 +261,44 @@ footer{ border-top:1px solid var(--line-soft) !important; padding:44px 24px 34px
   .hero h1{ font-size:2.05em !important; }
   .hvb-stat b{ font-size:1.45em; }
 }
+
+
+/* ===== Messenger float + contact + policy (v3) ===== */
+.hvb-msgr-float{
+  position:fixed; right:18px; bottom:18px; z-index:60;
+  display:flex; align-items:center; gap:9px;
+  padding:12px 18px; border-radius:999px;
+  background:linear-gradient(90deg,#00B2FF,#006AFF);
+  color:#fff !important; -webkit-text-fill-color:#fff;
+  font-weight:700; font-size:0.92em; text-decoration:none;
+  box-shadow:0 10px 30px rgba(0,106,255,.45);
+  transition:transform .18s ease, box-shadow .18s ease;
+}
+.hvb-msgr-float:hover{ transform:translateY(-3px); box-shadow:0 14px 38px rgba(0,106,255,.6); }
+.hvb-msgr-float i{ font-style:normal; font-size:1.15em; }
+@media (max-width:640px){
+  .hvb-msgr-float{ right:12px; bottom:12px; padding:11px 15px; font-size:0.85em; }
+}
+
+.hvb-contact-grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;
+}
+.hvb-contact-card{
+  display:flex; gap:14px; align-items:flex-start;
+  background:var(--surface,#131826); border:1px solid var(--line,#242C42);
+  border-radius:14px; padding:20px; transition:border-color .2s, transform .2s;
+}
+.hvb-contact-card:hover{ border-color:var(--cyan,#5EEAD4); transform:translateY(-2px); }
+.hvb-contact-card i{ font-style:normal; font-size:1.5em; line-height:1; }
+.hvb-contact-card b{ display:block; color:var(--text,#EAF0FF); -webkit-text-fill-color:currentColor; font-size:1em; }
+.hvb-contact-card small{ display:block; color:var(--muted,#8891A8); font-size:0.86em; margin-top:5px; }
+
+.hvb-policy-box{
+  background:var(--surface,#131826); border:1px solid var(--line,#242C42);
+  border-left:3px solid var(--cyan,#5EEAD4);
+  border-radius:14px; padding:22px 24px; max-width:760px; margin:0 auto;
+}
+.hvb-policy-box h4{ font-size:1.05em; margin-bottom:10px; color:var(--text,#EAF0FF); -webkit-text-fill-color:currentColor; }
+.hvb-policy-box p{ color:var(--muted,#8891A8); font-size:0.92em; margin-bottom:8px; }
+.hvb-policy-box ul{ color:var(--muted,#8891A8); font-size:0.92em; padding-left:20px; margin-top:6px; }
+.hvb-policy-box li{ margin-bottom:6px; }
