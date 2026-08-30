@@ -56,7 +56,7 @@ header{
 .brand:hover img{ transform:rotate(-4deg) scale(1.06); box-shadow:0 10px 28px -8px rgba(155,140,255,.75); }
 .brand-text b{
   font-size:1.22em !important; letter-spacing:.14em !important;
-  background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent;
+  color:var(--cyan); -webkit-text-fill-color:var(--cyan);
 }
 .brand-text span{ font-size:.62em !important; letter-spacing:.16em !important; color:var(--muted); }
 
@@ -104,7 +104,7 @@ nav .links a:hover::after{ width:100%; }
   font-size:clamp(2.05em,6.4vw,3.55em) !important;
   line-height:1.22 !important; letter-spacing:-.015em;
 }
-.hero h1 .grad-text{ background:var(--grad) !important; -webkit-background-clip:text; background-clip:text; }
+.hero h1 .grad-text{ background:none !important; -webkit-text-fill-color:currentColor !important; color:var(--cyan) !important; text-shadow:0 0 26px rgba(94,234,212,.35); }
 .hero p.sub{ font-size:1.14em !important; max-width:620px !important; color:#B9C3D9 !important; }
 .trust-row{ border-top:1px dashed var(--line) !important; }
 .trust-row b{ color:var(--text); }
@@ -156,8 +156,7 @@ nav .links a:hover::after{ width:100%; }
 .course-body .badge, .badge{ letter-spacing:.1em !important; }
 .price{
   font-size:1.25em !important;
-  background:linear-gradient(95deg,var(--gold),#FFE7B0);
-  -webkit-background-clip:text; background-clip:text; color:transparent !important;
+  color:var(--gold) !important; -webkit-text-fill-color:var(--gold) !important;
 }
 .why-item{ transition:transform .3s, border-color .3s; }
 .why-item:hover{ transform:translateY(-4px); border-color:rgba(155,140,255,.45) !important; }
@@ -206,7 +205,7 @@ footer{ border-top:1px solid var(--line-soft) !important; padding:44px 24px 34px
 }
 .hvb-stat b{
   display:block; font-family:'Sora',sans-serif; font-size:1.75em; line-height:1.1;
-  background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent;
+  color:var(--cyan); -webkit-text-fill-color:var(--cyan);
 }
 .hvb-stat span{ font-size:.86em; color:var(--muted); }
 
