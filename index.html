@@ -186,19 +186,30 @@
     section{ padding:44px 20px; }
   }
 
-  /* Affiliate tutorial চলন্ত ব্যানার */
-  .hvb-marquee{ display:block; background:linear-gradient(90deg, rgba(94,234,212,.14), rgba(167,139,250,.16));
-    border-bottom:1px solid var(--line); overflow:hidden; white-space:nowrap; cursor:pointer; }
-  .hvb-marquee span{ display:inline-block; padding:9px 0; font-weight:600; font-size:.95em;
-    animation:hvbslide 18s linear infinite; }
-  .hvb-marquee:hover span{ animation-play-state:paused; }
-  @keyframes hvbslide{ from{ transform:translateX(100%);} to{ transform:translateX(-100%);} }
+  /* চলন্ত অ্যানাউন্সমেন্ট ব্যানার */
+  .hvb-bar{ position:relative; overflow:hidden; white-space:nowrap;
+    background:linear-gradient(90deg, rgba(34,211,238,.16), rgba(167,139,250,.20), rgba(34,211,238,.16));
+    border-bottom:1px solid var(--line); }
+  .hvb-bar::before, .hvb-bar::after{ content:""; position:absolute; top:0; bottom:0; width:60px; z-index:2; pointer-events:none; }
+  .hvb-bar::before{ left:0; background:linear-gradient(90deg, var(--bg, #070b14), transparent); }
+  .hvb-bar::after{ right:0; background:linear-gradient(270deg, var(--bg, #070b14), transparent); }
+  .hvb-bar-track{ display:inline-flex; align-items:center; animation:hvbmarquee 26s linear infinite; }
+  .hvb-bar:hover .hvb-bar-track{ animation-play-state:paused; }
+  .hvb-bar-item{ display:inline-flex; align-items:center; gap:8px; padding:8px 26px;
+    font-size:.86rem; font-weight:600; letter-spacing:.2px; color:#e6f6ff; }
+  .hvb-bar-item b{ color:var(--cyan, #22d3ee); font-weight:700; }
+  .hvb-bar-item .dot{ width:5px; height:5px; border-radius:50%; background:rgba(167,139,250,.9); }
+  @keyframes hvbmarquee{ from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
+  @media (prefers-reduced-motion: reduce){ .hvb-bar-track{ animation-duration:80s; } }
+  @media (max-width:640px){ .hvb-bar-item{ padding:7px 18px; font-size:.78rem; } }
 </style>
 <link rel="stylesheet" href="hvb-theme.css">
 </head>
 <body>
 <script src="hvb-ref.js"></script>
 <script src="hvb-track.js"></script>
+
+<div class="hvb-bar" aria-label="ঘোষণা"><div class="hvb-bar-track"><a class="hvb-bar-item" href="index.html#courses" style="text-decoration:none;">🚀 <b>Long + Short কোর্স ৬৫০৳</b> · Short কোর্স ২৯৯৳</a><span class="hvb-bar-item"><span class="dot"></span></span><span class="hvb-bar-item">⚡ পেমেন্টের সাথে সাথেই <b>ইনস্ট্যান্ট এক্সেস</b></span><span class="hvb-bar-item"><span class="dot"></span></span><span class="hvb-bar-item">📱 শুধু ফোন দিয়েই <b>প্রফেশনাল AI ভিডিও</b></span><span class="hvb-bar-item"><span class="dot"></span></span><a class="hvb-bar-item" href="affiliate.html" style="text-decoration:none;">💰 <b>অ্যাফিলিয়েট প্রোগ্রাম</b> — শেয়ার করে ইনকাম</a><span class="hvb-bar-item"><span class="dot"></span></span><span class="hvb-bar-item">🇧🇩 bKash · Nagad · Rocket সাপোর্ট</span><span class="hvb-bar-item"><span class="dot"></span></span><a class="hvb-bar-item" href="index.html#courses" style="text-decoration:none;">🚀 <b>Long + Short কোর্স ৬৫০৳</b> · Short কোর্স ২৯৯৳</a><span class="hvb-bar-item"><span class="dot"></span></span><span class="hvb-bar-item">⚡ পেমেন্টের সাথে সাথেই <b>ইনস্ট্যান্ট এক্সেস</b></span><span class="hvb-bar-item"><span class="dot"></span></span><span class="hvb-bar-item">📱 শুধু ফোন দিয়েই <b>প্রফেশনাল AI ভিডিও</b></span><span class="hvb-bar-item"><span class="dot"></span></span><a class="hvb-bar-item" href="affiliate.html" style="text-decoration:none;">💰 <b>অ্যাফিলিয়েট প্রোগ্রাম</b> — শেয়ার করে ইনকাম</a><span class="hvb-bar-item"><span class="dot"></span></span><span class="hvb-bar-item">🇧🇩 bKash · Nagad · Rocket সাপোর্ট</span><span class="hvb-bar-item"><span class="dot"></span></span></div></div>
 
 <header>
   <div class="brand">
