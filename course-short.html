@@ -169,6 +169,7 @@
     .buy-box{ flex-direction:column; gap:12px; align-items:stretch; }
   }
 </style>
+<link rel="stylesheet" href="hvb-theme.css">
 </head>
 <body>
 <script src="hvb-ref.js"></script>
@@ -213,7 +214,7 @@
   </div>
 
   <div class="buy-box">
-    <div class="price">৪৯৯ ৳ <small>/ কোর্স</small></div>
+    <div class="price">২৯৯ ৳ <small>/ কোর্স</small></div>
     <button class="btn-primary" onclick="document.getElementById('payModal').classList.add('active')">কিনুন</button>
   </div>
 
@@ -227,6 +228,39 @@
     <div>ভিডিও আপলোড করা</div>
     <div>আমাদের থেকে ফুল সাপোর্ট</div>
   </div>
+
+  
+<section id="support">
+  <div class="hvb-support-box">
+    <h4>🤝 কোর্স কিনলে সরাসরি আমার পার্সোনাল WhatsApp সাপোর্ট</h4>
+    <p>কোর্স চলার সময় যেকোনো সমস্যায় আপনি একা থাকবেন না। কোর্স কেনার পরপরই আমার পার্সোনাল WhatsApp নাম্বার পেয়ে যাবেন — ভিডিও বানানো, প্রম্পট, এডিটিং বা আপলোড, যেকোনো জায়গায় আটকে গেলে সরাসরি আমাকে জানাবেন, ফুল সাপোর্ট পাবেন।</p>
+    <div class="hvb-badge-row">
+      <span class="hvb-badge">✅ পার্সোনাল WhatsApp সাপোর্ট</span>
+      <span class="hvb-badge outline">♾️ আজীবন এক্সেস</span>
+      <span class="hvb-badge outline">🎓 ১০০+ সন্তুষ্ট স্টুডেন্ট</span>
+      <span class="hvb-badge outline">🇧🇩 বাংলায় শেখানো</span>
+    </div>
+  </div>
+</section>
+
+<section id="ids">
+  <div class="section-head">
+    <span class="tag mono">// আমাদের কনটেন্ট</span>
+    <h2>যেসব ভিডিও আপনি নিজেই বানাতে পারবেন</h2>
+    <p>এই আইডিগুলোতে থাকা ৩৫ সেকেন্ডের নিচের শর্ট ভিডিওগুলো — কোর্স শেষে ঠিক এই ধরনের ভিডিও আপনি নিজেই বানাতে পারবেন।</p>
+  </div>
+  <div class="hvb-idlist">
+    <a class="hvb-idcard" href="https://www.tiktok.com/@hypervisionbangla" target="_blank" rel="noopener">
+      <i>🎵</i><div><b>TikTok — @hypervisionbangla</b><small>ভাইরাল শর্ট ভিডিও কালেকশন</small></div>
+    </a>
+    <a class="hvb-idcard" href="https://www.facebook.com/share/1Dc8eJn2dT/" target="_blank" rel="noopener">
+      <i>📘</i><div><b>Facebook Page ১</b><small>Long ও Short — দুই ধরনের ভিডিও</small></div>
+    </a>
+    <a class="hvb-idcard" href="https://www.facebook.com/share/197Vtpdui9/" target="_blank" rel="noopener">
+      <i>📘</i><div><b>Facebook Page ২</b><small>নতুন স্টাইলের AI ভিডিও</small></div>
+    </a>
+  </div>
+</section>
 
   <h2 class="h">কোর্স কারিকুলাম</h2>
   <div class="lesson"><span class="num mono">০১</span> ভূমিকা ও Short-Video ট্রেন্ড পরিচিতি</div>
@@ -259,7 +293,7 @@
     <button class="close" onclick="closePayModal()">✕</button>
     <div id="payStep">
       <h3>Short Video Course</h3>
-      <div class="price-tag mono" id="modalPrice">৪৯৯ ৳</div>
+      <div class="price-tag mono" id="modalPrice">২৯৯ ৳</div>
       <div class="promo-box">
         <input type="text" id="promoInput" class="promo-input" placeholder="প্রোমো কোড থাকলে দিন">
         <button type="button" class="promo-btn" onclick="applyPromo()">Apply</button>
@@ -348,7 +382,7 @@ Understood? If you understand, reply ONLY with this exact sentence:
 </div>
 
 <script>
-  const BASE_PRICE = 499;
+  const BASE_PRICE = 299;
   const promoCodes = { 'HVB10': 10, 'WELCOME50': 50, 'LAUNCH50': 50 };
   const bnDigits = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
   function toBn(n){ return String(n).split('').map(d => bnDigits[d] || d).join(''); }

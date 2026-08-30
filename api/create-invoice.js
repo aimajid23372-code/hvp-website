@@ -11,8 +11,8 @@ const supabase = createClient(
 );
 
 const COURSES = {
-  bundle: { title: 'Long + Short Video Course', amount: 950 },
-  short: { title: 'Short Video Course', amount: 499 },
+  bundle: { title: 'Long + Short Video Course', amount: 650 },
+  short: { title: 'Short Video Course', amount: 299 },
 };
 
 // payment_url থেকে invoice id বের করা (ZiniPay create-এ শুধু payment_url দেয়)
