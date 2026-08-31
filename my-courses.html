@@ -78,6 +78,26 @@
     .wrap{ padding:30px 18px 70px; }
     .lookup-box{ flex-direction:column; }
   }
+  .hvb-auth-box{
+    background:var(--surface); border:1px solid var(--line); border-radius:14px;
+    padding:18px; margin-bottom:18px;
+  }
+  .hvb-auth-head b{ display:block; font-family:'Sora',sans-serif; font-size:1.05em; margin-bottom:4px; }
+  .hvb-auth-head span{ display:block; color:var(--muted); font-size:0.85em; margin-bottom:14px; }
+  .hvb-google-btn{
+    display:inline-flex; align-items:center; gap:10px; cursor:pointer;
+    background:#fff; color:#1f2328; border:none; border-radius:10px;
+    padding:11px 18px; font-weight:700; font-size:0.95em; font-family:inherit;
+  }
+  .hvb-google-btn:hover{ opacity:.9; }
+  .hvb-auth-state{ margin-top:12px; font-size:0.87em; color:var(--muted); }
+  .hvb-auth-state b{ color:var(--cyan); }
+  .hvb-auth-state button{
+    background:transparent; border:1px solid var(--line); color:var(--muted);
+    border-radius:8px; padding:5px 10px; font-size:0.85em; cursor:pointer; margin-left:8px;
+  }
+  .hvb-or{ text-align:center; margin:0 0 14px; position:relative; color:var(--muted); font-size:0.8em; }
+  .hvb-or span{ background:var(--bg,transparent); padding:0 10px; }
 </style>
 <link rel="stylesheet" href="hvb-theme.css">
 </head>
@@ -96,6 +116,21 @@
 <div class="wrap">
   <h1>আমার কোর্স দেখুন</h1>
   <p class="lead">আগে কোর্স কিনে থাকলে, পেমেন্টের সময় যে ফোন নাম্বার/ইমেইল দিয়েছিলেন সেটা দিন — আপনার কোর্স লিংক ও Prompt আবার দেখতে পাবেন।</p>
+
+  <div class="hvb-auth-box">
+    <div class="hvb-auth-head">
+      <b>এক ক্লিকে লগইন</b>
+      <span>Google দিয়ে লগইন করলে পরে আর কিছু লেখা লাগবে না — কোর্স নিজেই খুলে যাবে।</span>
+    </div>
+    <button type="button" id="gBtn" class="hvb-google-btn" onclick="hvbGoogleLogin()">
+      <img src="https://www.google.com/favicon.ico" alt="" width="18" height="18"> Google দিয়ে লগইন
+    </button>
+    <div id="hvbAuthState" class="hvb-auth-state"></div>
+  </div>
+
+  <div class="hvb-or"><span>অথবা</span></div>
+
+  <p class="lead" style="margin-bottom:12px">আগে নাম্বার/ইমেইল দিয়ে কোর্স কিনেছেন? নিচে সেটাই দিন — আগের মতোই কাজ করবে।</p>
 
   <div class="lookup-box">
     <input type="text" id="contactInput" class="lookup-input" placeholder="নাম্বার / ইমেইল / Invoice ID">
@@ -389,6 +424,100 @@ THUMBNAIL PROMPT:
       lookupOrder();
     }
   });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  /* ---------- Google লগইন (Supabase Auth) ---------- */
+  var hvbSb = null;
+
+  async function hvbInitAuth(){
+    try {
+      const cfg = await (await fetch('/api/auth-config')).json();
+      if(!cfg.enabled || !window.supabase) return;
+      hvbSb = window.supabase.createClient(cfg.url, cfg.anonKey);
+      const { data } = await hvbSb.auth.getSession();
+      if(data && data.session) hvbAfterLogin(data.session);
+      hvbSb.auth.onAuthStateChange(function(_e, session){ if(session) hvbAfterLogin(session); });
+    } catch(e){}
+  }
+
+  async function hvbGoogleLogin(){
+    if(!hvbSb){ await hvbInitAuth(); }
+    if(!hvbSb){
+      document.getElementById('hvbAuthState').textContent = 'Google লগইন এখনো চালু হয়নি। নিচে নাম্বার/ইমেইল দিয়ে খুঁজুন।';
+      return;
+    }
+    await hvbSb.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin + '/my-courses.html' }
+    });
+  }
+
+  async function hvbLogout(){
+    if(hvbSb) await hvbSb.auth.signOut();
+    document.getElementById('hvbAuthState').textContent = '';
+    document.getElementById('gBtn').style.display = '';
+  }
+
+  async function hvbAfterLogin(session){
+    const state = document.getElementById('hvbAuthState');
+    const btn = document.getElementById('gBtn');
+    if(btn) btn.style.display = 'none';
+    state.innerHTML = 'লগইন হয়েছে — কোর্স খোঁজা হচ্ছে...';
+    try {
+      const res = await fetch('/api/my-access', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ access_token: session.access_token })
+      });
+      const data = await res.json();
+      const email = data.email || '';
+      const courses = data.courses || [];
+      if(courses.length){
+        state.innerHTML = '<b>' + email + '</b> — আপনার কোর্স নিচে খুলে দেওয়া হয়েছে। <button type="button" onclick="hvbLogout()">লগআউট</button>';
+        renderCourses(courses);
+      } else {
+        state.innerHTML = '<b>' + email + '</b> — এই ইমেইলে কোনো কেনা কোর্স পাওয়া যায়নি। ' +
+          'আগে <u>অন্য নাম্বার/ইমেইল</u> দিয়ে কিনলে সেটা এখানে দিন, একবার যুক্ত করলেই পরে শুধু Google লগইনেই চলবে:' +
+          '<div class="lookup-box" style="margin-top:10px">' +
+            '<input type="text" id="linkInput" class="lookup-input" placeholder="আগের নাম্বার / ইমেইল / Invoice ID">' +
+            '<button type="button" class="lookup-btn" onclick="hvbLinkOld()">যুক্ত করুন</button>' +
+          '</div>' +
+          '<button type="button" onclick="hvbLogout()">লগআউট</button>';
+      }
+    } catch(e){
+      state.textContent = 'সমস্যা হয়েছে, একটু পরে আবার চেষ্টা করুন।';
+    }
+  }
+
+  async function hvbLinkOld(){
+    const el = document.getElementById('linkInput');
+    const state = document.getElementById('hvbAuthState');
+    const contact = el ? el.value.trim() : '';
+    if(!contact) return;
+    const { data } = await hvbSb.auth.getSession();
+    if(!data || !data.session) return;
+    state.innerHTML = 'যুক্ত করা হচ্ছে...';
+    try {
+      const res = await fetch('/api/my-access', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ access_token: data.session.access_token, action: 'link', contact: contact })
+      });
+      const out = await res.json();
+      if((out.courses || []).length){
+        state.innerHTML = '✅ যুক্ত হয়েছে (<b>' + (out.email||'') + '</b>) — এখন থেকে শুধু Google লগইনেই কোর্স পাবেন। <button type="button" onclick="hvbLogout()">লগআউট</button>';
+        renderCourses(out.courses);
+      } else {
+        state.innerHTML = 'এটি দিয়ে কোনো সফল পেমেন্ট পাওয়া যায়নি। সমস্যা হলে <a href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" style="color:var(--cyan)">Messenger-এ</a> জানান।';
+      }
+    } catch(e){
+      state.textContent = 'সমস্যা হয়েছে, আবার চেষ্টা করুন।';
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', hvbInitAuth);
 </script>
 
 <script>
