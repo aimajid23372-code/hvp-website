@@ -62,6 +62,16 @@ async function ordersForEmail(email) {
 }
 
 module.exports = async (req, res) => {
+  // GET /api/my-access?config=1 → ব্রাউজারের Google লগইনের জন্য পাবলিক (anon) কী।
+  // আলাদা ফাংশন না বানিয়ে এখানেই রাখা হয়েছে (Vercel Hobby ফাংশন লিমিট বাঁচাতে)।
+  if (req.method === 'GET') {
+    const url = process.env.SUPABASE_URL || '';
+    const anonKey = process.env.SUPABASE_ANON_KEY || '';
+    if (!url || !anonKey) return res.status(200).json({ enabled: false });
+    res.setHeader('Cache-Control', 'public, max-age=300');
+    return res.status(200).json({ enabled: true, url, anonKey });
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }

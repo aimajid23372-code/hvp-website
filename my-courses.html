@@ -433,7 +433,7 @@ THUMBNAIL PROMPT:
 
   async function hvbInitAuth(){
     try {
-      const cfg = await (await fetch('/api/auth-config')).json();
+      const cfg = await (await fetch('/api/my-access?config=1')).json();
       if(!cfg.enabled || !window.supabase) return;
       hvbSb = window.supabase.createClient(cfg.url, cfg.anonKey);
       const { data } = await hvbSb.auth.getSession();
