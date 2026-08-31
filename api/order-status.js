@@ -1,6 +1,6 @@
 // /api/order-status.js
-// পেমেন্ট থেকে ফিরে এলে এই এন্ডপয়েন্ট অর্ডারটা চেক করে।
-// Webhook-এর উপর ভরসা না করে সরাসরি ZiniPay-কে জিজ্ঞেস করে যাচাই করা হয়।
+// পেমেন্ট থেকে ফিরে এলে এই এন্ডপয়েন্ট অর্ডারটা চেক করে এবং নিজে থেকেই কোর্স খুলে দেয়।
+// webhook মিস হলেও এখানে সরাসরি ZiniPay-কে যাচাই করা হয়, তাই ম্যানুয়াল অনুমোদন লাগে না।
 
 const { createClient } = require('@supabase/supabase-js');
 
@@ -32,6 +32,15 @@ async function verifyWithZiniPay(invoiceId) {
   }
 }
 
+function paidResponse(res, order) {
+  return res.status(200).json({
+    status: 'paid',
+    course: order.course,
+    courses: [order.course],
+    contact: order.customer_contact,
+  });
+}
+
 module.exports = async (req, res) => {
   const ref = (req.query && req.query.ref) || (req.body && req.body.ref);
 
@@ -50,12 +59,7 @@ module.exports = async (req, res) => {
   }
 
   if (order.status === 'paid') {
-    return res.status(200).json({
-      status: 'paid',
-      course: order.course,
-      courses: [order.course],
-      contact: order.customer_contact,
-    });
+    return paidResponse(res, order);
   }
 
   // এখনো paid না — ZiniPay-কে সরাসরি জিজ্ঞেস করি
@@ -71,18 +75,29 @@ module.exports = async (req, res) => {
         payment_method: verified.payment_method || null,
       })
       .eq('our_ref', ref);
-
-    return res.status(200).json({
-      status: 'paid',
-      course: order.course,
-      courses: [order.course],
-      contact: order.customer_contact,
-    });
+    return paidResponse(res, order);
   }
 
   if (zStatus === 'FAILED') {
     await supabase.from('orders').update({ status: 'failed' }).eq('our_ref', ref);
     return res.status(200).json({ status: 'failed' });
+  }
+
+  // একই কাস্টমারের অন্য কোনো paid অর্ডার থাকলে সেটিও খুলে দিই
+  if (order.customer_contact) {
+    const { data: others } = await supabase
+      .from('orders')
+      .select('course,status,customer_contact')
+      .eq('customer_contact', order.customer_contact)
+      .eq('status', 'paid');
+    if (others && others.length) {
+      return res.status(200).json({
+        status: 'paid',
+        course: others[0].course,
+        courses: [...new Set(others.map((o) => o.course))],
+        contact: order.customer_contact,
+      });
+    }
   }
 
   return res.status(200).json({ status: 'pending' });

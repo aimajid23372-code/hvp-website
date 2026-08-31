@@ -363,10 +363,10 @@ THUMBNAIL PROMPT:
       }
     } catch(err){ /* চুপচাপ আবার চেষ্টা করবে */ }
 
-    if(attempt < 12){
+    if(attempt < 32){
       setTimeout(function(){ checkPaidOrder(orderRef, attempt + 1); }, 2500);
     } else {
-      msg.innerHTML = 'পেমেন্ট যাচাই করতে একটু দেরি হচ্ছে। ১ মিনিট পর নিচে আপনার নাম্বার/ইমেইল দিয়ে "খুঁজুন" চাপুন। সমস্যা থাকলে khadimulhasanshuvo@gmail.com-এ জানান।';
+      msg.innerHTML = 'পেমেন্ট যাচাই করতে একটু দেরি হচ্ছে। নিচে আপনার নাম্বার/ইমেইল দিয়ে "খুঁজুন" চাপুন — পেমেন্ট সফল হলে সাথে সাথেই কোর্স খুলে যাবে। সমস্যা থাকলে <a href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" style="color:var(--cyan)">Messenger-এ</a> জানান।';
       msg.className = 'lookup-msg error';
     }
   }
