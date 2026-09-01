@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>সব কোর্স — HVB | AI দিয়ে ভিডিও বানানো শিখুন</title>
+<meta name="description" content="HVB-এর সব কোর্স এক জায়গায় — Long + Short Video Course (৬৫০৳) ও Short Video Course (২৯৯৳)। বাংলায় ধাপে ধাপে AI ভিডিও বানানো শেখা।">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Sora:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#090C13; --bg-2:#0D1119; --surface:#131826; --surface-2:#1A2133;
+    --line:#242C42; --text:#EAF0FF; --muted:#8891A8; --cyan:#5EEAD4; --violet:#A78BFA;
+    --grad: linear-gradient(90deg, var(--cyan), var(--violet));
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 15% 0%, rgba(94,234,212,0.06), transparent 40%),
+      radial-gradient(circle at 85% 10%, rgba(167,139,250,0.08), transparent 40%),
+      var(--bg);
+    color:var(--text); font-family:'Hind Siliguri',sans-serif; line-height:1.65;
+  }
+  a{ color:inherit; text-decoration:none; }
+  header{
+    position:sticky; top:0; z-index:20; background:rgba(9,12,19,.85); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line); padding:14px 24px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; }
+  .brand img{ width:36px; height:36px; border-radius:8px; object-fit:cover; }
+  .brand-text{ display:flex; flex-direction:column; line-height:1.1; }
+  .brand-text b{ font-family:'Sora',sans-serif; font-size:1.05em; }
+  .brand-text span{ font-size:.68em; color:var(--muted); letter-spacing:.08em; text-transform:uppercase; }
+  nav{ display:flex; align-items:center; gap:20px; }
+  nav .links{ display:flex; gap:18px; font-size:.92em; color:var(--muted); }
+  nav .links a:hover{ color:var(--text); }
+  @media (max-width:820px){ nav .links{ display:none; } }
+
+  .page-head{ max-width:820px; margin:0 auto; padding:70px 24px 30px; text-align:center; }
+  .page-head .eyebrow{
+    display:inline-flex; align-items:center; gap:8px; border:1px solid var(--line);
+    background:var(--surface); padding:6px 14px; border-radius:20px; font-size:.8em;
+    color:var(--muted); margin-bottom:22px;
+  }
+  .page-head h1{ font-family:'Sora',sans-serif; font-size:clamp(1.6em,4.5vw,2.3em); line-height:1.3; }
+  .page-head p{ color:var(--muted); margin-top:14px; }
+
+  section{ max-width:1080px; margin:0 auto; padding:34px 24px 60px; }
+  .clist{ display:grid; gap:22px; }
+  .ccard{
+    background:var(--surface); border:1px solid var(--line); border-radius:16px; overflow:hidden;
+    display:grid; grid-template-columns:230px 1fr; transition:border-color .2s;
+  }
+  .ccard:hover{ border-color:var(--cyan); }
+  .ccard.featured{ border-color:rgba(94,234,212,.45); }
+  .cthumb{
+    position:relative; min-height:190px;
+    background:linear-gradient(135deg, rgba(94,234,212,.14), rgba(167,139,250,.16)), var(--surface-2);
+    display:flex; align-items:center; justify-content:center; flex-direction:column; gap:10px;
+  }
+  .cthumb .play{
+    width:52px; height:52px; border-radius:50%; background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.2); display:flex; align-items:center; justify-content:center; font-size:1.2em;
+  }
+  .cthumb small{ font-family:'JetBrains Mono',monospace; font-size:.68em; color:var(--muted); letter-spacing:.1em; }
+  .cbody{ padding:22px; display:flex; flex-direction:column; gap:12px; }
+  .cbody .badge{
+    align-self:flex-start; font-size:.7em; letter-spacing:.06em; text-transform:uppercase;
+    color:#0A0D14; background:var(--grad); padding:4px 10px; border-radius:20px; font-weight:700;
+  }
+  .cbody .badge.plain{ background:var(--surface-2); color:var(--violet); }
+  .cbody h2{ font-family:'Sora',sans-serif; font-size:1.22em; }
+  .cbody p{ color:var(--muted); font-size:.92em; }
+  .feat{ display:grid; gap:7px; margin-top:2px; }
+  .feat span{ font-size:.87em; color:#c9d2e6; display:flex; gap:8px; }
+  .cfoot{
+    display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
+    margin-top:auto; padding-top:16px; border-top:1px solid var(--line);
+  }
+  .price{ font-family:'Sora',sans-serif; font-weight:700; font-size:1.3em; }
+  .price s{ color:var(--muted); font-size:.62em; font-weight:500; margin-left:8px; }
+  .cbtns{ display:flex; gap:10px; flex-wrap:wrap; }
+  .btn-primary{
+    background:var(--grad); color:#0A0D14; border:none; padding:11px 20px;
+    font-weight:700; font-size:.9em; border-radius:9px; cursor:pointer; font-family:inherit;
+  }
+  .btn-ghost{
+    background:transparent; color:var(--text); border:1px solid var(--line);
+    padding:11px 18px; font-weight:600; font-size:.9em; border-radius:9px; cursor:pointer; font-family:inherit;
+  }
+  .btn-ghost:hover{ border-color:var(--cyan); color:var(--cyan); }
+  @media (max-width:700px){ .ccard{ grid-template-columns:1fr; } .cthumb{ min-height:130px; } }
+
+  .helper{
+    max-width:1080px; margin:0 auto 60px; padding:0 24px;
+  }
+  .helper-box{
+    background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:22px;
+    display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  }
+  .helper-box b{ font-family:'Sora',sans-serif; }
+  .helper-box p{ color:var(--muted); font-size:.9em; margin-top:4px; }
+  footer{ border-top:1px solid var(--line); padding:30px 24px; text-align:center; color:var(--muted); font-size:.82em; }
+</style>
+<link rel="stylesheet" href="hvb-theme.css">
+</head>
+<body>
+<script src="hvb-ref.js"></script>
+<script src="hvb-track.js"></script>
+
+<header>
+  <a href="index.html" class="brand">
+    <img src="hvb-logo.png" alt="HVB Logo">
+    <div class="brand-text"><b>HVB</b><span>Hyper Vision Bangla</span></div>
+  </a>
+  <nav>
+    <div class="links">
+      <a href="index.html">হোম</a>
+      <a href="free-lesson.html">ফ্রি লেসন</a>
+      <a href="my-courses.html">আমার কোর্স</a>
+      <a href="contact.html">যোগাযোগ</a>
+    </div>
+  </nav>
+</header>
+
+<div class="page-head">
+  <div class="eyebrow">🎓 সব কোর্স · একবার কিনলেই দীর্ঘসময় এক্সেস</div>
+  <h1>আপনার জন্য কোন কোর্সটা?</h1>
+  <p>দুটোই সম্পূর্ণ বাংলায়, ধাপে ধাপে — শুধু ফোন দিয়েই করা যাবে। নতুন আপডেট এলে সেটাও ফ্রি পাবেন।</p>
+</div>
+
+<section>
+  <div class="clist">
+
+    <article class="ccard featured">
+      <div class="cthumb"><div class="play">▶</div><small>LONG + SHORT</small></div>
+      <div class="cbody">
+        <span class="badge">🔥 সবচেয়ে জনপ্রিয়</span>
+        <h2>Long + Short Video Course</h2>
+        <p>Short আর Long — দুইটাই একসাথে। YouTube/Facebook-এর ২-৫ মিনিটের ভিডিও থেকে TikTok ও Reels-এর ভাইরাল ক্লিপ, পুরো প্রসেস A থেকে Z।</p>
+        <div class="feat">
+          <span>✅ Long ভিডিওর সম্পূর্ণ প্রম্পট সিস্টেম</span>
+          <span>✅ Short/Reels-এর ভাইরাল ফর্মুলা</span>
+          <span>✅ এডিটিং, ভয়েস ও আপলোড — সব ধাপ</span>
+          <span>✅ ডিরেক্ট WhatsApp সাপোর্ট + প্রিমিয়াম গ্রুপ</span>
+        </div>
+        <div class="cfoot">
+          <div class="price">৬৫০ ৳</div>
+          <div class="cbtns">
+            <a class="btn-ghost" href="course-bundle.html">বিস্তারিত দেখুন</a>
+            <a class="btn-primary" href="course-bundle.html#buy" data-hvb-gate>এখনই কিনুন</a>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="ccard">
+      <div class="cthumb"><div class="play">▶</div><small>SHORT ONLY</small></div>
+      <div class="cbody">
+        <span class="badge plain">শর্ট কোর্স</span>
+        <h2>Short Video Course</h2>
+        <p>কম খরচে শুরু করতে চান? ৩৫ সেকেন্ডের ভাইরাল Short ভিডিও বানানোর পুরো কৌশল — আজ শিখে কালই পোস্ট করতে পারবেন।</p>
+        <div class="feat">
+          <span>✅ Short ভিডিওর রেডি প্রম্পট</span>
+          <span>✅ ক্যারেক্টার ও ডায়ালগ বানানোর নিয়ম</span>
+          <span>✅ ফোনেই এডিটিং ও আপলোড</span>
+        </div>
+        <div class="cfoot">
+          <div class="price">২৯৯ ৳</div>
+          <div class="cbtns">
+            <a class="btn-ghost" href="course-short.html">বিস্তারিত দেখুন</a>
+            <a class="btn-primary" href="course-short.html#buy" data-hvb-gate>এখনই কিনুন</a>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="ccard">
+      <div class="cthumb"><div class="play">🎁</div><small>FREE</small></div>
+      <div class="cbody">
+        <span class="badge plain">ফ্রি</span>
+        <h2>ফ্রি লেসন — প্রথমে দেখে নিন</h2>
+        <p>কেনার আগে দেখে নিন শেখানোর ধরন কেমন। একটি সম্পূর্ণ লেসন একেবারে ফ্রি।</p>
+        <div class="cfoot">
+          <div class="price">০ ৳</div>
+          <div class="cbtns"><a class="btn-ghost" href="free-lesson.html">ফ্রি লেসন দেখুন</a></div>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<div class="helper">
+  <div class="helper-box">
+    <div>
+      <b>আগেই কোর্স কিনেছেন?</b>
+      <p>লগইন করলে আপনার কেনা কোর্স নিজেই খুলে যাবে — যেকোনো ডিভাইসে।</p>
+    </div>
+    <a class="btn-primary" href="my-courses.html">আমার কোর্স দেখুন</a>
+  </div>
+</div>
+
+<footer>© ২০২৬ HVB — Hyper Vision Bangla · bKash · Nagad · Rocket</footer>
+
+<a class="hvb-msgr-float" href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" aria-label="Messenger-এ প্রশ্ন করুন"><i>💬</i> Messenger-এ প্রশ্ন করুন</a>
+<script src="hvb-account.js"></script>
+</body>
+</html>

@@ -181,19 +181,8 @@
     <div class="brand-text"><b>HVB</b><span>Hyper Vision Bangla</span></div>
   </a>
   <div class="header-right">
-    <a href="index.html" class="back-link">← সব কোর্স</a>
-    <div class="dots-wrap">
-      <button class="dots-btn" onclick="document.getElementById('dotsMenu').classList.toggle('active')">⋮</button>
-      <div class="dots-menu" id="dotsMenu">
-        <a href="index.html">Home</a>
-        <a href="index.html#courses">Courses</a>
-        <a href="free-lesson.html">Free Lesson</a>
-        <a href="my-courses.html">আমার কোর্স</a>
-        <a href="affiliate.html">Affiliate Program</a>
-                <a href="about.html">About Us</a>
-      </div>
-    </div>
-  </div>
+    <a href="courses.html" class="back-link">← সব কোর্স</a>
+</div>
 </header>
 
 <div class="wrap">
@@ -217,7 +206,7 @@
 
   <div class="buy-box">
     <div class="price">২৯৯ ৳ <small>/ কোর্স</small></div>
-    <button class="btn-primary" onclick="document.getElementById('payModal').classList.add('active')">কিনুন</button>
+    <button class="btn-primary" data-hvb-gate onclick="hvbGate(function(){ document.getElementById('payModal').classList.add('active'); })">কিনুন</button>
   </div>
 
   <h2 class="h">আপনি যা শিখবেন</h2>
@@ -520,6 +509,16 @@ Understood? If you understand, reply ONLY with this exact sentence:
     entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('is-in'); io.unobserve(en.target); } });
   }, { threshold:0.08, rootMargin:'0px 0px -40px 0px' });
   els.forEach(function(el){ io.observe(el); });
+})();
+</script>
+<script src="hvb-account.js"></script>
+<script>
+/* #buy দিয়ে এলে সোজা পেমেন্ট মোডাল খুলবে (লগইন থাকলে) */
+(function hvbBuyHash(){
+  if(location.hash !== '#buy') return;
+  var open = function(){ var m=document.getElementById('payModal'); if(m) m.classList.add('active'); };
+  if(window.HVBAuth) window.HVBAuth.whenReady(function(){ window.HVBAuth.gate(open); });
+  else open();
 })();
 </script>
 </body>

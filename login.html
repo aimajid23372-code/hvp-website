@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>লগইন / সাইন আপ — HVB Hyper Vision Bangla</title>
+<meta name="description" content="HVB-তে Google দিয়ে এক ক্লিকে লগইন করুন — আপনার কেনা কোর্স যেকোনো ডিভাইসে নিজেই খুলে যাবে।">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#090C13; --bg-2:#0D1119; --surface:#131826; --surface-2:#1A2133;
+    --line:#242C42; --text:#EAF0FF; --muted:#8891A8; --cyan:#5EEAD4; --violet:#A78BFA;
+    --grad: linear-gradient(90deg, var(--cyan), var(--violet));
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 15% 0%, rgba(94,234,212,0.07), transparent 42%),
+      radial-gradient(circle at 85% 10%, rgba(167,139,250,0.09), transparent 42%),
+      var(--bg);
+    color:var(--text); font-family:'Hind Siliguri',sans-serif; line-height:1.65; min-height:100vh;
+  }
+  a{color:inherit; text-decoration:none;}
+  header{
+    position:sticky; top:0; z-index:20; background:rgba(9,12,19,.85); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line); padding:14px 24px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; }
+  .brand img{ width:36px; height:36px; border-radius:8px; object-fit:cover; }
+  .brand-text{ display:flex; flex-direction:column; line-height:1.1; }
+  .brand-text b{ font-family:'Sora',sans-serif; font-size:1.05em; }
+  .brand-text span{ font-size:.68em; color:var(--muted); letter-spacing:.08em; text-transform:uppercase; }
+  nav{ display:flex; align-items:center; gap:16px; }
+
+  .wrap{ max-width:440px; margin:0 auto; padding:60px 22px 90px; }
+  .card{
+    background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:28px 24px;
+  }
+  .card h1{ font-family:'Sora',sans-serif; font-size:1.45em; margin-bottom:8px; }
+  .card .sub{ color:var(--muted); font-size:.92em; margin-bottom:24px; }
+  .gbtn{
+    width:100%; display:inline-flex; align-items:center; justify-content:center; gap:10px;
+    background:#fff; color:#1f2328; border:none; border-radius:11px; padding:13px 18px;
+    font-weight:700; font-size:1em; font-family:inherit; cursor:pointer;
+  }
+  .gbtn:hover{ opacity:.92; }
+  .state{ margin-top:14px; font-size:.88em; color:var(--muted); min-height:20px; }
+  .state b{ color:var(--cyan); }
+  .perks{ margin-top:24px; padding-top:20px; border-top:1px solid var(--line); display:grid; gap:11px; }
+  .perks div{ display:flex; gap:10px; font-size:.88em; color:var(--muted); }
+  .perks i{ font-style:normal; }
+  .alt{
+    margin-top:22px; background:var(--surface-2); border:1px solid var(--line);
+    border-radius:12px; padding:16px; font-size:.87em; color:var(--muted);
+  }
+  .alt b{ color:var(--text); display:block; margin-bottom:5px; font-size:1.02em; }
+  .alt a{ color:var(--cyan); font-weight:600; }
+  .backhome{ display:block; text-align:center; margin-top:22px; color:var(--muted); font-size:.86em; }
+  .backhome:hover{ color:var(--text); }
+</style>
+<link rel="stylesheet" href="hvb-theme.css">
+</head>
+<body>
+<script src="hvb-ref.js"></script>
+<script src="hvb-track.js"></script>
+
+<header>
+  <a href="index.html" class="brand">
+    <img src="hvb-logo.png" alt="HVB Logo">
+    <div class="brand-text"><b>HVB</b><span>Hyper Vision Bangla</span></div>
+  </a>
+  <nav></nav>
+</header>
+
+<div class="wrap">
+  <div class="card">
+    <h1 id="ttl">লগইন করুন</h1>
+    <p class="sub" id="sub">Google দিয়ে এক ক্লিকেই — আলাদা পাসওয়ার্ড মনে রাখার দরকার নেই।</p>
+
+    <button type="button" class="gbtn" id="gBtn">
+      <img src="https://www.google.com/favicon.ico" alt="" width="18" height="18"> Google দিয়ে চালিয়ে যান
+    </button>
+    <div class="state" id="state"></div>
+
+    <div class="perks">
+      <div><i>📚</i> কেনা কোর্স যেকোনো ডিভাইসে নিজেই খুলে যাবে</div>
+      <div><i>⚡</i> পেমেন্টের সাথে সাথেই ইনস্ট্যান্ট এক্সেস</div>
+      <div><i>♾️</i> দীর্ঘসময় এক্সেস — নতুন আপডেটও ফ্রি</div>
+    </div>
+
+    <div class="alt">
+      <b>আগে নাম্বার/ইমেইল দিয়ে কোর্স কিনেছেন?</b>
+      কোনো সমস্যা নেই — লগইন করার পর <a href="my-courses.html">আমার কোর্স</a> পেজে একবার সেই নাম্বার/ইমেইল যুক্ত করলেই পরে শুধু লগইনেই কোর্স পাবেন।
+    </div>
+  </div>
+  <a class="backhome" href="index.html">← হোমে ফিরে যান</a>
+</div>
+
+<a class="hvb-msgr-float" href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" aria-label="Messenger-এ প্রশ্ন করুন"><i>💬</i> Messenger-এ প্রশ্ন করুন</a>
+
+<script src="hvb-account.js"></script>
+<script>
+(function(){
+  var q = new URLSearchParams(location.search);
+  var next = q.get('next') || 'my-courses.html';
+  if(/^https?:|^\/\//i.test(next)) next = 'my-courses.html';
+  if(q.get('mode') === 'signup'){
+    document.getElementById('ttl').textContent = 'অ্যাকাউন্ট খুলুন';
+    document.getElementById('sub').textContent = 'Google দিয়ে সাইন আপ করুন — ১০ সেকেন্ডেই হয়ে যাবে, কোনো ফর্ম পূরণ করতে হবে না।';
+  }
+  var state = document.getElementById('state');
+
+  window.HVBAuth.whenReady(function(){
+    if(window.HVBAuth.user){
+      state.innerHTML = '<b>ইতিমধ্যেই লগইন আছেন</b> — নিয়ে যাচ্ছি...';
+      setTimeout(function(){ location.href = next; }, 700);
+    } else if(!window.HVBAuth.sb){
+      state.textContent = 'লগইন সার্ভিস এই মুহূর্তে চালু নেই। কোর্স দেখতে "আমার কোর্স" পেজে নাম্বার/ইমেইল দিয়ে খুঁজুন।';
+    }
+  });
+
+  document.getElementById('gBtn').addEventListener('click', async function(){
+    state.textContent = 'Google-এ নিয়ে যাচ্ছি...';
+    var ok = await window.HVBAuth.signInWithGoogle(next);
+    if(!ok) state.textContent = 'লগইন এখনো চালু হয়নি। একটু পরে আবার চেষ্টা করুন।';
+  });
+})();
+</script>
+</body>
+</html>
