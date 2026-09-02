@@ -136,7 +136,7 @@
 
 <div class="hvb-tut-cta">
   <a href="/affiliate-tutorial">
-    <div><b> Affiliate থেকে ইনকাম করবেন কীভাবে?</b><small>ধাপে ধাপে টিউটোরিয়াল ভিডিও ও গাইড দেখে নিন</small></div>
+    <div><b> 🎬 Affiliate থেকে ইনকাম করবেন কীভাবে?</b><small>ধাপে ধাপে টিউটোরিয়াল ভিডিও ও গাইড দেখে নিন</small></div>
     <em>টিউটোরিয়াল দেখুন →</em>
   </a>
 </div>
@@ -214,7 +214,7 @@
     const refCode = document.getElementById('affRefCode').value.trim();
     const password = document.getElementById('affPassword').value;
     const msg = document.getElementById('signupMsg');
-    msg.textContent = 'অপেক্ষা করুন...';
+    msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
     msg.className = 'msg';
 
     try {
@@ -225,7 +225,7 @@
       });
       const data = await res.json();
       if(!res.ok){
-        msg.textContent = ' ' + (data.error || 'সমস্যা হয়েছে');
+        msg.textContent = ' ⚠️ ' + (data.error || 'সমস্যা হয়েছে');
         msg.className = 'msg error';
         return;
       }
@@ -247,10 +247,10 @@
       });
       const data = await res.json();
       if(!res.ok){
-        alert(' ' + (data.error || 'সমস্যা হয়েছে'));
+        alert(' ⚠️ ' + (data.error || 'সমস্যা হয়েছে'));
         return;
       }
-      alert(' Withdraw রিকোয়েস্ট পাঠানো হয়েছে (' + data.amount + ' ৳)। ২৪-৪৮ ঘণ্টার মধ্যে টাকা পাঠানো হবে।');
+      alert(' ✅ Withdraw রিকোয়েস্ট পাঠানো হয়েছে (' + data.amount + ' ৳)। ২৪-৪৮ ঘণ্টার মধ্যে টাকা পাঠানো হবে।');
       checkStats();
     } catch(err){
       alert('সমস্যা হয়েছে, আবার চেষ্টা করুন।');
@@ -263,12 +263,12 @@
     const box = document.getElementById('refLinkBox');
     box.style.display = 'block';
     box.innerHTML =
-      '<h3 style="font-family:Sora,sans-serif; margin-bottom:8px;"> সাইনআপ সফল!</h3>' +
+      '<h3 style="font-family:Sora,sans-serif; margin-bottom:8px;"> 🎉 সাইনআপ সফল!</h3>' +
       '<p style="color:var(--muted); font-size:0.9em; margin-bottom:12px;">এটাই আপনার রেফার লিংক। এই লিংক দিয়ে কেউ সাইটে ঢুকে <b>যেকোনো কোর্স</b> কিনলেই আপনি ২০% কমিশন পাবেন।</p>' +
       '<div id="refLinkText" style="word-break:break-all; background:var(--surface-2); border:1px solid var(--cyan); border-radius:8px; padding:14px; font-size:1.05em; font-weight:700; color:var(--cyan);">' + link + '</div>' +
-      '<button type="button" class="submit-btn" style="margin-top:12px;" onclick="copyRefLink(this)"> লিংক কপি করুন</button>' +
+      '<button type="button" class="submit-btn" style="margin-top:12px;" onclick="copyRefLink(this)"> 📋 লিংক কপি করুন</button>' +
       '<p style="color:var(--muted); font-size:0.85em; margin-top:10px;">আপনার Ref Code: <b style="color:var(--text);">' + refCode + '</b> — কমিশন দেখতে হলে এই কোড ও পাসওয়ার্ড লাগবে।</p>' +
-      '<a href="/affiliate-dashboard" class="submit-btn" style="display:block; text-align:center; text-decoration:none; margin-top:10px;"> আমার কমিশন ড্যাশবোর্ড</a>';
+      '<a href="/affiliate-dashboard" class="submit-btn" style="display:block; text-align:center; text-decoration:none; margin-top:10px;"> 📊 আমার কমিশন ড্যাশবোর্ড</a>';
     try { box.scrollIntoView({behavior:'smooth', block:'start'}); } catch(e){}
     try { localStorage.setItem('hvb_my_ref', refCode); } catch(e){}
   }
@@ -277,7 +277,7 @@
     const text = document.getElementById('refLinkText').textContent;
     navigator.clipboard.writeText(text).then(function(){
       const old = btn.textContent;
-      btn.textContent = 'কপি হয়েছে ';
+      btn.textContent = 'কপি হয়েছে ✓ ';
       setTimeout(function(){ btn.textContent = old; }, 2000);
     });
   }
@@ -288,7 +288,7 @@
     const password = document.getElementById('statsPassword').value;
     const msg = document.getElementById('statsMsg');
     if(!refCode || !password){
-      msg.textContent = ' Ref Code ও পাসওয়ার্ড দুটোই দিন';
+      msg.textContent = ' ⚠️ Ref Code ও পাসওয়ার্ড দুটোই দিন';
       msg.className = 'msg error';
       return;
     }
@@ -296,7 +296,7 @@
       sessionStorage.setItem('hvb_aff_ref', refCode);
       sessionStorage.setItem('hvb_aff_pass', password);
     } catch(e){}
-    msg.textContent = 'ড্যাশবোর্ড খোলা হচ্ছে...';
+    msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
     msg.className = 'msg';
     window.location.href = '/affiliate-dashboard';
   }
@@ -315,7 +315,7 @@
   })();
 </script>
 
-<a class="hvb-msgr-float" href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" aria-label="Messenger-এ প্রশ্ন করুন"><i></i> Messenger-এ প্রশ্ন করুন</a>
+<a class="hvb-msgr-float" href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" aria-label="Messenger-এ প্রশ্ন করুন"><i>💬 </i> Messenger-এ প্রশ্ন করুন</a>
 
 <script>
 /* HVB scroll reveal */

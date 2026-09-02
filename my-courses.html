@@ -261,14 +261,14 @@ THUMBNAIL PROMPT:
     const text = document.getElementById(elId).innerText;
     navigator.clipboard.writeText(text).then(function(){
       const old = btn.textContent;
-      btn.textContent = 'Copied ';
+      btn.textContent = 'Copied ✓ ';
       setTimeout(function(){ btn.textContent = old; }, 2000);
     });
   }
 
   function shortBlock(idx){
     return '<div class="course-section">' +
-      '<h3> Short Video Course</h3>' +
+      '<h3> 🎬 Short Video Course</h3>' +
       '<p class="step-note">১) প্রথমে নিচের Master Chatting Prompt কপি করুন, ২) তারপর কোর্স লিংকে ক্লিক করে ভিডিও দেখুন</p>' +
       '<div class="deliver-block">' +
         '<span class="deliver-label"> Master Chatting Prompt</span>' +
@@ -278,7 +278,7 @@ THUMBNAIL PROMPT:
         '</div>' +
       '</div>' +
       '<div class="deliver-block">' +
-        '<span class="deliver-label"> Course Link</span>' +
+        '<span class="deliver-label"> 📁 Course Link</span>' +
         '<a href="' + SHORT_LINK + '" target="_blank" rel="noopener" class="deliver-link">কোর্স দেখুন →</a>' +
       '</div>' +
     '</div>';
@@ -286,7 +286,7 @@ THUMBNAIL PROMPT:
 
   function longBlock(idx){
     return '<div class="course-section">' +
-      '<h3> Long Video Course</h3>' +
+      '<h3> 🎬 Long Video Course</h3>' +
       '<p class="step-note">১) প্রথমে নিচের Master Chatting Prompt কপি করুন, ২) তারপর কোর্স লিংকে ক্লিক করে ভিডিও দেখুন</p>' +
       '<div class="deliver-block">' +
         '<span class="deliver-label"> Master Chatting Prompt</span>' +
@@ -296,7 +296,7 @@ THUMBNAIL PROMPT:
         '</div>' +
       '</div>' +
       '<div class="deliver-block">' +
-        '<span class="deliver-label"> Course Link</span>' +
+        '<span class="deliver-label"> 📁 Course Link</span>' +
         '<a href="' + LONG_LINK + '" target="_blank" rel="noopener" class="deliver-link">কোর্স দেখুন →</a>' +
       '</div>' +
     '</div>';
@@ -321,7 +321,7 @@ THUMBNAIL PROMPT:
       }
     });
     html += '<div class="course-section">' +
-      '<span class="deliver-label"> HVB Premium Group</span>' +
+      '<span class="deliver-label"> 👥 HVB Premium Group</span>' +
       '<p style="color:var(--muted); font-size:0.88em; margin: 8px 0;">এখানে কোর্স সম্পর্কে প্রতিনিয়তই নতুন আপডেট দেওয়া হয়।</p>' +
       '<a href="' + GROUP_LINK + '" target="_blank" rel="noopener" class="deliver-link">গ্রুপে জয়েন করুন →</a>' +
     '</div>';
@@ -348,7 +348,7 @@ THUMBNAIL PROMPT:
       msg.className = 'lookup-msg error';
       return;
     }
-    msg.textContent = 'খোঁজা হচ্ছে...';
+    msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
     msg.className = 'lookup-msg info';
 
     try {
@@ -367,7 +367,7 @@ THUMBNAIL PROMPT:
       }
 
       try { localStorage.setItem('hvb_contact', contact); } catch(e){}
-      msg.textContent = ' আপনার কোর্স পাওয়া গেছে!';
+      msg.textContent = ' ✅ আপনার কোর্স পাওয়া গেছে!';
       msg.className = 'lookup-msg';
       renderCourses(courses);
     } catch(err){
@@ -384,7 +384,7 @@ THUMBNAIL PROMPT:
       const res = await fetch('/api/order-status?ref=' + encodeURIComponent(orderRef));
       const data = await res.json();
       if(data.status === 'paid'){
-        msg.innerHTML = ' <b>পেমেন্ট সফল হয়েছে!</b> আপনার কোর্স খুলে দেওয়া হয়েছে — নিচে দেখুন।';
+        msg.innerHTML = ' ✅ <b>পেমেন্ট সফল হয়েছে!</b> আপনার কোর্স খুলে দেওয়া হয়েছে — নিচে দেখুন।';
         msg.className = 'lookup-msg';
         if(data.contact){
           try { localStorage.setItem('hvb_contact', data.contact); } catch(e){}
@@ -395,7 +395,7 @@ THUMBNAIL PROMPT:
         return;
       }
       if(data.status === 'failed' || data.status === 'cancelled'){
-        msg.textContent = ' পেমেন্টটি সম্পন্ন হয়নি। আবার চেষ্টা করুন অথবা khadimulhasanshuvo@gmail.com-এ যোগাযোগ করুন।';
+        msg.textContent = ' ❌ পেমেন্টটি সম্পন্ন হয়নি। আবার চেষ্টা করুন অথবা khadimulhasanshuvo@gmail.com-এ যোগাযোগ করুন।';
         msg.className = 'lookup-msg error';
         return;
       }
@@ -404,7 +404,7 @@ THUMBNAIL PROMPT:
     if(attempt < 32){
       setTimeout(function(){ checkPaidOrder(orderRef, attempt + 1); }, 2500);
     } else {
-      msg.innerHTML = 'পেমেন্ট যাচাই করতে একটু দেরি হচ্ছে। নিচে আপনার নাম্বার/ইমেইল দিয়ে "খুঁজুন" চাপুন — পেমেন্ট সফল হলে সাথে সাথেই কোর্স খুলে যাবে। সমস্যা থাকলে <a href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" style="color:var(--cyan)">Messenger-এ</a> জানান।';
+      msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
       msg.className = 'lookup-msg error';
     }
   }
@@ -419,7 +419,7 @@ THUMBNAIL PROMPT:
       if(input) input.value = saved;
     }
     if(orderRef){
-      msg.innerHTML = '⏳ <b>পেমেন্ট যাচাই করা হচ্ছে...</b> একটু অপেক্ষা করুন, পেজ বন্ধ করবেন না।';
+      msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
       msg.className = 'lookup-msg info';
       history.replaceState({}, '', window.location.pathname);
       checkPaidOrder(orderRef, 0);
@@ -467,7 +467,7 @@ THUMBNAIL PROMPT:
     const state = document.getElementById('hvbAuthState');
     const btn = document.getElementById('gBtn');
     if(btn) btn.style.display = 'none';
-    state.innerHTML = 'লগইন হয়েছে — কোর্স খোঁজা হচ্ছে...';
+    state.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
     try {
       const res = await fetch('/api/my-access', {
         method: 'POST',
@@ -501,7 +501,7 @@ THUMBNAIL PROMPT:
     if(!contact) return;
     const { data } = await hvbSb.auth.getSession();
     if(!data || !data.session) return;
-    state.innerHTML = 'যুক্ত করা হচ্ছে...';
+    state.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
     try {
       const res = await fetch('/api/my-access', {
         method: 'POST',
@@ -536,7 +536,7 @@ THUMBNAIL PROMPT:
   })();
 </script>
 
-<a class="hvb-msgr-float" href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" aria-label="Messenger-এ প্রশ্ন করুন"><i></i> Messenger-এ প্রশ্ন করুন</a>
+<a class="hvb-msgr-float" href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" aria-label="Messenger-এ প্রশ্ন করুন"><i>💬 </i> Messenger-এ প্রশ্ন করুন</a>
 
 <script>
 /* HVB scroll reveal */

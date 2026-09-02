@@ -1,20 +1,20 @@
 /* ============================================================
    HVB — UI Layer v3
-   অ্যাকসেন্ট কালার (নরম কোরাল-গোল্ড), মাইক্রো-অ্যানিমেশন,
+   অ্যাকসেন্ট কালার (লোগো-ম্যাচিং সায়ান-ভায়োলেট), মাইক্রো-অ্যানিমেশন,
    লোডিং স্টেট ও রিভিউ সিস্টেমের স্টাইল।
    সব পেজে hvb-theme.css এর পরে লোড হয়।
    ============================================================ */
 
 :root{
-  /* খুব কড়া লাল নয় — সফট কোরাল + গোল্ড + সাদা মিশ্রণ */
-  --accent:#FF8C63;
-  --accent-2:#FFC48C;
-  --accent-3:#F5647E;
-  --accent-ink:#2A1408;
-  --accent-tint:rgba(255,140,99,.12);
-  --accent-line:rgba(255,178,140,.34);
-  --grad-accent:linear-gradient(103deg,#FFD9B8 0%,#FF9E72 42%,#F5647E 100%);
-  --grad-accent-soft:linear-gradient(103deg,rgba(255,217,184,.16),rgba(245,100,126,.16));
+  /* লোগোর সাথে মিল — আইসি সায়ান → স্কাই ব্লু → ভায়োলেট */
+  --accent:#38D6F0;
+  --accent-2:#9EF3F0;
+  --accent-3:#7C6BF5;
+  --accent-ink:#04121F;
+  --accent-tint:rgba(56,214,240,.12);
+  --accent-line:rgba(120,220,245,.34);
+  --grad-accent:linear-gradient(103deg,#B4F0F0 0%,#3FC7F2 45%,#7C6BF5 100%);
+  --grad-accent-soft:linear-gradient(103deg,rgba(180,240,240,.16),rgba(124,107,245,.16));
 }
 
 /* ---------- অ্যাকসেন্ট বাটন ---------- */
@@ -25,12 +25,12 @@
   border:none; border-radius:11px; padding:11px 20px;
   font-family:inherit; font-size:.94em; font-weight:800; letter-spacing:.01em;
   cursor:pointer; white-space:nowrap;
-  box-shadow:0 10px 26px -14px rgba(245,100,126,.75), inset 0 1px 0 rgba(255,255,255,.45);
+  box-shadow:0 10px 26px -14px rgba(56,150,240,.75), inset 0 1px 0 rgba(255,255,255,.45);
   transition:transform .18s ease, box-shadow .22s ease, filter .2s ease;
 }
 .hvb-btn-accent:hover{
   transform:translateY(-2px);
-  box-shadow:0 16px 34px -14px rgba(245,100,126,.85), inset 0 1px 0 rgba(255,255,255,.55);
+  box-shadow:0 16px 34px -14px rgba(56,150,240,.85), inset 0 1px 0 rgba(255,255,255,.55);
   filter:saturate(1.05);
 }
 .hvb-btn-accent:active{ transform:translateY(0) scale(.985); }
@@ -61,7 +61,7 @@
 /* ---------- টপ প্রগ্রেস বার ---------- */
 #hvbProgress{
   position:fixed; top:0; left:0; height:3px; width:0; z-index:9999;
-  background:var(--grad-accent); box-shadow:0 0 12px rgba(255,158,114,.7);
+  background:var(--grad-accent); box-shadow:0 0 12px rgba(80,210,245,.75);
   opacity:0; transition:width .25s ease, opacity .3s ease;
 }
 #hvbProgress.on{ opacity:1; }
@@ -107,7 +107,7 @@
   border-radius:16px; padding:18px 20px; margin-bottom:20px;
 }
 .hvb-rv-score{ font-family:'Sora',sans-serif; font-size:2.2em; font-weight:800; line-height:1; }
-.hvb-rv-stars{ color:#FFC48C; letter-spacing:.12em; font-size:1.05em; }
+.hvb-rv-stars{ color:#9EF3F0; letter-spacing:.12em; font-size:1.05em; }
 .hvb-rv-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; }
 .hvb-rv-card{
   background:var(--surface,#0F1421); border:1px solid var(--line,#212A42);
@@ -149,7 +149,7 @@
 .hvb-rv-form textarea{ min-height:110px; resize:vertical; }
 .hvb-rv-pick{ display:flex; gap:6px; font-size:1.5em; cursor:pointer; user-select:none; }
 .hvb-rv-pick i{ font-style:normal; color:#3A425C; transition:color .15s ease, transform .15s ease; }
-.hvb-rv-pick i.on{ color:#FFC48C; transform:scale(1.08); }
+.hvb-rv-pick i.on{ color:#9EF3F0; transform:scale(1.08); }
 .hvb-rv-note{ font-size:.84em; color:var(--muted,#9AA5BF); margin-top:10px; }
 .hvb-rv-msg{ font-size:.88em; margin-top:10px; min-height:20px; }
 .hvb-rv-msg.ok{ color:#7FE3C4; } .hvb-rv-msg.err{ color:#FF9B9B; }
@@ -161,3 +161,23 @@
 @media (prefers-reduced-motion:reduce){
   *{ animation-duration:.001s !important; transition-duration:.001s !important; }
 }
+
+
+/* ---------- ইনলাইন স্পিনার (লোডিং টেক্সটের বদলে) ---------- */
+.hvb-inline-spin{
+  display:inline-block; width:18px; height:18px; vertical-align:-4px;
+  border-radius:50%; border:2px solid rgba(255,255,255,.14);
+  border-top-color:var(--accent); border-right-color:var(--accent-3);
+  animation:hvbSpin .75s linear infinite;
+}
+.hvb-loadrow{ display:flex; align-items:center; justify-content:center; gap:10px; padding:18px 0; }
+.hvb-loadrow .hvb-inline-spin{ width:26px; height:26px; border-width:3px; }
+
+/* পেজ ট্রানজিশন লোডার — বড় রিং */
+#hvbLoader .hvb-spin{ width:52px; height:52px; border-width:4px; }
+#hvbLoader .hvb-ring2{
+  position:absolute; width:78px; height:78px; border-radius:50%;
+  border:2px solid transparent; border-bottom-color:var(--accent-2);
+  animation:hvbSpin 1.6s linear infinite reverse;
+}
+#hvbLoader .hvb-spinwrap{ position:relative; display:grid; place-items:center; width:78px; height:78px; }

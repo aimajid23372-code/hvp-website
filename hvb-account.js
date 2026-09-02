@@ -246,6 +246,7 @@
   }
 
   function go(base) {
+    if (HVB.overlay) HVB.overlay(true);
     location.href = base + (base.indexOf('?') > -1 ? '&' : '?') + 'next=' + nextParam();
   }
 
@@ -392,7 +393,8 @@
       document.body.appendChild(bar);
       var loader = document.createElement('div');
       loader.id = 'hvbLoader';
-      loader.innerHTML = '<div class="hvb-spin"></div><small>একটু অপেক্ষা করুন…</small>';
+      loader.innerHTML =
+        '<div class="hvb-spinwrap"><span class="hvb-ring2"></span><div class="hvb-spin"></div></div>';
       document.body.appendChild(loader);
     }
     var bar = document.getElementById('hvbProgress');
@@ -449,6 +451,23 @@
       b.appendChild(sp);
       setTimeout(function () { sp.remove(); }, 620);
     });
+
+    /* ইন্টারনাল লিংক/নেভিগেশনে স্পিনার */
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href]');
+      if (!a || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+      if (a.target === '_blank' || a.hasAttribute('download')) return;
+      var href = a.getAttribute('href') || '';
+      if (!href || href[0] === '#' || /^(mailto:|tel:|javascript:)/i.test(href)) return;
+      var u;
+      try { u = new URL(a.href, location.href); } catch (_) { return; }
+      if (u.origin !== location.origin) return;
+      if (u.pathname === location.pathname && u.hash) return;
+      start();
+      HVB.overlay(true);
+    });
+    window.addEventListener('pageshow', function () { HVB.overlay(false); done(); });
+    window.addEventListener('beforeunload', function () { HVB.overlay(true); });
 
     /* স্ক্রল রিভিল */
     if ('IntersectionObserver' in window) {

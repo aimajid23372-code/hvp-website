@@ -60,7 +60,7 @@
 <header>
   <img src="hvb-logo.png" alt="HVB">
   <b style="font-family:'Sora',sans-serif;">HVB Admin</b>
-  <a href="/admin-analytics" style="margin-left:auto;font-size:.9em;background:linear-gradient(90deg,var(--cyan),var(--violet));color:#0A0D14;padding:7px 14px;border-radius:8px;font-weight:700;"> সব হিস্ট্রি দেখুন</a>
+  <a href="/admin-analytics" style="margin-left:auto;font-size:.9em;background:linear-gradient(90deg,var(--cyan),var(--violet));color:#0A0D14;padding:7px 14px;border-radius:8px;font-weight:700;"> 📊 সব হিস্ট্রি দেখুন</a>
 </header>
 
 <div class="wrap">
@@ -68,7 +68,7 @@
 
   <div id="hvbAdminGate" style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:18px;">
     <b style="font-family:'Sora',sans-serif;display:block;margin-bottom:6px;">ধাপ ১ — অ্যাডমিন অ্যাকাউন্ট যাচাই</b>
-    <p id="hvbGateMsg" style="color:var(--muted);font-size:.9em;">যাচাই করা হচ্ছে…</p>
+    <p id="hvbGateMsg" style="color:var(--muted);font-size:.9em;"><span class="hvb-inline-spin"></span></p>
     <div id="hvbGateBtns" style="margin-top:12px;"></div>
   </div>
 
@@ -93,8 +93,8 @@
       <h1>২) অর্ডার খুঁজুন / কোর্স খুলে দিন</h1>
       <p class="hint">
         কেউ যদি বলে "টাকা দিয়েছি কিন্তু কোর্স পাচ্ছি না" — তার <b>নাম্বার, ইমেইল বা Invoice ID</b> এখানে লিখে খুঁজুন।<br>
-        • <b> ZiniPay-তে যাচাই করুন</b> = ZiniPay-কে জিজ্ঞেস করবে টাকা সত্যিই এসেছে কিনা; এসে থাকলে নিজে থেকেই কোর্স খুলে দেবে।<br>
-        • <b> হাতে হাতে Paid করুন</b> = আপনি নিজে নিশ্চিত হয়ে থাকলে জোর করে কোর্স খুলে দেবে (ZiniPay-তে না পাওয়া গেলে এটা ব্যবহার করুন)।
+        • <b> 🔍 ZiniPay-তে যাচাই করুন</b> = ZiniPay-কে জিজ্ঞেস করবে টাকা সত্যিই এসেছে কিনা; এসে থাকলে নিজে থেকেই কোর্স খুলে দেবে।<br>
+        • <b> ✅ হাতে হাতে Paid করুন</b> = আপনি নিজে নিশ্চিত হয়ে থাকলে জোর করে কোর্স খুলে দেবে (ZiniPay-তে না পাওয়া গেলে এটা ব্যবহার করুন)।
       </p>
       <div class="login-box">
         <input type="text" id="orderQuery" placeholder="নাম্বার / ইমেইল / Invoice ID">
@@ -112,7 +112,7 @@
         <span style="font-family:monospace;">করিম, 01712345678, bundle<br>রহিম, 01898765432, short</span>
       </p>
       <textarea id="bulkStudents" rows="8" placeholder="করিম, 01712345678, bundle" style="width:100%;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--text);font-family:inherit;font-size:.95em;"></textarea>
-      <button type="button" onclick="bulkAdd()" class="approve-btn" style="margin-top:10px;"> সবাইকে যোগ করুন</button>
+      <button type="button" onclick="bulkAdd()" class="approve-btn" style="margin-top:10px;"> ➕ সবাইকে যোগ করুন</button>
       <div id="bulkMsg" class="msg" style="margin-top:10px;"></div>
     </div>
 
@@ -131,7 +131,7 @@
 
   async function doLogin(){
     var msg = document.getElementById('msg');
-    msg.className = 'msg'; msg.textContent = 'চেক করা হচ্ছে...';
+    msg.className = 'msg'; msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
     var data = await adminApi({ action:'auth' });
     if(data && data.ok){
       msg.textContent = '';
@@ -140,13 +140,13 @@
     } else {
       document.getElementById('panel').style.display = 'none';
       msg.className = 'msg error';
-      msg.textContent = ' ' + ((data && data.error) || 'ভুল পাসওয়ার্ড');
+      msg.textContent = ' ⚠️ ' + ((data && data.error) || 'ভুল পাসওয়ার্ড');
     }
   }
 
   async function bulkAdd(){
     const msg = document.getElementById('bulkMsg');
-    msg.textContent = 'যোগ করা হচ্ছে...';
+    msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
     const data = await adminApi({ action:'bulkAdd', students: document.getElementById('bulkStudents').value });
     msg.textContent = data.result || data.error || 'হয়ে গেছে';
     if(data.result) document.getElementById('bulkStudents').value = '';
@@ -155,7 +155,7 @@
   async function searchOrders(){
     const msg = document.getElementById('orderMsg');
     const area = document.getElementById('ordersArea');
-    area.innerHTML = ''; msg.textContent = 'খোঁজা হচ্ছে...';
+    area.innerHTML = ''; msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
     const data = await adminApi({ action:'search', query: document.getElementById('orderQuery').value.trim() });
     if(data.error){ msg.textContent = data.error; return; }
     const orders = data.orders || [];
@@ -168,8 +168,8 @@
         '<div style="font-size:12px;opacity:.7"><b>Order ID:</b> ' + o.our_ref + '<br><b>Invoice ID:</b> ' + (o.invoice_id || 'নেই') + '</div>' +
         (o.status === 'paid' ? '' :
           '<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">' +
-          '<button class="approve-btn" onclick="orderAction(\'verify\',\'' + o.our_ref + '\')"> ZiniPay-তে যাচাই করুন</button>' +
-          '<button class="approve-btn" onclick="orderAction(\'markPaid\',\'' + o.our_ref + '\')"> হাতে হাতে Paid করুন</button>' +
+          '<button class="approve-btn" onclick="orderAction(\'verify\',\'' + o.our_ref + '\')"> 🔍 ZiniPay-তে যাচাই করুন</button>' +
+          '<button class="approve-btn" onclick="orderAction(\'markPaid\',\'' + o.our_ref + '\')"> ✅ হাতে হাতে Paid করুন</button>' +
           '</div>') +
       '</div>';
     }).join('');
@@ -177,7 +177,7 @@
 
   async function orderAction(action, orderId){
     const msg = document.getElementById('orderMsg');
-    msg.textContent = 'অপেক্ষা করুন...';
+    msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
     const data = await adminApi({ action: action, orderId: orderId });
     msg.textContent = data.result || data.error || 'হয়ে গেছে';
     searchOrders();
@@ -188,7 +188,7 @@
     const msg = document.getElementById('msg');
     const area = document.getElementById('requestsArea');
     area.innerHTML = '';
-    msg.textContent = 'লোড হচ্ছে...';
+    msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
     msg.className = 'msg';
 
     try {
@@ -199,7 +199,7 @@
       });
       const data = await res.json();
       if(!res.ok){
-        msg.textContent = ' ' + (data.error || 'সমস্যা হয়েছে');
+        msg.textContent = ' ⚠️ ' + (data.error || 'সমস্যা হয়েছে');
         msg.className = 'msg error';
         return;
       }
@@ -221,7 +221,7 @@
             '<div class="req-row"><span>Ref Code</span><span>' + r.ref_code + '</span></div>' +
             '<div class="req-row"><span>রিকোয়েস্ট তারিখ</span><span>' + dateStr + '</span></div>' +
             '<div class="req-row"><span>পরিমাণ</span><span class="amount">' + r.amount + ' ৳</span></div>' +
-            '<button class="approve-btn" data-id="' + r.id + '"> টাকা পাঠিয়েছি — Approve করুন</button>';
+            '<button class="approve-btn" data-id="' + r.id + '"> ✅ টাকা পাঠিয়েছি — Approve করুন</button>';
           area.appendChild(card);
         });
         area.querySelectorAll('.approve-btn').forEach(function(btn){
@@ -240,7 +240,7 @@
           card.style.opacity = '0.6';
           card.innerHTML =
             '<div class="req-row"><span>নাম</span><span>' + r.name + '</span></div>' +
-            '<div class="req-row"><span>পরিমাণ</span><span class="amount">' + r.amount + ' ৳  Paid</span></div>';
+            '<div class="req-row"><span>পরিমাণ</span><span class="amount">' + r.amount + ' ৳  ✓ Paid</span></div>';
           area.appendChild(card);
         });
       }

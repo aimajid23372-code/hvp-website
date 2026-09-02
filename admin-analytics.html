@@ -59,7 +59,7 @@
 </header>
 
 <div class="wrap">
-  <h1> সব হিস্ট্রি — কে ঢুকল, কে কিনল</h1>
+  <h1> 📊 সব হিস্ট্রি — কে ঢুকল, কে কিনল</h1>
   <div class="login-box">
     <input type="password" id="pw" placeholder="Admin পাসওয়ার্ড">
     <select id="days">
@@ -91,13 +91,13 @@ function dt(s){ try{ var d=new Date(s); return d.toLocaleDateString('bn-BD')+' '
 
 async function load(){
   var msg = document.getElementById('msg'), out = document.getElementById('out');
-  out.innerHTML=''; msg.textContent = 'লোড হচ্ছে...';
+  out.innerHTML=''; msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
   var res = await fetch('/api/admin-analytics', {
     method:'POST', headers:{'Content-Type':'application/json'},
     body: JSON.stringify({ adminPassword: document.getElementById('pw').value, days: document.getElementById('days').value })
   });
   var d = await res.json();
-  if(d.error){ msg.textContent = ' ' + d.error; return; }
+  if(d.error){ msg.textContent = ' ⚠️ ' + d.error; return; }
   msg.textContent = '';
 
   var s = d.summary;
