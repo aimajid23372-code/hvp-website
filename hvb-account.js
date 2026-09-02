@@ -118,7 +118,9 @@
 
   /* ---------------- হেল্পার ---------------- */
   function here() {
-    return location.pathname.split('/').pop() || 'index.html';
+    var last = location.pathname.split('/').pop() || '';
+    last = last.replace(/\.html$/i, '');
+    return last || 'index';
   }
   function nextParam() {
     return encodeURIComponent(here() + location.search + location.hash);
@@ -129,21 +131,41 @@
     });
   }
 
+  function ic(d) {
+    return (
+      '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" ' +
+      'stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' + d + '</svg>'
+    );
+  }
+  var IC = {
+    home: ic('<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.8V21h14V9.8"/>'),
+    cap: ic('<path d="M2 8l10-4 10 4-10 4L2 8z"/><path d="M6 10.5V17c0 1.5 2.7 3 6 3s6-1.5 6-3v-6.5"/>'),
+    gift: ic('<rect x="3" y="8" width="18" height="13" rx="2"/><path d="M3 12h18M12 8v13"/><path d="M12 8s-1-4-4-4a2.4 2.4 0 0 0 0 4zM12 8s1-4 4-4a2.4 2.4 0 0 1 0 4z"/>'),
+    book: ic('<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5V5.5"/>'),
+    star: ic('<path d="M12 3.6l2.6 5.4 5.9.8-4.3 4.1 1.1 5.9L12 17l-5.3 2.8 1.1-5.9L3.5 9.8l5.9-.8z"/>'),
+    coin: ic('<circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.4 9.4h4a1.9 1.9 0 0 1 0 3.8h-3.8a1.9 1.9 0 0 0 0 3.8h4.4"/>'),
+    chart: ic('<path d="M4 20V4"/><path d="M4 20h16"/><path d="M8 17v-5M12.5 17V8M17 17v-8"/>'),
+    info: ic('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.1"/>'),
+    mail: ic('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5 12 13l8.5-6.5"/>'),
+    doc: ic('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/>'),
+  };
+
   var LINKS = [
     { g: 'শেখা', items: [
-      ['index.html', '🏠', 'হোম'],
-      ['courses.html', '🎓', 'কোর্সসমূহ'],
-      ['free-lesson.html', '🎁', 'ফ্রি লেসন'],
-      ['my-courses.html', '📚', 'আমার কোর্স'],
+      ['index', IC.home, 'হোম'],
+      ['courses', IC.cap, 'কোর্সসমূহ'],
+      ['free-lesson', IC.gift, 'ফ্রি লেসন'],
+      ['my-courses', IC.book, 'আমার কোর্স'],
+      ['reviews', IC.star, 'শিক্ষার্থীদের রিভিউ'],
     ]},
     { g: 'ইনকাম', items: [
-      ['affiliate.html', '💰', 'অ্যাফিলিয়েট প্রোগ্রাম'],
-      ['affiliate-dashboard.html', '📊', 'অ্যাফিলিয়েট ড্যাশবোর্ড'],
+      ['affiliate', IC.coin, 'অ্যাফিলিয়েট প্রোগ্রাম'],
+      ['affiliate-dashboard', IC.chart, 'অ্যাফিলিয়েট ড্যাশবোর্ড'],
     ]},
     { g: 'প্রতিষ্ঠান', items: [
-      ['about.html', 'ℹ️', 'আমাদের সম্পর্কে'],
-      ['contact.html', '✉️', 'যোগাযোগ'],
-      ['refund.html', '📄', 'রিফান্ড ও এক্সেস পলিসি'],
+      ['about', IC.info, 'আমাদের সম্পর্কে'],
+      ['contact', IC.mail, 'যোগাযোগ'],
+      ['refund', IC.doc, 'এক্সেস ও রিফান্ড পলিসি'],
     ]},
   ];
 
@@ -164,7 +186,7 @@
       nav += '<h6>' + grp.g + '</h6>';
       grp.items.forEach(function (it) {
         nav +=
-          '<a href="' + it[0] + '"' + (it[0] === here() ? ' class="active"' : '') + '>' +
+          '<a href="/' + (it[0] === 'index' ? '' : it[0]) + '"' + (it[0] === here() ? ' class="active"' : '') + '>' +
           '<i>' + it[1] + '</i>' + it[2] + '</a>';
       });
     });
@@ -200,23 +222,26 @@
     // পুরোনো ৩-ডট মেনু সরিয়ে নতুন ড্রয়ার ব্যবহার
     var old = header.querySelector('.dots-wrap');
     if (old) old.remove();
+    // পেজের নিজের পুরোনো হেডার CTA সরিয়ে একটাই অ্যাকসেন্ট বাটন রাখি
+    header.querySelectorAll(
+      '.btn-primary, .btn-ghost, a[href="/login"], a[href="/my-courses"]'
+    ).forEach(function (el) { el.remove(); });
 
     actions = document.createElement('div');
     actions.className = 'hvb-acc-actions';
     actions.innerHTML =
-      '<button class="hvb-acc-login" type="button" id="hvbTopLogin">লগইন</button>' +
-      '<button class="hvb-acc-signup" type="button" id="hvbTopSignup">সাইন আপ</button>' +
-      '<button class="hvb-menu-btn" type="button" id="hvbMenuBtn" aria-label="মেনু">⋮</button>';
+      '<button class="hvb-btn-accent hvb-cta" type="button" id="hvbTopCta">শুরু করুন</button>' +
+      '<button class="hvb-menu-btn" type="button" id="hvbMenuBtn" aria-label="মেনু">' +
+      '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" ' +
+      'stroke-width="1.9" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>';
 
     var nav = header.querySelector('nav');
     (nav || header).appendChild(actions);
 
     actions.querySelector('#hvbMenuBtn').addEventListener('click', openDrawer);
-    actions.querySelector('#hvbTopLogin').addEventListener('click', function () {
-      go('login.html');
-    });
-    actions.querySelector('#hvbTopSignup').addEventListener('click', function () {
-      go('login.html?mode=signup');
+    actions.querySelector('#hvbTopCta').addEventListener('click', function () {
+      if (HVB.user) location.href = '/my-courses';
+      else go('/login');
     });
   }
 
@@ -246,8 +271,8 @@
       foot.querySelector('#hvbSignOut').addEventListener('click', signOut);
 
       if (actions) {
-        actions.querySelector('#hvbTopLogin').style.display = 'none';
-        actions.querySelector('#hvbTopSignup').style.display = 'none';
+        var cta = actions.querySelector('#hvbTopCta');
+        if (cta) cta.textContent = 'আমার কোর্স';
         if (!actions.querySelector('.hvb-avatar')) {
           var av = document.createElement('button');
           av.type = 'button';
@@ -261,18 +286,18 @@
       }
     } else {
       block.innerHTML =
-        '<div class="hvb-guest"><b>স্বাগতম 👋</b>' +
-        '<p>লগইন করলে আপনার কেনা কোর্স যেকোনো ডিভাইসে নিজেই খুলে যাবে।</p>' +
-        '<div class="row"><button class="hvb-acc-signup" type="button" id="hvbDrawerLogin">লগইন</button>' +
-        '<button class="hvb-acc-login" style="display:block" type="button" id="hvbDrawerSignup">সাইন আপ</button></div></div>';
-      block.querySelector('#hvbDrawerLogin').addEventListener('click', function () { go('login.html'); });
-      block.querySelector('#hvbDrawerSignup').addEventListener('click', function () { go('login.html?mode=signup'); });
+        '<div class="hvb-guest"><b>স্বাগতম</b>' +
+        '<p>লগইন করলে আপনার কেনা কোর্স যেকোনো ডিভাইস থেকে নিজেই খুলে যাবে।</p>' +
+        '<div class="row"><button class="hvb-btn-accent" type="button" id="hvbDrawerLogin">লগইন</button>' +
+        '<button class="hvb-btn-quiet" type="button" id="hvbDrawerSignup">সাইন আপ</button></div></div>';
+      block.querySelector('#hvbDrawerLogin').addEventListener('click', function () { go('/login'); });
+      block.querySelector('#hvbDrawerSignup').addEventListener('click', function () { go('/login?mode=signup'); });
       foot.innerHTML = '<small>© ২০২৬ HVB — Hyper Vision Bangla</small>';
       if (actions) {
         var a = actions.querySelector('.hvb-avatar');
         if (a) a.remove();
-        actions.querySelector('#hvbTopLogin').style.display = '';
-        actions.querySelector('#hvbTopSignup').style.display = '';
+        var cta2 = actions.querySelector('#hvbTopCta');
+        if (cta2) cta2.textContent = 'শুরু করুন';
       }
     }
   }
@@ -320,7 +345,7 @@
     if (!HVB.sb) return false;
     await HVB.sb.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: location.origin + '/' + (nextUrl || 'my-courses.html') },
+      options: { redirectTo: location.origin + '/' + String(nextUrl || 'my-courses').replace(/^\//, '').replace(/\.html$/i, '') },
     });
     return true;
   };
@@ -333,7 +358,7 @@
       render();
       closeDrawer();
       var p = here();
-      if (p === 'my-courses.html' || p === 'affiliate-dashboard.html') location.href = 'index.html';
+      if (p === 'my-courses' || p === 'affiliate-dashboard' || p === 'admin') location.href = '/';
     })();
   }
   HVB.signOut = signOut;
@@ -342,7 +367,7 @@
   HVB.gate = function (fn) {
     HVB.whenReady(function () {
       if (!HVB.sb || HVB.user) return fn(); // লগইন বন্ধ থাকলে পুরোনো ফ্লো ঠিক থাকবে
-      go('login.html');
+      go('/login');
     });
   };
   window.hvbGate = HVB.gate;
@@ -355,11 +380,87 @@
     if (HVB.sb && !HVB.user) {
       e.preventDefault();
       e.stopPropagation();
-      go('login.html');
+      go('/login');
     }
   }, true);
 
+  /* ---------------- মাইক্রো-ইন্টারঅ্যাকশন + লোডিং ---------------- */
+  function mountUiLayer() {
+    if (!document.getElementById('hvbProgress')) {
+      var bar = document.createElement('div');
+      bar.id = 'hvbProgress';
+      document.body.appendChild(bar);
+      var loader = document.createElement('div');
+      loader.id = 'hvbLoader';
+      loader.innerHTML = '<div class="hvb-spin"></div><small>একটু অপেক্ষা করুন…</small>';
+      document.body.appendChild(loader);
+    }
+    var bar = document.getElementById('hvbProgress');
+    var pending = 0, width = 0, timer = null;
+
+    function start() {
+      pending++;
+      if (pending > 1) return;
+      width = 8; bar.classList.add('on'); bar.style.width = '8%';
+      timer = setInterval(function () {
+        width = Math.min(92, width + (92 - width) * 0.12 + 1);
+        bar.style.width = width.toFixed(1) + '%';
+      }, 220);
+    }
+    function done() {
+      pending = Math.max(0, pending - 1);
+      if (pending) return;
+      clearInterval(timer);
+      bar.style.width = '100%';
+      setTimeout(function () { bar.classList.remove('on'); bar.style.width = '0'; }, 320);
+    }
+    HVB.loadStart = start;
+    HVB.loadDone = done;
+    HVB.overlay = function (on) {
+      document.getElementById('hvbLoader').classList.toggle('on', !!on);
+    };
+
+    var origFetch = window.fetch;
+    if (origFetch && !origFetch.__hvb) {
+      var wrapped = function (input, init) {
+        var url = typeof input === 'string' ? input : (input && input.url) || '';
+        var track = url.indexOf('/api/') > -1;
+        if (track) start();
+        var pr = origFetch.apply(this, arguments);
+        return track ? pr.then(function (r) { done(); return r; }, function (e) { done(); throw e; }) : pr;
+      };
+      wrapped.__hvb = true;
+      window.fetch = wrapped;
+    }
+
+    /* ক্লিকে ripple */
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest && e.target.closest('.hvb-btn-accent, .hvb-btn-quiet, .btn-primary, .buy-btn');
+      if (!b) return;
+      var rect = b.getBoundingClientRect();
+      var size = Math.max(rect.width, rect.height);
+      var sp = document.createElement('span');
+      sp.className = 'hvb-ripple';
+      sp.style.width = sp.style.height = size + 'px';
+      sp.style.left = (e.clientX - rect.left - size / 2) + 'px';
+      sp.style.top = (e.clientY - rect.top - size / 2) + 'px';
+      if (getComputedStyle(b).position === 'static') b.style.position = 'relative';
+      b.style.overflow = 'hidden';
+      b.appendChild(sp);
+      setTimeout(function () { sp.remove(); }, 620);
+    });
+
+    /* স্ক্রল রিভিল */
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.hvb-reveal').forEach(function (el) { io.observe(el); });
+    }
+  }
+
   function boot() {
+    mountUiLayer();
     buildDrawer();
     buildHeaderActions();
     render();

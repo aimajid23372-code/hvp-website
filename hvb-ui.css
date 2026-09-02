@@ -1,0 +1,163 @@
+/* ============================================================
+   HVB — UI Layer v3
+   অ্যাকসেন্ট কালার (নরম কোরাল-গোল্ড), মাইক্রো-অ্যানিমেশন,
+   লোডিং স্টেট ও রিভিউ সিস্টেমের স্টাইল।
+   সব পেজে hvb-theme.css এর পরে লোড হয়।
+   ============================================================ */
+
+:root{
+  /* খুব কড়া লাল নয় — সফট কোরাল + গোল্ড + সাদা মিশ্রণ */
+  --accent:#FF8C63;
+  --accent-2:#FFC48C;
+  --accent-3:#F5647E;
+  --accent-ink:#2A1408;
+  --accent-tint:rgba(255,140,99,.12);
+  --accent-line:rgba(255,178,140,.34);
+  --grad-accent:linear-gradient(103deg,#FFD9B8 0%,#FF9E72 42%,#F5647E 100%);
+  --grad-accent-soft:linear-gradient(103deg,rgba(255,217,184,.16),rgba(245,100,126,.16));
+}
+
+/* ---------- অ্যাকসেন্ট বাটন ---------- */
+.hvb-btn-accent{
+  position:relative; overflow:hidden; isolation:isolate;
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  background:var(--grad-accent); color:var(--accent-ink);
+  border:none; border-radius:11px; padding:11px 20px;
+  font-family:inherit; font-size:.94em; font-weight:800; letter-spacing:.01em;
+  cursor:pointer; white-space:nowrap;
+  box-shadow:0 10px 26px -14px rgba(245,100,126,.75), inset 0 1px 0 rgba(255,255,255,.45);
+  transition:transform .18s ease, box-shadow .22s ease, filter .2s ease;
+}
+.hvb-btn-accent:hover{
+  transform:translateY(-2px);
+  box-shadow:0 16px 34px -14px rgba(245,100,126,.85), inset 0 1px 0 rgba(255,255,255,.55);
+  filter:saturate(1.05);
+}
+.hvb-btn-accent:active{ transform:translateY(0) scale(.985); }
+/* shine sweep */
+.hvb-btn-accent::after{
+  content:''; position:absolute; inset:0; z-index:-1;
+  background:linear-gradient(115deg,transparent 20%,rgba(255,255,255,.55) 46%,transparent 72%);
+  transform:translateX(-120%); transition:transform .7s ease;
+}
+.hvb-btn-accent:hover::after{ transform:translateX(120%); }
+
+.hvb-btn-quiet{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  background:transparent; color:var(--text,#F2F6FF);
+  border:1px solid var(--line,#212A42); border-radius:11px; padding:11px 18px;
+  font-family:inherit; font-size:.92em; font-weight:600; cursor:pointer;
+  transition:border-color .2s ease, color .2s ease, transform .18s ease;
+}
+.hvb-btn-quiet:hover{ border-color:var(--accent-line); color:var(--accent-2); transform:translateY(-2px); }
+
+/* ripple */
+.hvb-ripple{
+  position:absolute; border-radius:50%; transform:scale(0); pointer-events:none;
+  background:rgba(255,255,255,.45); animation:hvbRipple .6s ease-out forwards;
+}
+@keyframes hvbRipple{ to{ transform:scale(2.6); opacity:0; } }
+
+/* ---------- টপ প্রগ্রেস বার ---------- */
+#hvbProgress{
+  position:fixed; top:0; left:0; height:3px; width:0; z-index:9999;
+  background:var(--grad-accent); box-shadow:0 0 12px rgba(255,158,114,.7);
+  opacity:0; transition:width .25s ease, opacity .3s ease;
+}
+#hvbProgress.on{ opacity:1; }
+
+/* ---------- গ্লোবাল লোডার ---------- */
+#hvbLoader{
+  position:fixed; inset:0; z-index:9998; display:none;
+  align-items:center; justify-content:center; flex-direction:column; gap:14px;
+  background:rgba(5,7,13,.72); backdrop-filter:blur(4px);
+}
+#hvbLoader.on{ display:flex; }
+#hvbLoader small{ color:var(--muted,#9AA5BF); font-size:.86em; }
+.hvb-spin{
+  width:44px; height:44px; border-radius:50%;
+  border:3px solid rgba(255,255,255,.12);
+  border-top-color:var(--accent); border-right-color:var(--accent-3);
+  animation:hvbSpin .8s linear infinite;
+}
+@keyframes hvbSpin{ to{ transform:rotate(360deg); } }
+
+/* বাটনের ভেতরের স্পিনার */
+.hvb-busy{ position:relative; color:transparent !important; pointer-events:none; }
+.hvb-busy::before{
+  content:''; position:absolute; left:50%; top:50%; width:18px; height:18px; margin:-9px 0 0 -9px;
+  border-radius:50%; border:2px solid rgba(0,0,0,.25); border-top-color:rgba(0,0,0,.75);
+  animation:hvbSpin .7s linear infinite;
+}
+
+/* ---------- স্কেলিটন ---------- */
+.hvb-skel{
+  background:linear-gradient(90deg,rgba(255,255,255,.04),rgba(255,255,255,.10),rgba(255,255,255,.04));
+  background-size:200% 100%; animation:hvbShimmer 1.3s linear infinite; border-radius:10px;
+}
+@keyframes hvbShimmer{ to{ background-position:-200% 0; } }
+
+/* ---------- রিভিউ সিস্টেম ---------- */
+.hvb-rv{ max-width:1080px; margin:0 auto; padding:56px 22px; }
+.hvb-rv h2{ font-family:'Sora',sans-serif; font-size:1.5em; margin-bottom:6px; }
+.hvb-rv .rv-sub{ color:var(--muted,#9AA5BF); font-size:.92em; margin-bottom:22px; }
+.hvb-rv-summary{
+  display:flex; flex-wrap:wrap; align-items:center; gap:18px;
+  background:var(--surface,#0F1421); border:1px solid var(--line,#212A42);
+  border-radius:16px; padding:18px 20px; margin-bottom:20px;
+}
+.hvb-rv-score{ font-family:'Sora',sans-serif; font-size:2.2em; font-weight:800; line-height:1; }
+.hvb-rv-stars{ color:#FFC48C; letter-spacing:.12em; font-size:1.05em; }
+.hvb-rv-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; }
+.hvb-rv-card{
+  background:var(--surface,#0F1421); border:1px solid var(--line,#212A42);
+  border-radius:14px; padding:16px 17px; transition:transform .2s ease, border-color .2s ease;
+}
+.hvb-rv-card:hover{ transform:translateY(-3px); border-color:var(--accent-line); }
+.hvb-rv-card .who{ display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.hvb-rv-card .who .av{
+  width:36px; height:36px; border-radius:50%; flex:0 0 36px;
+  background:var(--grad-accent); color:var(--accent-ink);
+  display:flex; align-items:center; justify-content:center; font-weight:800;
+}
+.hvb-rv-card .who b{ font-size:.94em; display:block; }
+.hvb-rv-card .who span{ font-size:.75em; color:var(--muted,#9AA5BF); }
+.hvb-rv-card p{ font-size:.92em; color:#D5DDEE; margin:8px 0; white-space:pre-wrap; }
+.hvb-rv-card img.shot{
+  width:100%; border-radius:10px; border:1px solid var(--line,#212A42); margin-top:8px;
+  display:block; max-height:280px; object-fit:cover;
+}
+.hvb-rv-card a.lnk{ font-size:.84em; color:var(--accent-2); word-break:break-all; }
+.hvb-rv-verified{
+  display:inline-flex; align-items:center; gap:5px; font-size:.72em; font-weight:700;
+  color:#7FE3C4; background:rgba(79,227,193,.10); border:1px solid rgba(79,227,193,.24);
+  padding:3px 8px; border-radius:20px;
+}
+.hvb-rv-form{
+  background:var(--surface-2,#161D2E); border:1px solid var(--line,#212A42);
+  border-radius:16px; padding:20px; margin-bottom:22px;
+}
+.hvb-rv-form label{ display:block; font-size:.85em; color:var(--muted,#9AA5BF); margin:12px 0 6px; }
+.hvb-rv-form input, .hvb-rv-form textarea, .hvb-rv-form select{
+  width:100%; background:var(--bg-2,#080B14); border:1px solid var(--line,#212A42);
+  border-radius:10px; padding:12px 13px; color:var(--text,#F2F6FF);
+  font-family:inherit; font-size:.94em;
+}
+.hvb-rv-form input:focus, .hvb-rv-form textarea:focus, .hvb-rv-form select:focus{
+  outline:none; border-color:var(--accent-line); box-shadow:0 0 0 3px var(--accent-tint);
+}
+.hvb-rv-form textarea{ min-height:110px; resize:vertical; }
+.hvb-rv-pick{ display:flex; gap:6px; font-size:1.5em; cursor:pointer; user-select:none; }
+.hvb-rv-pick i{ font-style:normal; color:#3A425C; transition:color .15s ease, transform .15s ease; }
+.hvb-rv-pick i.on{ color:#FFC48C; transform:scale(1.08); }
+.hvb-rv-note{ font-size:.84em; color:var(--muted,#9AA5BF); margin-top:10px; }
+.hvb-rv-msg{ font-size:.88em; margin-top:10px; min-height:20px; }
+.hvb-rv-msg.ok{ color:#7FE3C4; } .hvb-rv-msg.err{ color:#FF9B9B; }
+
+/* ---------- স্ক্রল রিভিল ---------- */
+.hvb-reveal{ opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease; }
+.hvb-reveal.in{ opacity:1; transform:none; }
+
+@media (prefers-reduced-motion:reduce){
+  *{ animation-duration:.001s !important; transition-duration:.001s !important; }
+}

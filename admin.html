@@ -49,6 +49,10 @@
   .hint{ color:var(--muted); font-size:.9em; margin:-10px 0 14px; }
   .sec{ border-top:1px solid var(--line); margin-top:38px; padding-top:8px; }
 </style>
+<link rel="stylesheet" href="hvb-theme.css">
+<link rel="stylesheet" href="hvb-ui.css">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/hvb-logo.png" type="image/png">
 </head>
 <body>
 <script src="hvb-ref.js"></script>
@@ -56,14 +60,24 @@
 <header>
   <img src="hvb-logo.png" alt="HVB">
   <b style="font-family:'Sora',sans-serif;">HVB Admin</b>
-  <a href="admin-analytics.html" style="margin-left:auto;font-size:.9em;background:linear-gradient(90deg,var(--cyan),var(--violet));color:#0A0D14;padding:7px 14px;border-radius:8px;font-weight:700;">📊 সব হিস্ট্রি দেখুন</a>
+  <a href="/admin-analytics" style="margin-left:auto;font-size:.9em;background:linear-gradient(90deg,var(--cyan),var(--violet));color:#0A0D14;padding:7px 14px;border-radius:8px;font-weight:700;"> সব হিস্ট্রি দেখুন</a>
 </header>
 
 <div class="wrap">
   <h1>HVB Admin Panel</h1>
-  <div class="login-box">
-    <input type="password" id="adminPassword" placeholder="Admin পাসওয়ার্ড দিন">
-    <button type="button" onclick="doLogin()">ঢুকুন</button>
+
+  <div id="hvbAdminGate" style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:18px;">
+    <b style="font-family:'Sora',sans-serif;display:block;margin-bottom:6px;">ধাপ ১ — অ্যাডমিন অ্যাকাউন্ট যাচাই</b>
+    <p id="hvbGateMsg" style="color:var(--muted);font-size:.9em;">যাচাই করা হচ্ছে…</p>
+    <div id="hvbGateBtns" style="margin-top:12px;"></div>
+  </div>
+
+  <div id="hvbAdminPass" style="display:none">
+    <b style="font-family:'Sora',sans-serif;display:block;margin-bottom:8px;">ধাপ ২ — অ্যাডমিন পাসওয়ার্ড</b>
+    <div class="login-box">
+      <input type="password" id="adminPassword" placeholder="Admin পাসওয়ার্ড দিন">
+      <button type="button" onclick="doLogin()">ঢুকুন</button>
+    </div>
   </div>
   <div id="msg" class="msg"></div>
 
@@ -79,8 +93,8 @@
       <h1>২) অর্ডার খুঁজুন / কোর্স খুলে দিন</h1>
       <p class="hint">
         কেউ যদি বলে "টাকা দিয়েছি কিন্তু কোর্স পাচ্ছি না" — তার <b>নাম্বার, ইমেইল বা Invoice ID</b> এখানে লিখে খুঁজুন।<br>
-        • <b>🔍 ZiniPay-তে যাচাই করুন</b> = ZiniPay-কে জিজ্ঞেস করবে টাকা সত্যিই এসেছে কিনা; এসে থাকলে নিজে থেকেই কোর্স খুলে দেবে।<br>
-        • <b>✅ হাতে হাতে Paid করুন</b> = আপনি নিজে নিশ্চিত হয়ে থাকলে জোর করে কোর্স খুলে দেবে (ZiniPay-তে না পাওয়া গেলে এটা ব্যবহার করুন)।
+        • <b> ZiniPay-তে যাচাই করুন</b> = ZiniPay-কে জিজ্ঞেস করবে টাকা সত্যিই এসেছে কিনা; এসে থাকলে নিজে থেকেই কোর্স খুলে দেবে।<br>
+        • <b> হাতে হাতে Paid করুন</b> = আপনি নিজে নিশ্চিত হয়ে থাকলে জোর করে কোর্স খুলে দেবে (ZiniPay-তে না পাওয়া গেলে এটা ব্যবহার করুন)।
       </p>
       <div class="login-box">
         <input type="text" id="orderQuery" placeholder="নাম্বার / ইমেইল / Invoice ID">
@@ -98,7 +112,7 @@
         <span style="font-family:monospace;">করিম, 01712345678, bundle<br>রহিম, 01898765432, short</span>
       </p>
       <textarea id="bulkStudents" rows="8" placeholder="করিম, 01712345678, bundle" style="width:100%;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--text);font-family:inherit;font-size:.95em;"></textarea>
-      <button type="button" onclick="bulkAdd()" class="approve-btn" style="margin-top:10px;">➕ সবাইকে যোগ করুন</button>
+      <button type="button" onclick="bulkAdd()" class="approve-btn" style="margin-top:10px;"> সবাইকে যোগ করুন</button>
       <div id="bulkMsg" class="msg" style="margin-top:10px;"></div>
     </div>
 
@@ -126,7 +140,7 @@
     } else {
       document.getElementById('panel').style.display = 'none';
       msg.className = 'msg error';
-      msg.textContent = '⚠️ ' + ((data && data.error) || 'ভুল পাসওয়ার্ড');
+      msg.textContent = ' ' + ((data && data.error) || 'ভুল পাসওয়ার্ড');
     }
   }
 
@@ -154,8 +168,8 @@
         '<div style="font-size:12px;opacity:.7"><b>Order ID:</b> ' + o.our_ref + '<br><b>Invoice ID:</b> ' + (o.invoice_id || 'নেই') + '</div>' +
         (o.status === 'paid' ? '' :
           '<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">' +
-          '<button class="approve-btn" onclick="orderAction(\'verify\',\'' + o.our_ref + '\')">🔍 ZiniPay-তে যাচাই করুন</button>' +
-          '<button class="approve-btn" onclick="orderAction(\'markPaid\',\'' + o.our_ref + '\')">✅ হাতে হাতে Paid করুন</button>' +
+          '<button class="approve-btn" onclick="orderAction(\'verify\',\'' + o.our_ref + '\')"> ZiniPay-তে যাচাই করুন</button>' +
+          '<button class="approve-btn" onclick="orderAction(\'markPaid\',\'' + o.our_ref + '\')"> হাতে হাতে Paid করুন</button>' +
           '</div>') +
       '</div>';
     }).join('');
@@ -185,7 +199,7 @@
       });
       const data = await res.json();
       if(!res.ok){
-        msg.textContent = '⚠️ ' + (data.error || 'সমস্যা হয়েছে');
+        msg.textContent = ' ' + (data.error || 'সমস্যা হয়েছে');
         msg.className = 'msg error';
         return;
       }
@@ -207,7 +221,7 @@
             '<div class="req-row"><span>Ref Code</span><span>' + r.ref_code + '</span></div>' +
             '<div class="req-row"><span>রিকোয়েস্ট তারিখ</span><span>' + dateStr + '</span></div>' +
             '<div class="req-row"><span>পরিমাণ</span><span class="amount">' + r.amount + ' ৳</span></div>' +
-            '<button class="approve-btn" data-id="' + r.id + '">✅ টাকা পাঠিয়েছি — Approve করুন</button>';
+            '<button class="approve-btn" data-id="' + r.id + '"> টাকা পাঠিয়েছি — Approve করুন</button>';
           area.appendChild(card);
         });
         area.querySelectorAll('.approve-btn').forEach(function(btn){
@@ -226,7 +240,7 @@
           card.style.opacity = '0.6';
           card.innerHTML =
             '<div class="req-row"><span>নাম</span><span>' + r.name + '</span></div>' +
-            '<div class="req-row"><span>পরিমাণ</span><span class="amount">' + r.amount + ' ৳ ✓ Paid</span></div>';
+            '<div class="req-row"><span>পরিমাণ</span><span class="amount">' + r.amount + ' ৳  Paid</span></div>';
           area.appendChild(card);
         });
       }
@@ -251,5 +265,54 @@
 </script>
 
 <script src="hvb-account.js"></script>
+<script>
+/* অ্যাডমিন গেট: শুধু নির্দিষ্ট Google অ্যাকাউন্ট + তারপর পাসওয়ার্ড */
+(function(){
+  var ALLOWED = ['khadizashuvo50@gmail.com'];
+  var gate = document.getElementById('hvbAdminGate');
+  var msg = document.getElementById('hvbGateMsg');
+  var btns = document.getElementById('hvbGateBtns');
+  var passBox = document.getElementById('hvbAdminPass');
+
+  function deny(text, showLogin){
+    msg.innerHTML = text;
+    btns.innerHTML = showLogin
+      ? '<button class="hvb-btn-accent" type="button" id="hvbGateLogin">Google দিয়ে লগইন</button>'
+      : '<button class="hvb-btn-quiet" type="button" id="hvbGateOut">অন্য অ্যাকাউন্টে লগইন</button>';
+    var l = document.getElementById('hvbGateLogin');
+    if (l) l.onclick = function(){ window.HVBAuth.signInWithGoogle('admin'); };
+    var o = document.getElementById('hvbGateOut');
+    if (o) o.onclick = function(){ window.HVBAuth.signOut(); setTimeout(function(){ location.reload(); }, 400); };
+    passBox.style.display = 'none';
+    var p = document.getElementById('panel');
+    if (p) p.style.display = 'none';
+  }
+
+  function allow(email){
+    gate.style.borderColor = 'rgba(79,227,193,.35)';
+    msg.innerHTML = 'যাচাই সম্পন্ন — <b>' + email + '</b>';
+    btns.innerHTML = '<button class="hvb-btn-quiet" type="button" id="hvbGateOut">সাইন আউট</button>';
+    document.getElementById('hvbGateOut').onclick = function(){
+      window.HVBAuth.signOut(); setTimeout(function(){ location.reload(); }, 400);
+    };
+    passBox.style.display = '';
+  }
+
+  function check(){
+    var A = window.HVBAuth;
+    if (!A) return deny('লগইন সার্ভিস লোড হয়নি — পেজ রিফ্রেশ করুন।', false);
+    A.whenReady(function(){
+      if (!A.sb) return deny('লগইন সার্ভিস এখন বন্ধ আছে। Vercel-এ SUPABASE_URL ও SUPABASE_ANON_KEY সেট আছে কিনা দেখুন।', false);
+      if (!A.user) return deny('অ্যাডমিন প্যানেলে ঢুকতে আগে অনুমোদিত Google অ্যাকাউন্ট দিয়ে লগইন করুন।', true);
+      var email = (A.user.email || '').toLowerCase();
+      if (ALLOWED.indexOf(email) === -1)
+        return deny('এই অ্যাকাউন্টের (<b>' + email + '</b>) অনুমতি নেই। অনুমোদিত অ্যাডমিন অ্যাকাউন্ট দিয়ে লগইন করুন।', false);
+      allow(email);
+    });
+  }
+  document.readyState === 'loading'
+    ? document.addEventListener('DOMContentLoaded', check) : check();
+})();
+</script>
 </body>
 </html>

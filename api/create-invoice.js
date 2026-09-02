@@ -64,7 +64,7 @@ module.exports = async (req, res) => {
     const siteUrl = (process.env.SITE_URL || '').replace(/\/$/, '');
 
     // পেমেন্ট সফল হলে সরাসরি কোর্স পেজে ফেরত — order=<our_ref>
-    const redirectUrl = `${siteUrl}/my-courses.html?order=${ourRef}`;
+    const redirectUrl = `${siteUrl}/my-courses?order=${ourRef}`;
     const cancelUrl = `${siteUrl}/${course === 'short' ? 'course-short.html' : 'course-bundle.html'}?cancelled=1`;
 
     const zpRes = await fetch('https://api.zinipay.com/v1/payment/create', {

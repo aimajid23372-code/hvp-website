@@ -45,17 +45,21 @@
   .pill{ background:var(--surface-2); border:1px solid var(--line); padding:2px 8px; border-radius:20px; font-size:0.8em; }
   .paid{ color:#34D399; } .pending{ color:#FBBF24; }
 </style>
+<link rel="stylesheet" href="hvb-theme.css">
+<link rel="stylesheet" href="hvb-ui.css">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/hvb-logo.png" type="image/png">
 </head>
 <body>
 <script src="hvb-ref.js"></script>
 <header>
   <img src="hvb-logo.png" alt="HVB">
   <b style="font-family:'Sora',sans-serif;">HVB Admin</b>
-  <span style="margin-left:auto;font-size:.85em"><a href="admin.html" class="pill">অর্ডার / উইথড্র</a></span>
+  <span style="margin-left:auto;font-size:.85em"><a href="/admin" class="pill">অর্ডার / উইথড্র</a></span>
 </header>
 
 <div class="wrap">
-  <h1>📊 সব হিস্ট্রি — কে ঢুকল, কে কিনল</h1>
+  <h1> সব হিস্ট্রি — কে ঢুকল, কে কিনল</h1>
   <div class="login-box">
     <input type="password" id="pw" placeholder="Admin পাসওয়ার্ড">
     <select id="days">
@@ -93,7 +97,7 @@ async function load(){
     body: JSON.stringify({ adminPassword: document.getElementById('pw').value, days: document.getElementById('days').value })
   });
   var d = await res.json();
-  if(d.error){ msg.textContent = '⚠️ ' + d.error; return; }
+  if(d.error){ msg.textContent = ' ' + d.error; return; }
   msg.textContent = '';
 
   var s = d.summary;

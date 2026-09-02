@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin-analytics
+Disallow: /my-courses
+Disallow: /affiliate-dashboard
+Disallow: /login
+Disallow: /api/
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+Sitemap: https://hvb1.vercel.app/sitemap.xml

@@ -65,6 +65,32 @@ module.exports = async (req, res) => {
   // GET /api/my-access?config=1 → ব্রাউজারের Google লগইনের জন্য পাবলিক (anon) কী।
   // আলাদা ফাংশন না বানিয়ে এখানেই রাখা হয়েছে (Vercel Hobby ফাংশন লিমিট বাঁচাতে)।
   if (req.method === 'GET') {
+    // GET /api/my-access?reviews=course-bundle → পাবলিক রিভিউ লিস্ট (যাচাইকৃত ক্রেতাদের)
+    if (req.query && req.query.reviews) {
+      const course = String(req.query.reviews);
+      let q = supabase
+        .from('reviews')
+        .select('name,email,course,rating,body,image_url,link,created_at')
+        .eq('status', 'approved')
+        .order('created_at', { ascending: false })
+        .limit(60);
+      if (course && course !== 'all') q = q.eq('course', course);
+      const { data, error } = await q;
+      if (error) return res.status(200).json({ items: [], count: 0, avg: 0 });
+      const items = (data || []).map((r) => ({
+        name: r.name || (r.email ? r.email.split('@')[0] : 'HVB শিক্ষার্থী'),
+        course: r.course,
+        rating: r.rating,
+        body: r.body,
+        image_url: r.image_url,
+        link: r.link,
+        created_at: r.created_at,
+      }));
+      const avg = items.length ? items.reduce((a, b) => a + (Number(b.rating) || 0), 0) / items.length : 0;
+      res.setHeader('Cache-Control', 'public, max-age=60');
+      return res.status(200).json({ items, count: items.length, avg });
+    }
+
     const url = process.env.SUPABASE_URL || '';
     const anonKey = process.env.SUPABASE_ANON_KEY || '';
     if (!url || !anonKey) return res.status(200).json({ enabled: false });
@@ -85,6 +111,37 @@ module.exports = async (req, res) => {
     if (!user) return res.status(401).json({ error: 'invalid session' });
 
     const email = String(user.email).toLowerCase();
+
+    // রিভিউ যোগ করা — শুধু যাচাইকৃত ক্রেতা
+    if (body.action === 'review_add') {
+      const orders = await ordersForEmail(email);
+      const owned = [...new Set(orders.filter((o) => o.status === 'paid').map((o) => o.course))];
+      if (!owned.length) return res.status(403).json({ error: 'শুধু কোর্স কেনা শিক্ষার্থীরাই রিভিউ দিতে পারেন' });
+
+      const course = owned.includes(String(body.course)) ? String(body.course) : owned[0];
+      const rating = Math.min(5, Math.max(1, parseInt(body.rating, 10) || 5));
+      const text = String(body.body || '').trim().slice(0, 1200);
+      if (text.length < 10) return res.status(400).json({ error: 'রিভিউ অন্তত ১০ অক্ষরের হতে হবে' });
+      const httpOnly = (v) => (/^https?:\/\//i.test(String(v || '').trim()) ? String(v).trim().slice(0, 600) : null);
+
+      const row = {
+        course,
+        email,
+        name: String(body.name || email.split('@')[0]).slice(0, 80),
+        rating,
+        body: text,
+        image_url: httpOnly(body.image_url),
+        link: httpOnly(body.link),
+        status: 'approved',
+      };
+
+      const { error } = await supabase.from('reviews').insert(row);
+      if (error) {
+        console.error('review insert error:', error);
+        return res.status(500).json({ error: 'রিভিউ সেভ করা যায়নি' });
+      }
+      return res.status(200).json({ ok: true });
+    }
 
     // পুরোনো কেনা লিংক করা (ফোন নাম্বার / ইমেইল / Invoice ID দিয়ে)
     if (body.action === 'link') {

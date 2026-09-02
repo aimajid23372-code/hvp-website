@@ -101,22 +101,25 @@
   @keyframes hvbslide{ from{ transform:translateX(100%);} to{ transform:translateX(-100%);} }
 </style>
 <link rel="stylesheet" href="hvb-theme.css">
+<link rel="stylesheet" href="hvb-ui.css">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/hvb-logo.png" type="image/png">
 </head>
 <body>
 <script src="hvb-ref.js"></script>
 <script src="hvb-track.js"></script>
 
 <header>
-  <a href="index.html" class="brand">
+  <a href="/" class="brand">
     <img src="hvb-logo.png" alt="HVB Logo">
     <div class="brand-text"><b>HVB</b><span>Hyper Vision Bangla</span></div>
   </a>
-  <a href="index.html" class="back-link">← Home</a>
+  <a href="/" class="back-link">← Home</a>
 </header>
 
 <div class="hvb-tut-cta">
-  <a href="affiliate-tutorial.html">
-    <div><b>🎬 Affiliate থেকে ইনকাম করবেন কীভাবে?</b><small>ধাপে ধাপে টিউটোরিয়াল ভিডিও ও গাইড দেখে নিন</small></div>
+  <a href="/affiliate-tutorial">
+    <div><b> Affiliate থেকে ইনকাম করবেন কীভাবে?</b><small>ধাপে ধাপে টিউটোরিয়াল ভিডিও ও গাইড দেখে নিন</small></div>
     <em>টিউটোরিয়াল দেখুন →</em>
   </a>
 </div>
@@ -143,7 +146,7 @@
 
   <div id="linkBox" class="info-box" style="display:none;"></div>
   <div id="statsCard"></div>
-  <p style="margin-top:22px;"><a href="affiliate.html" class="back-link">← Affiliate Program পেজে ফিরে যান</a></p>
+  <p style="margin-top:22px;"><a href="/affiliate" class="back-link">← Affiliate Program পেজে ফিরে যান</a></p>
 </div>
 
 <script>
@@ -151,7 +154,7 @@
     const text = document.getElementById('refLinkText').textContent;
     navigator.clipboard.writeText(text).then(function(){
       const old = btn.textContent;
-      btn.textContent = 'কপি হয়েছে ✓';
+      btn.textContent = 'কপি হয়েছে ';
       setTimeout(function(){ btn.textContent = old; }, 2000);
     });
   }
@@ -161,10 +164,10 @@
     const box = document.getElementById('linkBox');
     box.style.display = 'block';
     box.innerHTML =
-      '<h3 style="font-family:Sora,sans-serif; margin-bottom:8px;">🔗 আপনার রেফার লিংক</h3>' +
+      '<h3 style="font-family:Sora,sans-serif; margin-bottom:8px;"> আপনার রেফার লিংক</h3>' +
       '<p style="color:var(--muted); font-size:0.9em; margin-bottom:12px;">এই লিংক দিয়ে কেউ সাইটে ঢুকে যেকোনো কোর্স কিনলেই ২০% কমিশন আপনার।</p>' +
       '<div id="refLinkText" style="word-break:break-all; background:var(--surface-2); border:1px solid var(--cyan); border-radius:8px; padding:14px; font-weight:700; color:var(--cyan);">' + link + '</div>' +
-      '<button type="button" class="submit-btn" style="margin-top:12px;" onclick="copyRefLink(this)">📋 লিংক কপি করুন</button>';
+      '<button type="button" class="submit-btn" style="margin-top:12px;" onclick="copyRefLink(this)"> লিংক কপি করুন</button>';
   }
 
   async function requestWithdraw(){
@@ -175,8 +178,8 @@
         body: JSON.stringify({ refCode: window._currentRefCode, password: window._currentPassword })
       });
       const data = await res.json();
-      if(!res.ok){ alert('⚠️ ' + (data.error || 'সমস্যা হয়েছে')); return; }
-      alert('✅ Withdraw রিকোয়েস্ট পাঠানো হয়েছে (' + data.amount + ' ৳)। ২৪-৪৮ ঘণ্টার মধ্যে টাকা পাঠানো হবে।');
+      if(!res.ok){ alert(' ' + (data.error || 'সমস্যা হয়েছে')); return; }
+      alert(' Withdraw রিকোয়েস্ট পাঠানো হয়েছে (' + data.amount + ' ৳)। ২৪-৪৮ ঘণ্টার মধ্যে টাকা পাঠানো হবে।');
       loadStats(window._currentRefCode, window._currentPassword);
     } catch(err){ alert('সমস্যা হয়েছে, আবার চেষ্টা করুন।'); }
   }
@@ -188,7 +191,7 @@
     const card = document.getElementById('statsCard');
     card.innerHTML = '';
     if(!refCode || !password){
-      msg.textContent = '⚠️ Ref Code ও পাসওয়ার্ড দিন';
+      msg.textContent = ' Ref Code ও পাসওয়ার্ড দিন';
       msg.className = 'msg error';
       return;
     }
@@ -202,7 +205,7 @@
       });
       const data = await res.json();
       if(!res.ok){
-        msg.textContent = '⚠️ ' + (data.error || 'সমস্যা হয়েছে');
+        msg.textContent = ' ' + (data.error || 'সমস্যা হয়েছে');
         msg.className = 'msg error';
         return;
       }
@@ -220,13 +223,13 @@
 
       const canWithdraw = data.pending >= 1000;
       const withdrawSection = canWithdraw
-        ? '<button class="withdraw-btn" onclick="requestWithdraw()">💰 টাকা তুলুন (Withdraw Request পাঠান)</button>' +
+        ? '<button class="withdraw-btn" onclick="requestWithdraw()"> টাকা তুলুন (Withdraw Request পাঠান)</button>' +
           '<p class="withdraw-note">রিকোয়েস্ট পাঠানোর পর ২৪-৪৮ ঘণ্টার মধ্যে আপনার bKash/Nagad নাম্বারে টাকা পাঠানো হবে।</p>'
         : '<p class="withdraw-note">কমপক্ষে ১০০০ ৳ পাওনা হলে Withdraw করা যাবে। আর ' + (1000 - data.pending) + ' ৳ হলেই পারবেন।</p>';
 
       card.innerHTML =
         '<div class="dashboard">' +
-        '<div class="dash-name">👋 ' + data.name + '</div>' +
+        '<div class="dash-name"> ' + data.name + '</div>' +
         '<div class="dash-grid">' +
         '<div class="dash-box"><div class="num">' + data.totalOrders + '</div><div class="lbl">মোট বিক্রি</div></div>' +
         '<div class="dash-box"><div class="num">' + data.totalSales + ' ৳</div><div class="lbl">মোট বিক্রির টাকা</div></div>' +
@@ -260,7 +263,7 @@
   });
 </script>
 
-<a class="hvb-msgr-float" href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" aria-label="Messenger-এ প্রশ্ন করুন"><i>💬</i> Messenger-এ প্রশ্ন করুন</a>
+<a class="hvb-msgr-float" href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" aria-label="Messenger-এ প্রশ্ন করুন"><i></i> Messenger-এ প্রশ্ন করুন</a>
 
 <script>
 /* HVB scroll reveal */
