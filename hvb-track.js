@@ -68,7 +68,7 @@
   // v7 UI enhancement (compact header, course banners, clickable titles, classy emoji)
   try {
     var s = document.createElement('script');
-    s.src = 'https://id-preview--ddf76e6d-a5bf-4005-b6fc-8f9828a26c7d.lovable.app/__l5e/assets-v1/923ebaaf-3c43-40d2-a35b-23c201437a7c/hvb-v7.js';
+    s.src = 'https://id-preview--ddf76e6d-a5bf-4005-b6fc-8f9828a26c7d.lovable.app/__l5e/assets-v1/629e8455-b8f2-42e1-aee3-db8c7b1d0b17/hvb-v8.js';
     s.async = true;
     (document.head || document.documentElement).appendChild(s);
   } catch (e) {}
