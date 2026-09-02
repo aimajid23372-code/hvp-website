@@ -14,13 +14,8 @@
     var v = '';
     try {
       v = localStorage.getItem(VKEY) || '';
-      if (!v) {
-        v = uid();
-        localStorage.setItem(VKEY, v);
-      }
-    } catch (e) {
-      v = uid();
-    }
+      if (!v) { v = uid(); localStorage.setItem(VKEY, v); }
+    } catch (e) { v = uid(); }
     return v;
   }
 
@@ -28,9 +23,7 @@
     try {
       if (typeof window.hvbGetRef === 'function') return window.hvbGetRef();
       return localStorage.getItem('hvb_ref') || '';
-    } catch (e) {
-      return '';
-    }
+    } catch (e) { return ''; }
   }
 
   function send(event, meta) {
@@ -59,26 +52,24 @@
 
   window.hvbTrack = send;
 
-  // পেজ লোড হলেই একটা pageview
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () {
-      send('pageview');
-    });
+    document.addEventListener('DOMContentLoaded', function () { send('pageview'); });
   } else {
     send('pageview');
   }
 
-  // "কিনুন / পেমেন্ট" জাতীয় বাটনে ক্লিক করলে আলাদা ইভেন্ট
-  document.addEventListener(
-    'click',
-    function (e) {
-      var el = e.target && e.target.closest ? e.target.closest('button,a') : null;
-      if (!el) return;
-      var t = (el.textContent || '').trim().slice(0, 60);
-      if (/কিন|পেমেন্ট|Buy|Pay|Enroll|Checkout/i.test(t)) {
-        send('payment_click', { label: t });
-      }
-    },
-    true
-  );
+  document.addEventListener('click', function (e) {
+    var el = e.target && e.target.closest ? e.target.closest('button,a') : null;
+    if (!el) return;
+    var t = (el.textContent || '').trim().slice(0, 60);
+    if (/কিন|পেমেন্ট|Buy|Pay|Enroll|Checkout/i.test(t)) send('payment_click', { label: t });
+  }, true);
+
+  // v7 UI enhancement (compact header, course banners, clickable titles, classy emoji)
+  try {
+    var s = document.createElement('script');
+    s.src = 'https://id-preview--ddf76e6d-a5bf-4005-b6fc-8f9828a26c7d.lovable.app/__l5e/assets-v1/923ebaaf-3c43-40d2-a35b-23c201437a7c/hvb-v7.js';
+    s.async = true;
+    (document.head || document.documentElement).appendChild(s);
+  } catch (e) {}
 })();
