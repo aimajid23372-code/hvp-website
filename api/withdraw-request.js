@@ -51,8 +51,8 @@ module.exports = async (req, res) => {
     const paidOut = Number(affiliate.paid_out || 0);
     const pending = totalCommission - paidOut;
 
-    if (pending < 1000) {
-      return res.status(400).json({ error: 'কমপক্ষে ১০০০ টাকা পাওনা হলে তবেই Withdraw রিকোয়েস্ট পাঠানো যাবে। আপনার বর্তমান পাওনা: ' + pending + ' ৳' });
+    if (pending < 500) {
+      return res.status(400).json({ error: 'কমপক্ষে ৫০০ টাকা পাওনা হলে তবেই Withdraw রিকোয়েস্ট পাঠানো যাবে। আপনার বর্তমান পাওনা: ' + pending + ' ৳' });
     }
 
     // আগে থেকে pending রিকোয়েস্ট থাকলে আবার পাঠাতে দিব না

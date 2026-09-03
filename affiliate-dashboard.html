@@ -221,11 +221,11 @@
         historyHtml += '<div class="stat-row"><span>' + dateStr + ' — ' + courseName + '</span><b>+' + o.commission + ' ৳</b></div>';
       });
 
-      const canWithdraw = data.pending >= 1000;
+      const canWithdraw = data.pending >= 500;
       const withdrawSection = canWithdraw
         ? '<button class="withdraw-btn" onclick="requestWithdraw()"> 💰 টাকা তুলুন (Withdraw Request পাঠান)</button>' +
           '<p class="withdraw-note">রিকোয়েস্ট পাঠানোর পর ২৪-৪৮ ঘণ্টার মধ্যে আপনার bKash/Nagad নাম্বারে টাকা পাঠানো হবে।</p>'
-        : '<p class="withdraw-note">কমপক্ষে ১০০০ ৳ পাওনা হলে Withdraw করা যাবে। আর ' + (1000 - data.pending) + ' ৳ হলেই পারবেন।</p>';
+        : '<p class="withdraw-note">কমপক্ষে ৫০০ ৳ পাওনা হলে Withdraw করা যাবে। আর ' + (500 - data.pending) + ' ৳ হলেই পারবেন।</p>';
 
       card.innerHTML =
         '<div class="dashboard">' +
