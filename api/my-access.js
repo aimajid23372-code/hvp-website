@@ -274,7 +274,7 @@ module.exports = async (req, res) => {
         const digits = contact.replace(/[^0-9]/g, '');
         const tail = digits.slice(-10);
         if (tail.length >= 6) q = q.ilike('customer_contact', '%' + tail + '%');
-        else q = q.or(\`our_ref.eq.\${contact},invoice_id.eq.\${contact}\`);
+        else q = q.or(`our_ref.eq.${contact},invoice_id.eq.${contact}`);
       }
 
       const { data } = await q.order('created_at', { ascending: false });
