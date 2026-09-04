@@ -77,7 +77,18 @@
     display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
     margin-top:auto; padding-top:16px; border-top:1px solid var(--line);
   }
-  .price{ font-family:'Sora',sans-serif; font-weight:700; font-size:1.3em; }
+  .price{
+    font-family:'Sora',sans-serif;
+    font-weight:900;
+    font-size:1.45em;
+    white-space:nowrap;
+    flex-shrink:0;
+    color:#FFB319;
+    background:linear-gradient(135deg, #FFE066 0%, #F59E0B 55%, #D97706 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 2px 10px rgba(245,158,11,0.5));
+  }
   .price s{ color:var(--muted); font-size:.62em; font-weight:500; margin-left:8px; }
   .cbtns{ display:flex; gap:10px; flex-wrap:wrap; }
   .btn-primary{

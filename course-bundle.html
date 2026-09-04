@@ -97,8 +97,19 @@
     background:var(--surface); border:1px solid var(--line); border-radius:12px;
     padding:18px 22px; display:flex; align-items:center; justify-content:space-between;
   }
-  .buy-box .price{ font-family:'Sora',sans-serif; font-weight:700; font-size:1.3em; }
-  .buy-box .price small{ color:var(--muted); font-size:0.55em; font-weight:400; }
+  .buy-box .price{
+    font-family:'Sora',sans-serif;
+    font-weight:900;
+    font-size:1.45em;
+    white-space:nowrap;
+    flex-shrink:0;
+    color:#FFB319;
+    background:linear-gradient(135deg, #FFE066 0%, #F59E0B 55%, #D97706 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 2px 10px rgba(245,158,11,0.5));
+  }
+  .buy-box .price small{ color:var(--muted); font-size:0.55em; font-weight:400; -webkit-text-fill-color:var(--muted); }
   .btn-primary{
     background:var(--grad); color:#0A0D14; border:none; padding:13px 26px;
     font-weight:700; font-size:0.95em; border-radius:8px; cursor:pointer;
