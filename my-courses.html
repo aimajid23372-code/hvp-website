@@ -184,18 +184,26 @@
     // Fallback if API hasn't updated yet or content missing
     contentData = contentData || {};
 
-    courses.forEach(function(c){
-      if(c === 'short' || c === 'bundle'){
-        if(contentData['short']) {
+    
+      let renderShort = false;
+      let renderLong = false;
+      
+      courses.forEach(function(c) {
+          const lowerC = String(c).toLowerCase();
+          if (lowerC === 'short') renderShort = true;
+          if (lowerC === 'long') renderLong = true;
+          if (lowerC === 'bundle' || lowerC.includes('short+long') || lowerC.includes('long+short') || lowerC.includes('both') || (lowerC.includes('short') && lowerC.includes('long'))) {
+              renderShort = true;
+              renderLong = true;
+          }
+      });
+      
+      if (renderShort && contentData['short']) {
           html += renderCourseBlock(idx++, 'short', 'Short Video Course', contentData['short']);
-        }
       }
-      if(c === 'long' || c === 'bundle'){
-        if(contentData['long']) {
+      if (renderLong && contentData['long']) {
           html += renderCourseBlock(idx++, 'long', 'Long Video Course', contentData['long']);
-        }
       }
-    });
 
     html += '<div class="course-section" style="background: rgba(94,234,212,0.05); border-color: var(--cyan);">' +
       '<h3> 💬 স্পেশাল WhatsApp সাপোর্ট</h3>' +
@@ -485,5 +493,7 @@
 <script src="hvb-account.js"></script>
 </body>
 </html>
+
+
 
 

@@ -120,7 +120,9 @@ VIRAL DELIVERABLES:
 
 [PLACE THE THUMBNAIL PROMPT INSIDE A SEPARATE CODE BLOCK]
 THUMBNAIL PROMPT:
-[1 Highly dramatic, extremely detailed English 16k UE5 prompt. Include instructions for a seamless blended collage (no hard lines), extreme facial expressions, and ONE unified 3D typography lockup at the bottom center with a specific 3D sticker attached].`
+[1 Highly dramatic, extremely detailed English 16k UE5 prompt. Include instructions for a seamless blended collage (no hard lines), extreme facial expressions, and ONE unified 3D typography lockup at the bottom center with a specific 3D sticker attached].
+
+Acknowledge this directive by saying: "ওস্তাদ, আপনার 'long video 2.0' ডিরেকটিভ আমার ব্রেইনে পুরোপুরি লক হয়ে গেছে! আজকের প্রজেক্টের এমন লেভেলের কনসেপ্ট দেবো, যা ইন্টারনেট আগে কখনো দেখেনি! ভিডিওর টপিক দিন!".`
   }
 };
 
@@ -176,10 +178,12 @@ async function ordersForEmail(email) {
 
 function buildContentResponse(courses) {
   const content = {};
-  if (courses.includes('short') || courses.includes('bundle')) {
+  const hasBundle = courses.some(c => c === 'bundle' || String(c).includes('short+long') || String(c).includes('long+short') || String(c).includes('both') || (String(c).includes('short') && String(c).includes('long')));
+  
+  if (courses.includes('short') || hasBundle) {
     content['short'] = COURSE_CONTENT['short'];
   }
-  if (courses.includes('long') || courses.includes('bundle')) {
+  if (courses.includes('long') || hasBundle) {
     content['long'] = COURSE_CONTENT['long'];
   }
   return content;
@@ -321,3 +325,4 @@ module.exports = async (req, res) => {
     return res.status(500).json({ error: 'Server error' });
   }
 };
+
