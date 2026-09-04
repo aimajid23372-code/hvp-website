@@ -224,6 +224,17 @@
       msg.className = 'lookup-msg error';
       return;
     }
+
+      if(contact){
+        try { localStorage.setItem('hvb_contact', contact); } catch(e){}
+      }
+
+      if (window.HVB && window.HVB.session) {
+        msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
+        msg.className = 'lookup-msg info';
+        await hvbInitAuth();
+        return;
+      }
     msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
     msg.className = 'lookup-msg info';
 
@@ -239,6 +250,17 @@
       if(courses.length === 0){
         msg.innerHTML = 'এটি দিয়ে কোনো সফল পেমেন্ট পাওয়া যায়নি। পেমেন্টের সময় দেওয়া নাম্বার/ইমেইল দিন, অথবা পেমেন্টের Invoice ID (লম্বা কোড) দিন। সমস্যা হলে khadimulhasanshuvo@gmail.com-এ যোগাযোগ করুন।';
         msg.className = 'lookup-msg error';
+        return;
+      }
+
+      if(contact){
+        try { localStorage.setItem('hvb_contact', contact); } catch(e){}
+      }
+
+      if (window.HVB && window.HVB.session) {
+        msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
+        msg.className = 'lookup-msg info';
+        await hvbInitAuth();
         return;
       }
 
@@ -270,9 +292,31 @@
         renderCourses(data.courses && data.courses.length ? data.courses : [data.course], data.content);
         return;
       }
+
+      if(contact){
+        try { localStorage.setItem('hvb_contact', contact); } catch(e){}
+      }
+
+      if (window.HVB && window.HVB.session) {
+        msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
+        msg.className = 'lookup-msg info';
+        await hvbInitAuth();
+        return;
+      }
       if(data.status === 'failed' || data.status === 'cancelled'){
         msg.textContent = ' ❌ পেমেন্টটি সম্পন্ন হয়নি। আবার চেষ্টা করুন অথবা khadimulhasanshuvo@gmail.com-এ যোগাযোগ করুন।';
         msg.className = 'lookup-msg error';
+        return;
+      }
+
+      if(contact){
+        try { localStorage.setItem('hvb_contact', contact); } catch(e){}
+      }
+
+      if (window.HVB && window.HVB.session) {
+        msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
+        msg.className = 'lookup-msg info';
+        await hvbInitAuth();
         return;
       }
     } catch(err){ /* চুপচাপ আবার চেষ্টা করবে */ }
@@ -327,6 +371,17 @@
       document.getElementById('hvbAuthState').textContent = 'Google লগইন এখনো চালু হয়নি। নিচে নাম্বার/ইমেইল দিয়ে খুঁজুন।';
       return;
     }
+
+      if(contact){
+        try { localStorage.setItem('hvb_contact', contact); } catch(e){}
+      }
+
+      if (window.HVB && window.HVB.session) {
+        msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
+        msg.className = 'lookup-msg info';
+        await hvbInitAuth();
+        return;
+      }
     await hvbSb.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: window.location.origin + '/my-courses' }
@@ -430,3 +485,5 @@
 <script src="hvb-account.js"></script>
 </body>
 </html>
+
+
