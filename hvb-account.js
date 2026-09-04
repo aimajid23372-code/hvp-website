@@ -343,11 +343,19 @@
 
   HVB.signInWithGoogle = async function (nextUrl) {
     if (!HVB.sb) await HVB.init();
-    if (!HVB.sb) return false;
-    await HVB.sb.auth.signInWithOAuth({
+    if (!HVB.sb) {
+      alert("Auth is not initialized. Check your Supabase configuration.");
+      return false;
+    }
+    const { data, error } = await HVB.sb.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: location.origin + '/' + String(nextUrl || 'my-courses').replace(/^\//, '').replace(/\.html$/i, '') },
     });
+    if (error) {
+      console.error("Google Auth Error:", error.message);
+      alert("Google Login Error: " + error.message);
+      return false;
+    }
     return true;
   };
 
