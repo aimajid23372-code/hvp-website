@@ -138,6 +138,32 @@ module.exports = async (req, res) => {
       });
     }
 
+    if (action === 'getPendingReviews') {
+      const { data, error } = await supabase
+        .from('reviews')
+        .select('*')
+        .eq('status', 'pending')
+        .order('created_at', { ascending: false });
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json({ reviews: data || [] });
+    }
+
+    if (action === 'approveReview') {
+      const reviewId = req.body.reviewId;
+      if (!reviewId) return res.status(400).json({ error: 'reviewId missing' });
+      const { error } = await supabase.from('reviews').update({ status: 'approved' }).eq('id', reviewId);
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json({ result: '✅ রিভিউ অ্যাপ্রুভ করা হয়েছে।' });
+    }
+
+    if (action === 'deleteReview') {
+      const reviewId = req.body.reviewId;
+      if (!reviewId) return res.status(400).json({ error: 'reviewId missing' });
+      const { error } = await supabase.from('reviews').delete().eq('id', reviewId);
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json({ result: '🗑️ রিভিউটি ডিলিট করা হয়েছে।' });
+    }
+
     return res.status(400).json({ error: 'Invalid action' });
   } catch (err) {
     console.error(err);

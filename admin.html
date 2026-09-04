@@ -115,6 +115,11 @@
       <button type="button" onclick="bulkAdd()" class="approve-btn" style="margin-top:10px;"> ➕ সবাইকে যোগ করুন</button>
       <div id="bulkMsg" class="msg" style="margin-top:10px;"></div>
     </div>
+    <div class="sec">
+      <h1>৪) নতুন রিভিউ রিকোয়েস্ট</h1>
+      <p class="hint">স্টুডেন্টরা যেসব রিভিউ সাবমিট করেছে, সেগুলো এখানে আসবে। Approve করলে ওয়েবসাইটে লাইভ হবে।</p>
+      <div id="reviewsArea"></div>
+    </div>
 
   </div>
 </div>
@@ -137,6 +142,7 @@
       msg.textContent = '';
       document.getElementById('panel').style.display = 'block';
       loadRequests();
+      loadReviews();
     } else {
       document.getElementById('panel').style.display = 'none';
       msg.className = 'msg error';
@@ -261,6 +267,49 @@
       if(res.ok){ loadRequests(); }
       else { alert('সমস্যা হয়েছে'); }
     } catch(err){ alert('সমস্যা হয়েছে'); }
+  }
+  async function loadReviews(){
+    const pw = document.getElementById('adminPassword').value;
+    const area = document.getElementById('reviewsArea');
+    area.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
+
+    try {
+      const data = await adminApi({ action: 'getPendingReviews' });
+      if(data.error) { area.innerHTML = '<div class="msg error"> ⚠️ ' + data.error + '</div>'; return; }
+      
+      const reviews = data.reviews || [];
+      if(!reviews.length){
+        area.innerHTML = '<div class="empty">কোনো নতুন রিভিউ রিকোয়েস্ট নেই</div>';
+      } else {
+        area.innerHTML = reviews.map(function(r){
+          return '<div class="card">' +
+            '<div class="req-row"><span>নাম:</span> <b>' + (r.name || '-') + ' (' + (r.email || '-') + ')</b></div>' +
+            '<div class="req-row"><span>কোর্স:</span> <b>' + (r.course || '-') + '</b></div>' +
+            '<div class="req-row"><span>রেটিং:</span> <b>' + (r.rating || 5) + ' স্টার</b></div>' +
+            '<div style="background:var(--bg); padding:10px; border-radius:8px; margin:8px 0; font-size:0.9em; white-space:pre-wrap;">' + (r.body || '-') + '</div>' +
+            (r.image_url ? '<div style="margin-top:6px"><a href="' + r.image_url + '" target="_blank" style="color:var(--cyan);font-size:0.9em;">🖼️ ইমেজ লিংক</a></div>' : '') +
+            (r.link ? '<div style="margin-top:6px"><a href="' + r.link + '" target="_blank" style="color:var(--cyan);font-size:0.9em;">🔗 কাজের লিংক</a></div>' : '') +
+            '<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">' +
+            '<button class="approve-btn" style="background:#22C55E;" onclick="reviewAction(\'approveReview\',\'' + r.id + '\')"> ✔️ Approve</button>' +
+            '<button class="approve-btn" style="background:#EF4444;" onclick="reviewAction(\'deleteReview\',\'' + r.id + '\')"> 🗑️ Remove</button>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+      }
+    } catch(err){
+      area.innerHTML = '<div class="msg error">সমস্যা হয়েছে, আবার চেষ্টা করুন।</div>';
+    }
+  }
+
+  async function reviewAction(action, id){
+    if(action === 'deleteReview' && !confirm('আপনি কি সত্যিই এই রিভিউটি মুছে ফেলতে চান?')) return;
+    
+    const area = document.getElementById('reviewsArea');
+    area.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
+    
+    const data = await adminApi({ action: action, reviewId: id });
+    if(data.error) alert(data.error);
+    loadReviews();
   }
 </script>
 

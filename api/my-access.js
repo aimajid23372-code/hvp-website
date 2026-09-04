@@ -252,7 +252,7 @@ module.exports = async (req, res) => {
         body: text,
         image_url: httpOnly(body.image_url),
         link: httpOnly(body.link),
-        status: 'approved',
+        status: 'pending',
       };
 
       const { error } = await supabase.from('reviews').insert(row);
@@ -260,7 +260,7 @@ module.exports = async (req, res) => {
         console.error('review insert error:', error);
         return res.status(500).json({ error: 'রিভিউ সেভ করা যায়নি' });
       }
-      return res.status(200).json({ ok: true });
+      return res.status(200).json({ ok: true, msg: 'আপনার রিভিউ সফলভাবে জমা হয়েছে। অ্যাডমিন অ্যাপ্রুভ করার পর ওয়েবসাইটে দেখা যাবে।' });
     }
 
     if (body.action === 'link') {
