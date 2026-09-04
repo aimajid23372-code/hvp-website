@@ -335,7 +335,10 @@
 .trust-text b {
   display: block;
   font-family: 'Sora', sans-serif;
-  color: var(--text);
+  font-size: 1.35em;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: #FFFFFF;
 }
 .trust-text span {
   font-size: 0.85em;

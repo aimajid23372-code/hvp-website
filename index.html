@@ -573,28 +573,40 @@
       localStorage.setItem('hvb_ref', refCode);
     }
     
-    // --- Counter Animation ---
+    // --- Smooth Natural Counter Animation (1.4s Ease-Out) ---
     const counters = document.querySelectorAll('.counter');
     counters.forEach(counter => {
       const target = +counter.getAttribute('data-target') || 100;
-      const inc = Math.max(1, Math.ceil(target / 45));
-      let c = 0;
-      const updateCount = () => {
-        c += inc;
-        if(c < target) {
-          counter.innerText = Math.ceil(c) + "+";
-          setTimeout(updateCount, 16);
+      const duration = 1400; // 1.4s — সাবলীল ও স্পষ্ট গতি, না বেশি ফাস্ট না বেশি স্লো
+      let startTimestamp = null;
+      
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const elapsed = timestamp - startTimestamp;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // easeOutCubic: শুরুতে দ্রুত কিন্তু শেষে গিয়ে স্মুথলি স্লো হয়ে ১০০+ এ থামে
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const current = Math.floor(easeOut * target);
+        
+        counter.innerText = current + "+";
+        
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
         } else {
           counter.innerText = target + "+";
         }
       };
-      // only animate when in view
+
+      // Only animate when in view, with a gentle 180ms delay so user catches the start
       const observer = new IntersectionObserver(entries => {
         if(entries[0].isIntersecting) {
-          updateCount();
+          setTimeout(() => {
+            window.requestAnimationFrame(step);
+          }, 180);
           observer.disconnect();
         }
-      });
+      }, { threshold: 0.15 });
       observer.observe(counter);
     });
 
