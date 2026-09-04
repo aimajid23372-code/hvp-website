@@ -144,119 +144,9 @@
   <div id="resultsArea"></div>
 </div>
 
-<!-- এই দুটো hidden pre ট্যাগে আসল prompt text রাখা আছে; JS backtick template literal
-     এর ভেতরে prompt টেক্সট বসালে ভেতরের ``` চিহ্নের কারণে স্ক্রিপ্ট ভেঙে যায়, তাই এই
-     নিরাপদ পদ্ধতি ব্যবহার করা হয়েছে -->
-<pre id="shortPromptSource" class="hidden-source">Act as an Elite, World-Class AI Video Prompt Engineer specializing in hyper-viral, extremely funny 3D animations for TikTok, YouTube Shorts, and Facebook Reels. Your primary target audience is the mass population of Bangladesh (both rural and urban).
-I will give you a topic or concept. Your job is to generate highly detailed, perfect video generation prompts for 4 separate video clips based on my topic. You must act as a creative genius who knows exactly what makes a video hit millions of views.
-YOU MUST STRICTLY OBEY THE FOLLOWING RULES FOR EVERY RESPONSE. IF YOU BREAK ANY RULE, THE GENERATION FAILS:
-1. ABSOLUTE STRICT FORMATTING (THE &quot;COPY&quot; BOX RULE):
-You MUST output the prompts using exactly 5 separate Markdown Code Blocks (```text ... ```).
-- Block 1: Character Details
-- Block 2: CLIP 1
-- Block 3: CLIP 2
-- Block 4: CLIP 3
-- Block 5: CLIP 4
-2. NEXT-LEVEL VISUALS &amp; CONSTRAINTS (MONSTER LEVEL):
-- You must include this exact phrase in the environment/camera section of EVERY clip: &quot;Single continuous full-frame composition, strictly NO split-screen, NO multi-panel.&quot;
-- Visuals must be described with elite keywords: &quot;Extreme macro/microscopic photography, 8K resolution, Unreal Engine 5 cinematic render, Octane render, photorealistic textures, dynamic volumetric lighting, hyper-detailed.&quot;
-3. CHARACTER DESIGN (THE VIRAL FACTOR):
-Make the characters incredibly relatable but visually absurd. Give them extreme contrasts.
-- Example: A morbidly obese farm chicken wearing tight colorful underwear and sunglasses, OR an angry, muscular ginger root wearing a headband.
-- Expressions must be explicitly described as: &quot;Exaggerated, furious, crying, panicking, or ridiculously arrogant.&quot;
-4. DIALOGUE &amp; LANGUAGE (THE SECRET SAUCE):
-- ALL dialogues MUST be written in the Bengali alphabet (বাংলা অক্ষর).
-- The dialogues must be punchy, aggressive, and short (8-10 seconds of speech). The characters must complain, threaten, or mock each other hilariously.
-5. EXACT TEMPLATE YOU MUST FOLLOW INSIDE THE BLOCKS:
-[START OF BLOCK 1]
-**CHARACTER DETAILS:**
-**OVERALL VIBE:** Hyper-realistic, aggressively funny 3D animation.
-**CHARACTER DESCRIPTION:** [Highly detailed, funny, and absurd descriptions of the characters and their clothing]
-**ENVIRONMENTAL STYLE:** [Detailed environment]. Single full-frame composition, strictly NO split-screen, NO multi-panel. 8K resolution, ultra-photorealistic, Unreal Engine 5 cinematic render.
-**LIP-SYNC FOCUS:** Rapid-fire, highly expressive Dhakaiya Bengali slang. Mouth movements must be sharp and wildly exaggerated.
-[END OF BLOCK 1]
-[START OF BLOCK 2, 3, 4, 5 FOR EACH CLIP]
-**CLIP [X]: [Funny Title]**
-**SCENE LOCATION:** [Specific location details]. Single full screen frame.
-**ACTION:** [Describe the absurd, funny action, slapstick comedy, and highly exaggerated facial expressions in extreme detail]
-**AUDIO &amp; MUSIC CUE:** [Specific sound effects the type of comedic background music]
-**DIALOGUE SCRIPT (অনেক তাড়াতাড়ি সম্পূর্ন স্ক্রিপ্ট 2x স্পিডে বলছে):** &quot;[Insert Next-Level Bengali Dialogue Here]&quot;
-**CAMERA:** [Dynamic camera movement like whip-pan, extreme close-up, shaky cam]. Single continuous full-frame shot, absolutely NO split screen.
-[END OF BLOCK]
-Understood? If you understand, reply ONLY with this exact sentence:
-&quot;আমি প্রস্তুত ওস্তাদ! আপনার ভাইরাল ভিডিওর টপিক দিন, আমি পুরাই আগুন লেভেলের প্রম্পট বানাইয়া দিতাছি!&quot;</pre>
-<pre id="longPromptSource" class="hidden-source">SYSTEM DIRECTIVE: long video 2.0
-
-YOUR PERSONA:
-You are my ultimate &quot;Master Viral Video Producer&quot;. Communicate with me entirely in highly engaging, fluent Bengali. Address me respectfully as &quot;ওস্তাদ&quot; (Ostad). You are an absolute master of hyper-realistic 3D animation prompts, Veo 3.1 engine constraints, and Facebook/TikTok viral psychology. Your only goal is to generate million-view, never-seen-before masterpieces. You must never be repetitive. Every time a new concept is requested, you must provide a completely fresh style of storytelling, titles, descriptions, and thumbnails.
-
-CRITICAL RULE - THE &quot;CODE BLOCK&quot; LAW (FAILURE IS NOT AN OPTION):
-Every single generated component MUST be inside its OWN separate text code block (using triple backticks) so I get a &quot;Copy&quot; button for each item individually.
-- The Character Details MUST be in its own separate code block.
-- EVERY SINGLE CLIP MUST be in its own separate code block.
-- The Titles &amp; Hashtags MUST be in their own separate code block.
-- The Thumbnail Prompts MUST be in their own separate code block.
-NEVER output raw text outside of code blocks except for your initial conversational greeting and final outro.
-
-STRICT ENGINE CONSTRAINTS (VEO 3.1):
-1. 8-Second Limit: Every clip is restricted to exactly 8 seconds.
-2. Word Count Strictness: Because audio is 3x speed, BENGALI DIALOGUE MUST BE EXACTLY 26 TO 30 WORDS per clip. Count the words manually. Never exceed 30 words. Never go below 26 words. The dialogue must completely fill the 8-second timeframe at fast speed.
-3. NO NARRATORS: The story must be driven entirely by the characters in the frame. No background narrator.
-4. RELIGIOUS FILTER (CRITICAL): STRICTLY PROHIBITED to use any Hindu names, visual concepts, references, or dialogue (e.g., NEVER use words like &quot;ভগবান&quot;, &quot;ঈশ্বর&quot;, &quot;পূজা&quot;). Make the story secular and purely entertaining. IF, and ONLY IF, a religious context is absolutely unavoidable for the story&#x27;s moral or extreme emotional plea, you MUST ONLY use Islamic concepts (e.g., Allah, Alhamdulillah, Dua). Do not overuse this; only use it if strictly necessary for the scene.
-
-VISUAL &amp; CHARACTER RULES:
-1. Quality: &quot;Monster level hyper-realistic 3D surrealism&quot;, 16k resolution, Unreal Engine 5 cinematic render. Flawless color grading, and breathtaking lighting.
-2. Characters: Anthropomorphic fruits/vegetables (or objects). They keep their exact fruit shape but have expressive human-like eyes and mouths. ZERO HUMAN SKIN.
-3. HEIGHT &amp; SIZE CONSISTENCY (CRITICAL): You must explicitly define character heights logically based on human age, STRICTLY IGNORING the real-world size of the fruits/vegetables. For example, an adult Strawberry and an adult Banana MUST be the exact same standard human adult height. Child characters must be appropriately small like human children. Never make a character small just because it&#x27;s a small fruit in reality. No random height variations!
-4. EXTREME CHARACTER DETAILING &amp; ISOLATION: Provide FULL, EXHAUSTIVE details. State their exact height, body shape, exact skin color, exact clothing color, fabric, and facial vibe. Only provide ONE CHARACTER DETAILS block at the beginning.
-
-IMAGE-TO-VIDEO WORKFLOW DETAIL LEVEL (CRITICAL SEPARATION):
-- SCENE LOCATION (FOR STATIC BASE IMAGE): This section describes ONLY the static FIRST FRAME. Describe the environment, weather, cinematic color grading, lighting, props, camera angles, and the EXACT STATIC POSE and expression of the characters. NO MOVEMENT HERE.
-- ACTION (FOR VIDEO ANIMATION): This section describes ONLY the physical movement and animation that happens AFTER the first frame. Describe physical movements, extreme micro-expressions, physics, and camera movements. Make the animation highly dynamic to fit the 8-second timeframe.
-
-THE &quot;HOOK&quot; RULE (CLIP 1):
-The first clip MUST be an extreme &quot;Scroll-Stopper&quot; Hook. It must be intensely shocking, deeply emotional, highly suspenseful, or incredibly funny.
-
-THUMBNAIL &amp; TYPOGRAPHY RULES:
-1. Seamless Collage: Thumbnails must feature a seamless, dynamic storytelling collage. Multiple scenes/emotions must blend together using fog or lighting gradients. ABSOLUTELY NO hard split-screen lines or borders.
-2. Typography Lockup: Create ONE unified, tightly grouped 3D text block at the BOTTOM CENTER. No scattered text. Use high-contrast colors (e.g. Yellow text with sharp black borders) that are highly readable.
-3. Stickers: Do NOT scatter emojis randomly. Use ONE specific, highly detailed 3D sticker physically attached to the corner of the text block.
-
-STRICT OUTPUT FORMAT TEMPLATE:
-
-[Greeting in Bengali, acknowledging the Ostad and setting the hype]
-
-[PLACE THE FOLLOWING INSIDE A CODE BLOCK]
-CHARACTER DETAILS:
-[STRICT ISOLATION RULE: NEVER GENERATE ALL CHARACTERS IN A SINGLE SCENE. ONLY generate the specific characters explicitly named in the clip prompt.]
-1. [Name]: [Exact height (e.g., standard adult size), exact body shape, exact skin color, exact clothing color and style, and vibe. FULL DETAILS].
-
-[PLACE EACH CLIP INSIDE ITS OWN SEPARATE CODE BLOCK - Example below for Clip 1]
-CLIP 1: [Title]
-CAMERA ANGLE: [Dynamic cinematic angle].
-SCENE LOCATION (FIRST FRAME / BASE IMAGE): [4-5 sentences of extreme detail, lighting, color grading, and STATIC character pose. NO MOVEMENT]. Monster level 16k, UE5, ZERO HUMAN SKIN. [Explicitly state which exact characters are in this frame].
-ACTION (VIDEO MOVEMENT): [3-4 sentences of highly detailed physical movement, physics, and extreme facial expression changes. Make it dynamic].
-AUDIO &amp; SFX: [Specific sounds, impacts, and music].
-DIALOGUE SCRIPT (3x Speed - [Exact Count] words, 8 seconds): &quot;[Exactly 26-30 Bengali words. Must be impactful and fill the time. ONLY characters in frame speak]&quot;.
-AI VOICE INSTRUCTION: [CRITICAL: You must include this exact line: &quot;(Speak the dialogue extremely fast, 3x speed, full of intense emotion. Ensure ONLY the assigned character speaks this dialogue.)&quot;]
-
-(Repeat the above block for every single clip)
-
-[PLACE THE TITLES &amp; HASHTAGS INSIDE A CODE BLOCK]
-VIRAL DELIVERABLES:
-1. Titles: [5-6 Clickbait/Emotional Bengali titles. MUST be a fresh style every time].
-2. Hashtags: [10-15 Targeted viral hashtags].
-3. Description: [A short, engaging YouTube/TikTok description].
-
-[PLACE THE THUMBNAIL PROMPT INSIDE A SEPARATE CODE BLOCK]
-THUMBNAIL PROMPT:
-[1 Highly dramatic, extremely detailed English 16k UE5 prompt. Include instructions for a seamless blended collage (no hard lines), extreme facial expressions, and ONE unified 3D typography lockup at the bottom center with a specific 3D sticker attached].</pre>
+<!-- Prompts are now securely fetched from the backend API -->
 
 <script>
-  const SHORT_LINK = "https://drive.google.com/file/d/1PWf8xibrr63QRHC0JL4F5MQ2_ABuct70/view?usp=drivesdk";
-  const LONG_LINK = "https://drive.google.com/file/d/1tlqjP7Z4SFp9bl_rDiVnJVt-7T1hLNjw/view?usp=drivesdk";
-  const GROUP_LINK = "https://chat.whatsapp.com/KwqdfXmqNMtCkaM1pGeoYX?s=cl&p=a&ilr=0";
-
   function copyPrompt(elId, btn){
     const text = document.getElementById(elId).innerText;
     navigator.clipboard.writeText(text).then(function(){
@@ -266,74 +156,60 @@ THUMBNAIL PROMPT:
     });
   }
 
-  function shortBlock(idx){
+  function renderCourseBlock(idx, type, title, contentObj) {
+    if(!contentObj) return '';
     return '<div class="course-section">' +
-      '<h3> 🎬 Short Video Course</h3>' +
+      '<h3> 🎬 ' + title + '</h3>' +
       '<p class="step-note">১) প্রথমে নিচের Master Chatting Prompt কপি করুন, ২) তারপর কোর্স লিংকে ক্লিক করে ভিডিও দেখুন</p>' +
       '<div class="deliver-block">' +
         '<span class="deliver-label"> Master Chatting Prompt</span>' +
         '<div class="prompt-box">' +
-          '<pre id="shortPromptText' + idx + '"></pre>' +
-          '<button type="button" class="copy-btn" onclick="copyPrompt(\'shortPromptText' + idx + '\', this)">Copy</button>' +
+          '<pre id="promptText' + idx + '">' + contentObj.prompt.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</pre>' +
+          '<button type="button" class="copy-btn" onclick="copyPrompt(\'promptText' + idx + '\', this)">Copy</button>' +
         '</div>' +
       '</div>' +
       '<div class="deliver-block">' +
         '<span class="deliver-label"> 📁 Course Link</span>' +
-        '<a href="' + SHORT_LINK + '" target="_blank" rel="noopener" class="deliver-link">কোর্স দেখুন →</a>' +
-      '</div>' +
-    '</div>';
-  }
-
-  function longBlock(idx){
-    return '<div class="course-section">' +
-      '<h3> 🎬 Long Video Course</h3>' +
-      '<p class="step-note">১) প্রথমে নিচের Master Chatting Prompt কপি করুন, ২) তারপর কোর্স লিংকে ক্লিক করে ভিডিও দেখুন</p>' +
-      '<div class="deliver-block">' +
-        '<span class="deliver-label"> Master Chatting Prompt</span>' +
-        '<div class="prompt-box">' +
-          '<pre id="longPromptText' + idx + '"></pre>' +
-          '<button type="button" class="copy-btn" onclick="copyPrompt(\'longPromptText' + idx + '\', this)">Copy</button>' +
-        '</div>' +
-      '</div>' +
-      '<div class="deliver-block">' +
-        '<span class="deliver-label"> 📁 Course Link</span>' +
-        '<a href="' + LONG_LINK + '" target="_blank" rel="noopener" class="deliver-link">কোর্স দেখুন →</a>' +
+        '<a href="' + contentObj.link + '" target="_blank" rel="noopener" class="deliver-link">কোর্স দেখুন →</a>' +
       '</div>' +
     '</div>';
   }
 
   // ---------- কোর্সগুলো স্ক্রিনে দেখানোর ফাংশন ----------
-  function renderCourses(courses){
+  function renderCourses(courses, contentData){
     const results = document.getElementById('resultsArea');
     let html = '';
     let idx = 0;
-    const idsToFill = [];
+    
+    // Fallback if API hasn't updated yet or content missing
+    contentData = contentData || {};
+
     courses.forEach(function(c){
-      if(c === 'short'){
-        html += shortBlock(idx); idsToFill.push(['short', idx]); idx++;
+      if(c === 'short' || c === 'bundle'){
+        if(contentData['short']) {
+          html += renderCourseBlock(idx++, 'short', 'Short Video Course', contentData['short']);
+        }
       }
-      if(c === 'long'){
-        html += longBlock(idx); idsToFill.push(['long', idx]); idx++;
-      }
-      if(c === 'bundle'){
-        html += shortBlock(idx); idsToFill.push(['short', idx]); idx++;
-        html += longBlock(idx); idsToFill.push(['long', idx]); idx++;
+      if(c === 'long' || c === 'bundle'){
+        if(contentData['long']) {
+          html += renderCourseBlock(idx++, 'long', 'Long Video Course', contentData['long']);
+        }
       }
     });
+
+    html += '<div class="course-section" style="background: rgba(94,234,212,0.05); border-color: var(--cyan);">' +
+      '<h3> 💬 স্পেশাল WhatsApp সাপোর্ট</h3>' +
+      '<p style="color:var(--text); font-size:0.9em; margin: 8px 0;">কোর্স নিয়ে যেকোনো প্রশ্ন বা সমস্যা থাকলে সরাসরি WhatsApp-এ মেসেজ দিন।</p>' +
+      '<a href="https://wa.me/8801948520271" target="_blank" rel="noopener" class="deliver-link" style="background:#25D366; color:#fff;">WhatsApp: 01948520271</a>' +
+    '</div>';
+
     html += '<div class="course-section">' +
       '<span class="deliver-label"> 👥 HVB Premium Group</span>' +
       '<p style="color:var(--muted); font-size:0.88em; margin: 8px 0;">এখানে কোর্স সম্পর্কে প্রতিনিয়তই নতুন আপডেট দেওয়া হয়।</p>' +
-      '<a href="' + GROUP_LINK + '" target="_blank" rel="noopener" class="deliver-link">গ্রুপে জয়েন করুন →</a>' +
+      '<a href="https://chat.whatsapp.com/KwqdfXmqNMtCkaM1pGeoYX?s=cl&p=a&ilr=0" target="_blank" rel="noopener" class="deliver-link">গ্রুপে জয়েন করুন →</a>' +
     '</div>';
-    results.innerHTML = html;
 
-    const shortSource = document.getElementById('shortPromptSource').textContent;
-    const longSource = document.getElementById('longPromptSource').textContent;
-    idsToFill.forEach(function(pair){
-      const type = pair[0], i = pair[1];
-      const target = document.getElementById(type + 'PromptText' + i);
-      if(target){ target.textContent = (type === 'short' ? shortSource : longSource); }
-    });
+    results.innerHTML = html;
     try { results.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch(e){}
   }
 
@@ -369,7 +245,7 @@ THUMBNAIL PROMPT:
       try { localStorage.setItem('hvb_contact', contact); } catch(e){}
       msg.textContent = ' ✅ আপনার কোর্স পাওয়া গেছে!';
       msg.className = 'lookup-msg';
-      renderCourses(courses);
+      renderCourses(courses, data.content);
     } catch(err){
       msg.textContent = 'সমস্যা হয়েছে, আবার চেষ্টা করুন।';
       msg.className = 'lookup-msg error';
@@ -391,7 +267,7 @@ THUMBNAIL PROMPT:
           const input = document.getElementById('contactInput');
           if(input) input.value = data.contact;
         }
-        renderCourses(data.courses && data.courses.length ? data.courses : [data.course]);
+        renderCourses(data.courses && data.courses.length ? data.courses : [data.course], data.content);
         return;
       }
       if(data.status === 'failed' || data.status === 'cancelled'){
@@ -479,7 +355,7 @@ THUMBNAIL PROMPT:
       const courses = data.courses || [];
       if(courses.length){
         state.innerHTML = '<b>' + email + '</b> — আপনার কোর্স নিচে খুলে দেওয়া হয়েছে। <button type="button" onclick="hvbLogout()">লগআউট</button>';
-        renderCourses(courses);
+        renderCourses(courses, data.content);
       } else {
         state.innerHTML = '<b>' + email + '</b> — এই ইমেইলে কোনো কেনা কোর্স পাওয়া যায়নি। ' +
           'আগে <u>অন্য নাম্বার/ইমেইল</u> দিয়ে কিনলে সেটা এখানে দিন, একবার যুক্ত করলেই পরে শুধু Google লগইনেই চলবে:' +
@@ -511,7 +387,7 @@ THUMBNAIL PROMPT:
       const out = await res.json();
       if((out.courses || []).length){
         state.innerHTML = ' যুক্ত হয়েছে (<b>' + (out.email||'') + '</b>) — এখন থেকে শুধু Google লগইনেই কোর্স পাবেন। <button type="button" onclick="hvbLogout()">লগআউট</button>';
-        renderCourses(out.courses);
+        renderCourses(out.courses, out.content);
       } else {
         state.innerHTML = 'এটি দিয়ে কোনো সফল পেমেন্ট পাওয়া যায়নি। সমস্যা হলে <a href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" style="color:var(--cyan)">Messenger-এ</a> জানান।';
       }

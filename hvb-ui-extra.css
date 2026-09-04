@@ -1,0 +1,91 @@
+/* ---------- Sticky Bottom CTA (Mobile) ---------- */
+.sticky-cta {
+  display: none; /* hidden on desktop */
+}
+@media (max-width: 768px) {
+  .sticky-cta {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(9, 12, 19, 0.95);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid var(--line);
+    padding: 12px 20px;
+    z-index: 100;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+  }
+  .sticky-cta-price {
+    display: flex;
+    flex-direction: column;
+  }
+  .sticky-cta-price span:first-child {
+    font-size: 0.75em;
+    color: var(--muted);
+    text-decoration: line-through;
+  }
+  .sticky-cta-price span:last-child {
+    font-size: 1.2em;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .sticky-cta .hvb-btn-accent {
+    padding: 10px 24px;
+    animation: hvbPulse 2s infinite;
+  }
+}
+
+/* ---------- Offer Stacking Section ---------- */
+.offer-stack {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 24px;
+  margin: 40px auto;
+  max-width: 800px;
+}
+.offer-stack h3 {
+  text-align: center;
+  font-size: 1.4em;
+  margin-bottom: 20px;
+  color: var(--text);
+}
+.offer-stack-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: 0.95em;
+}
+.offer-stack-item:last-of-type {
+  border-bottom: none;
+}
+.offer-stack-item .value {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--muted);
+  text-decoration: line-through;
+}
+.offer-stack-total {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 2px solid var(--accent);
+  font-weight: 800;
+  font-size: 1.2em;
+}
+.offer-stack-total .final-price {
+  color: var(--accent);
+  font-family: 'Sora', sans-serif;
+  font-size: 1.4em;
+}
+
+@keyframes hvbPulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(56,214,240,0.7); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(56,214,240,0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(56,214,240,0); }
+}
