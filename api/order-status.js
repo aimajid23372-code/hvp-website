@@ -3,6 +3,7 @@
 // webhook মিস হলেও এখানে সরাসরি ZiniPay-কে যাচাই করা হয়, তাই ম্যানুয়াল অনুমোদন লাগে না।
 
 const { createClient } = require('@supabase/supabase-js');
+const { normalizeCourse, buildContentResponse } = require('./_course_content');
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -33,10 +34,13 @@ async function verifyWithZiniPay(invoiceId) {
 }
 
 function paidResponse(res, order) {
+  const raw = [order.course];
+  const courses = [normalizeCourse(order.course)];
   return res.status(200).json({
     status: 'paid',
-    course: order.course,
-    courses: [order.course],
+    course: courses[0],
+    courses,
+    content: buildContentResponse(raw),
     contact: order.customer_contact,
   });
 }
@@ -91,10 +95,13 @@ module.exports = async (req, res) => {
       .eq('customer_contact', order.customer_contact)
       .eq('status', 'paid');
     if (others && others.length) {
+      const rawCourses = others.map((o) => o.course);
+      const courses = [...new Set(rawCourses.map(normalizeCourse))];
       return res.status(200).json({
         status: 'paid',
-        course: others[0].course,
-        courses: [...new Set(others.map((o) => o.course))],
+        course: courses[0],
+        courses,
+        content: buildContentResponse(rawCourses),
         contact: order.customer_contact,
       });
     }

@@ -181,34 +181,43 @@
     let html = '';
     let idx = 0;
     
-    // Fallback if API hasn't updated yet or content missing
     contentData = contentData || {};
 
-    
-      let renderShort = false;
-      let renderLong = false;
-      
-      courses.forEach(function(c) {
-          const lowerC = String(c).toLowerCase();
-          if (lowerC === 'short') renderShort = true;
-          if (lowerC === 'long') renderLong = true;
-          if (lowerC === 'bundle' || lowerC.includes('short+long') || lowerC.includes('long+short') || lowerC.includes('both') || (lowerC.includes('short') && lowerC.includes('long'))) {
-              renderShort = true;
-              renderLong = true;
-          }
-      });
-      
-      if (renderShort && contentData['short']) {
-          html += renderCourseBlock(idx++, 'short', 'Short Video Course', contentData['short']);
+    const rawList = Array.isArray(courses) ? courses : [courses];
+    let renderShort = false;
+    let renderLong = false;
+
+    rawList.forEach(function(c) {
+      const s = String(c || '').toLowerCase().trim();
+      if ((s.includes('short') && s.includes('long')) || s.includes('bundle') || s.includes('combo') || s.includes('both')) {
+        renderShort = true;
+        renderLong = true;
+      } else if (s.includes('short')) {
+        renderShort = true;
+      } else if (s.includes('long')) {
+        renderLong = true;
       }
-      if (renderLong && contentData['long']) {
-          html += renderCourseBlock(idx++, 'long', 'Long Video Course', contentData['long']);
-      }
+    });
+
+    if (renderShort && contentData['short']) {
+      html += renderCourseBlock(idx++, 'short', 'Short Video Course', contentData['short']);
+    }
+    if (renderLong && contentData['long']) {
+      html += renderCourseBlock(idx++, 'long', 'Long Video Course', contentData['long']);
+    }
+
+    // Fallback: If course detected but content wasn't attached
+    if ((renderShort || renderLong) && !contentData['short'] && !contentData['long']) {
+      html += '<div class="course-section" style="border-color: #f59e0b; background: rgba(245, 158, 11, 0.08);">' +
+        '<h3 style="color:#f59e0b;"> ⚠️ কোর্স কনটেন্ট লোড হতে সমস্যা হয়েছে</h3>' +
+        '<p style="color:var(--text); font-size:0.92em; margin: 8px 0;">আপনার পেমেন্ট ভেরিফাইড হয়েছে, কিন্তু কনটেন্ট সাময়িকভাবে লোড করা যায়নি। অনুগ্রহ করে পেজটি একবার রিফ্রেশ করুন অথবা নিচে সরাসরি মেসেঞ্জারে আমাদের জানান।</p>' +
+      '</div>';
+    }
 
     html += '<div class="course-section" style="background: rgba(94,234,212,0.05); border-color: var(--cyan);">' +
-      '<h3> 💬 স্পেশাল WhatsApp সাপোর্ট</h3>' +
-      '<p style="color:var(--text); font-size:0.9em; margin: 8px 0;">কোর্স নিয়ে যেকোনো প্রশ্ন বা সমস্যা থাকলে সরাসরি WhatsApp-এ মেসেজ দিন।</p>' +
-      '<a href="https://wa.me/8801948520271" target="_blank" rel="noopener" class="deliver-link" style="background:#25D366; color:#fff;">WhatsApp: 01948520271</a>' +
+      '<h3> 💬 অফিসিয়াল সাপোর্ট (Messenger)</h3>' +
+      '<p style="color:var(--text); font-size:0.9em; margin: 8px 0;">কোর্স নিয়ে যেকোনো প্রশ্ন বা সমস্যা থাকলে সরাসরি আমাদের অফিসিয়াল ফেসবুক পেজে মেসেজ দিন।</p>' +
+      '<a href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" class="deliver-link" style="background: #0084FF; color:#fff;">Messenger-এ মেসেজ দিন →</a>' +
     '</div>';
 
     html += '<div class="course-section">' +
@@ -233,20 +242,32 @@
       return;
     }
 
-      if(contact){
-        try { localStorage.setItem('hvb_contact', contact); } catch(e){}
-      }
-
-      if (window.HVB && window.HVB.session) {
-        msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
-        msg.className = 'lookup-msg info';
-        await hvbInitAuth();
-        return;
-      }
+    try { localStorage.setItem('hvb_contact', contact); } catch(e){}
     msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
     msg.className = 'lookup-msg info';
 
     try {
+      // If user is currently logged in with Google, also link it securely!
+      if (hvbSb) {
+        try {
+          const { data } = await hvbSb.auth.getSession();
+          if (data && data.session) {
+            const linkRes = await fetch('/api/my-access', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({ access_token: data.session.access_token, action: 'link', contact: contact })
+            });
+            const linkOut = await linkRes.json();
+            if (linkOut.courses && linkOut.courses.length) {
+              msg.textContent = ' ✅ আপনার কোর্স পাওয়া গেছে এবং Google অ্যাকাউন্টে যুক্ত হয়েছে!';
+              msg.className = 'lookup-msg';
+              renderCourses(linkOut.courses, linkOut.content);
+              return;
+            }
+          }
+        } catch(e) {}
+      }
+
       const res = await fetch('/api/lookup-order', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -256,23 +277,11 @@
       const courses = data.courses || [];
 
       if(courses.length === 0){
-        msg.innerHTML = 'এটি দিয়ে কোনো সফল পেমেন্ট পাওয়া যায়নি। পেমেন্টের সময় দেওয়া নাম্বার/ইমেইল দিন, অথবা পেমেন্টের Invoice ID (লম্বা কোড) দিন। সমস্যা হলে khadimulhasanshuvo@gmail.com-এ যোগাযোগ করুন।';
+        msg.innerHTML = 'এটি দিয়ে কোনো সফল পেমেন্ট পাওয়া যায়নি। পেমেন্টের সময় দেওয়া নাম্বার/ইমেইল দিন, অথবা পেমেন্টের Invoice ID (লম্বা কোড) দিন। সমস্যা হলে <a href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" style="color:var(--cyan)">Messenger-এ</a> যোগাযোগ করুন।';
         msg.className = 'lookup-msg error';
         return;
       }
 
-      if(contact){
-        try { localStorage.setItem('hvb_contact', contact); } catch(e){}
-      }
-
-      if (window.HVB && window.HVB.session) {
-        msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
-        msg.className = 'lookup-msg info';
-        await hvbInitAuth();
-        return;
-      }
-
-      try { localStorage.setItem('hvb_contact', contact); } catch(e){}
       msg.textContent = ' ✅ আপনার কোর্স পাওয়া গেছে!';
       msg.className = 'lookup-msg';
       renderCourses(courses, data.content);
@@ -300,31 +309,9 @@
         renderCourses(data.courses && data.courses.length ? data.courses : [data.course], data.content);
         return;
       }
-
-      if(contact){
-        try { localStorage.setItem('hvb_contact', contact); } catch(e){}
-      }
-
-      if (window.HVB && window.HVB.session) {
-        msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
-        msg.className = 'lookup-msg info';
-        await hvbInitAuth();
-        return;
-      }
       if(data.status === 'failed' || data.status === 'cancelled'){
-        msg.textContent = ' ❌ পেমেন্টটি সম্পন্ন হয়নি। আবার চেষ্টা করুন অথবা khadimulhasanshuvo@gmail.com-এ যোগাযোগ করুন।';
+        msg.textContent = ' ❌ পেমেন্টটি সম্পন্ন হয়নি। আবার চেষ্টা করুন অথবা Messenger-এ যোগাযোগ করুন।';
         msg.className = 'lookup-msg error';
-        return;
-      }
-
-      if(contact){
-        try { localStorage.setItem('hvb_contact', contact); } catch(e){}
-      }
-
-      if (window.HVB && window.HVB.session) {
-        msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
-        msg.className = 'lookup-msg info';
-        await hvbInitAuth();
         return;
       }
     } catch(err){ /* চুপচাপ আবার চেষ্টা করবে */ }
@@ -379,17 +366,6 @@
       document.getElementById('hvbAuthState').textContent = 'Google লগইন এখনো চালু হয়নি। নিচে নাম্বার/ইমেইল দিয়ে খুঁজুন।';
       return;
     }
-
-      if(contact){
-        try { localStorage.setItem('hvb_contact', contact); } catch(e){}
-      }
-
-      if (window.HVB && window.HVB.session) {
-        msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
-        msg.className = 'lookup-msg info';
-        await hvbInitAuth();
-        return;
-      }
     await hvbSb.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: window.location.origin + '/my-courses' }
