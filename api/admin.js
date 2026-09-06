@@ -89,6 +89,30 @@ module.exports = async (req, res) => {
       return res.status(200).json({ success: true });
     }
 
+    // Promos
+    if (action === 'promoList') {
+      const { data } = await supabase.from('promo_codes').select('*').order('created_at', { ascending: false });
+      return res.status(200).json({ promos: data || [] });
+    }
+    if (action === 'promoAdd') {
+      await supabase.from('promo_codes').upsert({ code: String(body.code).toUpperCase(), discount_percent: Number(body.discount), active: true });
+      return res.status(200).json({ success: true });
+    }
+    if (action === 'promoToggle') {
+      await supabase.from('promo_codes').update({ active: body.active }).eq('code', body.code);
+      return res.status(200).json({ success: true });
+    }
+
+    // Wallet
+    if (action === 'walletUpdate') {
+      const email = String(body.email).toLowerCase().trim();
+      const amount = Number(body.amount);
+      const { data: w } = await supabase.from('wallets').select('balance').eq('email', email).maybeSingle();
+      const newBal = (w ? Number(w.balance) : 0) + amount;
+      await supabase.from('wallets').upsert({ email, balance: newBal });
+      return res.status(200).json({ success: true, balance: newBal });
+    }
+
     // Settings
     if (action === 'settingsGet') {
       const { data } = await supabase.from('settings').select('*');

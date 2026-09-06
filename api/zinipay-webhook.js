@@ -54,22 +54,33 @@ module.exports = async (req, res) => {
     }
 
     if (vStatus === 'COMPLETED' || callbackOk) {
-      const { error } = await supabase
+      const { data: orderData, error } = await supabase
         .from('orders')
         .update({
           status: 'paid',
           transaction_id: (verified && verified.transaction_id) || null,
           payment_method: (verified && verified.payment_method) || null,
         })
-        .eq('invoice_id', invoiceId);
+        .eq('invoice_id', invoiceId)
+        .select('*')
+        .single();
+        
       if (error) console.error('order update error:', error);
       
+      // If it's a wallet topup, add funds to the wallet
+      if (orderData && orderData.course === 'wallet_topup') {
+        const email = String(orderData.customer_contact).toLowerCase().trim();
+        const amount = Number(orderData.amount);
+        const { data: w } = await supabase.from('wallets').select('balance').eq('email', email).maybeSingle();
+        const newBal = (w ? Number(w.balance) : 0) + amount;
+        await supabase.from('wallets').upsert({ email, balance: newBal });
+      }
+      
       // Auto-Email Delivery
-      if (process.env.RESEND_API_KEY) {
+      if (process.env.RESEND_API_KEY && orderData && orderData.course !== 'wallet_topup') {
         try {
           const { Resend } = require('resend');
           const resend = new Resend(process.env.RESEND_API_KEY);
-          const { data: orderData } = await supabase.from('orders').select('*').eq('invoice_id', invoiceId).single();
           
           if (orderData && orderData.c_email) {
             await resend.emails.send({

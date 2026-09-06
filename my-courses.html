@@ -477,8 +477,20 @@ THUMBNAIL PROMPT:
       const data = await res.json();
       const email = data.email || '';
       const courses = data.courses || [];
+      const walletBal = data.wallet_balance || 0;
+        
+      let walletHtml = `<div style="margin-top:15px; padding:12px; background:rgba(42,239,183,0.1); border:1px solid var(--cyan); border-radius:8px; text-align:center;">
+          <b style="color:var(--cyan); font-size:1.1em;">💰 Wallet Balance: ${walletBal} Tk</b>
+          <p style="font-size:0.85em; color:var(--muted); margin:5px 0;">Use this balance to buy courses instantly.</p>
+          <div style="margin-top:10px; display:flex; gap:10px; justify-content:center;">
+            <input type="number" id="topupAmount" placeholder="Amount (Tk)" style="width:120px; padding:6px; border-radius:4px; border:1px solid var(--line); background:#111; color:#fff;">
+            <button class="btn" style="padding:6px 12px; font-size:0.9em;" onclick="topupWallet('${email}')">Top Up via ZiniPay</button>
+          </div>
+          <div id="topupMsg" style="color:red; font-size:0.9em; margin-top:5px;"></div>
+        </div>`;
+
       if(courses.length){
-        state.innerHTML = '<b>' + email + '</b> — আপনার কোর্স নিচে খুলে দেওয়া হয়েছে। <button type="button" onclick="hvbLogout()">লগআউট</button>';
+        state.innerHTML = '<b>' + email + '</b> এবং আপনার কোর্স নিচে দেওয়া হয়েছে। <button type="button" onclick="hvbLogout()">লগআউট</button>' + walletHtml;
         renderCourses(courses);
       } else {
         state.innerHTML = '<b>' + email + '</b> — এই ইমেইলে কোনো কেনা কোর্স পাওয়া যায়নি। ' +
@@ -487,11 +499,28 @@ THUMBNAIL PROMPT:
             '<input type="text" id="linkInput" class="lookup-input" placeholder="আগের নাম্বার / ইমেইল / Invoice ID">' +
             '<button type="button" class="lookup-btn" onclick="hvbLinkOld()">যুক্ত করুন</button>' +
           '</div>' +
-          '<button type="button" onclick="hvbLogout()">লগআউট</button>';
+          '<button type="button" onclick="hvbLogout()">লগআউট</button>' + walletHtml;
       }
     } catch(e){
       state.textContent = 'সমস্যা হয়েছে, একটু পরে আবার চেষ্টা করুন।';
     }
+  }
+
+  async function topupWallet(email) {
+    const amount = document.getElementById('topupAmount').value;
+    const msg = document.getElementById('topupMsg');
+    if(!amount || amount < 10) { msg.innerText = 'Minimum 10 Tk'; return; }
+    msg.innerText = 'Loading...';
+    try {
+      const res = await fetch('/api/wallet-topup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, amount })
+      });
+      const data = await res.json();
+      if(data.payment_url) { window.location.href = data.payment_url; }
+      else { msg.innerText = data.error || 'Error'; }
+    } catch(e) { msg.innerText = 'Error connecting to server'; }
   }
 
   async function hvbLinkOld(){

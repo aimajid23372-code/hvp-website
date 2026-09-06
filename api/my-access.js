@@ -111,6 +111,10 @@ module.exports = async (req, res) => {
 
     const email = String(user.email).toLowerCase();
 
+    let wallet_balance = 0;
+    const { data: w } = await supabase.from('wallets').select('balance').eq('email', email).maybeSingle();
+    if (w) wallet_balance = Number(w.balance);
+
     if (body.action === 'review_add') {
       const orders = await ordersForEmail(email);
       const owned = [...new Set(orders.filter((o) => o.status === 'paid').map((o) => o.course))];
@@ -195,10 +199,9 @@ module.exports = async (req, res) => {
     const courses = [...new Set(rawOrders.map(normalizeCourse))];
     
     // Return both the list of courses AND the secure content payload
-    return res.status(200).json({ email, courses, content: buildContentResponse(rawOrders) });
+    return res.status(200).json({ email, courses, wallet_balance, content: buildContentResponse(rawOrders) });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'Server error' });
   }
 };
-

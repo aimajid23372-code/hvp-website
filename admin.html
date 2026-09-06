@@ -79,10 +79,11 @@
   </div>
   <div class="nav-menu">
     <div class="nav-item active" onclick="switchTab('dashboard', this)">📊 Dashboard</div>
-    <div class="nav-item" onclick="switchTab('orders', this)">🛍️ Orders</div>
-    <div class="nav-item" onclick="switchTab('withdrawals', this)">💰 Withdrawals</div>
-    
-    <div class="nav-item" onclick="switchTab('courses', this)">📚 Courses</div>
+    <div class="nav-item" onclick="switchTab('orders', this)">🛒 Orders</div>
+    <div class="nav-item" onclick="switchTab('withdrawals', this)">💸 Withdrawals</div>
+    <div class="nav-item" onclick="switchTab('promos', this)">🎟️ Promo Codes</div>
+    <div class="nav-item" onclick="switchTab('wallet', this)">💰 Wallet Control</div>
+    <div class="nav-item" onclick="switchTab('courses', this)">🎓 Courses</div>
     <a href="/" class="nav-item" style="margin-top:auto; text-decoration:none;">🌐 View Website</a>
   </div>
 </div>
@@ -133,6 +134,34 @@
       </div>
     </div>
 
+    <!-- Promo Codes Tab -->
+    <div id="tab-promos" class="tab-pane">
+      <div class="card">
+        <h3>Manage Promo Codes</h3>
+        <div style="display:flex; gap:10px; margin-bottom:15px;">
+          <input type="text" id="newPromoCode" placeholder="Code (e.g. EID50)">
+          <input type="number" id="newPromoDiscount" placeholder="Discount %" style="width:120px;">
+          <button class="btn" onclick="addPromo()">Add Promo</button>
+        </div>
+        <div id="promoMsg" style="color:var(--cyan); margin-bottom:10px;"></div>
+        <div id="promoList">Loading...</div>
+      </div>
+    </div>
+
+    <!-- Wallet Tab -->
+    <div id="tab-wallet" class="tab-pane">
+      <div class="card">
+        <h3>Add Money to User Wallet</h3>
+        <p style="color:var(--muted); font-size:0.9em; margin-bottom:15px;">Manually add or deduct balance for testing or refunds.</p>
+        <div style="display:flex; gap:10px;">
+          <input type="email" id="walletEmail" placeholder="User Email">
+          <input type="number" id="walletAmount" placeholder="Amount (Taka)" style="width:150px;">
+          <button class="btn" onclick="updateWallet()">Update Balance</button>
+        </div>
+        <div id="walletMsg" style="margin-top:10px; color:var(--cyan);"></div>
+      </div>
+    </div>
+
     <!-- Courses Tab -->
     <div id="tab-courses" class="tab-pane">
       <div class="card">
@@ -160,6 +189,7 @@ Kamrul Hasan, 01811223344, short"></textarea>
     document.getElementById('headerTitle').innerText = el.innerText.replace(/[^a-zA-Z &]/g, '').trim();
     
     if(tabId === 'withdrawals') loadWithdrawals();
+    if(tabId === 'promos') loadPromos();
     
   }
 
@@ -281,6 +311,86 @@ Kamrul Hasan, 01811223344, short"></textarea>
       });
       loadWithdrawals();
     } catch(e) { alert('Error'); }
+  }
+
+  // --- Promo Codes ---
+  async function loadPromos() {
+    const list = document.getElementById('promoList');
+    try {
+      const response = await fetch('/api/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminPassword: PASS, action: 'promoList' })
+      });
+      const data = await response.json();
+      if(data.error) { list.innerHTML = data.error; return; }
+      if(!data.promos || data.promos.length === 0) { list.innerHTML = 'No promo codes.'; return; }
+      
+      let html = '';
+      data.promos.forEach(p => {
+        html += `
+          <div class="data-row">
+            <div>
+              <b style="display:block; color:#fff;">${p.code}</b>
+              <span style="color:var(--muted); font-size:0.9em;">Discount: ${p.discount_percent}%</span>
+            </div>
+            <div style="text-align:right;">
+              <span class="badge ${p.active ? 'success' : 'warning'}" style="margin-bottom:8px; display:inline-block;">${p.active ? 'ACTIVE' : 'INACTIVE'}</span><br>
+              <button class="btn btn-outline" style="padding:6px 12px; font-size:0.8em;" onclick="togglePromo('${p.code}', ${!p.active})">Toggle</button>
+            </div>
+          </div>
+        `;
+      });
+      list.innerHTML = html;
+    } catch(e) { list.innerHTML = 'Error loading promos'; }
+  }
+
+  async function addPromo() {
+    const code = document.getElementById('newPromoCode').value;
+    const discount = document.getElementById('newPromoDiscount').value;
+    const msg = document.getElementById('promoMsg');
+    if(!code || !discount) return;
+    msg.innerText = 'Adding...';
+    try {
+      const response = await fetch('/api/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminPassword: PASS, action: 'promoAdd', code, discount })
+      });
+      msg.innerText = 'Added!';
+      setTimeout(()=>msg.innerText='', 2000);
+      loadPromos();
+    } catch(e) { msg.innerText = 'Error'; }
+  }
+
+  async function togglePromo(code, setActive) {
+    try {
+      await fetch('/api/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminPassword: PASS, action: 'promoToggle', code, active: setActive })
+      });
+      loadPromos();
+    } catch(e) { alert('Error'); }
+  }
+
+  // --- Wallet Management ---
+  async function updateWallet() {
+    const email = document.getElementById('walletEmail').value;
+    const amount = document.getElementById('walletAmount').value;
+    const msg = document.getElementById('walletMsg');
+    if(!email || !amount) return;
+    msg.innerText = 'Updating...';
+    try {
+      const response = await fetch('/api/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminPassword: PASS, action: 'walletUpdate', email, amount })
+      });
+      const data = await response.json();
+      if(data.error) msg.innerText = data.error;
+      else msg.innerText = 'Updated! New Balance: ' + data.balance + ' Tk';
+    } catch(e) { msg.innerText = 'Error'; }
   }
 
   async function bulkAddStudents() {
