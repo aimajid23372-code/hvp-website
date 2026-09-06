@@ -512,10 +512,10 @@ THUMBNAIL PROMPT:
     if(!amount || amount < 10) { msg.innerText = 'Minimum 10 Tk'; return; }
     msg.innerText = 'Loading...';
     try {
-      const res = await fetch('/api/wallet-topup', {
+      const res = await fetch('/api/wallet', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, amount })
+        body: JSON.stringify({ action: 'topup', email, amount })
       });
       const data = await res.json();
       if(data.payment_url) { window.location.href = data.payment_url; }

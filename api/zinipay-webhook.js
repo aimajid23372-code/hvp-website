@@ -82,24 +82,27 @@ module.exports = async (req, res) => {
           const { Resend } = require('resend');
           const resend = new Resend(process.env.RESEND_API_KEY);
           
-          if (orderData && orderData.c_email) {
+          const userEmail = orderData.c_email || orderData.customer_email || orderData.customer_contact;
+          const userName = orderData.c_name || orderData.customer_name || 'Customer';
+
+          if (userEmail) {
             await resend.emails.send({
               from: 'HVB <onboarding@resend.dev>', // Should be a verified domain like info@hypervisionbangla.com
-              to: orderData.c_email,
-              subject: 'HVB কোর্সে আপনাকে স্বাগতম! 🎉',
+              to: userEmail,
+              subject: 'HVB এ আপনার কোর্সটি সফলভাবে চালু হয়েছে! 🎉',
               html: `
               <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0f1421; color: #ffffff; padding: 30px; border-radius: 12px;">
                 <h2 style="color: #4FE3C1; text-align: center;">HVB-তে স্বাগতম! 🎉</h2>
-                <p style="font-size: 16px; color: #eaf0ff;">হ্যালো ${orderData.c_name || 'Customer'},</p>
-                <p style="font-size: 16px; color: #eaf0ff;">আপনার পেমেন্ট সফলভাবে রিসিভ হয়েছে। HVB এর সাথে যুক্ত হওয়ার জন্য আপনাকে অসংখ্য ধন্যবাদ!</p>
+                <p style="font-size: 16px; color: #eaf0ff;">হ্যালো ${userName},</p>
+                <p style="font-size: 16px; color: #eaf0ff;">আপনার পেমেন্টটি সফলভাবে ভেরিফাই হয়েছে এবং HVB তে আপনার কোর্সটি এখন সম্পূর্ণ চালু!</p>
                 <div style="background: #161d2e; padding: 20px; border-radius: 8px; margin: 25px 0; border: 1px solid #212a42;">
-                  <h3 style="margin-top: 0; color: #9B8CFF;">কোর্সের বিস্তারিত:</h3>
-                  <p style="margin: 5px 0; color: #9aa5bf;">অর্ডার আইডি: <span style="color: #ffffff;">${invoiceId}</span></p>
+                  <h3 style="margin-top: 0; color: #9B8CFF;">অর্ডারের বিস্তারিত:</h3>
+                  <p style="margin: 5px 0; color: #9aa5bf;">ইনভয়েস নাম্বার: <span style="color: #ffffff;">${invoiceId}</span></p>
                   <p style="margin: 5px 0; color: #9aa5bf;">স্ট্যাটাস: <strong style="color: #4FE3C1;">Paid</strong></p>
                 </div>
-                <p style="font-size: 16px; color: #eaf0ff;">আপনার কোর্সটি এখন আনলক হয়ে গেছে। ওয়েবসাইটে গিয়ে <strong>My Courses</strong> সেকশন থেকে আপনি এখনই কোর্স দেখা শুরু করতে পারেন।</p>
+                <p style="font-size: 16px; color: #eaf0ff;">আপনার কোর্সটি দেখার জন্য নিচের বাটনে ক্লিক করে <strong>My Courses</strong> পেজে যান এবং আপনার ইমেইল দিয়ে লগইন করুন.</p>
                 <a href="https://hvb1.vercel.app/my-courses" style="display: block; width: 100%; text-align: center; background-color: #4FE3C1; color: #000000; padding: 15px 0; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin: 30px 0;">কোর্স শুরু করুন</a>
-                <p style="font-size: 14px; color: #9aa5bf; text-align: center;">যেকোনো সমস্যায় আমাদের ফেসবুক পেইজে মেসেজ দিন।<br>Happy Learning! 🚀</p>
+                <p style="font-size: 14px; color: #9aa5bf; text-align: center;">যেকোনো প্রয়োজনে আমাদের সাপোর্ট টিমের সাথে যোগাযোগ করুন।<br>Happy Learning! 🚀</p>
               </div>
               `
             });
