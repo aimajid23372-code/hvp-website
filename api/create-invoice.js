@@ -61,7 +61,8 @@ module.exports = async (req, res) => {
     const cus_phone = isEmail ? '01000000000' : cleanContact.replace(/[^0-9]/g, '');
 
     const ourRef = crypto.randomUUID();
-    const siteUrl = (process.env.SITE_URL || '').replace(/\/$/, '');
+    const fallbackUrl = req.body.returnUrl ? String(req.body.returnUrl).split('/').slice(0,3).join('/') : (req.headers.origin || ('https://' + (req.headers.host || 'hvb1.vercel.app')));
+    const siteUrl = (process.env.SITE_URL || fallbackUrl).replace(/\/$/, '');
 
     // পেমেন্ট সফল হলে সরাসরি কোর্স পেজে ফেরত — order=<our_ref>
     const redirectUrl = `${siteUrl}/my-courses?order=${ourRef}`;
