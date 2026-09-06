@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin — Withdraw Requests | HVB</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Sora:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>HVB Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#090C13; --surface:#131826; --surface-2:#1A2133; --line:#242C42;
@@ -13,355 +12,346 @@
     --grad: linear-gradient(90deg, var(--cyan), var(--violet));
   }
   *{box-sizing:border-box; margin:0; padding:0;}
-  body{ background:var(--bg); color:var(--text); font-family:'Hind Siliguri', sans-serif; line-height:1.65; }
-  a{ color:inherit; text-decoration:none; }
-  header{
-    position:sticky; top:0; background:rgba(9,12,19,0.9); border-bottom:1px solid var(--line);
-    padding:14px 24px; display:flex; align-items:center; gap:10px;
-  }
-  header img{ width:32px; height:32px; border-radius:8px; }
-  .wrap{ max-width:800px; margin:0 auto; padding:40px 24px 80px; }
-  h1{ font-family:'Sora',sans-serif; font-weight:700; font-size:1.6em; margin-bottom:20px; }
-  .login-box{ display:flex; gap:8px; margin-bottom:24px; }
-  .login-box input{
-    flex:1; padding:12px 14px; background:var(--surface); border:1px solid var(--line);
-    border-radius:8px; color:var(--text); font-size:0.95em;
-  }
-  .login-box button{
-    background:var(--grad); color:#0A0D14; border:none; padding:0 22px;
-    border-radius:8px; font-weight:700; cursor:pointer;
-  }
-  .req-card{
-    background:var(--surface); border:1px solid var(--line); border-radius:12px;
-    padding:18px; margin-bottom:14px;
-  }
-  .req-row{ display:flex; justify-content:space-between; padding:5px 0; font-size:0.9em; }
-  .req-row span:first-child{ color:var(--muted); }
-  .amount{ color:var(--cyan); font-family:'Sora',sans-serif; font-weight:700; font-size:1.2em; }
-  .approve-btn{
-    width:100%; margin-top:12px; background:var(--grad); color:#0A0D14; border:none;
-    padding:11px; border-radius:8px; font-weight:700; cursor:pointer;
-  }
-  .empty{ color:var(--muted); text-align:center; padding:40px 0; }
-  .msg{ font-size:0.88em; margin-bottom:16px; }
-  .msg.error{ color:#F87171; }
-  .card{ background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:12px; }
-  .hint{ color:var(--muted); font-size:.9em; margin:-10px 0 14px; }
-  .sec{ border-top:1px solid var(--line); margin-top:38px; padding-top:8px; }
+  body{ background:var(--bg); color:var(--text); font-family:'Hind Siliguri', sans-serif; display:flex; height:100vh; overflow:hidden;}
+  
+  /* Sidebar */
+  .sidebar { width:260px; background:var(--surface); border-right:1px solid var(--line); display:flex; flex-direction:column; }
+  .brand { padding:20px; display:flex; align-items:center; gap:12px; border-bottom:1px solid var(--line); }
+  .brand img { width:40px; height:40px; border-radius:10px; }
+  .brand-text { font-family:'Sora',sans-serif; font-weight:700; font-size:1.2em; }
+  
+  .nav-menu { flex:1; padding:20px 10px; display:flex; flex-direction:column; gap:8px; overflow-y:auto; }
+  .nav-item { padding:12px 16px; border-radius:8px; cursor:pointer; font-weight:600; color:var(--muted); transition:0.2s; display:flex; align-items:center; gap:10px; }
+  .nav-item:hover, .nav-item.active { background:rgba(94,234,212,0.1); color:var(--cyan); }
+  
+  /* Main Content */
+  .main { flex:1; display:flex; flex-direction:column; overflow-y:auto; }
+  .header { padding:20px 30px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; background:rgba(19,24,38,0.8); backdrop-filter:blur(10px); position:sticky; top:0; z-index:10; }
+  .content { padding:30px; max-width:1000px; width:100%; margin:0 auto; }
+  
+  /* Cards & Forms */
+  h2 { font-family:'Sora',sans-serif; margin-bottom:20px; }
+  .card { background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:24px; margin-bottom:20px; }
+  .input-group { margin-bottom:15px; }
+  .input-group label { display:block; margin-bottom:6px; color:var(--muted); font-size:0.9em; }
+  input, select, textarea { width:100%; padding:12px; background:var(--bg); border:1px solid var(--line); border-radius:8px; color:var(--text); font-family:inherit; }
+  input:focus { outline:none; border-color:var(--cyan); }
+  
+  .btn { background:var(--grad); color:#0A0D14; border:none; padding:12px 24px; border-radius:8px; font-weight:700; cursor:pointer; transition:opacity 0.2s; }
+  .btn:hover { opacity:0.9; }
+  .btn-outline { background:transparent; border:1px solid var(--cyan); color:var(--cyan); }
+  
+  /* Auth Gate */
+  #auth-gate { position:fixed; inset:0; background:var(--bg); z-index:100; display:flex; align-items:center; justify-content:center; }
+  .auth-box { background:var(--surface); padding:40px; border-radius:16px; border:1px solid var(--line); width:100%; max-width:400px; text-align:center; }
+  .auth-box input { margin-bottom:15px; text-align:center; }
+  
+  /* Tab Sections */
+  .tab-pane { display:none; }
+  .tab-pane.active { display:block; }
+  
+  /* Data Tables */
+  .data-row { display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--line); align-items:center; }
+  .data-row:last-child { border-bottom:none; }
+  .badge { padding:4px 10px; border-radius:20px; font-size:0.8em; font-weight:700; }
+  .badge.success { background:rgba(45,212,191,0.1); color:#2DD4BF; }
+  .badge.warning { background:rgba(250,204,21,0.1); color:#FACC15; }
 </style>
-<link rel="stylesheet" href="hvb-theme.css">
-<link rel="stylesheet" href="hvb-ui.css">
-<meta name="robots" content="noindex,nofollow">
-<link rel="icon" href="/hvb-logo.png" type="image/png">
 </head>
 <body>
-<script src="hvb-ref.js"></script>
 
-<header>
-  <img src="hvb-logo.png" alt="HVB">
-  <b style="font-family:'Sora',sans-serif;">HVB Admin</b>
-  <a href="/admin-analytics" style="margin-left:auto;font-size:.9em;background:linear-gradient(90deg,var(--cyan),var(--violet));color:#0A0D14;padding:7px 14px;border-radius:8px;font-weight:700;"> 📊 সব হিস্ট্রি দেখুন</a>
-</header>
-
-<div class="wrap">
-  <h1>HVB Admin Panel</h1>
-
-  <div id="hvbAdminGate" style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:18px;">
-    <b style="font-family:'Sora',sans-serif;display:block;margin-bottom:6px;">ধাপ ১ — অ্যাডমিন অ্যাকাউন্ট যাচাই</b>
-    <p id="hvbGateMsg" style="color:var(--muted);font-size:.9em;"><span class="hvb-inline-spin"></span></p>
-    <div id="hvbGateBtns" style="margin-top:12px;"></div>
+<!-- Login Gate -->
+<div id="auth-gate">
+  <div class="auth-box">
+    <img src="hvb-logo.png" style="width:60px; border-radius:12px; margin-bottom:20px;">
+    <h2 style="margin-bottom:10px;">Admin Login</h2>
+    <p style="color:var(--muted); margin-bottom:20px; font-size:0.9em;">Please enter the admin password</p>
+    <input type="password" id="adminPass" placeholder="Password...">
+    <button class="btn" onclick="login()" style="width:100%;">Login</button>
+    <p id="loginMsg" style="color:#F87171; margin-top:15px; font-size:0.9em;"></p>
   </div>
+</div>
 
-  <div id="hvbAdminPass" style="display:none">
-    <b style="font-family:'Sora',sans-serif;display:block;margin-bottom:8px;">ধাপ ২ — অ্যাডমিন পাসওয়ার্ড</b>
-    <div class="login-box">
-      <input type="password" id="adminPassword" placeholder="Admin পাসওয়ার্ড দিন">
-      <button type="button" onclick="doLogin()">ঢুকুন</button>
+<div class="sidebar">
+  <div class="brand">
+    <img src="hvb-logo.png">
+    <div class="brand-text">HVB Admin</div>
+  </div>
+  <div class="nav-menu">
+    <div class="nav-item active" onclick="switchTab('dashboard', this)">📊 Dashboard</div>
+    <div class="nav-item" onclick="switchTab('orders', this)">🛍️ Orders</div>
+    <div class="nav-item" onclick="switchTab('withdrawals', this)">💰 Withdrawals</div>
+    <div class="nav-item" onclick="switchTab('theme', this)">🎨 Theme & Settings</div>
+    <div class="nav-item" onclick="switchTab('courses', this)">📚 Courses</div>
+    <a href="/" class="nav-item" style="margin-top:auto; text-decoration:none;">🌐 View Website</a>
+  </div>
+</div>
+
+<div class="main">
+  <div class="header">
+    <h2 id="headerTitle" style="margin:0;">Dashboard</h2>
+    <div style="display:flex; gap:15px; align-items:center;">
+      <span style="color:var(--muted); font-size:0.9em;">Logged in as Admin</span>
+      <button class="btn btn-outline" style="padding:8px 16px;" onclick="location.reload()">Logout</button>
     </div>
   </div>
-  <div id="msg" class="msg"></div>
-
-  <div id="panel" style="display:none">
-
-    <div class="sec">
-      <h1>১) Withdraw Requests — Affiliate-দের টাকা চাওয়ার লিস্ট</h1>
-      <p class="hint">যেসব Affiliate কমিশনের টাকা চেয়েছে তারা এখানে আসবে। টাকা bKash/Nagad-এ পাঠানোর পর "Approve" চাপুন।</p>
-      <div id="requestsArea"></div>
-    </div>
-
-    <div class="sec">
-      <h1>২) অর্ডার খুঁজুন / কোর্স খুলে দিন</h1>
-      <p class="hint">
-        কেউ যদি বলে "টাকা দিয়েছি কিন্তু কোর্স পাচ্ছি না" — তার <b>নাম্বার, ইমেইল বা Invoice ID</b> এখানে লিখে খুঁজুন।<br>
-        • <b> 🔍 ZiniPay-তে যাচাই করুন</b> = ZiniPay-কে জিজ্ঞেস করবে টাকা সত্যিই এসেছে কিনা; এসে থাকলে নিজে থেকেই কোর্স খুলে দেবে।<br>
-        • <b> ✅ হাতে হাতে Paid করুন</b> = আপনি নিজে নিশ্চিত হয়ে থাকলে জোর করে কোর্স খুলে দেবে (ZiniPay-তে না পাওয়া গেলে এটা ব্যবহার করুন)।
-      </p>
-      <div class="login-box">
-        <input type="text" id="orderQuery" placeholder="নাম্বার / ইমেইল / Invoice ID">
-        <button type="button" onclick="searchOrders()">খোঁজুন</button>
+  
+  <div class="content">
+    <!-- Dashboard Tab -->
+    <div id="tab-dashboard" class="tab-pane active">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:30px;">
+        <div class="card" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px;">
+          <span style="color:var(--muted); font-size:1.1em; margin-bottom:10px;">Total Sales</span>
+          <span style="font-size:2.5em; font-weight:700; font-family:'Sora',sans-serif; color:var(--cyan);">৳---</span>
+        </div>
+        <div class="card" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px;">
+          <span style="color:var(--muted); font-size:1.1em; margin-bottom:10px;">Active Students</span>
+          <span style="font-size:2.5em; font-weight:700; font-family:'Sora',sans-serif; color:var(--violet);">---</span>
+        </div>
       </div>
-      <div id="orderMsg" class="msg"></div>
-      <div id="ordersArea"></div>
+      <a href="/admin-analytics" class="btn" style="display:inline-block; text-decoration:none;">View Full Analytics</a>
     </div>
 
-    <div class="sec">
-      <h1>৩) পুরোনো স্টুডেন্ট যোগ করুন</h1>
-      <p class="hint">
-        ওয়েবসাইট হওয়ার আগে যারা কোর্স কিনেছিল তাদের এখানে যোগ করুন — যোগ করলেই তারা ওয়েবসাইটে তাদের Gmail দিয়ে লগইন করে কোর্স দেখতে পাবে।<br>
-        প্রতি লাইনে একজন — <b>নাম, ইমেইল (Gmail), প্যাকেজ</b>। প্যাকেজ: <b>bundle</b> (Long+Short) বা <b>short</b>।<br>
-        <span style="font-family:monospace;">করিম, karim@gmail.com, bundle<br>রহিম, rahim@gmail.com, short</span>
-      </p>
-      <textarea id="bulkStudents" rows="8" placeholder="করিম, karim@gmail.com, bundle" style="width:100%;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--text);font-family:inherit;font-size:.95em;"></textarea>
-      <button type="button" onclick="bulkAdd()" class="approve-btn" style="margin-top:10px;"> ➕ সবাইকে যোগ করুন</button>
-      <div id="bulkMsg" class="msg" style="margin-top:10px;"></div>
+    <!-- Orders Tab -->
+    <div id="tab-orders" class="tab-pane">
+      <div class="card">
+        <h3>Verify Order</h3>
+        <p style="color:var(--muted); font-size:0.9em; margin-bottom:15px;">Enter an invoice ID or phone number to check ZiniPay status and grant access.</p>
+        <div style="display:flex; gap:10px;">
+          <input type="text" id="orderQuery" placeholder="Invoice ID or Phone...">
+          <button class="btn" onclick="searchOrders()">Search</button>
+        </div>
+        <div id="orderResult" style="margin-top:20px;"></div>
+      </div>
     </div>
-    <div class="sec">
-      <h1>৪) নতুন রিভিউ রিকোয়েস্ট</h1>
-      <p class="hint">স্টুডেন্টরা যেসব রিভিউ সাবমিট করেছে, সেগুলো এখানে আসবে। Approve করলে ওয়েবসাইটে লাইভ হবে।</p>
-      <div id="reviewsArea"></div>
+
+    <!-- Withdrawals Tab -->
+    <div id="tab-withdrawals" class="tab-pane">
+      <div class="card">
+        <h3>Pending Withdrawals</h3>
+        <div id="withdrawList" style="margin-top:20px;">Loading...</div>
+      </div>
+    </div>
+
+    <!-- Theme Settings Tab -->
+    <div id="tab-theme" class="tab-pane">
+      <div class="card">
+        <h3>Website Branding & Colors</h3>
+        <p style="color:var(--muted); font-size:0.9em; margin-bottom:20px;">Customize how your website looks. These changes will reflect immediately.</p>
+        
+        <div class="input-group">
+          <label>Primary Brand Color (Cyan/Teal by default)</label>
+          <input type="color" id="colorPrimary" value="#4FE3C1" style="padding:5px; height:50px;">
+        </div>
+        
+        <div class="input-group">
+          <label>Secondary Accent Color (Violet by default)</label>
+          <input type="color" id="colorSecondary" value="#9B8CFF" style="padding:5px; height:50px;">
+        </div>
+        
+        <div class="input-group">
+          <label>Top Announcement Text</label>
+          <input type="text" id="announcementText" placeholder="Special 85% OFF today!">
+        </div>
+        
+        <button class="btn" onclick="saveThemeSettings()">Save Changes</button>
+        <span id="themeMsg" style="margin-left:15px; color:var(--cyan);"></span>
+      </div>
+    </div>
+    
+    <!-- Courses Tab -->
+    <div id="tab-courses" class="tab-pane">
+      <div class="card">
+        <h3>Manage Courses</h3>
+        <p style="color:var(--muted); font-size:0.9em;">Currently, courses are hardcoded in the frontend. To make them fully dynamic, the frontend needs to be connected to Supabase 'courses' table. For now, this is a placeholder.</p>
+      </div>
     </div>
 
   </div>
 </div>
 
 <script>
-  async function adminApi(body){
-    const res = await fetch('/api/admin-orders', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(Object.assign({ adminPassword: document.getElementById('adminPassword').value }, body))
-    });
-    return await res.json();
+  let PASS = '';
+
+  function switchTab(tabId, el) {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelectorAll('.tab-pane').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + tabId).classList.add('active');
+    
+    document.getElementById('headerTitle').innerText = el.innerText.replace(/[^a-zA-Z &]/g, '').trim();
+    
+    if(tabId === 'withdrawals') loadWithdrawals();
+    if(tabId === 'theme') loadThemeSettings();
   }
 
-
-  async function doLogin(){
-    var msg = document.getElementById('msg');
-    msg.className = 'msg'; msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
-    var data = await adminApi({ action:'auth' });
-    if(data && data.ok){
-      msg.textContent = '';
-      document.getElementById('panel').style.display = 'block';
-      loadRequests();
-      loadReviews();
-    } else {
-      document.getElementById('panel').style.display = 'none';
-      msg.className = 'msg error';
-      msg.textContent = ' ⚠️ ' + ((data && data.error) || 'ভুল পাসওয়ার্ড');
-    }
-  }
-
-  async function bulkAdd(){
-    const msg = document.getElementById('bulkMsg');
-    msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
-    const data = await adminApi({ action:'bulkAdd', students: document.getElementById('bulkStudents').value });
-    msg.textContent = data.result || data.error || 'হয়ে গেছে';
-    if(data.result) document.getElementById('bulkStudents').value = '';
-  }
-
-  async function searchOrders(){
-    const msg = document.getElementById('orderMsg');
-    const area = document.getElementById('ordersArea');
-    area.innerHTML = ''; msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
-    const data = await adminApi({ action:'search', query: document.getElementById('orderQuery').value.trim() });
-    if(data.error){ msg.textContent = data.error; return; }
-    const orders = data.orders || [];
-    if(!orders.length){ msg.textContent = 'কোনো অর্ডার পাওয়া যায়নি'; return; }
-    msg.textContent = orders.length + ' টি অর্ডার পাওয়া গেছে';
-    area.innerHTML = orders.map(function(o){
-      return '<div class="card">' +
-        '<div><b>কোর্স:</b> ' + (o.course || '-') + ' &nbsp; <b>স্ট্যাটাস:</b> ' + (o.status || '-') + '</div>' +
-        '<div><b>যোগাযোগ:</b> ' + (o.customer_contact || '-') + '</div>' +
-        '<div style="font-size:12px;opacity:.7"><b>Order ID:</b> ' + o.our_ref + '<br><b>Invoice ID:</b> ' + (o.invoice_id || 'নেই') + '</div>' +
-        (o.status === 'paid' ? '' :
-          '<div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">' +
-          '<button class="approve-btn" onclick="orderAction(\'verify\',\'' + o.our_ref + '\')"> 🔍 ZiniPay-তে যাচাই করুন</button>' +
-          '<button class="approve-btn" onclick="orderAction(\'markPaid\',\'' + o.our_ref + '\')"> ✅ হাতে হাতে Paid করুন</button>' +
-          '</div>') +
-      '</div>';
-    }).join('');
-  }
-
-  async function orderAction(action, orderId){
-    const msg = document.getElementById('orderMsg');
-    msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
-    const data = await adminApi({ action: action, orderId: orderId });
-    msg.textContent = data.result || data.error || 'হয়ে গেছে';
-    searchOrders();
-  }
-
-  async function loadRequests(){
-    const pw = document.getElementById('adminPassword').value;
-    const msg = document.getElementById('msg');
-    const area = document.getElementById('requestsArea');
-    area.innerHTML = '';
-    msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
-    msg.className = 'msg';
-
+  async function login() {
+    const pw = document.getElementById('adminPass').value;
+    document.getElementById('loginMsg').innerText = 'Verifying...';
+    
     try {
-      const res = await fetch('/api/admin-withdrawals', {
+      // Test the password against admin-orders endpoint
+      const res = await fetch('/api/admin-orders', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ adminPassword: pw, action: 'list' })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminPassword: pw, action: 'search', query: 'test' })
       });
       const data = await res.json();
-      if(!res.ok){
-        msg.textContent = ' ⚠️ ' + (data.error || 'সমস্যা হয়েছে');
-        msg.className = 'msg error';
-        return;
-      }
-      msg.textContent = '';
-      const pending = (data.requests || []).filter(r => r.status === 'pending');
-      const paid = (data.requests || []).filter(r => r.status === 'paid');
-
-      if(pending.length === 0){
-        area.innerHTML = '<div class="empty">এখন কোনো Pending রিকোয়েস্ট নেই।</div>';
-      } else {
-        pending.forEach(function(r){
-          const d = new Date(r.created_at);
-          const dateStr = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear();
-          const card = document.createElement('div');
-          card.className = 'req-card';
-          card.innerHTML =
-            '<div class="req-row"><span>নাম</span><span>' + r.name + '</span></div>' +
-            '<div class="req-row"><span>bKash/Nagad নাম্বার</span><span>' + r.contact + '</span></div>' +
-            '<div class="req-row"><span>Ref Code</span><span>' + r.ref_code + '</span></div>' +
-            '<div class="req-row"><span>রিকোয়েস্ট তারিখ</span><span>' + dateStr + '</span></div>' +
-            '<div class="req-row"><span>পরিমাণ</span><span class="amount">' + r.amount + ' ৳</span></div>' +
-            '<button class="approve-btn" data-id="' + r.id + '"> ✅ টাকা পাঠিয়েছি — Approve করুন</button>';
-          area.appendChild(card);
-        });
-        area.querySelectorAll('.approve-btn').forEach(function(btn){
-          btn.addEventListener('click', function(){ approveRequest(btn.dataset.id, pw); });
-        });
-      }
-
-      if(paid.length > 0){
-        const h = document.createElement('h3');
-        h.style.cssText = 'margin:26px 0 12px; font-family:Sora,sans-serif; color:var(--muted); font-size:1em;';
-        h.textContent = 'আগে Approve করা হয়েছে (' + paid.length + ')';
-        area.appendChild(h);
-        paid.forEach(function(r){
-          const card = document.createElement('div');
-          card.className = 'req-card';
-          card.style.opacity = '0.6';
-          card.innerHTML =
-            '<div class="req-row"><span>নাম</span><span>' + r.name + '</span></div>' +
-            '<div class="req-row"><span>পরিমাণ</span><span class="amount">' + r.amount + ' ৳  ✓ Paid</span></div>';
-          area.appendChild(card);
-        });
-      }
-    } catch(err){
-      msg.textContent = 'সমস্যা হয়েছে, আবার চেষ্টা করুন।';
-      msg.className = 'msg error';
-    }
-  }
-
-  async function approveRequest(id, pw){
-    if(!confirm('নিশ্চিত করছেন যে আপনি নিজে bKash/Nagad দিয়ে টাকা পাॠিয়ে দিয়েছেন?')) return;
-    try {
-      const res = await fetch('/api/admin-withdrawals', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ adminPassword: pw, action: 'approve', requestId: id })
-      });
-      if(res.ok){ loadRequests(); }
-      else { alert('সমস্যা হয়েছে'); }
-    } catch(err){ alert('সমস্যা হয়েছে'); }
-  }
-  async function loadReviews(){
-    const pw = document.getElementById('adminPassword').value;
-    const area = document.getElementById('reviewsArea');
-    area.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
-
-    try {
-      const data = await adminApi({ action: 'getPendingReviews' });
-      if(data.error) { area.innerHTML = '<div class="msg error"> ⚠️ ' + data.error + '</div>'; return; }
       
-      const reviews = data.reviews || [];
-      if(!reviews.length){
-        area.innerHTML = '<div class="empty">কোনো নতুন রিভিউ রিকোয়েস্ট নেই</div>';
+      if (res.status === 401 || data.error === 'Unauthorized' || data.error === 'ভুল পাসওয়ার্ড') {
+        document.getElementById('loginMsg').innerText = 'Incorrect password!';
       } else {
-        area.innerHTML = reviews.map(function(r){
-          return '<div class="card">' +
-            '<div class="req-row"><span>নাম:</span> <b>' + (r.name || '-') + ' (' + (r.email || '-') + ')</b></div>' +
-            '<div class="req-row"><span>কোর্স:</span> <b>' + (r.course || '-') + '</b></div>' +
-            '<div class="req-row"><span>রেটিং:</span> <b>' + (r.rating || 5) + ' স্টার</b></div>' +
-            '<div style="background:var(--bg); padding:10px; border-radius:8px; margin:8px 0; font-size:0.9em; white-space:pre-wrap;">' + (r.body || '-') + '</div>' +
-            (r.image_url ? '<div style="margin-top:6px"><a href="' + r.image_url + '" target="_blank" style="color:var(--cyan);font-size:0.9em;">🖼️ ইমেজ লিংক</a></div>' : '') +
-            (r.link ? '<div style="margin-top:6px"><a href="' + r.link + '" target="_blank" style="color:var(--cyan);font-size:0.9em;">🔗 কাজের লিংক</a></div>' : '') +
-            '<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">' +
-            '<button class="approve-btn" style="background:#22C55E;" onclick="reviewAction(\'approveReview\',\'' + r.id + '\')"> ✔️ Approve</button>' +
-            '<button class="approve-btn" style="background:#EF4444;" onclick="reviewAction(\'deleteReview\',\'' + r.id + '\')"> 🗑️ Remove</button>' +
-            '</div>' +
-          '</div>';
-        }).join('');
+        PASS = pw;
+        document.getElementById('auth-gate').style.display = 'none';
+        loadWithdrawals();
       }
-    } catch(err){
-      area.innerHTML = '<div class="msg error">সমস্যা হয়েছে, আবার চেষ্টা করুন।</div>';
+    } catch(e) {
+      document.getElementById('loginMsg').innerText = 'Connection error.';
     }
   }
-
-  async function reviewAction(action, id){
-    if(action === 'deleteReview' && !confirm('আপনি কি সত্যিই এই রিভিউটি মুছে ফেলতে চান?')) return;
+  
+  // --- Orders ---
+  async function searchOrders() {
+    const query = document.getElementById('orderQuery').value;
+    const res = document.getElementById('orderResult');
+    res.innerHTML = 'Searching...';
     
-    const area = document.getElementById('reviewsArea');
-    area.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
+    try {
+      const response = await fetch('/api/admin-orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminPassword: PASS, action: 'search', query: query })
+      });
+      const data = await response.json();
+      if(data.error) { res.innerHTML = '<span style="color:#F87171">'+data.error+'</span>'; return; }
+      
+      if(!data.orders || data.orders.length === 0) { res.innerHTML = 'No orders found.'; return; }
+      
+      let html = '';
+      data.orders.forEach(o => {
+        html += \`
+          <div class="data-row">
+            <div>
+              <b style="display:block; color:#fff;">\${o.customer_name} (\${o.customer_phone})</b>
+              <span style="color:var(--muted); font-size:0.9em;">Ref: \${o.our_ref || o.invoice_id}</span>
+            </div>
+            <div style="text-align:right;">
+              <span class="badge \${o.status === 'paid' ? 'success' : 'warning'}" style="margin-bottom:8px; display:inline-block;">\${o.status.toUpperCase()}</span><br>
+              \${o.status !== 'paid' ? \\\`<button class="btn" style="padding:6px 12px; font-size:0.8em;" onclick="verifyOrder('\${o.our_ref || o.invoice_id}')">Verify Payment</button>\\\` : ''}
+            </div>
+          </div>
+        \`;
+      });
+      res.innerHTML = html;
+    } catch(e) { res.innerHTML = 'Error searching.'; }
+  }
+  
+  async function verifyOrder(ref) {
+    if(!confirm('Check ZiniPay for payment?')) return;
+    try {
+      const response = await fetch('/api/admin-orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminPassword: PASS, action: 'verify', orderId: ref })
+      });
+      const data = await response.json();
+      alert(data.result || data.error);
+      searchOrders();
+    } catch(e) { alert('Error'); }
+  }
+
+  // --- Withdrawals ---
+  async function loadWithdrawals() {
+    const list = document.getElementById('withdrawList');
+    try {
+      const response = await fetch('/api/admin-withdrawals', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminPassword: PASS, action: 'list' })
+      });
+      const data = await response.json();
+      if(data.error) { list.innerHTML = data.error; return; }
+      
+      if(!data.requests || data.requests.length === 0) { list.innerHTML = 'No pending requests.'; return; }
+      
+      let html = '';
+      data.requests.forEach(r => {
+        html += \`
+          <div class="data-row">
+            <div>
+              <b style="display:block; color:#fff;">\${r.affiliate_id}</b>
+              <span style="color:var(--muted); font-size:0.9em;">\${r.method} - \${r.account}</span>
+            </div>
+            <div style="text-align:right;">
+              <b style="color:var(--cyan); font-size:1.1em; display:block; margin-bottom:5px;">৳\${r.amount}</b>
+              <button class="btn btn-outline" style="padding:6px 12px; font-size:0.8em;" onclick="approveWithdraw('\${r.id}')">Approve</button>
+            </div>
+          </div>
+        \`;
+      });
+      list.innerHTML = html;
+    } catch(e) {}
+  }
+  
+  async function approveWithdraw(id) {
+    if(!confirm('Mark as Paid? Ensure you sent the money.')) return;
+    try {
+      const response = await fetch('/api/admin-withdrawals', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminPassword: PASS, action: 'approve', requestId: id })
+      });
+      loadWithdrawals();
+    } catch(e) { alert('Error'); }
+  }
+
+  // --- Theme Settings ---
+  async function loadThemeSettings() {
+    try {
+      const response = await fetch('/api/admin-settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminPassword: PASS, action: 'get' })
+      });
+      const data = await response.json();
+      if(data.settings) {
+        data.settings.forEach(s => {
+          if(s.key === 'theme_colors') {
+            document.getElementById('colorPrimary').value = s.value.primary;
+            document.getElementById('colorSecondary').value = s.value.accent;
+          }
+          if(s.key === 'announcement') {
+            document.getElementById('announcementText').value = s.value.text;
+          }
+        });
+      }
+    } catch(e) {}
+  }
+  
+  async function saveThemeSettings() {
+    const primary = document.getElementById('colorPrimary').value;
+    const accent = document.getElementById('colorSecondary').value;
+    const annText = document.getElementById('announcementText').value;
     
-    const data = await adminApi({ action: action, reviewId: id });
-    if(data.error) alert(data.error);
-    loadReviews();
+    document.getElementById('themeMsg').innerText = 'Saving...';
+    
+    try {
+      await fetch('/api/admin-settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminPassword: PASS, action: 'save', key: 'theme_colors', value: { primary: primary, accent: accent } })
+      });
+      
+      await fetch('/api/admin-settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminPassword: PASS, action: 'save', key: 'announcement', value: { text: annText, active: true } })
+      });
+      
+      document.getElementById('themeMsg').innerText = 'Saved! Refresh website to see changes.';
+      setTimeout(() => document.getElementById('themeMsg').innerText='', 3000);
+    } catch(e) { document.getElementById('themeMsg').innerText = 'Error saving.'; }
   }
-</script>
-
-<script src="hvb-account.js"></script>
-<script>
-/* অ্যাডমিন গেট: শুধু নির্দিষ্ট Google অ্যাকাউন্ট + তারপর পাসওয়ার্ড */
-(function(){
-  var ALLOWED = ['khadizashuvo50@gmail.com'];
-  var gate = document.getElementById('hvbAdminGate');
-  var msg = document.getElementById('hvbGateMsg');
-  var btns = document.getElementById('hvbGateBtns');
-  var passBox = document.getElementById('hvbAdminPass');
-
-  function deny(text, showLogin){
-    msg.innerHTML = text;
-    btns.innerHTML = showLogin
-      ? '<button class="hvb-btn-accent" type="button" id="hvbGateLogin">Google দিয়ে লগইন</button>'
-      : '<button class="hvb-btn-quiet" type="button" id="hvbGateOut">অন্য অ্যাকাউন্টে লগইন</button>';
-    var l = document.getElementById('hvbGateLogin');
-    if (l) l.onclick = function(){ window.HVBAuth.signInWithGoogle('admin'); };
-    var o = document.getElementById('hvbGateOut');
-    if (o) o.onclick = function(){ window.HVBAuth.signOut(); setTimeout(function(){ location.reload(); }, 400); };
-    passBox.style.display = 'none';
-    var p = document.getElementById('panel');
-    if (p) p.style.display = 'none';
-  }
-
-  function allow(email){
-    gate.style.borderColor = 'rgba(79,227,193,.35)';
-    msg.innerHTML = 'যাচাই সম্পন্ন — <b>' + email + '</b>';
-    btns.innerHTML = '<button class="hvb-btn-quiet" type="button" id="hvbGateOut">সাইন আউট</button>';
-    document.getElementById('hvbGateOut').onclick = function(){
-      window.HVBAuth.signOut(); setTimeout(function(){ location.reload(); }, 400);
-    };
-    passBox.style.display = '';
-  }
-
-  function check(){
-    var A = window.HVBAuth;
-    if (!A) return deny('লগইন সার্ভিস লোড হয়নি — পেজ রিফ্রেশ করুন।', false);
-    A.whenReady(function(){
-      if (!A.sb) return deny('লগইন সার্ভিস এখন বন্ধ আছে। Vercel-এ SUPABASE_URL ও SUPABASE_ANON_KEY সেট আছে কিনা দেখুন।', false);
-      if (!A.user) return deny('অ্যাডমিন প্যানেলে ঢুকতে আগে অনুমোদিত Google অ্যাকাউন্ট দিয়ে লগইন করুন।', true);
-      var email = (A.user.email || '').toLowerCase();
-      if (ALLOWED.indexOf(email) === -1)
-        return deny('এই অ্যাকাউন্টের (<b>' + email + '</b>) অনুমতি নেই। অনুমোদিত অ্যাডমিন অ্যাকাউন্ট দিয়ে লগইন করুন।', false);
-      allow(email);
-    });
-  }
-  document.readyState === 'loading'
-    ? document.addEventListener('DOMContentLoaded', check) : check();
-})();
 </script>
 </body>
 </html>

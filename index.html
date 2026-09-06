@@ -613,5 +613,21 @@
   <a href="https://m.me/hypervisionbangla" class="msgr-btn" target="_blank" aria-label="Messenger"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></a>
 </div>
 
+  <script>
+    // Load dynamic theme settings from admin panel
+    fetch('/api/site-settings')
+      .then(r => r.json())
+      .then(data => {
+        if(data && data.settings) {
+          data.settings.forEach(s => {
+            if(s.key === 'theme_colors') {
+              document.documentElement.style.setProperty('--cyan', s.value.primary);
+              document.documentElement.style.setProperty('--violet', s.value.accent);
+            }
+          });
+        }
+      })
+      .catch(e => console.error('Theme load error:', e));
+  </script>
 </body>
 </html>
