@@ -113,6 +113,7 @@ module.exports = async (req, res) => {
     
     if (insertErr && insertErr.code === 'PGRST204') {
       delete insertPayload.affiliate_ref;
+      delete insertPayload.promo_code;
       const retry = await supabase.from('orders').insert(insertPayload);
       insertErr = retry.error;
     }

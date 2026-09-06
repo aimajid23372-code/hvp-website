@@ -570,7 +570,7 @@ THUMBNAIL PROMPT:
       }
       window.location.href = data.payment_url;
     } catch(err){
-      errEl.textContent = ' ⚠️ কিছু একটা সমস্যা হয়েছে, আবার চেষ্টা করুন। সমস্যা থাকলে khadimulhasanshuvo@gmail.com-এ জানান।';
+      errEl.textContent = ' ⚠️ ' + (err.message || 'কিছু একটা সমস্যা হয়েছে, আবার চেষ্টা করুন।');
       btn.disabled = false; btn.classList.remove('hvb-busy');
       btn.textContent = 'এগিয়ে যান পেমেন্টে →';
     }
