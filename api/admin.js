@@ -3,6 +3,7 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SER
 const crypto = require('crypto');
 
 function daysAgoISO(n) { return new Date(Date.now() - n * 24 * 60 * 60 * 1000).toISOString(); }
+
 async function verifyWithZiniPay(invoiceId) {
   if (!invoiceId) return null;
   try {
@@ -20,6 +21,7 @@ module.exports = async (req, res) => {
   try {
     const body = req.body || {};
     const { adminPassword, action } = body;
+    
     if (action !== 'settingsGet' && (!adminPassword || adminPassword !== process.env.ADMIN_PASSWORD)) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
@@ -31,9 +33,13 @@ module.exports = async (req, res) => {
       const q = String(body.query || '').trim();
       let sel = supabase.from('orders').select('*');
       if (q) {
-        if (q.includes('@')) sel = sel.ilike('customer_contact', '%' + q.toLowerCase() + '%');
-        else if (/^[0-9\s+\-]+$/.test(q)) sel = sel.ilike('customer_contact', '%' + q.replace(/[^0-9]/g, '').slice(-10) + '%');
-        else sel = sel.or(\our_ref.eq.\,invoice_id.eq.\\);
+        if (q.includes('@')) {
+          sel = sel.ilike('customer_contact', '%' + q.toLowerCase() + '%');
+        } else if (/^[0-9\s+\-]+$/.test(q)) {
+          sel = sel.ilike('customer_contact', '%' + q.replace(/[^0-9]/g, '').slice(-10) + '%');
+        } else {
+          sel = sel.or(`our_ref.eq.${q},invoice_id.eq.${q}`);
+        }
       }
       const { data, error } = await sel.order('created_at', { ascending: false }).limit(30);
       if (error) return res.status(500).json({ error: error.message });
@@ -106,4 +112,3 @@ module.exports = async (req, res) => {
     return res.status(500).json({ error: err.message });
   }
 };
-
