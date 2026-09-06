@@ -97,7 +97,7 @@ module.exports = async (req, res) => {
 
     const invoiceId = extractInvoiceId(zpData);
 
-    const { error: insertErr } = await supabase.from('orders').insert({
+    let insertPayload = {
       customer_name: name,
       customer_contact: cleanContact,
       course,
@@ -107,7 +107,15 @@ module.exports = async (req, res) => {
       invoice_id: invoiceId,
       our_ref: ourRef,
       status: 'pending',
-    });
+    };
+
+    let { error: insertErr } = await supabase.from('orders').insert(insertPayload);
+    
+    if (insertErr && insertErr.code === 'PGRST204') {
+      delete insertPayload.affiliate_ref;
+      const retry = await supabase.from('orders').insert(insertPayload);
+      insertErr = retry.error;
+    }
 
     if (insertErr) {
       console.error('Order insert error:', insertErr);
