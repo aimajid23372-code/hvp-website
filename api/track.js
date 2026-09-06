@@ -42,9 +42,9 @@ module.exports = async (req, res) => {
 
     if (insErr) console.error('track insert error:', insErr.message);
     const { data: settingsData } = await supabase.from('settings').select('*');
-    const { data: testOrder } = await supabase.from('orders').select('*').limit(1).maybeSingle();
-    return res.status(200).json({ settings: settingsData || [], keys: testOrder ? Object.keys(testOrder) : null });
+    return res.status(200).json({ ok: true, stored: !insErr, settings: settingsData || [] });
   } catch (err) {
-    return res.status(200).json({ settings: [], err: err.message });
+    console.error('track error:', err);
+    return res.status(200).json({ ok: true });
   }
 };
