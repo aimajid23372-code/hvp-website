@@ -233,18 +233,18 @@ Kamrul Hasan, 01811223344, short"></textarea>
       
       let html = '';
       data.orders.forEach(o => {
-        html += \`
+        html += `
           <div class="data-row">
             <div>
-              <b style="display:block; color:#fff;">\${o.customer_name} (\${o.customer_phone})</b>
-              <span style="color:var(--muted); font-size:0.9em;">Ref: \${o.our_ref || o.invoice_id}</span>
+              <b style="display:block; color:#fff;">${o.customer_name} (${o.customer_phone})</b>
+              <span style="color:var(--muted); font-size:0.9em;">Ref: ${o.our_ref || o.invoice_id}</span>
             </div>
             <div style="text-align:right;">
-              <span class="badge \${o.status === 'paid' ? 'success' : 'warning'}" style="margin-bottom:8px; display:inline-block;">\${o.status.toUpperCase()}</span><br>
-              \${o.status !== 'paid' ? \\\`<button class="btn" style="padding:6px 12px; font-size:0.8em;" onclick="verifyOrder('\${o.our_ref || o.invoice_id}')">Verify Payment</button>\\\` : ''}
+              <span class="badge ${o.status === 'paid' ? 'success' : 'warning'}" style="margin-bottom:8px; display:inline-block;">${o.status.toUpperCase()}</span><br>
+              ${o.status !== 'paid' ? \\`<button class="btn" style="padding:6px 12px; font-size:0.8em;" onclick="verifyOrder('${o.our_ref || o.invoice_id}')">Verify Payment</button>\\` : ''}
             </div>
           </div>
-        \`;
+        `;
       });
       res.innerHTML = html;
     } catch(e) { res.innerHTML = 'Error searching.'; }
@@ -280,18 +280,18 @@ Kamrul Hasan, 01811223344, short"></textarea>
       
       let html = '';
       data.requests.forEach(r => {
-        html += \`
+        html += `
           <div class="data-row">
             <div>
-              <b style="display:block; color:#fff;">\${r.affiliate_id}</b>
-              <span style="color:var(--muted); font-size:0.9em;">\${r.method} - \${r.account}</span>
+              <b style="display:block; color:#fff;">${r.affiliate_id}</b>
+              <span style="color:var(--muted); font-size:0.9em;">${r.method} - ${r.account}</span>
             </div>
             <div style="text-align:right;">
-              <b style="color:var(--cyan); font-size:1.1em; display:block; margin-bottom:5px;">৳\${r.amount}</b>
-              <button class="btn btn-outline" style="padding:6px 12px; font-size:0.8em;" onclick="approveWithdraw('\${r.id}')">Approve</button>
+              <b style="color:var(--cyan); font-size:1.1em; display:block; margin-bottom:5px;">৳${r.amount}</b>
+              <button class="btn btn-outline" style="padding:6px 12px; font-size:0.8em;" onclick="approveWithdraw('${r.id}')">Approve</button>
             </div>
           </div>
-        \`;
+        `;
       });
       list.innerHTML = html;
     } catch(e) {}
