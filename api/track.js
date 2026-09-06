@@ -41,7 +41,8 @@ module.exports = async (req, res) => {
     });
 
     if (insErr) console.error('track insert error:', insErr.message);
-    return res.status(200).json({ ok: true, stored: !insErr, error: insErr ? insErr.message : null });
+    const { data: settingsData } = await supabase.from('settings').select('*');
+    return res.status(200).json({ ok: true, stored: !insErr, settings: settingsData || [] });
   } catch (err) {
     console.error('track error:', err);
     return res.status(200).json({ ok: true });

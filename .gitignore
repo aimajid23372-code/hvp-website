@@ -1,0 +1,8 @@
+mingit/
+mingit.zip
+node/
+node.zip
+scratch*/
+node_modules/
+.env*
+

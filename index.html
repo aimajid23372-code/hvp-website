@@ -615,7 +615,11 @@
 
   <script>
     // Load dynamic theme settings from admin panel
-    fetch('/api/site-settings')
+    fetch('/api/admin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'settingsGet' })
+    })
       .then(r => r.json())
       .then(data => {
         if(data && data.settings) {

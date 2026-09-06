@@ -162,8 +162,12 @@
     <!-- Courses Tab -->
     <div id="tab-courses" class="tab-pane">
       <div class="card">
-        <h3>Manage Courses</h3>
-        <p style="color:var(--muted); font-size:0.9em;">Currently, courses are hardcoded in the frontend. To make them fully dynamic, the frontend needs to be connected to Supabase 'courses' table. For now, this is a placeholder.</p>
+        <h3>Migrate Old Students</h3>
+        <p style="color:var(--muted); font-size:0.9em; margin-bottom:15px;">Format: Name, Phone Number, Course Name (bundle or short). One per line.</p>
+        <textarea id="bulkStudents" rows="5" placeholder="Abdur Rahman, 01711223344, bundle
+Kamrul Hasan, 01811223344, short"></textarea>
+        <button class="btn" onclick="bulkAddStudents()" style="margin-top:10px;">Migrate Students</button>
+        <div id="bulkMsg" style="margin-top:10px; color:var(--cyan);"></div>
       </div>
     </div>
 
@@ -191,7 +195,7 @@
     
     try {
       // Test the password against admin-orders endpoint
-      const res = await fetch('/api/admin-orders', {
+      const res = await fetch('/api/admin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ adminPassword: pw, action: 'search', query: 'test' })
@@ -217,7 +221,7 @@
     res.innerHTML = 'Searching...';
     
     try {
-      const response = await fetch('/api/admin-orders', {
+      const response = await fetch('/api/admin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ adminPassword: PASS, action: 'search', query: query })
@@ -249,7 +253,7 @@
   async function verifyOrder(ref) {
     if(!confirm('Check ZiniPay for payment?')) return;
     try {
-      const response = await fetch('/api/admin-orders', {
+      const response = await fetch('/api/admin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ adminPassword: PASS, action: 'verify', orderId: ref })
@@ -264,10 +268,10 @@
   async function loadWithdrawals() {
     const list = document.getElementById('withdrawList');
     try {
-      const response = await fetch('/api/admin-withdrawals', {
+      const response = await fetch('/api/admin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ adminPassword: PASS, action: 'list' })
+        body: JSON.stringify({ adminPassword: PASS, action: 'withdrawList' })
       });
       const data = await response.json();
       if(data.error) { list.innerHTML = data.error; return; }
@@ -296,10 +300,10 @@
   async function approveWithdraw(id) {
     if(!confirm('Mark as Paid? Ensure you sent the money.')) return;
     try {
-      const response = await fetch('/api/admin-withdrawals', {
+      const response = await fetch('/api/admin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ adminPassword: PASS, action: 'approve', requestId: id })
+        body: JSON.stringify({ adminPassword: PASS, action: 'withdrawApprove', requestId: id })
       });
       loadWithdrawals();
     } catch(e) { alert('Error'); }
@@ -308,10 +312,10 @@
   // --- Theme Settings ---
   async function loadThemeSettings() {
     try {
-      const response = await fetch('/api/admin-settings', {
+      const response = await fetch('/api/admin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ adminPassword: PASS, action: 'get' })
+        body: JSON.stringify({ adminPassword: PASS, action: 'settingsGet' })
       });
       const data = await response.json();
       if(data.settings) {
@@ -336,21 +340,34 @@
     document.getElementById('themeMsg').innerText = 'Saving...';
     
     try {
-      await fetch('/api/admin-settings', {
+      await fetch('/api/admin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ adminPassword: PASS, action: 'save', key: 'theme_colors', value: { primary: primary, accent: accent } })
+        body: JSON.stringify({ adminPassword: PASS, action: 'settingsSave', key: 'theme_colors', value: { primary: primary, accent: accent } })
       });
       
-      await fetch('/api/admin-settings', {
+      await fetch('/api/admin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ adminPassword: PASS, action: 'save', key: 'announcement', value: { text: annText, active: true } })
+        body: JSON.stringify({ adminPassword: PASS, action: 'settingsSave', key: 'announcement', value: { text: annText, active: true } })
       });
       
       document.getElementById('themeMsg').innerText = 'Saved! Refresh website to see changes.';
       setTimeout(() => document.getElementById('themeMsg').innerText='', 3000);
     } catch(e) { document.getElementById('themeMsg').innerText = 'Error saving.'; }
+  }
+async function bulkAddStudents() {
+    const text = document.getElementById("bulkStudents").value;
+    document.getElementById("bulkMsg").innerText = "Adding...";
+    try {
+      const response = await fetch("/api/admin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ adminPassword: PASS, action: "bulkAdd", students: text })
+      });
+      const data = await response.json();
+      document.getElementById("bulkMsg").innerText = data.result || data.error;
+    } catch(e) { document.getElementById("bulkMsg").innerText = "Error"; }
   }
 </script>
 </body>
