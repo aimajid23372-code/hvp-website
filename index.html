@@ -5,29 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hyper Vision Bangla (HVB) | AI দিয়ে প্রফেশনাল ভিডিও বানানো শেখার বাংলা কোর্স</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Sora:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg-primary: #0F172A;
-    --bg-surface: #1A2133;
-    --bg-surface-2: #232B45;
-    --accent-teal: #5EEAD4;
-    --accent-violet: #A78BFA;
-    --text-primary: #F8FAFC;
-    --text-muted: #94A3B8;
-    --border: #2A3352;
-    --success: #34D399;
-
-    --bg: var(--bg-primary);
-    --bg-2: var(--bg-surface);
-    --surface: var(--bg-surface-2);
-    --surface-2: #2B3553;
-    --line: var(--border);
-    --text: var(--text-primary);
-    --muted: var(--text-muted);
-    --cyan: var(--accent-teal);
-    --violet: var(--accent-violet);
+    --bg:#090C13;
+    --bg-2:#0D1119;
+    --surface:#131826;
+    --surface-2:#1A2133;
+    --line:#242C42;
+    --text:#EAF0FF;
+    --muted:#8891A8;
+    --cyan:#5EEAD4;
+    --violet:#A78BFA;
     --grad: linear-gradient(90deg, var(--cyan), var(--violet));
   }
   *{box-sizing:border-box; margin:0; padding:0;}
@@ -37,7 +26,7 @@
       radial-gradient(circle at 85% 10%, rgba(167,139,250,0.08), transparent 40%),
       var(--bg);
     color:var(--text);
-    font-family:'Inter', 'Noto Sans Bengali', sans-serif;
+    font-family:'Hind Siliguri', sans-serif;
     line-height:1.65;
   }
   .display{ font-family:'Sora', 'Hind Siliguri', sans-serif; }
@@ -120,7 +109,7 @@
   .section-head h2{ font-family:'Sora',sans-serif; font-size:1.7em; font-weight:700; }
   .section-head p{ color:var(--muted); margin-top:10px; max-width:480px; margin-left:auto; margin-right:auto; }
 
-  .courses{ display:grid; grid-template-columns:repeat(auto-fit, minmax(270px, 350px)); justify-content:center; gap:20px; max-width:1000px; margin: 0 auto; }
+  .courses{ display:grid; grid-template-columns:repeat(auto-fit, minmax(270px,1fr)); gap:20px; }
   .course-card{
     background:var(--surface); border:1px solid var(--line); border-radius:12px;
     overflow:hidden; display:flex; flex-direction:column; transition:border-color .2s;
@@ -138,9 +127,7 @@
     background:rgba(255,255,255,0.06); backdrop-filter:blur(4px);
     border:1px solid rgba(255,255,255,0.2);
     display:flex; align-items:center; justify-content:center; color:var(--text); font-size:1.1em;
-    z-index:10; position:relative;
   }
-  .course-thumb img { width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; z-index:0; }
   .course-body{ padding:18px; flex:1; display:flex; flex-direction:column; gap:10px; }
   .course-body .badge{
     font-size:0.72em; color:var(--violet); letter-spacing:0.05em; text-transform:uppercase;
@@ -151,21 +138,7 @@
     display:flex; align-items:center; justify-content:space-between;
     margin-top:auto; padding-top:12px; border-top:1px solid var(--line);
   }
-  .price{
-    font-family:'Sora',sans-serif;
-    font-weight:900;
-    font-size:1.45em;
-    white-space:nowrap !important;
-    flex-shrink:0 !important;
-    display:inline-flex;
-    align-items:baseline;
-    gap:3px;
-    color:#FFB319;
-    background: linear-gradient(135deg, #FFE066 0%, #F59E0B 55%, #D97706 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 2px 10px rgba(245, 158, 11, 0.5));
-  }
+  .price{ font-family:'Sora',sans-serif; font-weight:700; color:var(--text); }
   .buy-btn{
     background:transparent; border:1px solid var(--cyan); color:var(--cyan);
     padding:8px 16px; border-radius:6px; font-size:0.85em; cursor:pointer; font-weight:600;
@@ -232,8 +205,6 @@
 </style>
 <link rel="stylesheet" href="hvb-theme.css">
 <link rel="stylesheet" href="hvb-ui.css">
-<link rel="stylesheet" href="hvb-ui-extra.css">
-<link rel="stylesheet" href="hvb-store.css">
 <meta name="description" content="AI দিয়ে ভিডিও বানানো শিখুন বাংলায় — Hyper Vision Bangla (HVB)-র প্রফেশনাল AI ভিডিও কোর্স। প্রম্পট, ইমেজ, ভিডিও জেনারেশন, ভয়েস ও এডিটিং — শূন্য থেকে ইনকাম পর্যন্ত।">
 <meta name="keywords" content="hyper vision bangla, hvb, ai দিয়ে ভিডিও বানানো শেখা, ai video course bangla, md rayhan, prime vision ai, ai ভিডিও কোর্স, ai video banano, বাংলা ai কোর্স, ai video editing bangla, prompt engineering bangla, hypervision bangla">
 <link rel="canonical" href="https://hvb1.vercel.app/">
@@ -259,298 +230,241 @@
 <script src="hvb-ref.js"></script>
 <script src="hvb-track.js"></script>
 
-<div class="hvb-marquee-wrap">
-  <div class="hvb-marquee">
-    Long+Short ৳650 | Short ৳299 | Instant Access | Affiliate Program | Pay with bKash, Nagad, Rocket
-  </div>
-</div>
+<div class="hvb-bar" aria-label="ঘোষণা"><div class="hvb-bar-track"><a class="hvb-bar-item" href="/courses" style="text-decoration:none;"> <b>Long + Short কোর্স ৬৫০৳</b> · Short কোর্স ২৯৯৳</a><span class="hvb-bar-item"><span class="dot"></span></span><span class="hvb-bar-item"> পেমেন্টের সাথে সাথেই <b>ইনস্ট্যান্ট এক্সেস</b></span><span class="hvb-bar-item"><span class="dot"></span></span><span class="hvb-bar-item"> শুধু ফোন দিয়েই <b>প্রফেশনাল AI ভিডিও</b></span><span class="hvb-bar-item"><span class="dot"></span></span><a class="hvb-bar-item" href="/affiliate" style="text-decoration:none;"> <b>অ্যাফিলিয়েট প্রোগ্রাম</b> — শেয়ার করে ইনকাম</a><span class="hvb-bar-item"><span class="dot"></span></span><span class="hvb-bar-item"> bKash · Nagad · Rocket সাপোর্ট</span><span class="hvb-bar-item"><span class="dot"></span></span><a class="hvb-bar-item" href="/courses" style="text-decoration:none;"> <b>Long + Short কোর্স ৬৫০৳</b> · Short কোর্স ২৯৯৳</a><span class="hvb-bar-item"><span class="dot"></span></span><span class="hvb-bar-item"> পেমেন্টের সাথে সাথেই <b>ইনস্ট্যান্ট এক্সেস</b></span><span class="hvb-bar-item"><span class="dot"></span></span><span class="hvb-bar-item"> শুধু ফোন দিয়েই <b>প্রফেশনাল AI ভিডিও</b></span><span class="hvb-bar-item"><span class="dot"></span></span><a class="hvb-bar-item" href="/affiliate" style="text-decoration:none;"> <b>অ্যাফিলিয়েট প্রোগ্রাম</b> — শেয়ার করে ইনকাম</a><span class="hvb-bar-item"><span class="dot"></span></span><span class="hvb-bar-item"> bKash · Nagad · Rocket সাপোর্ট</span><span class="hvb-bar-item"><span class="dot"></span></span></div></div>
 
 <header>
-  <a href="/" class="brand">
+  <div class="brand">
     <img src="hvb-logo.png" alt="HVB Logo" style="width:36px; height:36px; border-radius:8px; object-fit:cover;">
     <div class="brand-text">
       <b>HVB</b>
       <span>Hyper Vision Bangla</span>
     </div>
-  </a>
+  </div>
   <nav>
     <div class="links">
-      <a href="/courses">কোর্স</a>
-      <a href="/free-lesson">ফ্রি লেসন</a>
-      <a href="/reviews">রিভিউ</a>
-      <a href="/affiliate">অ্যাফিলিয়েট</a>
+      <a href="/courses">কোর্সসমূহ</a>
+      <a href="#reviews">রিভিউ</a>
+      <a href="#why">কেন HVB</a>
+      <a href="/about">আমাদের সম্পর্কে</a>
       <a href="/contact">যোগাযোগ</a>
     </div>
-  </nav>
+    <a class="btn-primary" href="/courses" style="display:inline-block;">শুরু করুন</a>
+</nav>
 </header>
 
 
 
-<section class="hvb-hero-store hero">
-  <div class="bg-mesh"></div>
-  <div class="hvb-hero-copy">
-    <div class="eyebrow">
-      <span class="pulse"></span>
-      সবচেয়ে এডভান্সড ও কমপ্লিট ভিডিও মেকিং গাইডলাইন
-    </div>
-    <h1>শুধু ফোন দিয়েই বানান প্রফেশনাল AI ভিডিও</h1>
-    <p style="font-size: 1.15em; color: var(--muted); margin-bottom: 30px; line-height: 1.6; font-family: 'Noto Sans Bengali', sans-serif;">আইডিয়া, AI প্রম্পট, এডিটিং থেকে আপলোড — পুরো প্রসেস বাংলায়, ধাপে ধাপে। ক্যামেরা বা আগের অভিজ্ঞতা লাগবে না।</p>
-    <div class="hvb-hero-actions">
-      <a href="/course-bundle" class="btn-glow">Enroll Now — Pay Now</a>
-      <a href="/free-lesson" class="btn-ghost">ফ্রি ক্লাস দেখুন</a>
-    </div>
-    <div class="trust-signal">
-      <div class="avatars">
-        <img src="https://i.pravatar.cc/100?img=1" alt="Student">
-        <img src="https://i.pravatar.cc/100?img=2" alt="Student">
-        <img src="https://i.pravatar.cc/100?img=3" alt="Student">
-        <img src="https://i.pravatar.cc/100?img=4" alt="Student">
-      </div>
-      <span><strong>১০০+</strong> সন্তুষ্ট স্টুডেন্ট</span>
-    </div>
-  </div>    <div class="hvb-trust-chips" style="margin-top: 15px;">
-      <span class="hvb-chip">✅ bKash · Nagad · Rocket</span>
-      <span class="hvb-chip"> Messenger সাপোর্ট</span>
-      <span class="hvb-chip"> কেনার আগে ফ্রি লেসন</span>
-      <span class="hvb-chip"> যাচাইকৃত ক্রেতা রিভিউ</span>
-    </div>
+<div class="hero">
+  <div class="eyebrow"><span class="pulse"></span> AI Video Academy · বাংলাদেশ</div>
+  <h1>শুধু ফোন দিয়েই বানান <span class="grad-text">প্রফেশনাল</span> AI ভিডিও</h1>
+  <p class="sub">আইডিয়া, AI প্রম্পট, এডিটিং থেকে আপলোড — পুরো প্রসেস বাংলায়, ধাপে ধাপে। ক্যামেরা বা আগের অভিজ্ঞতা লাগবে না।</p>
+  <div class="hero-actions">
+    <a href="#courses" class="btn-primary lg" style="display:inline-block;"> 🚀 আজই শুরু করুন</a>
+    <a href="/free-lesson" class="btn-ghost" style="display:inline-block;">প্রথমে ফ্রি লেসন দেখুন</a>
   </div>
-  <div class="hvb-hero-visual">
-    <span class="hvb-orb a"></span>
-    <span class="hvb-orb b"></span>
-    <div class="hvb-phone">
-      <div class="notch"></div>
-      <img class="eye" src="hvb-logo.png" alt="Hyper Vision Bangla">
-      <div class="cap"><b>HYPER VISION</b><span>AI ভিডিও · সম্পূর্ণ বাংলায় 🇧🇩</span></div>
-      
-      <div class="trust-signal">
-        <div class="avatar-group">
-          <img src="https://i.pravatar.cc/100?img=11" alt="User">
-          <img src="https://i.pravatar.cc/100?img=12" alt="User">
-          <img src="https://i.pravatar.cc/100?img=13" alt="User">
-          <img src="https://i.pravatar.cc/100?img=14" alt="User">
-        </div>
-        <div class="trust-text">
-          <b>১,৫০০+</b>
-          <span>শিক্ষার্থী শিখছেন</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<div class="hvb-proof">
-  <article><b>ইনস্ট্যান্ট এক্সেস</b><span>পেমেন্ট কমপ্লিট হলেই কোর্স খুলে যায়</span></article>
-  <article><b>লোকাল পেমেন্ট</b><span>bKash, Nagad ও Rocket</span></article>
-  <article><b>সরাসরি সাপোর্ট</b><span>আটকে গেলে Messenger-এ জিজ্ঞেস করুন</span></article>
-  <article><b>ফ্রি লেসন</b><span>কেনার আগে শেখানোর ধরন দেখে নিন</span></article>
+  <div class="trust-row">
+    <span> ⚡ <b>পেমেন্টের সাথে সাথেই কোর্স</b></span>
+    <span> ♾️ <b>দীর্ঘসময় এক্সেস</b></span>
+    <span> <b>bKash · Nagad · Rocket</b></span>
+    <span> 🎓 <b>১০০+ সন্তুষ্ট স্টুডেন্ট</b></span>
+    <span> <b>ডিরেক্ট Messenger সাপোর্ট</b></span>
+  </div>
+</div>
+
+
+<div class="hvb-stats">
+  <div class="hvb-stat"><b>১০০+</b><span>সন্তুষ্ট স্টুডেন্ট</span></div>
+  <div class="hvb-stat"><b>A → Z</b><span>বানানো থেকে আপলোড</span></div>
+  <div class="hvb-stat"><b>২৪/৭</b><span>Messenger সাপোর্ট</span></div>
+  <div class="hvb-stat"><b>♾️ </b><span>দীর্ঘসময় এক্সেস</span></div>
 </div>
 
 <section id="courses">
   <div class="section-head">
-    <span class="tag">কোর্স </span>
-    <h2>আপনার জন্য কোনটা? 🎯</h2>
-    <p>দুটো কোর্সই বাংলায়, ফোনে করা যায়। বিস্তারিত তুলনা কোর্স পেজে।</p>
+    <span class="tag mono">// COURSES</span>
+    <h2>আপনার জন্য কোনটা?</h2>
+    <p>নিচে দুটি জনপ্রিয় কোর্স — বিস্তারিত তুলনা ও সব কোর্স দেখতে কোর্স পেজে যান।</p>
   </div>
-  
   <div class="courses">
-    <a class="course-card glass-card" href="/course-bundle" style="display: flex; flex-direction: column;">
-      <div class="course-thumb">
-        <img src="bundle-thumb.jpg" alt="Long + Short Video Course" loading="lazy">
-        <div class="play">▶</div>
-      </div>
-      <div class="course-body">
-        <span class="badge" style="background: rgba(167, 139, 250, 0.16); color: #C4B5FD; border: 1px solid rgba(167, 139, 250, 0.4); padding: 5px 12px; border-radius: 20px; align-self: flex-start; display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 0.72em; letter-spacing: 0.6px; box-shadow: 0 0 12px rgba(167, 139, 250, 0.25);">
-          TRENDING NOW
-        </span>
-        <h3 style="font-size: 1.22em; font-weight: 800; color: #FFFFFF; margin-top: 4px;">Long + Short Video Course</h3>
-        <p style="color: #CBD5E1; font-size: 0.92em; line-height: 1.6;">Short আর Long — দুইটাই একসাথে। YouTube-এর ২-৫ মিনিটের ভিডিও থেকে TikTok/Reels-এর ভাইরাল ক্লিপ, পুরো A থেকে Z।</p>
-        
-        <ul class="course-features">
-          <li style="color: #F8FAFC; font-weight: 500;"><svg viewBox="0 0 24 24" fill="none" style="stroke: #2DD4BF; filter: drop-shadow(0 0 5px rgba(45, 212, 191, 0.45));"><path d="M20 6L9 17l-5-5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> ২-৫ মিনিট Long + Short ভিডিও</li>
-          <li style="color: #F8FAFC; font-weight: 500;"><svg viewBox="0 0 24 24" fill="none" style="stroke: #2DD4BF; filter: drop-shadow(0 0 5px rgba(45, 212, 191, 0.45));"><path d="M20 6L9 17l-5-5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Facebook পেইজ মনিটাইজেশন ট্রিক্স</li>
-          <li style="color: #F8FAFC; font-weight: 500;"><svg viewBox="0 0 24 24" fill="none" style="stroke: #2DD4BF; filter: drop-shadow(0 0 5px rgba(45, 212, 191, 0.45));"><path d="M20 6L9 17l-5-5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> HVB Premium Group Access</li>
-        </ul>
 
-        <div class="course-footer" style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+    <a class="course-card" href="/course-bundle">
+      <div class="course-thumb"><div class="play">▶</div></div>
+      <div class="course-body">
+        <span class="badge"> 🔥 সবচেয়ে জনপ্রিয়</span>
+        <h3>Long + Short Video Course</h3>
+        <p>Short আর Long — দুইটাই একসাথে। YouTube-এর ২-৫ মিনিটের ভিডিও থেকে TikTok/Reels-এর ভাইরাল ক্লিপ, পুরো A থেকে Z। সবচেয়ে বেশি মানুষ এটাই নেয়।</p>
+        <div class="course-footer">
           <span class="price">৬৫০ ৳</span>
-          <button class="btn-glow">Enroll Now</button>
+          <button class="buy-btn">বিস্তারিত দেখুন</button>
         </div>
       </div>
     </a>
 
-    <a class="course-card glass-card" href="/course-short" style="display: flex; flex-direction: column;">
-      <div class="course-thumb">
-        <img src="short-thumb.jpg" alt="Short Video Course" loading="lazy">
-        <div class="play">▶</div>
-      </div>
+    <a class="course-card" href="/course-short">
+      <div class="course-thumb"><div class="play">▶</div></div>
       <div class="course-body">
-        <span class="badge" style="background: rgba(45, 212, 191, 0.16); color: #2DD4BF; border: 1px solid rgba(45, 212, 191, 0.4); padding: 5px 12px; border-radius: 20px; align-self: flex-start; font-weight: 800; font-size: 0.72em; letter-spacing: 0.6px; box-shadow: 0 0 12px rgba(45, 212, 191, 0.25);">শর্ট কোর্স </span>
-        <h3 style="font-size: 1.22em; font-weight: 800; color: #FFFFFF; margin-top: 4px;">Short Video Course</h3>
-        <p style="color: #CBD5E1; font-size: 0.92em; line-height: 1.6;">কম খরচে শুরু করতে চান? ৩৫ সেকেন্ডের ভাইরাল Short ভিডিও বানানোর পুরো কৌশল — আজ শিখে কালই পোস্ট করতে পারবেন।</p>
-        
-        <ul class="course-features">
-          <li style="color: #F8FAFC; font-weight: 500;"><svg viewBox="0 0 24 24" fill="none" style="stroke: #2DD4BF; filter: drop-shadow(0 0 5px rgba(45, 212, 191, 0.45));"><path d="M20 6L9 17l-5-5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> ৩৫ সেকেন্ডের ভাইরাল Short ভিডিও</li>
-          <li style="color: #F8FAFC; font-weight: 500;"><svg viewBox="0 0 24 24" fill="none" style="stroke: #2DD4BF; filter: drop-shadow(0 0 5px rgba(45, 212, 191, 0.45));"><path d="M20 6L9 17l-5-5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> হাই-কোয়ালিটি ইমেজ ও ভয়েস</li>
-          <li style="color: #F8FAFC; font-weight: 500;"><svg viewBox="0 0 24 24" fill="none" style="stroke: #2DD4BF; filter: drop-shadow(0 0 5px rgba(45, 212, 191, 0.45));"><path d="M20 6L9 17l-5-5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> ডিরেক্ট Messenger সাপোর্ট</li>
-        </ul>
-
-        <div class="course-footer" style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+        <span class="badge">শর্ট কোর্স</span>
+        <h3>Short Video Course</h3>
+        <p>কম খরচে শুরু করতে চান? ৩৫ সেকেন্ডের ভাইরাল Short ভিডিও বানানোর পুরো কৌশল — আজ শিখে কালই পোস্ট করতে পারবেন।</p>
+        <div class="course-footer">
           <span class="price">২৯৯ ৳</span>
-          <button class="btn-ghost">Enroll Now</button>
+          <button class="buy-btn">বিস্তারিত দেখুন</button>
         </div>
       </div>
     </a>
-  </div>
-</section>
 
-<section id="how-it-works">
-  <div class="section-head">
-    <span class="tag">কীভাবে কাজ করে 🛠️</span>
-    <h2>কীভাবে কাজ করে? 🤔</h2>
-    <p>খুব সহজ ৪টি ধাপে জিরো থেকে প্রফেশনাল ভিডিও আপলোড পর্যন্ত।</p>
   </div>
-  <div class="steps-grid">
-    <div class="step-box glass-card">
-      <div class="step-num">01</div>
-      <div class="icon" style="width: 48px; height: 48px; background: rgba(56, 214, 240, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-      </div>
-      <h4 style="margin-bottom: 8px;">এনরোল করুন 💳</h4>
-      <p style="color: var(--muted); font-size: 0.9em;">ওয়েবসাইটে পেমেন্ট করার সাথে সাথেই অটোমেটিক এক্সেস পেয়ে যাবেন। কোনো অপেক্ষার প্রয়োজন নেই।</p>
-    </div>
-    <div class="step-box glass-card">
-      <div class="step-num">02</div>
-      <div class="icon" style="width: 48px; height: 48px; background: rgba(167, 139, 250, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--violet)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-      </div>
-      <h4 style="margin-bottom: 8px;">ভিডিও দেখুন 📺</h4>
-      <p style="color: var(--muted); font-size: 0.9em;">ধাপে ধাপে সাজানো বাংলা ভিডিও টিউটোরিয়ালগুলো দেখুন। একদম বেসিক থেকে এডভান্সড পর্যন্ত।</p>
-    </div>
-    <div class="step-box glass-card">
-      <div class="step-num">03</div>
-      <div class="icon" style="width: 48px; height: 48px; background: rgba(56, 214, 240, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      </div>
-      <h4 style="margin-bottom: 8px;">প্রম্পট কপি করুন ✂️</h4>
-      <p style="color: var(--muted); font-size: 0.9em;">আমাদের দেওয়া Master Prompts কপি করে সহজেই AI দিয়ে স্ক্রিপ্ট ও ইমেজ বানিয়ে ফেলুন।</p>
-    </div>
-    <div class="step-box glass-card">
-      <div class="step-num">04</div>
-      <div class="icon" style="width: 48px; height: 48px; background: rgba(167, 139, 250, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--violet)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-      </div>
-      <h4 style="margin-bottom: 8px;">ভিডিও আপলোড </h4>
-      <p style="color: var(--muted); font-size: 0.9em;">এডিটিং শেষে আপনার ভিডিও Facebook বা YouTube এ আপলোড করে মনিটাইজেশন শুরু করুন।</p>
-    </div>
+  <div style="text-align:center; margin-top:28px;">
+    <a href="/courses" class="btn-ghost" style="display:inline-block;">সব কোর্স ও বিস্তারিত তুলনা দেখুন →</a>
   </div>
 </section>
 
 <section id="why">
-  <svg width="0" height="0"><defs><linearGradient id="cyan-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#38D6F0"/><stop offset="100%" stop-color="#7C6BF5"/></linearGradient></defs></svg>
   <div class="section-head">
-    <span class="tag">কেন HVB </span>
-    <h2>এখানে কী শিখবেন? 🎯</h2>
+    <span class="tag mono">// WHY HVB</span>
+    <h2>কেন হাজারো মানুষ HVB-তেই আসে</h2>
   </div>
   <div class="why">
-    <div class="why-item glass-card">
-      <div class="icon" style="background: transparent; border: 1px solid rgba(255,255,255,0.1); box-shadow: inset 0 0 20px rgba(56, 214, 240, 0.1); width: 48px; height: 48px; border-radius: 12px; align-items: center; justify-content: center;">
-        <svg class="pro-icon" viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-      </div>
-      <h4>Facebook মনিটাইজেশন </h4>
-      <p>২-৫ মিনিটের Long Video বানিয়ে সহজেই Facebook পেইজ মনিটাইজ করে ইনকাম শুরু করতে পারবেন।</p>
+    <div class="why-item">
+      <div class="icon">🎯 </div>
+      <h4>সহজ, ধাপে ধাপে শেখানো</h4>
+      <p>ধরে নিয়েছি আপনি কিছুই জানেন না। প্রতিটা ক্লিক, প্রতিটা প্রম্পট স্ক্রিনে দেখিয়ে বাংলায় বোঝানো।</p>
     </div>
-    <div class="why-item glass-card" style="position:relative;">
-      <div class="hvb-badge" style="font-size:0.65em; position:absolute; top:12px; right:12px; background: rgba(56,214,240,0.1); border-color: rgba(56,214,240,0.2); color: var(--cyan); padding: 4px 8px; border-radius: 6px;"> Fast</div>
-      <div class="icon" style="background: transparent; border: 1px solid rgba(255,255,255,0.1); box-shadow: inset 0 0 20px rgba(167, 139, 250, 0.1); width: 48px; height: 48px; border-radius: 12px; align-items: center; justify-content: center;">
-        <svg class="pro-icon" style="stroke: #A78BFA;" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-      </div>
-      <h4>High Quality ভিডিও </h4>
-      <p>খুব কম সময়ে প্রফেশনাল, হাই-কোয়ালিটি ইমেজ ও ভিডিও বানানো শিখবেন। সাথে ৩৫ সেকেন্ডের ভাইরাল শর্ট ভিডিও তো থাকছেই।</p>
+    <div class="why-item">
+      <div class="icon">⚡ </div>
+      <h4>Instant Access</h4>
+      <p>কোনো অপেক্ষা নেই। পেমেন্ট শেষ হওয়ার ১০ সেকেন্ডের মধ্যেই কোর্স আপনার হাতে।</p>
     </div>
-    <div class="why-item glass-card">
-      <div class="icon" style="background: transparent; border: 1px solid rgba(255,255,255,0.1); box-shadow: inset 0 0 20px rgba(56, 214, 240, 0.1); width: 48px; height: 48px; border-radius: 12px; align-items: center; justify-content: center;">
-        <svg class="pro-icon" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>
-      </div>
-      <h4>সিনেমাটিক থাম্বনেইল </h4>
-      <p>ভিডিওর জন্য একদম হাই-কোয়ালিটি, সিনেমাটিক থাম্বনেইল বানানো শেখানো হবে, যা মানুষের নজর কাড়তে বাধ্য।</p>
+    <div class="why-item">
+      <div class="icon">🤝 </div>
+      <h4>Full Support + Premium Group</h4>
+      <p>আটকে গেলে একা থাকবেন না। HVB Premium গ্রুপে নিয়মিত নতুন ট্রিক, আর দরকারে সরাসরি আমাদের সাথে কথা।</p>
     </div>
-    <div class="why-item glass-card">
-      <div class="icon" style="background: transparent; border: 1px solid rgba(255,255,255,0.1); box-shadow: inset 0 0 20px rgba(167, 139, 250, 0.1); width: 48px; height: 48px; border-radius: 12px; align-items: center; justify-content: center;">
-        <svg class="pro-icon" style="stroke: #A78BFA;" viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 0-5 5c0 1.9 1 3.5 2.5 4.4A3.8 3.8 0 0 1 11 14.5V17h2v-2.5c0-1.1.6-2.1 1.5-2.6A5 5 0 0 0 17 7a5 5 0 0 0-5-5z"/><line x1="9" y1="21" x2="15" y2="21"/></svg>
-      </div>
-      <h4>স্টোরি আইডিয়া জেনারেশন </h4>
-      <p>নিজের আইডিয়া দিয়ে ভিডিও বানাতে পারবেন। আইডিয়া না থাকলেও AI দিয়ে দারুণ সব স্টোরি বানিয়ে ভিডিও তৈরি করতে পারবেন।</p>
+    <div class="why-item">
+      <div class="icon">🔒 </div>
+      <h4>লোকাল, নিরাপদ পেমেন্ট</h4>
+      <p>bKash, Nagad, Rocket — যেটা আপনার হাতে আছে সেটা দিয়েই, কার্ড লাগবে না।</p>
     </div>
   </div>
 </section>
 
-<section>
-<section>
-  <div class="payment-strip glass-card" style="flex-direction: column; text-align: center; border-color: rgba(255,255,255,0.1);">
-    <div>
-      <span class="tag">নিরাপদ পেমেন্ট </span>
-      <h3 style="margin: 10px 0; font-family: 'Sora', sans-serif;">১০০% নিরাপদ ও ইনস্ট্যান্ট এক্সেস </h3>
-      <p style="margin-bottom: 24px; color: var(--muted);">পেমেন্ট কমপ্লিট হওয়ার ১ সেকেন্ডের মধ্যেই কোর্স আপনার অ্যাকাউন্টে যোগ হয়ে যাবে।</p>
-    </div>
-    <div class="pay-methods">
-      <div class="pay-badge" style="background: rgba(226, 19, 110, 0.1); color: #E2136E; border-color: rgba(226, 19, 110, 0.2);">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg> bKash
-      </div>
-      <div class="pay-badge" style="background: rgba(237, 28, 36, 0.1); color: #ED1C24; border-color: rgba(237, 28, 36, 0.2);">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg> Nagad
-      </div>
-      <div class="pay-badge" style="background: rgba(140, 52, 148, 0.1); color: #8C3494; border-color: rgba(140, 52, 148, 0.2);">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg> Rocket
-      </div>
-    </div>
-  </div>
-</section>
 
-<section id="faq">
+<section id="ids">
   <div class="section-head">
-    <span class="tag">জিজ্ঞাসা </span>
-    <h2>সচরাচর জিজ্ঞাসা </h2>
+    <span class="tag mono">// আমাদের কনটেন্ট</span>
+    <h2>যেসব ভিডিও আপনি নিজেই বানাতে পারবেন</h2>
+    <p>নিচের আইডিগুলোতে থাকা ভিডিওগুলো দেখে আসুন — কোর্স শেষে ঠিক এই মানের ভিডিও আপনি নিজেই বানাতে পারবেন।</p>
   </div>
-  <div class="faq-list">
-    <div class="faq-item glass-card" style="border: 1px solid rgba(255,255,255,0.05); cursor: pointer;" onclick="this.classList.toggle('active')">
-      <div class="faq-title">আমি কি মোবাইল দিয়ে ভিডিও বানাতে পারব?  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 9l6 6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="faq-body">হ্যাঁ! এই কোর্সের পুরোটাই মোবাইল-ফ্রেন্ডলি। আপনার শুধু একটি স্মার্টফোন এবং ইন্টারনেট কানেকশন লাগবে।</div>
-    </div>
-    <div class="faq-item glass-card" style="border: 1px solid rgba(255,255,255,0.05); cursor: pointer;" onclick="this.classList.toggle('active')">
-      <div class="faq-title">কোর্সটি কি লাইভ নাকি রেকর্ডেড?  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 9l6 6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="faq-body">এটি একটি রেকর্ডেড ভিডিও কোর্স। পেমেন্ট করার সাথে সাথেই আপনি সব ভিডিওর এক্সেস পেয়ে যাবেন এবং নিজের সুবিধামতো সময়ে দেখতে পারবেন।</div>
-    </div>
-    <div class="faq-item glass-card" style="border: 1px solid rgba(255,255,255,0.05); cursor: pointer;" onclick="this.classList.toggle('active')">
-      <div class="faq-title">কোর্সটি কতদিন দেখতে পারব? ⏳ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 9l6 6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="faq-body">কোর্সের এক্সেস আপনি দীর্ঘসময়ের জন্য পাবেন। অর্থাৎ একবার কিনলে আনলিমিটেড বার দেখতে পারবেন।</div>
-    </div>
-    <div class="faq-item glass-card" style="border: 1px solid rgba(255,255,255,0.05); cursor: pointer;" onclick="this.classList.toggle('active')">
-      <div class="faq-title">কোথাও না বুঝলে সাপোর্ট পাব?  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 9l6 6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <div class="faq-body">অবশ্যই! কোর্স কেনার পর আমাদের ডেডিকেটেড সাপোর্ট পাবেন। যেকোনো জায়গায় আটকে গেলে মেসেঞ্জারে বা হোয়াটসঅ্যাপে সাপোর্ট নিতে পারবেন।</div>
+  <div class="hvb-idlist">
+    <a class="hvb-idcard" href="https://www.tiktok.com/@hypervisionbangla" target="_blank" rel="noopener">
+      <i>🎵 </i><div><b>TikTok — @hypervisionbangla</b><small>Long + Short — দুই ধরনের ভিডিওই</small></div>
+    </a>
+    <a class="hvb-idcard" href="https://www.facebook.com/share/1Dc8eJn2dT/" target="_blank" rel="noopener">
+      <i>📘 </i><div><b>Facebook Page — Long ভিডিও</b><small>এই পেজের লং ভিডিওগুলো নিজেই বানাতে পারবেন</small></div>
+    </a>
+    <a class="hvb-idcard" href="https://www.facebook.com/share/197Vtpdui9/" target="_blank" rel="noopener">
+      <i>📘 </i><div><b>Facebook Page — Long + Short</b><small>লং ও শর্ট — দুই ধরনের ভিডিওই এখানে</small></div>
+    </a>
+  </div>
+</section>
+
+<section id="support">
+  <div class="hvb-support-box">
+    <h4> 🤝 কোর্স কিনলে সরাসরি আমার ডিরেক্ট Messenger সাপোর্ট</h4>
+    <p>কোর্স চলার সময় যেকোনো সমস্যায় আপনি একা থাকবেন না। কোর্স কেনার পরপরই Messenger-এ সরাসরি সাপোর্ট পাবেন — ভিডিও বানানো, প্রম্পট, এডিটিং বা আপলোড, যেকোনো জায়গায় আটকে গেলে জানাবেন, ফুল সাপোর্ট পাবেন।</p>
+    <div class="hvb-badge-row">
+      <span class="hvb-badge"> ডিরেক্ট Messenger সাপোর্ট</span>
+      <span class="hvb-badge outline"> ♾️ দীর্ঘসময় এক্সেস</span>
+      <span class="hvb-badge outline"> 🎓 ১০০+ সন্তুষ্ট স্টুডেন্ট</span>
+      <span class="hvb-badge outline"> বাংলায় শেখানো</span>
     </div>
   </div>
 </section>
 
 <section id="reviews">
   <div class="section-head">
-    <span class="tag">রিভিউ </span>
-    <h2>কেনা শিক্ষার্থীদের রিভিউ </h2>
-    <p>শুধু পেমেন্ট-যাচাই করা অ্যাকাউন্ট থেকেই রিভিউ দেওয়া যায় — ভুয়া রিভিউ নেই।</p>
+    <span class="tag mono">// REVIEWS</span>
+    <h2>শিক্ষার্থীদের রিভিউ</h2>
+    <p>প্রতিটি রিভিউ পেমেন্ট-যাচাই করা অ্যাকাউন্ট থেকে দেওয়া — শিক্ষার্থীরা স্ক্রিনশট ও নিজের বানানো ভিডিওর লিংকও যোগ করতে পারেন।</p>
   </div>
   <div data-hvb-reviews="all"></div>
-  <div style="text-align:center;margin-top:20px;"><a class="btn-ghost" href="/reviews">সব রিভিউ দেখুন </a></div>
+  <div style="text-align:center;margin-top:10px;"><a class="hvb-btn-quiet" href="/reviews">সব রিভিউ দেখুন</a></div>
+</section>
+
+
+
+
+<section>
+  <div class="payment-strip">
+    <div>
+      <h4>পেমেন্ট মেথড</h4>
+      <p>সব কোর্সে সাপোর্ট করে</p>
+    </div>
+    <div class="methods">
+      <span class="pill">bKash</span>
+      <span class="pill">Nagad</span>
+      <span class="pill">Rocket</span>
+    </div>
+  </div>
 </section>
 
 <footer class="hvb-foot">
-  <!-- injected by hvb-account.js -->
+  <div class="hvb-foot-grid">
+    <div class="hvb-foot-about">
+      <div class="brand" style="justify-content:flex-start;">
+        <img src="hvb-logo.png" alt="HVB Logo" style="width:34px;height:34px;border-radius:8px;object-fit:cover;">
+        <div class="brand-text" style="align-items:flex-start;"><b>HVB</b><span>Hyper Vision Bangla</span></div>
+      </div>
+      <p>AI দিয়ে ভিডিও বানানো — আইডিয়া থেকে আপলোড পর্যন্ত, সম্পূর্ণ বাংলায় হাতে-কলমে শেখার প্ল্যাটফর্ম।</p>
+    </div>
+    <div>
+      <h5>কোর্স</h5>
+      <ul>
+        <li><a href="/courses">সব কোর্স</a></li>
+        <li><a href="/course-bundle">Long + Short Course</a></li>
+        <li><a href="/course-short">Short Video Course</a></li>
+        <li><a href="/free-lesson">ফ্রি লেসন</a></li>
+        <li><a href="/my-courses">আমার কোর্স</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>প্ল্যাটফর্ম</h5>
+      <ul>
+        <li><a href="/">হোম</a></li>
+        <li><a href="/about">আমাদের সম্পর্কে</a></li>
+        <li><a href="/affiliate">Affiliate Program</a></li>
+        <li><a href="/refund">রিফান্ড ও এক্সেস পলিসি</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>যোগাযোগ ও সোশ্যাল</h5>
+      <ul>
+        <li><a href="/contact">যোগাযোগ</a></li>
+        <li><a href="https://m.me/hypervisionbangla" target="_blank" rel="noopener">Messenger</a></li>
+        <li><a href="https://www.tiktok.com/@hypervisionbangla" target="_blank" rel="noopener">TikTok</a></li>
+        <li><a href="https://www.facebook.com/share/197Vtpdui9/" target="_blank" rel="noopener">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="hvb-foot-bottom">
+    <span>© ২০২৬ HVB — Hyper Vision Bangla</span>
+    <span>bKash · Nagad · Rocket — নিরাপদ লোকাল পেমেন্ট</span>
+  </div>
 </footer>
 
 <script>
+  document.addEventListener('click', function(e){
+    const wrap = document.querySelector('.dots-wrap');
+    const menu = document.getElementById('dotsMenu');
+    if(wrap && menu && !wrap.contains(e.target)) menu.classList.remove('active');
+  });
+
   document.addEventListener("DOMContentLoaded", function() {
     const urlParams = new URLSearchParams(window.location.search);
     if(urlParams.has('ref')) {
-      localStorage.setItem('hvb_ref', urlParams.get('ref'));
+      const refCode = urlParams.get('ref');
+      localStorage.setItem('hvb_ref', refCode);
     }
   });
 </script>
@@ -568,29 +482,7 @@
   })();
 </script>
 
-<a class="hvb-msgr-float" href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" aria-label="Messenger-এ প্রশ্ন করুন"><i> </i> Messenger-এ প্রশ্ন করুন</a>
-
-<div class="exit-overlay" id="hvbExit">
-  <div class="exit-popup glass-card">
-    <button class="exit-close" onclick="document.getElementById('hvbExit').classList.remove('show')">×</button>
-    <h3>একটু দাঁড়ান!</h3>
-    <p style="color: var(--muted); font-size: 0.9em; margin-bottom: 20px;">যেতে চাইছেন? একটু দাঁড়ান! আমাদের Long + Short কোর্সে এখন স্পেশাল অফার চলছে। অফারটি শেষ হওয়ার আগেই এনরোল করুন।</p>
-    <a href="/course-bundle" class="btn-glow" style="width: 100%;">Enroll Now</a>
-  </div>
-</div>
-
-<script>
-  /* Exit Intent Logic */
-  document.addEventListener('mouseleave', function(e) {
-    if (e.clientY < 0 && !sessionStorage.getItem('hvb_exit_shown')) {
-      var exitModal = document.getElementById('hvbExit');
-      if (exitModal) {
-        exitModal.classList.add('show');
-        sessionStorage.setItem('hvb_exit_shown', 'true');
-      }
-    }
-  });
-</script>
+<a class="hvb-msgr-float" href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" aria-label="Messenger-এ প্রশ্ন করুন"><i>💬 </i> Messenger-এ প্রশ্ন করুন</a>
 
 <script>
 /* HVB scroll reveal */
@@ -607,31 +499,5 @@
 </script>
 <script src="hvb-account.js"></script>
 <script src="hvb-reviews.js"></script>
-
-<div class="mobile-sticky-cta">
-  <a href="/course-bundle" class="btn-glow">Enroll Now</a>
-  <a href="https://m.me/hypervisionbangla" class="msgr-btn" target="_blank" aria-label="Messenger"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></a>
-</div>
-
-  <script>
-    // Load dynamic theme settings from admin panel
-    fetch('/api/admin', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'settingsGet' })
-    })
-      .then(r => r.json())
-      .then(data => {
-        if(data && data.settings) {
-          data.settings.forEach(s => {
-            if(s.key === 'theme_colors') {
-              document.documentElement.style.setProperty('--cyan', s.value.primary);
-              document.documentElement.style.setProperty('--violet', s.value.accent);
-            }
-          });
-        }
-      })
-      .catch(e => console.error('Theme load error:', e));
-  </script>
 </body>
 </html>

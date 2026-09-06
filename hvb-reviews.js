@@ -174,9 +174,8 @@
                 btn.classList.remove('hvb-busy');
                 if (!o.ok) throw new Error(o.j.error || 'পাঠানো যায়নি');
                 msg.className = 'hvb-rv-msg ok';
-                msg.textContent = o.j.msg || 'ধন্যবাদ! আপনার রিভিউ যোগ হয়েছে।';
-                // Don't auto-reload immediately so user can read the message
-                // setTimeout(onDone, 900);
+                msg.textContent = 'ধন্যবাদ! আপনার রিভিউ যোগ হয়েছে।';
+                setTimeout(onDone, 900);
               })
               .catch(function (err) {
                 btn.classList.remove('hvb-busy');

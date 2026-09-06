@@ -81,7 +81,7 @@
     <div class="nav-item active" onclick="switchTab('dashboard', this)">📊 Dashboard</div>
     <div class="nav-item" onclick="switchTab('orders', this)">🛍️ Orders</div>
     <div class="nav-item" onclick="switchTab('withdrawals', this)">💰 Withdrawals</div>
-    <div class="nav-item" onclick="switchTab('theme', this)">🎨 Theme & Settings</div>
+    
     <div class="nav-item" onclick="switchTab('courses', this)">📚 Courses</div>
     <a href="/" class="nav-item" style="margin-top:auto; text-decoration:none;">🌐 View Website</a>
   </div>
@@ -133,32 +133,6 @@
       </div>
     </div>
 
-    <!-- Theme Settings Tab -->
-    <div id="tab-theme" class="tab-pane">
-      <div class="card">
-        <h3>Website Branding & Colors</h3>
-        <p style="color:var(--muted); font-size:0.9em; margin-bottom:20px;">Customize how your website looks. These changes will reflect immediately.</p>
-        
-        <div class="input-group">
-          <label>Primary Brand Color (Cyan/Teal by default)</label>
-          <input type="color" id="colorPrimary" value="#4FE3C1" style="padding:5px; height:50px;">
-        </div>
-        
-        <div class="input-group">
-          <label>Secondary Accent Color (Violet by default)</label>
-          <input type="color" id="colorSecondary" value="#9B8CFF" style="padding:5px; height:50px;">
-        </div>
-        
-        <div class="input-group">
-          <label>Top Announcement Text</label>
-          <input type="text" id="announcementText" placeholder="Special 85% OFF today!">
-        </div>
-        
-        <button class="btn" onclick="saveThemeSettings()">Save Changes</button>
-        <span id="themeMsg" style="margin-left:15px; color:var(--cyan);"></span>
-      </div>
-    </div>
-    
     <!-- Courses Tab -->
     <div id="tab-courses" class="tab-pane">
       <div class="card">
@@ -186,7 +160,7 @@ Kamrul Hasan, 01811223344, short"></textarea>
     document.getElementById('headerTitle').innerText = el.innerText.replace(/[^a-zA-Z &]/g, '').trim();
     
     if(tabId === 'withdrawals') loadWithdrawals();
-    if(tabId === 'theme') loadThemeSettings();
+    
   }
 
   async function login() {
@@ -309,54 +283,7 @@ Kamrul Hasan, 01811223344, short"></textarea>
     } catch(e) { alert('Error'); }
   }
 
-  // --- Theme Settings ---
-  async function loadThemeSettings() {
-    try {
-      const response = await fetch('/api/admin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ adminPassword: PASS, action: 'settingsGet' })
-      });
-      const data = await response.json();
-      if(data.settings) {
-        data.settings.forEach(s => {
-          if(s.key === 'theme_colors') {
-            document.getElementById('colorPrimary').value = s.value.primary;
-            document.getElementById('colorSecondary').value = s.value.accent;
-          }
-          if(s.key === 'announcement') {
-            document.getElementById('announcementText').value = s.value.text;
-          }
-        });
-      }
-    } catch(e) {}
-  }
-  
-  async function saveThemeSettings() {
-    const primary = document.getElementById('colorPrimary').value;
-    const accent = document.getElementById('colorSecondary').value;
-    const annText = document.getElementById('announcementText').value;
-    
-    document.getElementById('themeMsg').innerText = 'Saving...';
-    
-    try {
-      await fetch('/api/admin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ adminPassword: PASS, action: 'settingsSave', key: 'theme_colors', value: { primary: primary, accent: accent } })
-      });
-      
-      await fetch('/api/admin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ adminPassword: PASS, action: 'settingsSave', key: 'announcement', value: { text: annText, active: true } })
-      });
-      
-      document.getElementById('themeMsg').innerText = 'Saved! Refresh website to see changes.';
-      setTimeout(() => document.getElementById('themeMsg').innerText='', 3000);
-    } catch(e) { document.getElementById('themeMsg').innerText = 'Error saving.'; }
-  }
-async function bulkAddStudents() {
+  async function bulkAddStudents() {
     const text = document.getElementById("bulkStudents").value;
     document.getElementById("bulkMsg").innerText = "Adding...";
     try {

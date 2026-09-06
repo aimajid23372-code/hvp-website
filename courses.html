@@ -58,9 +58,7 @@
     background:linear-gradient(135deg, rgba(94,234,212,.14), rgba(167,139,250,.16)), var(--surface-2);
     display:flex; align-items:center; justify-content:center; flex-direction:column; gap:10px;
   }
-  .cthumb img{ width:100%; height:100%; object-fit:cover; position:absolute; inset:0; }
   .cthumb .play{
-    position:relative; z-index:2;
     width:52px; height:52px; border-radius:50%; background:rgba(255,255,255,.07);
     border:1px solid rgba(255,255,255,.2); display:flex; align-items:center; justify-content:center; font-size:1.2em;
   }
@@ -79,18 +77,7 @@
     display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
     margin-top:auto; padding-top:16px; border-top:1px solid var(--line);
   }
-  .price{
-    font-family:'Sora',sans-serif;
-    font-weight:900;
-    font-size:1.45em;
-    white-space:nowrap;
-    flex-shrink:0;
-    color:#FFB319;
-    background:linear-gradient(135deg, #FFE066 0%, #F59E0B 55%, #D97706 100%);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    filter:drop-shadow(0 2px 10px rgba(245,158,11,0.5));
-  }
+  .price{ font-family:'Sora',sans-serif; font-weight:700; font-size:1.3em; }
   .price s{ color:var(--muted); font-size:.62em; font-weight:500; margin-left:8px; }
   .cbtns{ display:flex; gap:10px; flex-wrap:wrap; }
   .btn-primary{
@@ -117,7 +104,6 @@
 </style>
 <link rel="stylesheet" href="hvb-theme.css">
 <link rel="stylesheet" href="hvb-ui.css">
-<link rel="stylesheet" href="hvb-store.css">
 <meta name="description" content="HVB-র সব AI ভিডিও কোর্স এক পেজে — ফুল কোর্স ৬৫০ টাকা, শর্ট কোর্স ২৯৯ টাকা। বাংলায় ধাপে ধাপে AI ভিডিও বানানো শেখার সম্পূর্ণ গাইড।">
 <meta name="keywords" content="hyper vision bangla, hvb, ai দিয়ে ভিডিও বানানো শেখা, ai video course bangla, md rayhan, prime vision ai, ai ভিডিও কোর্স, ai video banano, বাংলা ai কোর্স, ai video editing bangla, prompt engineering bangla, hypervision bangla">
 <link rel="canonical" href="https://hvb1.vercel.app/courses">
@@ -167,9 +153,9 @@
   <div class="clist">
 
     <article class="ccard featured">
-      <div class="cthumb"><img src="bundle-thumb.jpg" alt="Long + Short Video Course"><div class="play">▶</div></div>
+      <div class="cthumb"><div class="play">▶</div><small>LONG + SHORT</small></div>
       <div class="cbody">
-        <span class="badge">ফুল প্যাকেজ</span>
+        <span class="badge"> সবচেয়ে জনপ্রিয়</span>
         <h2>Long + Short Video Course</h2>
         <p>Short আর Long — দুইটাই একসাথে। YouTube/Facebook-এর ২-৫ মিনিটের ভিডিও থেকে TikTok ও Reels-এর ভাইরাল ক্লিপ, পুরো প্রসেস A থেকে Z।</p>
         <div class="feat">
@@ -189,7 +175,7 @@
     </article>
 
     <article class="ccard">
-      <div class="cthumb"><img src="short-thumb.jpg" alt="Short Video Course"><div class="play">▶</div></div>
+      <div class="cthumb"><div class="play">▶</div><small>SHORT ONLY</small></div>
       <div class="cbody">
         <span class="badge plain">শর্ট কোর্স</span>
         <h2>Short Video Course</h2>

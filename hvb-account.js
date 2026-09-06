@@ -116,13 +116,6 @@
   st.textContent = css;
   document.head.appendChild(st);
 
-  if (!document.querySelector('link[href*="hvb-store.css"]')) {
-    var storeCss = document.createElement('link');
-    storeCss.rel = 'stylesheet';
-    storeCss.href = '/hvb-store.css';
-    document.head.appendChild(storeCss);
-  }
-
   /* ---------------- হেল্পার ---------------- */
   function here() {
     var last = location.pathname.split('/').pop() || '';
@@ -158,21 +151,21 @@
   };
 
   var LINKS = [
-    { g: 'শেখা ', items: [
-      ['index', IC.home, 'হোম '],
-      ['courses', IC.cap, 'কোর্সসমূহ '],
-      ['free-lesson', IC.gift, 'ফ্রি লেসন '],
-      ['my-courses', IC.book, 'আমার কোর্স '],
-      ['reviews', IC.star, 'শিক্ষার্থীদের রিভিউ '],
+    { g: 'শেখা', items: [
+      ['index', IC.home, 'হোম'],
+      ['courses', IC.cap, 'কোর্সসমূহ'],
+      ['free-lesson', IC.gift, 'ফ্রি লেসন'],
+      ['my-courses', IC.book, 'আমার কোর্স'],
+      ['reviews', IC.star, 'শিক্ষার্থীদের রিভিউ'],
     ]},
-    { g: 'ইনকাম ', items: [
-      ['affiliate', IC.coin, 'অ্যাফিলিয়েট প্রোগ্রাম '],
-      ['affiliate-dashboard', IC.chart, 'অ্যাফিলিয়েট ড্যাশবোর্ড '],
+    { g: 'ইনকাম', items: [
+      ['affiliate', IC.coin, 'অ্যাফিলিয়েট প্রোগ্রাম'],
+      ['affiliate-dashboard', IC.chart, 'অ্যাফিলিয়েট ড্যাশবোর্ড'],
     ]},
-    { g: 'প্রতিষ্ঠান ', items: [
-      ['about', IC.info, 'আমাদের সম্পর্কে '],
-      ['contact', IC.mail, 'যোগাযোগ '],
-      ['refund', IC.doc, 'এক্সেস ও রিফান্ড পলিসি '],
+    { g: 'প্রতিষ্ঠান', items: [
+      ['about', IC.info, 'আমাদের সম্পর্কে'],
+      ['contact', IC.mail, 'যোগাযোগ'],
+      ['refund', IC.doc, 'এক্সেস ও রিফান্ড পলিসি'],
     ]},
   ];
 
@@ -199,9 +192,7 @@
     });
 
     drawer.innerHTML =
-      '<div class="hvb-drawer-top"><div class="hvb-drawer-brand">' +
-      '<img src="/hvb-logo.png" alt="">' +
-      '<b>HVB</b></div>' +
+      '<div class="hvb-drawer-top"><b>HVB মেনু</b>' +
       '<button class="hvb-x" type="button" aria-label="বন্ধ করুন">✕</button></div>' +
       '<div class="hvb-userblock" id="hvbUserBlock"></div>' +
       '<div class="hvb-nav">' + nav + '</div>' +
@@ -225,100 +216,33 @@
     drawer.classList.remove('open');
   }
 
-  function ensureBrandLink(header) {
-    var brand = header.querySelector('.brand');
-    if (!brand) return;
-    if (brand.tagName === 'A') return;
-    var a = document.createElement('a');
-    a.href = '/';
-    a.className = brand.className;
-    a.style.display = 'flex';
-    a.style.alignItems = 'center';
-    a.style.gap = '10px';
-    a.style.color = 'inherit';
-    a.style.textDecoration = 'none';
-    while (brand.firstChild) a.appendChild(brand.firstChild);
-    brand.parentNode.replaceChild(a, brand);
-  }
-
-  function ensureNavLinks(header) {
-    var nav = header.querySelector('nav');
-    if (!nav) {
-      nav = document.createElement('nav');
-      header.appendChild(nav);
-    }
-    var links = nav.querySelector('.links');
-    if (!links) {
-      links = document.createElement('div');
-      links.className = 'links';
-      nav.insertBefore(links, nav.firstChild);
-    }
-    links.innerHTML =
-      '<a href="/courses">কোর্স </a>' +
-      '<a href="/free-lesson">ফ্রি লেসন </a>' +
-      '<a href="/reviews">রিভিউ </a>' +
-      '<a href="/affiliate">অ্যাফিলিয়েট </a>' +
-      '<a href="/contact">যোগাযোগ </a>';
-  }
-
   function buildHeaderActions() {
     var header = document.querySelector('header');
     if (!header) return;
-    ensureBrandLink(header);
-    ensureNavLinks(header);
-    var hr = header.querySelector('.header-right');
-    if (hr) hr.remove();
+    // পুরোনো ৩-ডট মেনু সরিয়ে নতুন ড্রয়ার ব্যবহার
     var old = header.querySelector('.dots-wrap');
     if (old) old.remove();
-    header.querySelectorAll(':scope > nav > .btn-primary, :scope > .btn-primary, .header-right .btn-primary').forEach(function (el) {
-      el.remove();
-    });
-    var existing = header.querySelector('.hvb-acc-actions');
-    if (existing) existing.remove();
+    // পেজের নিজের পুরোনো হেডার CTA সরিয়ে একটাই অ্যাকসেন্ট বাটন রাখি
+    header.querySelectorAll(
+      '.btn-primary, .btn-ghost, a[href="/login"], a[href="/my-courses"]'
+    ).forEach(function (el) { el.remove(); });
 
     actions = document.createElement('div');
     actions.className = 'hvb-acc-actions';
     actions.innerHTML =
-      '<button class="hvb-acc-login" type="button" id="hvbTopLogin">লগইন</button>' +
-      '<a class="hvb-btn-accent hvb-cta" id="hvbTopCta" href="/courses">কোর্স দেখুন</a>' +
+      '<button class="hvb-btn-accent hvb-cta" type="button" id="hvbTopCta">শুরু করুন</button>' +
       '<button class="hvb-menu-btn" type="button" id="hvbMenuBtn" aria-label="মেনু">' +
-      '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">' +
-      '<line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>' +
-      '</svg></button>';
+      '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" ' +
+      'stroke-width="1.9" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>';
 
     var nav = header.querySelector('nav');
     (nav || header).appendChild(actions);
 
     actions.querySelector('#hvbMenuBtn').addEventListener('click', openDrawer);
-    actions.querySelector('#hvbTopLogin').addEventListener('click', function () { go('/login'); });
-  }
-
-  function buildRail() {
-    if (document.querySelector('.hvb-rail')) return;
-    var page = here();
-    if (page === 'admin' || page === 'admin-analytics') return;
-    document.body.classList.add('hvb-rail-on');
-    var rail = document.createElement('aside');
-    rail.className = 'hvb-rail';
-    rail.setAttribute('aria-label', 'সাইডবার');
-    function item(href, title, svg, key) {
-      var active = key === page || (key === 'index' && page === 'index') ? ' class="active"' : '';
-      return '<a href="' + href + '" title="' + title + '"' + active + '>' + svg + '</a>';
-    }
-    rail.innerHTML =
-      '<a href="/" title="হোম"><img class="rail-logo" src="/hvb-logo.png" alt="HVB"></a>' +
-      item('/', 'হোম', IC.home, 'index') +
-      item('/courses', 'কোর্স', IC.cap, 'courses') +
-      item('/free-lesson', 'ফ্রি লেসন', IC.gift, 'free-lesson') +
-      item('/my-courses', 'আমার কোর্স', IC.book, 'my-courses') +
-      item('/reviews', 'রিভিউ', IC.star, 'reviews') +
-      '<div class="rail-grow"></div>' +
-      '<button type="button" class="rail-dots" id="hvbRailMenu" title="মেনু" aria-label="মেনু">' +
-      '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">' +
-      '<line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>' +
-      '</svg></button>';
-    document.body.appendChild(rail);
-    rail.querySelector('#hvbRailMenu').addEventListener('click', openDrawer);
+    actions.querySelector('#hvbTopCta').addEventListener('click', function () {
+      if (HVB.user) location.href = '/my-courses';
+      else go('/login');
+    });
   }
 
   function go(base) {
@@ -349,9 +273,7 @@
 
       if (actions) {
         var cta = actions.querySelector('#hvbTopCta');
-        if (cta) { cta.textContent = 'আমার কোর্স'; cta.setAttribute('href', '/my-courses'); }
-        var loginBtn = actions.querySelector('#hvbTopLogin');
-        if (loginBtn) loginBtn.style.display = 'none';
+        if (cta) cta.textContent = 'আমার কোর্স';
         if (!actions.querySelector('.hvb-avatar')) {
           var av = document.createElement('button');
           av.type = 'button';
@@ -376,9 +298,7 @@
         var a = actions.querySelector('.hvb-avatar');
         if (a) a.remove();
         var cta2 = actions.querySelector('#hvbTopCta');
-        if (cta2) { cta2.textContent = 'কোর্স দেখুন'; cta2.setAttribute('href', '/courses'); }
-        var loginBtn2 = actions.querySelector('#hvbTopLogin');
-        if (loginBtn2) loginBtn2.style.display = '';
+        if (cta2) cta2.textContent = 'শুরু করুন';
       }
     }
   }
@@ -423,19 +343,11 @@
 
   HVB.signInWithGoogle = async function (nextUrl) {
     if (!HVB.sb) await HVB.init();
-    if (!HVB.sb) {
-      alert("Auth is not initialized. Check your Supabase configuration.");
-      return false;
-    }
-    const { data, error } = await HVB.sb.auth.signInWithOAuth({
+    if (!HVB.sb) return false;
+    await HVB.sb.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: location.origin + '/' + String(nextUrl || 'my-courses').replace(/^\//, '').replace(/\.html$/i, '') },
     });
-    if (error) {
-      console.error("Google Auth Error:", error.message);
-      alert("Google Login Error: " + error.message);
-      return false;
-    }
     return true;
   };
 
@@ -566,48 +478,10 @@
     }
   }
 
-  function injectFooter() {
-    if (document.querySelector('.hvb-foot')) return;
-    if (here() === 'admin' || here() === 'admin-analytics') return;
-    var html =
-      '<footer class="hvb-foot">' +
-      '<div class="hvb-foot-grid">' +
-      '<div class="hvb-foot-about"><div class="brand" style="justify-content:flex-start;">' +
-      '<img src="/hvb-logo.png" alt="HVB" style="width:34px;height:34px;border-radius:8px;object-fit:cover;">' +
-      '<div class="brand-text"><b>HVB</b><span>Hyper Vision Bangla</span></div></div>' +
-      '<p>AI দিয়ে ভিডিও বানানো — আইডিয়া থেকে আপলোড পর্যন্ত, সম্পূর্ণ বাংলায়। </p></div>' +
-      '<div><h5>কোর্স </h5><ul>' +
-      '<li><a href="/courses">সব কোর্স</a></li>' +
-      '<li><a href="/course-bundle">Long + Short </a></li>' +
-      '<li><a href="/course-short">Short Video </a></li>' +
-      '<li><a href="/free-lesson">ফ্রি লেসন </a></li>' +
-      '<li><a href="/my-courses">আমার কোর্স </a></li></ul></div>' +
-      '<div><h5>প্ল্যাটফর্ম </h5><ul>' +
-      '<li><a href="/">হোম </a></li>' +
-      '<li><a href="/about">আমাদের সম্পর্কে </a></li>' +
-      '<li><a href="/affiliate">অ্যাফিলিয়েট </a></li>' +
-      '<li><a href="/refund">রিফান্ড পলিসি </a></li></ul></div>' +
-      '<div><h5>যোগাযোগ </h5><ul>' +
-      '<li><a href="/contact">যোগাযোগ </a></li>' +
-      '<li><a href="https://m.me/hypervisionbangla" target="_blank" rel="noopener">Messenger </a></li>' +
-      '<li><a href="https://www.tiktok.com/@hypervisionbangla" target="_blank" rel="noopener">TikTok </a></li>' +
-      '<li><a href="https://www.facebook.com/share/197Vtpdui9/" target="_blank" rel="noopener">Facebook </a></li></ul></div>' +
-      '</div><div class="hvb-foot-bottom"><span>© ২০২৬ HVB — Hyper Vision Bangla </span>' +
-      '<span> bKash · Nagad · Rocket</span></div></footer>';
-    var box = document.createElement('div');
-    box.innerHTML = html;
-    var foot = box.firstElementChild;
-    var old = document.querySelector('body > footer');
-    if (old) old.replaceWith(foot);
-    else document.body.appendChild(foot);
-  }
-
   function boot() {
     mountUiLayer();
     buildDrawer();
     buildHeaderActions();
-    buildRail();
-    injectFooter();
     render();
     HVB.init();
   }
