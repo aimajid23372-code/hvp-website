@@ -215,7 +215,7 @@ Kamrul Hasan, 01811223344, short"></textarea>
             </div>
             <div style="text-align:right;">
               <span class="badge ${o.status === 'paid' ? 'success' : 'warning'}" style="margin-bottom:8px; display:inline-block;">${o.status.toUpperCase()}</span><br>
-              ${o.status !== 'paid' ? \\`<button class="btn" style="padding:6px 12px; font-size:0.8em;" onclick="verifyOrder('${o.our_ref || o.invoice_id}')">Verify Payment</button>\\` : ''}
+              ${o.status !== 'paid' ? `<button class="btn" style="padding:6px 12px; font-size:0.8em;" onclick="verifyOrder('${o.our_ref || o.invoice_id}')">Verify Payment</button>` : ''}
             </div>
           </div>
         `;
