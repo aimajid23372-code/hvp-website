@@ -83,6 +83,7 @@
     <div class="nav-item" onclick="switchTab('withdrawals', this)">💸 Withdrawals</div>
     <div class="nav-item" onclick="switchTab('promos', this)">🎟️ Promo Codes</div>
     <div class="nav-item" onclick="switchTab('wallet', this)">💰 Wallet Control</div>
+    <div class="nav-item" onclick="switchTab('settings', this)">⚙️ Website Settings</div>
     <div class="nav-item" onclick="switchTab('courses', this)">🎓 Courses</div>
     <a href="/" class="nav-item" style="margin-top:auto; text-decoration:none;">🌐 View Website</a>
   </div>
@@ -162,6 +163,47 @@
       </div>
     </div>
 
+    <!-- Settings Tab -->
+    <div id="tab-settings" class="tab-pane">
+      <div class="card">
+        <h3>Website Global Settings</h3>
+        <p style="color:var(--muted); font-size:0.9em; margin-bottom:15px;">Change prices, links, and content across the website dynamically.</p>
+        
+        <div class="input-group">
+          <label>Long + Short Course Price (Tk)</label>
+          <input type="number" id="set_price_bundle" placeholder="e.g. 650">
+        </div>
+        
+        <div class="input-group">
+          <label>Short Course Price (Tk)</label>
+          <input type="number" id="set_price_short" placeholder="e.g. 299">
+        </div>
+
+        <div class="input-group">
+          <label>Messenger Support Link</label>
+          <input type="text" id="set_messenger_link" placeholder="https://m.me/hypervisionbangla">
+        </div>
+
+        <div class="input-group">
+          <label>Premium WhatsApp Group Link (For paid students)</label>
+          <input type="text" id="set_group_link" placeholder="https://chat.whatsapp.com/...">
+        </div>
+
+        <div class="input-group">
+          <label>Long Course Google Drive Link</label>
+          <input type="text" id="set_drive_long" placeholder="https://drive.google.com/file/d/...">
+        </div>
+
+        <div class="input-group">
+          <label>Short Course Google Drive Link</label>
+          <input type="text" id="set_drive_short" placeholder="https://drive.google.com/file/d/...">
+        </div>
+        
+        <button class="btn" onclick="saveAllSettings()">Save Settings</button>
+        <div id="settingsMsg" style="margin-top:10px; color:var(--cyan);"></div>
+      </div>
+    </div>
+
     <!-- Courses Tab -->
     <div id="tab-courses" class="tab-pane">
       <div class="card">
@@ -190,7 +232,7 @@ Kamrul Hasan, 01811223344, short"></textarea>
     
     if(tabId === 'withdrawals') loadWithdrawals();
     if(tabId === 'promos') loadPromos();
-    
+    if(tabId === 'settings') loadSettings();
   }
 
   async function login() {
@@ -391,6 +433,53 @@ Kamrul Hasan, 01811223344, short"></textarea>
       if(data.error) msg.innerText = data.error;
       else msg.innerText = 'Updated! New Balance: ' + data.balance + ' Tk';
     } catch(e) { msg.innerText = 'Error'; }
+  }
+
+  // --- Website Settings ---
+  let currentSettings = {};
+  async function loadSettings() {
+    try {
+      const response = await fetch('/api/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminPassword: PASS, action: 'settingsGet' })
+      });
+      const data = await response.json();
+      if(data.settings) {
+        data.settings.forEach(s => { currentSettings[s.key] = s.value; });
+        document.getElementById('set_price_bundle').value = currentSettings.price_bundle || 650;
+        document.getElementById('set_price_short').value = currentSettings.price_short || 299;
+        document.getElementById('set_messenger_link').value = currentSettings.messenger_link || '';
+        document.getElementById('set_group_link').value = currentSettings.group_link || '';
+        document.getElementById('set_drive_long').value = currentSettings.drive_long || '';
+        document.getElementById('set_drive_short').value = currentSettings.drive_short || '';
+      }
+    } catch(e) {}
+  }
+
+  async function saveSetting(key, value) {
+    await fetch('/api/admin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ adminPassword: PASS, action: 'settingsSave', key, value })
+    });
+  }
+
+  async function saveAllSettings() {
+    const msg = document.getElementById('settingsMsg');
+    msg.innerText = 'Saving...';
+    try {
+      await saveSetting('price_bundle', document.getElementById('set_price_bundle').value);
+      await saveSetting('price_short', document.getElementById('set_price_short').value);
+      await saveSetting('messenger_link', document.getElementById('set_messenger_link').value);
+      await saveSetting('group_link', document.getElementById('set_group_link').value);
+      await saveSetting('drive_long', document.getElementById('set_drive_long').value);
+      await saveSetting('drive_short', document.getElementById('set_drive_short').value);
+      msg.innerText = 'All Settings Saved Successfully!';
+      setTimeout(()=>msg.innerText='', 3000);
+    } catch(e) {
+      msg.innerText = 'Error saving settings!';
+    }
   }
 
   async function bulkAddStudents() {

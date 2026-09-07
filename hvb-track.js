@@ -73,3 +73,27 @@
     (document.head || document.documentElement).appendChild(s);
   } catch (e) {}
 })();
+  // --- HVB Dynamic Website Settings ---
+  try {
+    fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'settings_get' }) })
+    .then(r => r.json())
+    .then(data => {
+      if(data && data.settings) {
+        var conf = {};
+        data.settings.forEach(function(s) { conf[s.key] = s.value; });
+        
+        if (conf.price_bundle) {
+          document.querySelectorAll('.dyn-price-bundle').forEach(function(el) { el.innerHTML = conf.price_bundle + ' &#2547;'; });
+        }
+        if (conf.price_short) {
+          document.querySelectorAll('.dyn-price-short').forEach(function(el) { el.innerHTML = conf.price_short + ' &#2547;'; });
+        }
+        if (conf.messenger_link) {
+          document.querySelectorAll('.dyn-messenger-link').forEach(function(el) { el.href = conf.messenger_link; });
+        }
+        if (conf.group_link) {
+          document.querySelectorAll('.dyn-group-link').forEach(function(el) { el.href = conf.group_link; });
+        }
+      }
+    });
+  } catch(e) {}

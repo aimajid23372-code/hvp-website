@@ -247,15 +247,19 @@ VIRAL DELIVERABLES:
 1. Titles: [5-6 Clickbait/Emotional Bengali titles. MUST be a fresh style every time].
 2. Hashtags: [10-15 Targeted viral hashtags].
 3. Description: [A short, engaging YouTube/TikTok description].
-
 [PLACE THE THUMBNAIL PROMPT INSIDE A SEPARATE CODE BLOCK]
 THUMBNAIL PROMPT:
 [1 Highly dramatic, extremely detailed English 16k UE5 prompt. Include instructions for a seamless blended collage (no hard lines), extreme facial expressions, and ONE unified 3D typography lockup at the bottom center with a specific 3D sticker attached].</pre>
 
 <script>
-  const SHORT_LINK = "https://drive.google.com/file/d/1PWf8xibrr63QRHC0JL4F5MQ2_ABuct70/view?usp=drivesdk";
-  const LONG_LINK = "https://drive.google.com/file/d/1tlqjP7Z4SFp9bl_rDiVnJVt-7T1hLNjw/view?usp=drivesdk";
-  const GROUP_LINK = "https://chat.whatsapp.com/KwqdfXmqNMtCkaM1pGeoYX?s=cl&p=a&ilr=0";
+  function openCourse(type) {
+    if(type==='short' && SHORT_LINK) window.open(SHORT_LINK, '_blank');
+    if(type==='long' && LONG_LINK) window.open(LONG_LINK, '_blank');
+    if(type==='fb' && GROUP_LINK) window.open(GROUP_LINK, '_blank');
+  }
+  let SHORT_LINK = "";
+  let LONG_LINK = "";
+  let GROUP_LINK = "";
 
   function copyPrompt(elId, btn){
     const text = document.getElementById(elId).innerText;

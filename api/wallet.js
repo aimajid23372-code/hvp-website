@@ -53,8 +53,15 @@ module.exports = async (req, res) => {
 
     if (action === "pay") {
       if (!COURSES[course] || !email) return res.status(400).json({ error: "Invalid data" });
-      let finalAmount = COURSES[course].amount;
       const cleanEmail = String(email).toLowerCase().trim();
+
+      const { data: sData } = await supabase.from("settings").select("*");
+      let settings = {};
+      if (sData) sData.forEach(s => settings[s.key] = s.value);
+      
+      let finalAmount = COURSES[course].amount;
+      if (course === "short") finalAmount = parseInt(settings.price_short) || 299;
+      if (course === "bundle") finalAmount = parseInt(settings.price_bundle) || 650;
 
       if (promoCode) {
         const { data: promo } = await supabase.from("promo_codes").select("*").eq("code", String(promoCode).toUpperCase()).eq("active", true).maybeSingle();
