@@ -15,7 +15,16 @@ function extractInvoiceId(zpData) {
 module.exports = async (req, res) => {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
   try {
-    const { course, name, contact, promoCode, ref } = req.body;
+    const { action, promoCode } = req.body;
+    
+    if (action === 'checkPromo') {
+      if (!promoCode) return res.status(200).json({ valid: false });
+      const { data: promo } = await supabase.from('promo_codes').select('*').eq('code', String(promoCode).toUpperCase()).eq('active', true).maybeSingle();
+      if (promo) return res.status(200).json({ valid: true, discount: promo.discount_percent });
+      return res.status(200).json({ valid: false });
+    }
+
+    const { course, name, contact, ref } = req.body;
     if (!COURSES[course] || !name || !contact) return res.status(400).json({ error: "Missing information" });
 
     const { data: sData } = await supabase.from("settings").select("*");

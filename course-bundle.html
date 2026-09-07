@@ -194,7 +194,7 @@
 </head>
 <body>
 <script src="hvb-ref.js"></script>
-<script src="hvb-track.js"></script>
+<script src="hvb-track.js?v=2"></script>
 
 <header>
   <a href="/" class="brand">
@@ -508,18 +508,35 @@ THUMBNAIL PROMPT:
   const promoCodes = { 'HVB10': 10, 'WELCOME50': 50, 'LAUNCH50': 50 };
   const bnDigits = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
   function toBn(n){ return String(n).split('').map(d => bnDigits[d] || d).join(''); }
-  function applyPromo(){
-    const code = document.getElementById('promoInput').value.trim().toUpperCase();
-    const msg = document.getElementById('promoMsg');
-    if(promoCodes[code]){
-      const discount = promoCodes[code];
-      const newPrice = Math.round(BASE_PRICE - (BASE_PRICE*discount/100));
-      document.getElementById('modalPrice').textContent = toBn(newPrice) + ' ৳';
-      msg.textContent = ' ✅ ' + discount + '% ছাড় প্রয়োগ হয়েছে! (পেমেন্ট পেজে দেখানো হবে)';
-      msg.className = 'promo-msg success';
-    } else {
-      msg.textContent = ' ❌ ভুল প্রোমো কোড';
-      msg.className = 'promo-msg error';
+  async function applyPromo(){
+    const code = document.getElementById("promoInput").value.trim().toUpperCase();
+    const msg = document.getElementById("promoMsg");
+    if(!code) return;
+    msg.textContent = "Checking...";
+    msg.className = "promo-msg";
+    try {
+      const res = await fetch("/api/create-invoice", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({action:"checkPromo", promoCode:code})});
+      const d = await res.json();
+      if(d.valid){
+        const discount = d.discount;
+        let baseStr = document.getElementById("modalPrice").getAttribute("data-base");
+        if (!baseStr) {
+          baseStr = document.getElementById("modalPrice").innerText.replace(/[^0-9]/g, "");
+          if(!baseStr) baseStr = BASE_PRICE;
+          document.getElementById("modalPrice").setAttribute("data-base", baseStr);
+        }
+        let currentBase = parseInt(baseStr) || BASE_PRICE;
+        const newPrice = Math.round(currentBase - (currentBase*discount/100));
+        document.getElementById("modalPrice").textContent = toBn(newPrice) + " ?";
+        msg.textContent = discount + "% discount applied! Price will update at checkout.";
+        msg.className = "promo-msg success";
+      } else {
+        msg.textContent = "? Invalid promo code";
+        msg.className = "promo-msg error";
+      }
+    } catch(e){
+      msg.textContent = "Error checking code";
+      msg.className = "promo-msg error";
     }
   }
 
@@ -583,7 +600,13 @@ THUMBNAIL PROMPT:
 
   // পেমেন্ট শেষে ZiniPay সরাসরি my-courses.html?order=... পেজে পাঠিয়ে দেয়,
   // সেখানেই "পেমেন্ট সফল" দেখিয়ে কোর্স খুলে দেওয়া হয়। তাই এখানে আর চেক লাগে না।
-  window.addEventListener('DOMContentLoaded', function(){
+  window.addEventListener("pageshow", function(e){
+      if(e.persisted){
+        const btn = document.getElementById("submitBtn");
+        if(btn){ btn.disabled = false; btn.classList.remove("hvb-busy"); btn.textContent = "????? ??? (???????) ?"; }
+      }
+    });
+    window.addEventListener('DOMContentLoaded', function(){
     if(urlParams.get('cancelled')){
       history.replaceState({}, '', window.location.pathname);
     }

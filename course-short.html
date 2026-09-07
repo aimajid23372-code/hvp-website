@@ -194,7 +194,7 @@
 </head>
 <body>
 <script src="hvb-ref.js"></script>
-<script src="hvb-track.js"></script>
+<script src="hvb-track.js?v=2"></script>
 
 <header>
   <a href="/" class="brand">
@@ -501,7 +501,13 @@ Understood? If you understand, reply ONLY with this exact sentence:
 
   // পেমেন্ট শেষে ZiniPay সরাসরি my-courses.html?order=... পেজে পাঠিয়ে দেয়,
   // সেখানেই "পেমেন্ট সফল" দেখিয়ে কোর্স খুলে দেওয়া হয়। তাই এখানে আর চেক লাগে না।
-  window.addEventListener('DOMContentLoaded', function(){
+  window.addEventListener("pageshow", function(e){
+      if(e.persisted){
+        const btn = document.getElementById("submitBtn");
+        if(btn){ btn.disabled = false; btn.classList.remove("hvb-busy"); btn.textContent = "????? ??? (???????) ?"; }
+      }
+    });
+    window.addEventListener('DOMContentLoaded', function(){
     if(urlParams.get('cancelled')){
       history.replaceState({}, '', window.location.pathname);
     }

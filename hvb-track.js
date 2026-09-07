@@ -91,7 +91,7 @@
         if (conf.messenger_link) {
           document.querySelectorAll('.dyn-messenger-link').forEach(function(el) { el.href = conf.messenger_link; });
         }
-        if (conf.group_link) {
+        if (conf.color_primary) { document.documentElement.style.setProperty("--cyan", conf.color_primary); } if (conf.color_secondary) { document.documentElement.style.setProperty("--violet", conf.color_secondary); } if (conf.group_link) {
           document.querySelectorAll('.dyn-group-link').forEach(function(el) { el.href = conf.group_link; });
         }
       }

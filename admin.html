@@ -378,7 +378,7 @@ Kamrul Hasan, 01811223344, short"></textarea>
             </div>
             <div style="text-align:right;">
               <span class="badge ${p.active ? 'success' : 'warning'}" style="margin-bottom:8px; display:inline-block;">${p.active ? 'ACTIVE' : 'INACTIVE'}</span><br>
-              <button class="btn btn-outline" style="padding:6px 12px; font-size:0.8em;" onclick="togglePromo('${p.code}', ${!p.active})">Toggle</button>
+              <button class="btn btn-outline" style="padding:6px 12px; font-size:0.8em; margin-bottom:5px;" onclick="togglePromo('${p.code}', ${!p.active})">Toggle</button><br><button class="btn" style="background:var(--danger); padding:6px 12px; font-size:0.8em;" onclick="deletePromo('${p.code}')">Delete</button>
             </div>
           </div>
         `;
@@ -447,12 +447,12 @@ Kamrul Hasan, 01811223344, short"></textarea>
       const data = await response.json();
       if(data.settings) {
         data.settings.forEach(s => { currentSettings[s.key] = s.value; });
-        document.getElementById('set_price_bundle').value = currentSettings.price_bundle || 650;
-        document.getElementById('set_price_short').value = currentSettings.price_short || 299;
-        document.getElementById('set_messenger_link').value = currentSettings.messenger_link || '';
-        document.getElementById('set_group_link').value = currentSettings.group_link || '';
-        document.getElementById('set_drive_long').value = currentSettings.drive_long || '';
-        document.getElementById('set_drive_short').value = currentSettings.drive_short || '';
+        keys.forEach(k => { const el = document.getElementById("set_" + k); if(el) el.value = currentSettings[k] || (k.includes("color") ? (k.includes("primary") ? "#4FE3C1" : "#9B8CFF") : ""); });
+        
+        
+        
+        
+        
       }
     } catch(e) {}
   }
@@ -469,12 +469,12 @@ Kamrul Hasan, 01811223344, short"></textarea>
     const msg = document.getElementById('settingsMsg');
     msg.innerText = 'Saving...';
     try {
-      await saveSetting('price_bundle', document.getElementById('set_price_bundle').value);
-      await saveSetting('price_short', document.getElementById('set_price_short').value);
-      await saveSetting('messenger_link', document.getElementById('set_messenger_link').value);
-      await saveSetting('group_link', document.getElementById('set_group_link').value);
-      await saveSetting('drive_long', document.getElementById('set_drive_long').value);
-      await saveSetting('drive_short', document.getElementById('set_drive_short').value);
+      for(let k of keys) { const el = document.getElementById("set_" + k); if(el) await saveSetting(k, el.value); }
+      
+      
+      
+      
+      
       msg.innerText = 'All Settings Saved Successfully!';
       setTimeout(()=>msg.innerText='', 3000);
     } catch(e) {

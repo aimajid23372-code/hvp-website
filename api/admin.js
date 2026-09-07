@@ -102,6 +102,10 @@ module.exports = async (req, res) => {
       await supabase.from('promo_codes').update({ active: body.active }).eq('code', body.code);
       return res.status(200).json({ success: true });
     }
+    if (action === 'promoDelete') {
+      await supabase.from('promo_codes').delete().eq('code', body.code);
+      return res.status(200).json({ success: true });
+    }
 
     // Wallet
     if (action === 'walletUpdate') {
