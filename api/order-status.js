@@ -3,7 +3,7 @@
 // webhook মিস হলেও এখানে সরাসরি ZiniPay-কে যাচাই করা হয়, তাই ম্যানুয়াল অনুমোদন লাগে না।
 
 const { createClient } = require('@supabase/supabase-js');
-const { normalizeCourse, buildContentResponse } = require('./_course_content');
+const { normalizeCourse, buildContentResponse } = require('../lib/course_content');
 
 const supabase = createClient(
   process.env.SUPABASE_URL,

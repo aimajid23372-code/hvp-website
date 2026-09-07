@@ -11,7 +11,7 @@ const supabase = createClient(
 );
 
 // SECURE CONTENT STORAGE & HELPERS
-const { COURSE_CONTENT, normalizeCourse, buildContentResponse } = require('./_course_content');
+const { COURSE_CONTENT, normalizeCourse, buildContentResponse } = require('../lib/course_content');
 
 async function getUserFromToken(token) {
   try {
@@ -202,7 +202,7 @@ const supabase = createClient(
 );
 
 // SECURE CONTENT STORAGE & HELPERS
-const { COURSE_CONTENT, normalizeCourse, buildContentResponse } = require('./_course_content');
+const { COURSE_CONTENT, normalizeCourse, buildContentResponse } = require('../lib/course_content');
 
 async function getUserFromToken(token) {
   try {

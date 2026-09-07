@@ -4,7 +4,7 @@
 // এখনো pending থাকা অর্ডার থাকলে ZiniPay-তে যাচাই করে paid করে দেয়।
 
 const { createClient } = require('@supabase/supabase-js');
-const { normalizeCourse, buildContentResponse } = require('./_course_content');
+const { normalizeCourse, buildContentResponse } = require('../lib/course_content');
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
