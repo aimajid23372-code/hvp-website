@@ -97,3 +97,35 @@
       }
     });
   } catch(e) {}
+
+/* ---------- পেমেন্টের সাথে সাথেই কোর্স চালু (auto access) ----------
+   /api/create-invoice কলে লগইন করা ইউজারের টোকেন যুক্ত করে দেয়, যাতে
+   পেমেন্ট সফল হওয়ার সাথে সাথেই অর্ডারটি ওই অ্যাকাউন্টের সাথে যুক্ত হয়ে যায়।
+   পাশাপাশি নাম্বার/ইমেইল সেভ রাখে, যাতে my-courses পেজে নিজে থেকেই কোর্স আসে। */
+(function () {
+  if (window.__hvbPayPatch) return;
+  window.__hvbPayPatch = true;
+  var origFetch = window.fetch ? window.fetch.bind(window) : null;
+  if (!origFetch) return;
+
+  window.fetch = async function (input, init) {
+    try {
+      var url = typeof input === 'string' ? input : (input && input.url) || '';
+      var method = String((init && init.method) || (input && input.method) || 'GET').toUpperCase();
+      if (url.indexOf('/api/create-invoice') !== -1 && method === 'POST' && init && typeof init.body === 'string') {
+        var payload = JSON.parse(init.body);
+        if (payload && payload.course && payload.contact) {
+          try { localStorage.setItem('hvb_contact', String(payload.contact)); } catch (e) {}
+          if (!payload.access_token && window.HVBAuth && window.HVBAuth.sb) {
+            try {
+              var got = await window.HVBAuth.sb.auth.getSession();
+              if (got && got.data && got.data.session) payload.access_token = got.data.session.access_token;
+            } catch (e) {}
+          }
+          init = Object.assign({}, init, { body: JSON.stringify(payload) });
+        }
+      }
+    } catch (e) {}
+    return origFetch(input, init);
+  };
+})();
