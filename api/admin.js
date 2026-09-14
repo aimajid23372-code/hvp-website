@@ -137,7 +137,8 @@ module.exports = async (req, res) => {
 
     // Affiliate Management
     if (action === 'affiliateList') {
-      const { data } = await supabase.from('affiliates').select('ref_code, name, contact, commission_percent, active, paid_out, created_at').order('created_at', { ascending: false });
+      const { data, error } = await supabase.from('affiliates').select('ref_code, name, contact, commission_percent, active, paid_out, created_at').order('created_at', { ascending: false });
+      if (error) return res.status(500).json({ error: error.message, detail: error });
       return res.status(200).json({ affiliates: data || [] });
     }
     if (action === 'affiliateSetCommission') {

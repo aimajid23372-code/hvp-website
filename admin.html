@@ -528,6 +528,7 @@ Kamrul Hasan, 01811223344, short"></textarea>
         body: JSON.stringify({ adminPassword: PASS, action: 'affiliateList' })
       });
       const data = await res.json();
+      if(data.error) { list.innerHTML = '❌ Error: ' + data.error; return; }
       if(!data.affiliates || data.affiliates.length === 0) { list.innerHTML = 'কোনো affiliate নেই।'; return; }
 
       let html = '<table style="width:100%; border-collapse:collapse; font-size:0.88em;">';
