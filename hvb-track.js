@@ -19,10 +19,37 @@
     return v;
   }
 
+  // Ref code 30 দিন পর্যন্ত localStorage-এ থাকবে
+  // কেউ link-এ ক্লিক করলে সেই ref ৩০ দিনের মধ্যে যেকোনো সময় কিনলেই কমিশন যাবে
+  window.hvbGetRef = function() {
+    try {
+      var storedRef = localStorage.getItem('hvb_ref') || '';
+      var storedAt = parseInt(localStorage.getItem('hvb_ref_at') || '0', 10);
+      var EXPIRY_MS = 30 * 24 * 60 * 60 * 1000; // 30 দিন
+      if (storedRef && storedAt && (Date.now() - storedAt) < EXPIRY_MS) {
+        return storedRef;
+      }
+      // মেয়াদ শেষ হলে মুছে ফেলো
+      if (storedRef) {
+        localStorage.removeItem('hvb_ref');
+        localStorage.removeItem('hvb_ref_at');
+      }
+      return '';
+    } catch (e) { return ''; }
+  };
+
+  // URL-এ ?ref= থাকলে save করো (যেকোনো পেজে এলেও)
+  try {
+    var _urlRef = (new URLSearchParams(window.location.search).get('ref') || '').trim().toLowerCase();
+    if (_urlRef && /^[a-z0-9]{3,30}$/.test(_urlRef)) {
+      localStorage.setItem('hvb_ref', _urlRef);
+      localStorage.setItem('hvb_ref_at', String(Date.now()));
+    }
+  } catch(e) {}
+
   function ref() {
     try {
-      if (typeof window.hvbGetRef === 'function') return window.hvbGetRef();
-      return localStorage.getItem('hvb_ref') || '';
+      return window.hvbGetRef();
     } catch (e) { return ''; }
   }
 
