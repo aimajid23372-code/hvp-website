@@ -12,6 +12,23 @@ function extractInvoiceId(zpData) {
   return parts[parts.length - 1] || null;
 }
 
+async function emailFromToken(token) {
+  if (!token) return null;
+  try {
+    const r = await fetch(process.env.SUPABASE_URL + "/auth/v1/user", {
+      headers: {
+        apikey: process.env.SUPABASE_ANON_KEY || "",
+        Authorization: "Bearer " + token,
+      },
+    });
+    if (!r.ok) return null;
+    const u = await r.json();
+    return u && u.email ? String(u.email).toLowerCase() : null;
+  } catch (err) {
+    return null;
+  }
+}
+
 module.exports = async (req, res) => {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
   try {
@@ -25,6 +42,7 @@ module.exports = async (req, res) => {
     }
 
     const { course, name, contact, ref } = req.body;
+    const accessToken = String(req.body.access_token || '').trim();
     if (!COURSES[course] || !name || !contact) return res.status(400).json({ error: "Missing information" });
 
     const { data: sData } = await supabase.from("settings").select("*");
@@ -49,13 +67,15 @@ module.exports = async (req, res) => {
     const fallbackUrl = req.headers.origin || ("https://" + (req.headers.host || "hvb1.vercel.app"));
     const siteUrl = (process.env.SITE_URL || fallbackUrl).replace(/\/$/, "");
 
+    const loginEmail = await emailFromToken(accessToken);
+
     const zpRes = await fetch("https://api.zinipay.com/v1/payment/create", {
       method: "POST",
       headers: { "Content-Type": "application/json", "zini-api-key": process.env.ZINIPAY_API_KEY },
       body: JSON.stringify({
         amount, cus_name: name, cus_email, cus_phone, metadata: { our_ref: ourRef, course },
-        redirect_url: siteUrl + "/my-courses",
-        success_url: siteUrl + "/my-courses",
+        redirect_url: siteUrl + "/my-courses?order=" + ourRef,
+        success_url: siteUrl + "/my-courses?order=" + ourRef,
         cancel_url: siteUrl + "/course-" + course,
         webhook_url: siteUrl + "/api/zinipay-webhook",
       }),
@@ -72,11 +92,13 @@ module.exports = async (req, res) => {
       promo_code: promoCode || null, affiliate_ref: ref || null,
       invoice_id: invoiceId, our_ref: ourRef, status: "pending",
     };
+    if (loginEmail) insertPayload.linked_email = loginEmail;
 
     let { error: insertErr } = await supabase.from("orders").insert(insertPayload);
     if (insertErr && insertErr.code === "PGRST204") {
       delete insertPayload.promo_code;
       delete insertPayload.affiliate_ref;
+      delete insertPayload.linked_email;
       const retry = await supabase.from("orders").insert(insertPayload);
       insertErr = retry.error;
     }
@@ -86,7 +108,7 @@ module.exports = async (req, res) => {
       return res.status(500).json({ error: "Database error: " + insertErr.message });
     }
 
-    return res.status(200).json({ payment_url: zpData.payment_url });
+    return res.status(200).json({ payment_url: zpData.payment_url, order: ourRef });
   } catch (err) {
     console.error("create-invoice error:", err);
     return res.status(500).json({ error: "Server error" });
