@@ -135,6 +135,30 @@ module.exports = async (req, res) => {
       return res.status(200).json({ events: events || [], orders: orders || [] });
     }
 
+    // Affiliate Management
+    if (action === 'affiliateList') {
+      const { data } = await supabase.from('affiliates').select('ref_code, name, contact, commission_percent, active, paid_out, created_at').order('created_at', { ascending: false });
+      return res.status(200).json({ affiliates: data || [] });
+    }
+    if (action === 'affiliateSetCommission') {
+      const ref = String(body.refCode || '').trim().toLowerCase();
+      const pct = Math.min(100, Math.max(0, Number(body.commission)));
+      if (!ref) return res.status(400).json({ error: 'refCode required' });
+      const { error } = await supabase.from('affiliates').update({ commission_percent: pct }).eq('ref_code', ref);
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json({ success: true, ref_code: ref, commission_percent: pct });
+    }
+    if (action === 'affiliateToggle') {
+      const ref = String(body.refCode || '').trim().toLowerCase();
+      await supabase.from('affiliates').update({ active: body.active }).eq('ref_code', ref);
+      return res.status(200).json({ success: true });
+    }
+    if (action === 'affiliateDelete') {
+      const ref = String(body.refCode || '').trim().toLowerCase();
+      await supabase.from('affiliates').delete().eq('ref_code', ref);
+      return res.status(200).json({ success: true });
+    }
+
     return res.status(400).json({ error: 'Invalid action' });
   } catch (err) {
     return res.status(500).json({ error: err.message });

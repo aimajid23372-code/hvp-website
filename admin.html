@@ -82,6 +82,7 @@
     <div class="nav-item" onclick="switchTab('orders', this)">🛒 Orders</div>
     <div class="nav-item" onclick="switchTab('withdrawals', this)">💸 Withdrawals</div>
     <div class="nav-item" onclick="switchTab('promos', this)">🎟️ Promo Codes</div>
+    <div class="nav-item" onclick="switchTab('affiliates', this)">🤝 Affiliates</div>
     <div class="nav-item" onclick="switchTab('wallet', this)">💰 Wallet Control</div>
     <div class="nav-item" onclick="switchTab('settings', this)">⚙️ Website Settings</div>
     <div class="nav-item" onclick="switchTab('courses', this)">🎓 Courses</div>
@@ -170,6 +171,16 @@
         <p style="color:var(--muted); font-size:0.9em; margin-bottom:15px;">Change prices, links, and content across the website dynamically.</p>
         
         <div class="input-group">
+          <label>Primary Brand Color (Hex)</label>
+          <input type="color" id="set_color_primary" style="padding:5px; height:50px;" value="#4FE3C1">
+        </div>
+        
+        <div class="input-group">
+          <label>Secondary Accent Color (Hex)</label>
+          <input type="color" id="set_color_secondary" style="padding:5px; height:50px;" value="#9B8CFF">
+        </div>
+        
+        <div class="input-group">
           <label>Long + Short Course Price (Tk)</label>
           <input type="number" id="set_price_bundle" placeholder="e.g. 650">
         </div>
@@ -204,6 +215,15 @@
       </div>
     </div>
 
+    <!-- Affiliates Tab -->
+    <div id="tab-affiliates" class="tab-pane">
+      <div class="card">
+        <h3>🤝 Affiliate Management</h3>
+        <p style="color:var(--muted); font-size:0.9em; margin-bottom:15px;">সকল affiliate একাউন্ট দেখুন ও কমিশন পরিবর্তন করুন।</p>
+        <div id="affiliateList" style="margin-top:15px;">Loading...</div>
+      </div>
+    </div>
+
     <!-- Courses Tab -->
     <div id="tab-courses" class="tab-pane">
       <div class="card">
@@ -233,6 +253,7 @@ Kamrul Hasan, 01811223344, short"></textarea>
     if(tabId === 'withdrawals') loadWithdrawals();
     if(tabId === 'promos') loadPromos();
     if(tabId === 'settings') loadSettings();
+    if(tabId === 'affiliates') loadAffiliates();
   }
 
   async function login() {
@@ -494,6 +515,78 @@ Kamrul Hasan, 01811223344, short"></textarea>
       const data = await response.json();
       document.getElementById("bulkMsg").innerText = data.result || data.error;
     } catch(e) { document.getElementById("bulkMsg").innerText = "Error"; }
+  }
+
+  // --- Affiliate Management ---
+  async function loadAffiliates() {
+    const list = document.getElementById('affiliateList');
+    list.innerHTML = 'Loading...';
+    try {
+      const res = await fetch('/api/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminPassword: PASS, action: 'affiliateList' })
+      });
+      const data = await res.json();
+      if(!data.affiliates || data.affiliates.length === 0) { list.innerHTML = 'কোনো affiliate নেই।'; return; }
+
+      let html = '<table style="width:100%; border-collapse:collapse; font-size:0.88em;">';
+      html += '<tr style="border-bottom:1px solid var(--line); color:var(--muted);"><th style="padding:8px; text-align:left;">নাম</th><th style="text-align:left;">Ref Code</th><th style="text-align:left;">কমিশন%</th><th style="text-align:left;">Status</th><th style="text-align:left;">Action</th></tr>';
+      data.affiliates.forEach(a => {
+        html += `<tr style="border-bottom:1px solid var(--line);">
+          <td style="padding:10px;">${a.name}<br><small style="color:var(--muted);">${a.contact || ''}</small></td>
+          <td style="padding:10px;"><code style="color:var(--cyan);">${a.ref_code}</code></td>
+          <td style="padding:10px;">
+            <input type="number" value="${a.commission_percent}" min="0" max="100" id="comm_${a.ref_code}" style="width:70px; padding:4px; background:#111; border:1px solid var(--line); color:#fff; border-radius:4px;">%
+            <button class="btn" style="padding:4px 10px; font-size:0.8em; margin-left:5px;" onclick="setCommission('${a.ref_code}')">Save</button>
+          </td>
+          <td style="padding:10px;"><span class="badge ${a.active ? 'success' : 'warning'}">${a.active ? 'ACTIVE' : 'INACTIVE'}</span></td>
+          <td style="padding:10px; display:flex; gap:6px;">
+            <button class="btn btn-outline" style="padding:4px 10px; font-size:0.8em;" onclick="toggleAffiliate('${a.ref_code}', ${!a.active})">${a.active ? 'Disable' : 'Enable'}</button>
+            <button class="btn" style="padding:4px 10px; font-size:0.8em; background:var(--danger);" onclick="deleteAffiliate('${a.ref_code}')">Delete</button>
+          </td>
+        </tr>`;
+      });
+      html += '</table>';
+      list.innerHTML = html;
+    } catch(e) { list.innerHTML = 'Error loading affiliates'; }
+  }
+
+  async function setCommission(refCode) {
+    const val = document.getElementById('comm_' + refCode).value;
+    try {
+      const res = await fetch('/api/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminPassword: PASS, action: 'affiliateSetCommission', refCode, commission: Number(val) })
+      });
+      const d = await res.json();
+      if(d.success) alert('✅ ' + refCode + '-এর কমিশন ' + val + '% সেট হয়েছে!');
+      else alert('Error: ' + d.error);
+    } catch(e) { alert('Error'); }
+  }
+
+  async function toggleAffiliate(refCode, setActive) {
+    try {
+      await fetch('/api/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminPassword: PASS, action: 'affiliateToggle', refCode, active: setActive })
+      });
+      loadAffiliates();
+    } catch(e) { alert('Error'); }
+  }
+
+  async function deleteAffiliate(refCode) {
+    if(!confirm('Delete affiliate ' + refCode + '? এই কাজ undo করা যাবে না।')) return;
+    try {
+      await fetch('/api/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminPassword: PASS, action: 'affiliateDelete', refCode })
+      });
+      loadAffiliates();
+    } catch(e) { alert('Error'); }
   }
 </script>
 </body>
