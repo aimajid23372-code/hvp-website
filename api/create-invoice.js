@@ -49,9 +49,8 @@ module.exports = async (req, res) => {
     let settings = {};
     if (sData) sData.forEach(s => settings[s.key] = s.value);
     
-    let baseAmount = COURSES[course].amount;
-    if (course === "short") baseAmount = parseInt(settings.price_short) || 299;
-    if (course === "bundle") baseAmount = parseInt(settings.price_bundle) || 650;
+    // Fixed checkout prices prevent stale dashboard settings from changing ZiniPay totals.
+    const baseAmount = COURSES[course].amount;
 
     let amount = baseAmount;
     if (promoCode) {
