@@ -81,8 +81,24 @@ module.exports = async (req, res) => {
       }),
     });
 
-    const zpData = await zpRes.json();
-    if (!zpRes.ok || !zpData.payment_url) {
+    const zpText = await zpRes.text();
+    let zpData = null;
+    try {
+      zpData = JSON.parse(zpText);
+    } catch (parseError) {
+      const objectStart = zpText.indexOf("{");
+      const objectEnd = zpText.lastIndexOf("}");
+      if (objectStart !== -1 && objectEnd > objectStart) {
+        try {
+          zpData = JSON.parse(zpText.slice(objectStart, objectEnd + 1));
+        } catch (nestedParseError) {
+          console.error("ZiniPay returned invalid JSON:", zpText.slice(0, 500));
+        }
+      }
+    }
+
+    if (!zpRes.ok || !zpData || !zpData.payment_url) {
+      console.error("ZiniPay create failed:", zpRes.status, zpText.slice(0, 500));
       return res.status(502).json({ error: "Payment gateway error. Please try again later." });
     }
 
