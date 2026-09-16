@@ -50,3 +50,22 @@ alter table public.orders
 create index if not exists orders_linked_email_idx on public.orders (linked_email);
 
 grant all on public.orders to service_role;
+
+-- ৭) অ্যাফিলিয়েট ব্যালেন্স অ্যাডজাস্টমেন্ট — অ্যাডমিন থেকে হাতে টাকা যোগ/কমানোর হিসাব
+create table if not exists public.affiliate_adjustments (
+  id uuid primary key default gen_random_uuid(),
+  ref_code text not null,
+  amount integer not null,
+  note text,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists affiliate_adjustments_ref_idx on public.affiliate_adjustments (ref_code, created_at desc);
+
+alter table public.affiliate_adjustments enable row level security;
+grant all on public.affiliate_adjustments to service_role;
+
+-- ৮) সর্বনিম্ন উইথড্র সীমা (অ্যাডমিন থেকে বদলানো যাবে)
+insert into public.settings (id, key, value)
+values ('min_withdraw', 'min_withdraw', '500')
+on conflict (id) do nothing;
