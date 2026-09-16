@@ -27,8 +27,8 @@ create index if not exists orders_status_idx on public.orders (status);
 -- ৪) শুরুর কোর্সগুলো (দাম অ্যাডমিন থেকে বদলাতে পারবেন)
 insert into public.products (slug, title, price, active, sort_order)
 values
-  ('short', 'Short Video Course', 299, true, 1),
-  ('bundle', 'Short + Long Video Course', 650, true, 2),
+  ('short', 'Short Video Course', 499, true, 1),
+  ('bundle', 'Short + Long Video Course', 999, true, 2),
   ('long', 'Long Video Course', 0, false, 3)
 on conflict (slug) do nothing;
 
