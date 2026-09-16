@@ -16,6 +16,28 @@ async function verifyWithZiniPay(invoiceId) {
   } catch (err) { return null; }
 }
 
+async function getSetting(key, fallback) {
+  try {
+    const { data } = await supabase.from('settings').select('value').eq('key', key).maybeSingle();
+    const v = data && data.value;
+    return (v === null || v === undefined || v === '') ? fallback : v;
+  } catch (err) { return fallback; }
+}
+
+// একজন অ্যাফিলিয়েটের হিসাব: অর্ডার থেকে কমিশন + অ্যাডমিনের ম্যানুয়াল অ্যাডজাস্টমেন্ট - পেইড আউট
+async function affiliateBalance(aff) {
+  const ref = aff.ref_code;
+  const [{ data: orders }, { data: adjs }] = await Promise.all([
+    supabase.from('orders').select('amount').eq('affiliate_ref', ref).eq('status', 'paid'),
+    supabase.from('affiliate_adjustments').select('amount').eq('ref_code', ref),
+  ]);
+  const totalSales = (orders || []).reduce((s, o) => s + Number(o.amount || 0), 0);
+  const earned = Math.round(totalSales * Number(aff.commission_percent || 0) / 100);
+  const adjust = (adjs || []).reduce((s, a) => s + Number(a.amount || 0), 0);
+  const paidOut = Number(aff.paid_out || 0);
+  return { totalSales, earned, adjust, paidOut, pending: earned + adjust - paidOut, orderCount: (orders || []).length };
+}
+
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   try {
@@ -78,7 +100,8 @@ module.exports = async (req, res) => {
     // Withdrawals
     if (action === 'withdrawList') {
       const { data } = await supabase.from('withdraw_requests').select('*').order('created_at', { ascending: false });
-      return res.status(200).json({ requests: data || [] });
+      const minWithdraw = Number(await getSetting('min_withdraw', 500)) || 500;
+      return res.status(200).json({ requests: data || [], min_withdraw: minWithdraw });
     }
     if (action === 'withdrawApprove') {
       const { data: reqRow } = await supabase.from('withdraw_requests').select('*').eq('id', body.requestId).single();
@@ -131,7 +154,40 @@ module.exports = async (req, res) => {
     if (action === 'affiliateList') {
       const { data, error } = await supabase.from('affiliates').select('ref_code, name, contact, commission_percent, active, paid_out');
       if (error) return res.status(500).json({ error: error.message, detail: error });
-      return res.status(200).json({ affiliates: data || [] });
+      const minWithdraw = Number(await getSetting('min_withdraw', 500)) || 500;
+      const out = [];
+      for (const a of data || []) {
+        let bal = { earned: 0, adjust: 0, paidOut: Number(a.paid_out || 0), pending: 0, totalSales: 0, orderCount: 0 };
+        try { bal = await affiliateBalance(a); } catch (err) {}
+        out.push({ ...a, ...bal });
+      }
+      return res.status(200).json({ affiliates: out, min_withdraw: minWithdraw });
+    }
+
+    // অ্যাডমিন থেকে ব্যালেন্সে টাকা যোগ / কমানো
+    if (action === 'affiliateAdjust') {
+      const ref = String(body.refCode || '').trim().toLowerCase();
+      const amount = Math.round(Number(body.amount));
+      if (!ref) return res.status(400).json({ error: 'refCode required' });
+      if (!amount || !isFinite(amount)) return res.status(400).json({ error: 'টাকার পরিমাণ দিন' });
+      const { data: aff } = await supabase.from('affiliates').select('ref_code').eq('ref_code', ref).maybeSingle();
+      if (!aff) return res.status(404).json({ error: 'এই ref code নেই' });
+      const { error } = await supabase.from('affiliate_adjustments').insert({ ref_code: ref, amount, note: String(body.note || '') });
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json({ success: true, amount });
+    }
+    if (action === 'affiliateAdjustList') {
+      const ref = String(body.refCode || '').trim().toLowerCase();
+      let sel = supabase.from('affiliate_adjustments').select('*');
+      if (ref) sel = sel.eq('ref_code', ref);
+      const { data, error } = await sel.order('created_at', { ascending: false }).limit(100);
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json({ adjustments: data || [] });
+    }
+    if (action === 'affiliateAdjustDelete') {
+      const { error } = await supabase.from('affiliate_adjustments').delete().eq('id', body.adjustmentId);
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json({ success: true });
     }
     if (action === 'affiliateSetCommission') {
       const ref = String(body.refCode || '').trim().toLowerCase();
