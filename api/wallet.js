@@ -2,7 +2,7 @@ const { createClient } = require("@supabase/supabase-js");
 const crypto = require("crypto");
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
-const COURSES = { bundle: { amount: 650 }, short: { amount: 299 } };
+const COURSES = { bundle: { amount: 999 }, short: { amount: 499 } };
 
 function extractInvoiceId(zpData) {
   if (zpData && zpData.invoice_id) return zpData.invoice_id;
