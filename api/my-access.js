@@ -146,8 +146,14 @@ module.exports = async (req, res) => {
       const contact = String(body.contact || '').trim();
       if (!contact) return res.status(400).json({ error: 'contact required' });
 
+      // Invoice ID / Order ID (UUID বা ZiniPay invoice id) — lookup-order.js এর মতো একই নিয়মে
+      const looksLikeId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(contact)
+        || (!contact.includes('@') && /[a-z]/i.test(contact) && contact.length >= 10);
+
       let q = supabase.from('orders').select('*');
-      if (contact.includes('@')) {
+      if (looksLikeId) {
+        q = q.or(`our_ref.eq.${contact},invoice_id.eq.${contact}`);
+      } else if (contact.includes('@')) {
         q = q.ilike('customer_contact', contact.toLowerCase());
       } else {
         const digits = contact.replace(/[^0-9]/g, '');
@@ -173,13 +179,20 @@ module.exports = async (req, res) => {
       if (!paid.length) {
         return res.status(200).json({ email, linked: 0, courses: [] });
       }
+      let linkedCount = 0;
       for (const o of paid) {
-        await supabase.from('orders').update({ linked_email: email }).eq('id', o.id);
+        const upd = await supabase.from('orders').update({ linked_email: email }).eq('id', o.id);
+        if (upd.error) console.error('link save error:', upd.error);
+        else linkedCount++;
       }
+      // linked_email সেভ না হলেও (কলাম না থাকলে) ইউজার যেন কোর্স দেখতে পায়
       const all = await ordersForEmail(email);
-      const rawAll = all.filter((o) => o.status === 'paid').map((o) => o.course);
+      const rawAll = [
+        ...all.filter((o) => o.status === 'paid').map((o) => o.course),
+        ...paid.map((o) => o.course),
+      ];
       const courses = [...new Set(rawAll.map(normalizeCourse))];
-      return res.status(200).json({ email, linked: paid.length, courses, content: buildContentResponse(rawAll, await loadOverrides(supabase)) });
+      return res.status(200).json({ email, linked: linkedCount, courses, content: buildContentResponse(rawAll, await loadOverrides(supabase)) });
     }
 
     const orders = await ordersForEmail(email);

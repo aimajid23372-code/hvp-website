@@ -42,3 +42,11 @@ alter table public.products
 
 -- Data API permission পুনরায় নিশ্চিত করা
 grant all on public.products to service_role;
+
+-- ৬) Google অ্যাকাউন্টের সাথে পুরোনো অর্ডার যুক্ত করার ঘর (এটি না থাকলে "কোর্স যুক্ত করুন" কাজ করে না)
+alter table public.orders
+  add column if not exists linked_email text;
+
+create index if not exists orders_linked_email_idx on public.orders (linked_email);
+
+grant all on public.orders to service_role;
