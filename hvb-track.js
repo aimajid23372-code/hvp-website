@@ -100,30 +100,60 @@
     (document.head || document.documentElement).appendChild(s);
   } catch (e) {}
 })();
-  // --- HVB Dynamic Website Settings ---
-  try {
-    fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'settings_get' }) })
-    .then(r => r.json())
-    .then(data => {
-      if(data && data.settings) {
+  // --- HVB Dynamic Prices + Website Settings (single source: products table) ---
+  (function () {
+    var bnD = ['\u09E6','\u09E7','\u09E8','\u09E9','\u09EA','\u09EB','\u09EC','\u09ED','\u09EE','\u09EF'];
+    function toBn(n) { return String(n).split('').map(function (d) { return bnD[d] || d; }).join(''); }
+    var TK = ' \u09F3';
+    window.HVB_PRICES = window.HVB_PRICES || {};
+    function applyPrice(slug, price, regular) {
+      price = Number(price || 0);
+      if (!slug || !price) return;
+      window.HVB_PRICES[slug] = price;
+      document.querySelectorAll('[data-hvb-price="' + slug + '"], .dyn-price-' + slug).forEach(function (el) {
+        el.textContent = toBn(price) + TK;
+      });
+      document.querySelectorAll('[data-hvb-price-plain="' + slug + '"]').forEach(function (el) {
+        el.textContent = toBn(price);
+      });
+      document.querySelectorAll('[data-hvb-oldprice="' + slug + '"]').forEach(function (el) {
+        if (regular && Number(regular) > price) {
+          el.textContent = toBn(Number(regular).toLocaleString('en-US')) + TK;
+          el.style.display = '';
+        } else {
+          el.style.display = 'none';
+        }
+      });
+    }
+    function notify() {
+      try { if (typeof window.hvbOnPrices === 'function') window.hvbOnPrices(window.HVB_PRICES); } catch (e) {}
+    }
+    function post(event) {
+      return fetch('/api/track', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ event: event })
+      }).then(function (r) { return r.json(); });
+    }
+    function run() {
+      post('products_get').then(function (d) {
+        ((d && d.products) || []).forEach(function (p) { applyPrice(p.slug, p.price, p.regular_price); });
+        notify();
+      }).catch(function () {});
+      post('settings_get').then(function (d) {
         var conf = {};
-        data.settings.forEach(function(s) { conf[s.key] = s.value; });
-        
-        if (conf.price_bundle) {
-          document.querySelectorAll('.dyn-price-bundle').forEach(function(el) { el.innerHTML = conf.price_bundle + ' &#2547;'; });
-        }
-        if (conf.price_short) {
-          document.querySelectorAll('.dyn-price-short').forEach(function(el) { el.innerHTML = conf.price_short + ' &#2547;'; });
-        }
-        if (conf.messenger_link) {
-          document.querySelectorAll('.dyn-messenger-link').forEach(function(el) { el.href = conf.messenger_link; });
-        }
-        if (conf.color_primary) { document.documentElement.style.setProperty("--cyan", conf.color_primary); } if (conf.color_secondary) { document.documentElement.style.setProperty("--violet", conf.color_secondary); } if (conf.group_link) {
-          document.querySelectorAll('.dyn-group-link').forEach(function(el) { el.href = conf.group_link; });
-        }
-      }
-    });
-  } catch(e) {}
+        ((d && d.settings) || []).forEach(function (s) { conf[s.key] = s.value; });
+        if (!window.HVB_PRICES.bundle && conf.price_bundle) applyPrice('bundle', conf.price_bundle);
+        if (!window.HVB_PRICES.short && conf.price_short) applyPrice('short', conf.price_short);
+        if (conf.messenger_link) document.querySelectorAll('.dyn-messenger-link').forEach(function (el) { el.href = conf.messenger_link; });
+        if (conf.group_link) document.querySelectorAll('.dyn-group-link').forEach(function (el) { el.href = conf.group_link; });
+        if (conf.color_primary) document.documentElement.style.setProperty('--cyan', conf.color_primary);
+        if (conf.color_secondary) document.documentElement.style.setProperty('--violet', conf.color_secondary);
+        notify();
+      }).catch(function () {});
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+    else run();
+  })();
 
 /* ---------- পেমেন্টের সাথে সাথেই কোর্স চালু (auto access) ----------
    /api/create-invoice কলে লগইন করা ইউজারের টোকেন যুক্ত করে দেয়, যাতে
