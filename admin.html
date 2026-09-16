@@ -253,12 +253,22 @@
 
     <!-- WITHDRAWALS -->
     <section class="pane" id="p-withdrawals">
-      <div class="card"><h3>উইথড্র রিকোয়েস্ট (সর্বনিম্ন ৫০০৳)</h3><div id="withdrawList"></div></div>
+      <div class="card"><div class="section-kicker">WITHDRAW RULES</div><h3>Minimum Withdraw</h3>
+        <p class="muted">এর চেয়ে কম টাকা জমলে অ্যাফিলিয়েট টাকা তোলার রিকোয়েস্ট পাঠাতে পারবে না।</p>
+        <div class="field"><label>Minimum Withdraw Amount (৳)</label><input id="set_min_withdraw" type="number" min="0" step="1" /></div>
+        <button class="btn" onclick="saveMinWithdraw()">Save Changes</button>
+        <div id="minWMsg" class="muted" style="margin-top:8px"></div>
+      </div>
+      <div class="card"><h3>উইথড্র রিকোয়েস্ট <span class="muted" id="minWLabel"></span></h3><div id="withdrawList"></div></div>
     </section>
 
     <!-- AFFILIATES -->
     <section class="pane" id="p-affiliates">
-      <div class="card"><h3>অ্যাফিলিয়েট</h3><div class="scroll"><table id="affTable"></table></div></div>
+      <div class="card"><div class="section-kicker">AFFILIATE WALLET</div><h3>অ্যাফিলিয়েট ও ব্যালেন্স</h3>
+        <p class="muted">Balance = কমিশন + অ্যাডমিনের যোগ করা টাকা − আগে পাঠানো টাকা। Add Money দিলে সাথে সাথে তার Affiliate Dashboard-এ দেখাবে।</p>
+        <div class="scroll"><table id="affTable"></table></div>
+      </div>
+      <div class="card" id="affAdjCard" style="display:none"><h3>Balance History <span class="muted" id="affAdjRef"></span></h3><div id="affAdjBox"></div></div>
     </section>
 
     <!-- BRANDING -->
@@ -650,6 +660,9 @@ async function loadWithdrawals() {
   const box = document.getElementById('withdrawList');
   box.innerHTML = '<div class="spinner"></div>';
   const d = await api({ action: 'withdrawList' });
+  const minW = Number(d.min_withdraw || 500);
+  const mi = document.getElementById('set_min_withdraw'); if (mi) mi.value = minW;
+  const ml = document.getElementById('minWLabel'); if (ml) ml.innerText = '(সর্বনিম্ন ' + minW + '৳)';
   const list = d.requests || [];
   box.innerHTML = list.length ? list.map((r) =>
     '<div class="data-row"><div><b>' + esc(r.ref_code || r.affiliate_id || '') + '</b><div class="muted">' + esc(r.method || '') + ' · ' + esc(r.account || '') + '</div></div>' +
@@ -671,14 +684,67 @@ async function loadAffiliates() {
   if (d.error) { t.innerHTML = '<tr><td style="color:var(--danger)">' + esc(d.error) + '</td></tr>'; return; }
   const list = d.affiliates || [];
   t.innerHTML = list.length
-    ? '<tr><th>রেফ কোড</th><th>নাম</th><th>কমিশন %</th><th>পেইড</th><th>অবস্থা</th><th>কাজ</th></tr>' + list.map((a) =>
-      '<tr><td>' + esc(a.ref_code) + '</td><td>' + esc(a.name || '') + '<div class="muted">' + esc(a.contact || '') + '</div></td>' +
-      '<td><input value="' + esc(a.commission_percent) + '" id="aff_' + esc(a.ref_code) + '" style="max-width:80px" /></td>' +
-      '<td>' + tk(a.paid_out) + '</td><td><span class="badge ' + (a.active ? 'success' : 'warning') + '">' + (a.active ? 'চালু' : 'বন্ধ') + '</span></td>' +
-      '<td><button class="btn btn-sm" onclick="saveComm(\'' + esc(a.ref_code) + '\')">সেভ</button> ' +
-      '<button class="btn btn-sm btn-outline" onclick="toggleAff(\'' + esc(a.ref_code) + '\',' + (!a.active) + ')">টগল</button> ' +
-      '<button class="btn btn-sm btn-danger" onclick="delAff(\'' + esc(a.ref_code) + '\')">মুছুন</button></td></tr>').join('')
+    ? '<tr><th>রেফ কোড</th><th>নাম</th><th>কমিশন %</th><th>কমিশন আয়</th><th>অ্যাডমিন যোগ</th><th>পেইড</th><th>Balance</th><th>অবস্থা</th><th>Add Money</th><th>কাজ</th></tr>' + list.map((a) => {
+      const r = esc(a.ref_code);
+      return '<tr><td>' + r + '</td><td>' + esc(a.name || '') + '<div class="muted">' + esc(a.contact || '') + '</div></td>' +
+      '<td><input value="' + esc(a.commission_percent) + '" id="aff_' + r + '" style="max-width:70px" /></td>' +
+      '<td>' + tk(a.earned || 0) + '</td>' +
+      '<td>' + tk(a.adjust || 0) + '</td>' +
+      '<td>' + tk(a.paidOut || a.paid_out || 0) + '</td>' +
+      '<td><b style="color:var(--cyan)">' + tk(a.pending || 0) + '</b></td>' +
+      '<td><span class="badge ' + (a.active ? 'success' : 'warning') + '">' + (a.active ? 'চালু' : 'বন্ধ') + '</span></td>' +
+      '<td><input id="adjAmt_' + r + '" type="number" placeholder="৳" style="max-width:90px" />' +
+      '<input id="adjNote_' + r + '" placeholder="কারণ (optional)" style="max-width:130px;margin-top:4px" />' +
+      '<div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap">' +
+      '<button class="btn btn-sm" onclick="adjustAff(\'' + r + '\',1)">+ Add</button>' +
+      '<button class="btn btn-sm btn-outline" onclick="adjustAff(\'' + r + '\',-1)">− Deduct</button>' +
+      '<button class="btn btn-sm btn-outline" onclick="showAdjHistory(\'' + r + '\')">History</button>' +
+      '</div></td>' +
+      '<td><button class="btn btn-sm" onclick="saveComm(\'' + r + '\')">সেভ</button> ' +
+      '<button class="btn btn-sm btn-outline" onclick="toggleAff(\'' + r + '\',' + (!a.active) + ')">টগল</button> ' +
+      '<button class="btn btn-sm btn-danger" onclick="delAff(\'' + r + '\')">মুছুন</button></td></tr>';
+    }).join('')
     : '<tr><td class="muted">কোনো অ্যাফিলিয়েট নেই</td></tr>';
+}
+async function adjustAff(ref, sign) {
+  const amtEl = document.getElementById('adjAmt_' + ref);
+  const noteEl = document.getElementById('adjNote_' + ref);
+  const amt = Math.abs(Math.round(Number(amtEl && amtEl.value)));
+  if (!amt) { alert('টাকার পরিমাণ লিখুন'); return; }
+  const label = sign > 0 ? 'যোগ' : 'কমানো';
+  if (!confirm(ref + '-এর ব্যালেন্সে ' + amt + '৳ ' + label + ' করবেন?')) return;
+  const r = await api({ action: 'affiliateAdjust', refCode: ref, amount: sign * amt, note: (noteEl && noteEl.value) || '' });
+  if (r.error) { alert(r.error); return; }
+  if (amtEl) amtEl.value = '';
+  if (noteEl) noteEl.value = '';
+  loadAffiliates();
+}
+async function showAdjHistory(ref) {
+  const card = document.getElementById('affAdjCard');
+  const box = document.getElementById('affAdjBox');
+  document.getElementById('affAdjRef').innerText = '· ' + ref;
+  card.style.display = 'block';
+  box.innerHTML = '<div class="spinner"></div>';
+  const d = await api({ action: 'affiliateAdjustList', refCode: ref });
+  const list = d.adjustments || [];
+  box.innerHTML = list.length ? list.map((a) =>
+    '<div class="data-row"><div><b style="color:' + (Number(a.amount) >= 0 ? 'var(--cyan)' : 'var(--danger)') + '">' + (Number(a.amount) >= 0 ? '+' : '') + tk(a.amount) + '</b>' +
+    '<div class="muted">' + esc(a.note || '—') + ' · ' + new Date(a.created_at).toLocaleString('bn-BD') + '</div></div>' +
+    '<div><button class="btn btn-sm btn-danger" onclick="delAdj(\'' + esc(a.id) + '\',\'' + esc(ref) + '\')">মুছুন</button></div></div>').join('')
+    : '<div class="muted">কোনো এন্ট্রি নেই</div>';
+}
+async function delAdj(id, ref) {
+  if (!confirm('এই এন্ট্রি মুছবেন? ব্যালেন্স আবার আগের মতো হয়ে যাবে।')) return;
+  await api({ action: 'affiliateAdjustDelete', adjustmentId: id });
+  showAdjHistory(ref); loadAffiliates();
+}
+async function saveMinWithdraw() {
+  const msg = document.getElementById('minWMsg');
+  const val = Math.max(0, Math.round(Number(document.getElementById('set_min_withdraw').value)));
+  msg.innerText = 'সেভ হচ্ছে...';
+  const r = await api({ action: 'settingsSave', key: 'min_withdraw', value: String(val) });
+  msg.innerText = r.error ? ('সমস্যা: ' + r.error) : ('সেভ হয়েছে ✅ এখন সর্বনিম্ন ' + val + '৳');
+  loadWithdrawals();
 }
 async function saveComm(ref) { await api({ action: 'affiliateSetCommission', refCode: ref, commission: document.getElementById('aff_' + ref).value }); loadAffiliates(); }
 async function toggleAff(ref, active) { await api({ action: 'affiliateToggle', refCode: ref, active }); loadAffiliates(); }
