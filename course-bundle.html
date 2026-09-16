@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ফুল AI ভিডিও কোর্স (৬৫০ টাকা) | Hyper Vision Bangla</title>
+<title>ফুল AI ভিডিও কোর্স (৯৯৯ টাকা) | Hyper Vision Bangla</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Sora:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -186,7 +186,7 @@
 <meta name="description" content="AI দিয়ে ভিডিও বানানোর সম্পূর্ণ কোর্স — প্রম্পট ইঞ্জিনিয়ারিং, সিনেমাটিক ভিডিও জেনারেশন, বাংলা ভয়েসওভার, এডিটিং ও মনিটাইজেশন। দীর্ঘমেয়াদি এক্সেস।">
 <meta name="keywords" content="hyper vision bangla, hvb, ai দিয়ে ভিডিও বানানো শেখা, ai video course bangla, md rayhan, prime vision ai, ai ভিডিও কোর্স, ai video banano, বাংলা ai কোর্স, ai video editing bangla, prompt engineering bangla, hypervision bangla">
 <link rel="canonical" href="https://hvb1.vercel.app/course-bundle">
-<meta property="og:title" content="ফুল AI ভিডিও কোর্স (৬৫০ টাকা) | Hyper Vision Bangla">
+<meta property="og:title" content="ফুল AI ভিডিও কোর্স (৯৯৯ টাকা) | Hyper Vision Bangla">
 <meta property="og:description" content="AI দিয়ে ভিডিও বানানোর সম্পূর্ণ কোর্স — প্রম্পট ইঞ্জিনিয়ারিং, সিনেমাটিক ভিডিও জেনারেশন, বাংলা ভয়েসওভার, এডিটিং ও মনিটাইজেশন। দীর্ঘমেয়াদি এক্সেস।">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://hvb1.vercel.app/course-bundle">
@@ -196,7 +196,7 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="ফুল AI ভিডিও কোর্স (৬৫০ টাকা) | Hyper Vision Bangla">
+<meta name="twitter:title" content="ফুল AI ভিডিও কোর্স (৯৯৯ টাকা) | Hyper Vision Bangla">
 <meta name="twitter:description" content="AI দিয়ে ভিডিও বানানোর সম্পূর্ণ কোর্স — প্রম্পট ইঞ্জিনিয়ারিং, সিনেমাটিক ভিডিও জেনারেশন, বাংলা ভয়েসওভার, এডিটিং ও মনিটাইজেশন। দীর্ঘমেয়াদি এক্সেস।">
 <meta name="twitter:image" content="https://hvb1.vercel.app/hvb-og.png">
 <link rel="icon" href="/hvb-logo.png" type="image/png">
@@ -236,8 +236,8 @@
 
   <div class="buy-box">
     <div style="display:flex; align-items:baseline; gap:10px;">
-      <span style="font-family:'Sora',sans-serif; text-decoration:line-through; color:#8891A8; font-size:1.15em; font-weight:600;">১,৫০০ ৳</span>
-      <div class="price">৬৫০ ৳ <small>/ কোর্স</small></div>
+      <span data-hvb-oldprice="bundle" style="font-family:'Sora',sans-serif; text-decoration:line-through; color:#8891A8; font-size:1.15em; font-weight:600;">১,৫০০ ৳</span>
+      <div class="price"><span data-hvb-price="bundle">৯৯৯ ৳</span> <small>/ কোর্স</small></div>
     </div>
     <button class="btn-primary" data-hvb-gate onclick="hvbGate(function(){ document.getElementById('payModal').classList.add('active'); })">কিনুন</button>
   </div>
@@ -351,7 +351,7 @@
     <button class="close" onclick="closePayModal()">✕ </button>
     <div id="payStep">
       <h3>Long + Short Video Course</h3>
-      <div class="price-tag mono" id="modalPrice">৬৫০ ৳</div>
+      <div class="price-tag mono" id="modalPrice" data-hvb-price="bundle">৯৯৯ ৳</div>
       <div class="promo-box">
         <input type="text" id="promoInput" class="promo-input" placeholder="প্রোমো কোড থাকলে দিন">
         <button type="button" class="promo-btn" onclick="applyPromo()">Apply</button>
@@ -443,7 +443,8 @@ Understood? If you understand, reply ONLY with this exact sentence:
 </div>
 
 <script>
-  const BASE_PRICE = 650;
+  var BASE_PRICE = 999;
+  window.hvbOnPrices = function (p) { if (p && p.bundle) { BASE_PRICE = Number(p.bundle); } };
   const promoCodes = { 'HVB10': 10, 'WELCOME50': 50, 'LAUNCH50': 50 };
   const bnDigits = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
   function toBn(n){ return String(n).split('').map(d => bnDigits[d] || d).join(''); }
