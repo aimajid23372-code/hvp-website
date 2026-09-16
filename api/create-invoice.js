@@ -49,8 +49,12 @@ module.exports = async (req, res) => {
     let settings = {};
     if (sData) sData.forEach(s => settings[s.key] = s.value);
     
-    // Fixed checkout prices prevent stale dashboard settings from changing ZiniPay totals.
-    const baseAmount = COURSES[course].amount;
+    // Admin panel (products table) can set the price; otherwise the fixed price is used.
+    let baseAmount = COURSES[course].amount;
+    try {
+      const { data: prod } = await supabase.from("products").select("price, active").eq("slug", course).maybeSingle();
+      if (prod && prod.active !== false && Number(prod.price) > 0) baseAmount = Number(prod.price);
+    } catch (e) { /* products table optional */ }
 
     let amount = baseAmount;
     if (promoCode) {

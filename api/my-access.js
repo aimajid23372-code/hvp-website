@@ -11,7 +11,7 @@ const supabase = createClient(
 );
 
 // SECURE CONTENT STORAGE & HELPERS
-const { COURSE_CONTENT, normalizeCourse, buildContentResponse } = require('../lib/course_content');
+const { COURSE_CONTENT, normalizeCourse, buildContentResponse, loadOverrides } = require('../lib/course_content');
 
 async function getUserFromToken(token) {
   try {
@@ -182,7 +182,7 @@ module.exports = async (req, res) => {
       const all = await ordersForEmail(email);
       const rawAll = all.filter((o) => o.status === 'paid').map((o) => o.course);
       const courses = [...new Set(rawAll.map(normalizeCourse))];
-      return res.status(200).json({ email, linked: paid.length, courses, content: buildContentResponse(rawAll) });
+      return res.status(200).json({ email, linked: paid.length, courses, content: buildContentResponse(rawAll, await loadOverrides(supabase)) });
     }
 
     const orders = await ordersForEmail(email);
@@ -199,7 +199,7 @@ module.exports = async (req, res) => {
     const courses = [...new Set(rawOrders.map(normalizeCourse))];
     
     // Return both the list of courses AND the secure content payload
-    return res.status(200).json({ email, courses, wallet_balance, content: buildContentResponse(rawOrders) });
+    return res.status(200).json({ email, courses, wallet_balance, content: buildContentResponse(rawOrders, await loadOverrides(supabase)) });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'Server error' });
