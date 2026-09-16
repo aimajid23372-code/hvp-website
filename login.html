@@ -253,7 +253,7 @@
         });
         var d = await r.json();
         b.classList.remove('hvb-busy');
-        if(d.linked){ lm.className='msg ok'; lm.textContent='সফল! ' + d.linked + 'টি কেনা যুক্ত হয়েছে।';
+        if(d.linked || (d.courses && d.courses.length)){ lm.className='msg ok'; lm.textContent='সফল! ' + (d.linked||d.courses.length) + 'টি কেনা যুক্ত হয়েছে।';
           setTimeout(function(){ location.href='/my-courses'; }, 900); }
         else { lm.className='msg err'; lm.textContent='এই তথ্যে পেইড কোনো অর্ডার পাওয়া যায়নি।'; }
       }catch(err){ b.classList.remove('hvb-busy'); lm.className='msg err'; lm.textContent='সমস্যা হয়েছে।'; }
