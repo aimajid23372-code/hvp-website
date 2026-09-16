@@ -50,7 +50,21 @@ module.exports = async (req, res) => {
     const totalSales = (orders || []).reduce((sum, o) => sum + Number(o.amount), 0);
     const totalCommission = Math.round(totalSales * affiliate.commission_percent / 100);
     const paidOut = Number(affiliate.paid_out || 0);
-    const pending = totalCommission - paidOut;
+
+    const { data: adjs } = await supabase
+      .from('affiliate_adjustments')
+      .select('amount, note, created_at')
+      .eq('ref_code', cleanRef)
+      .order('created_at', { ascending: false });
+    const adjust = (adjs || []).reduce((sum, a) => sum + Number(a.amount || 0), 0);
+
+    let minWithdraw = 500;
+    try {
+      const { data: setRow } = await supabase.from('settings').select('value').eq('key', 'min_withdraw').maybeSingle();
+      if (setRow && setRow.value) minWithdraw = Number(setRow.value) || 500;
+    } catch (err) {}
+
+    const pending = totalCommission + adjust - paidOut;
 
     // প্রতিটা বিক্রির বিস্তারিত (কবে, কোন কোর্স, কত টাকা, কমিশন কত) —
     // কাস্টমারের ফোন/ইমেইল দেখানো হচ্ছে না, কাস্টমারদের প্রাইভেসির জন্য
@@ -68,6 +82,9 @@ module.exports = async (req, res) => {
       totalSales,
       totalCommission,
       paidOut,
+      adjust,
+      adjustments: (adjs || []).map((a) => ({ amount: Number(a.amount || 0), note: a.note || '', date: a.created_at })),
+      minWithdraw,
       pending,
       orders: orderList,
     });
