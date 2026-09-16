@@ -43,18 +43,20 @@ module.exports = async (req, res) => {
 
     const { course, name, contact, ref } = req.body;
     const accessToken = String(req.body.access_token || '').trim();
-    if (!COURSES[course] || !name || !contact) return res.status(400).json({ error: "Missing information" });
+    if (!course || !name || !contact) return res.status(400).json({ error: "Missing information" });
 
     const { data: sData } = await supabase.from("settings").select("*");
     let settings = {};
     if (sData) sData.forEach(s => settings[s.key] = s.value);
     
     // Admin panel (products table) can set the price; otherwise the fixed price is used.
-    let baseAmount = COURSES[course].amount;
+    let baseAmount = COURSES[course] ? COURSES[course].amount : 0;
     try {
       const { data: prod } = await supabase.from("products").select("price, active").eq("slug", course).maybeSingle();
-      if (prod && prod.active !== false && Number(prod.price) > 0) baseAmount = Number(prod.price);
+      if (prod && prod.active === false) return res.status(400).json({ error: "এই কোর্সটি এখন Enroll করা যাচ্ছে না" });
+      if (prod && Number(prod.price) > 0) baseAmount = Number(prod.price);
     } catch (e) { /* products table optional */ }
+    if (!baseAmount || baseAmount < 1) return res.status(400).json({ error: "Course unavailable" });
 
     let amount = baseAmount;
     if (promoCode) {
@@ -79,7 +81,7 @@ module.exports = async (req, res) => {
         amount, cus_name: name, cus_email, cus_phone, metadata: { our_ref: ourRef, course },
         redirect_url: siteUrl + "/my-courses?order=" + ourRef,
         success_url: siteUrl + "/my-courses?order=" + ourRef,
-        cancel_url: siteUrl + "/course-" + course,
+        cancel_url: siteUrl + (course === "short" || course === "bundle" ? "/course-" + course : "/course?course=" + encodeURIComponent(course)),
         webhook_url: siteUrl + "/api/zinipay-webhook",
       }),
     });

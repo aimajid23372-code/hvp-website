@@ -31,3 +31,14 @@ values
   ('bundle', 'Short + Long Video Course', 650, true, 2),
   ('long', 'Long Video Course', 0, false, 3)
 on conflict (slug) do nothing;
+
+
+-- ৫) Professional Course Manager-এর অতিরিক্ত ঘর
+alter table public.products
+  add column if not exists short_description text,
+  add column if not exists description text,
+  add column if not exists regular_price integer not null default 0,
+  add column if not exists featured boolean not null default false;
+
+-- Data API permission পুনরায় নিশ্চিত করা
+grant all on public.products to service_role;

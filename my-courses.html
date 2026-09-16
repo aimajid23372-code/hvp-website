@@ -205,6 +205,12 @@
     if (renderLong && contentData['long']) {
       html += renderCourseBlock(idx++, 'long', 'Long Video Course', contentData['long']);
     }
+    rawList.forEach(function(c) {
+      const slug = String(c || '').toLowerCase().trim();
+      if (!['short','long','bundle'].includes(slug) && contentData[slug]) {
+        html += renderCourseBlock(idx++, slug, contentData[slug].title || slug, contentData[slug]);
+      }
+    });
 
     // Fallback: If course detected but content wasn't attached
     if ((renderShort || renderLong) && !contentData['short'] && !contentData['long']) {

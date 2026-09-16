@@ -107,15 +107,7 @@ module.exports = async (req, res) => {
       return res.status(200).json({ success: true });
     }
 
-    // Wallet
-    if (action === 'walletUpdate') {
-      const email = String(body.email).toLowerCase().trim();
-      const amount = Number(body.amount);
-      const { data: w } = await supabase.from('wallets').select('balance').eq('email', email).maybeSingle();
-      const newBal = (w ? Number(w.balance) : 0) + amount;
-      await supabase.from('wallets').upsert({ email, balance: newBal });
-      return res.status(200).json({ success: true, balance: newBal });
-    }
+    // Customer Wallet is intentionally disabled; Affiliate Withdrawals remain active.
 
     // Settings
     if (action === 'settingsGet') {
@@ -186,6 +178,12 @@ module.exports = async (req, res) => {
         const r = await supabase.from('reviews').select('id', { count: 'exact', head: true }).neq('status', 'approved');
         pendingReviews = r.count || 0;
       } catch (e) { pendingReviews = 0; }
+      let pageViews = 0;
+      let checkoutStarts = 0;
+      try {
+        const ev = await supabase.from('site_events').select('event').gte('created_at', from).lt('created_at', to).limit(5000);
+        (ev.data || []).forEach((x) => { if (x.event === 'pageview') pageViews += 1; if (x.event === 'payment_click') checkoutStarts += 1; });
+      } catch (e) {}
       let pendingWithdraw = 0;
       try {
         const w = await supabase.from('withdraw_requests').select('id', { count: 'exact', head: true }).eq('status', 'pending');
@@ -199,6 +197,10 @@ module.exports = async (req, res) => {
         customers: customers.size,
         pending_reviews: pendingReviews,
         pending_withdraws: pendingWithdraw,
+        page_views: pageViews,
+        checkout_starts: checkoutStarts,
+        conversion_rate: pageViews ? Number(((paid.length / pageViews) * 100).toFixed(1)) : 0,
+        average_order_value: paid.length ? Math.round(revenue / paid.length) : 0,
         by_day: Object.keys(byDay).sort().map((d) => ({ date: d, amount: byDay[d] })),
         top_courses: Object.values(byCourse).sort((a, b) => b.revenue - a.revenue),
         recent: list.slice(0, 10),
@@ -231,7 +233,8 @@ module.exports = async (req, res) => {
     if (action === 'orderGrant') {
       const contact = String(body.contact || '').toLowerCase().trim();
       let course = String(body.course || 'bundle').toLowerCase();
-      if (!['bundle', 'short', 'long'].includes(course)) course = 'bundle';
+      const { data: grantProduct } = await supabase.from('products').select('slug').eq('slug', course).maybeSingle();
+      if (!grantProduct && !['bundle', 'short', 'long'].includes(course)) return res.status(400).json({ error: 'কোর্সটি পাওয়া যায়নি' });
       if (!contact) return res.status(400).json({ error: 'contact required' });
       const row = {
         customer_name: body.name || 'Manual Access',
@@ -262,11 +265,6 @@ module.exports = async (req, res) => {
           const c = String(o.course || '');
           if (c && !map[key].courses.includes(c)) map[key].courses.push(c);
         }
-      });
-      const { data: wallets } = await supabase.from('wallets').select('email, balance');
-      (wallets || []).forEach((w) => {
-        const k = String(w.email || '').toLowerCase();
-        if (map[k]) map[k].wallet = Number(w.balance || 0);
       });
       let out = Object.values(map).sort((a, b) => b.spent - a.spent);
       const search = String(body.query || '').toLowerCase().trim();
@@ -311,6 +309,10 @@ module.exports = async (req, res) => {
         title: p.title || slug,
         price: Number(p.price || 0),
         thumbnail: p.thumbnail || null,
+        short_description: p.short_description || null,
+        description: p.description || null,
+        regular_price: Number(p.regular_price || p.price || 0),
+        featured: p.featured === true,
         drive_link: p.drive_link || null,
         prompt: p.prompt || null,
         active: p.active !== false,
@@ -320,8 +322,16 @@ module.exports = async (req, res) => {
       if (error) return res.status(500).json({ error: error.message });
       return res.status(200).json({ success: true });
     }
+    if (action === 'productToggle') {
+      const { error } = await supabase.from('products').update({ active: body.active === true }).eq('slug', String(body.slug || ''));
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json({ success: true });
+    }
     if (action === 'productDelete') {
-      const { error } = await supabase.from('products').delete().eq('slug', String(body.slug || ''));
+      const slug = String(body.slug || '');
+      const { count } = await supabase.from('orders').select('id', { count: 'exact', head: true }).eq('course', slug);
+      if (count) return res.status(409).json({ error: 'এই কোর্সে অর্ডার আছে। Delete না করে Unpublish করুন।' });
+      const { error } = await supabase.from('products').delete().eq('slug', slug);
       if (error) return res.status(500).json({ error: error.message });
       return res.status(200).json({ success: true });
     }

@@ -66,16 +66,8 @@ module.exports = async (req, res) => {
         .single();
         
       if (error) console.error('order update error:', error);
-      
-      // If it's a wallet topup, add funds to the wallet
-      if (orderData && orderData.course === 'wallet_topup') {
-        const email = String(orderData.customer_contact).toLowerCase().trim();
-        const amount = Number(orderData.amount);
-        const { data: w } = await supabase.from('wallets').select('balance').eq('email', email).maybeSingle();
-        const newBal = (w ? Number(w.balance) : 0) + amount;
-        await supabase.from('wallets').upsert({ email, balance: newBal });
-      }
-      
+      // Customer Wallet is disabled. Historical wallet rows remain untouched.
+
       // Auto-Email Delivery
       if (process.env.RESEND_API_KEY && orderData && orderData.course !== 'wallet_topup') {
         try {

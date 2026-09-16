@@ -111,9 +111,6 @@ module.exports = async (req, res) => {
 
     const email = String(user.email).toLowerCase();
 
-    let wallet_balance = 0;
-    const { data: w } = await supabase.from('wallets').select('balance').eq('email', email).maybeSingle();
-    if (w) wallet_balance = Number(w.balance);
 
     if (body.action === 'review_add') {
       const orders = await ordersForEmail(email);
@@ -199,7 +196,7 @@ module.exports = async (req, res) => {
     const courses = [...new Set(rawOrders.map(normalizeCourse))];
     
     // Return both the list of courses AND the secure content payload
-    return res.status(200).json({ email, courses, wallet_balance, content: buildContentResponse(rawOrders, await loadOverrides(supabase)) });
+    return res.status(200).json({ email, courses, content: buildContentResponse(rawOrders, await loadOverrides(supabase)) });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'Server error' });

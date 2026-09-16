@@ -7,7 +7,7 @@
 <title>HVB Admin Panel</title>
 <style>
   :root{
-    --bg:#070B18; --panel:#0E1630; --panel2:#131D3C; --line:rgba(255,255,255,.09);
+    --bg:#070A12; --panel:#0D1425; --panel2:#141D31; --line:rgba(180,240,240,.12);
     --text:#EAF1FF; --muted:#93A2C6;
     --cyan:#3FC7F2; --blue:#2E8BFF; --violet:#7C6BF5; --ice:#B4F0F0;
     --ok:#34D399; --warn:#FBBF24; --danger:#F87171;
@@ -18,10 +18,10 @@
   a{color:var(--cyan)}
   .shell{display:flex;min-height:100vh}
   /* Sidebar */
-  .side{width:250px;flex:0 0 250px;background:var(--panel);border-right:1px solid var(--line);padding:18px 14px;position:sticky;top:0;height:100vh;overflow:auto}
+  .side{width:232px;flex:0 0 232px;background:var(--panel);border-right:1px solid var(--line);padding:18px 14px;position:sticky;top:0;height:100vh;overflow:auto}
   .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.25em;margin-bottom:22px}
   .brand .dot{width:32px;height:32px;border-radius:10px;background:var(--grad)}
-  .nav-item{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:11px;color:var(--muted);cursor:pointer;font-size:.95em;margin-bottom:4px;transition:.18s}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:7px;color:var(--muted);cursor:pointer;font-size:.88em;margin-bottom:3px;transition:.18s}
   .nav-item:hover{background:var(--panel2);color:var(--text)}
   .nav-item.active{background:var(--grad);color:#04121f;font-weight:700}
   .nav-item svg{width:18px;height:18px;flex:0 0 18px}
@@ -31,21 +31,21 @@
   .top{display:flex;align-items:center;gap:14px;justify-content:space-between;flex-wrap:wrap;margin-bottom:22px}
   .top h1{font-size:1.5em;margin:0}
   .burger{display:none;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:9px 12px;font-size:1.1em}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:18px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;margin-bottom:16px}
   .card h3{margin:0 0 14px;font-size:1.05em}
   .grid{display:grid;gap:14px}
   .stats{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
-  .stat{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;position:relative;overflow:hidden}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;position:relative;overflow:hidden}
   .stat:before{content:'';position:absolute;inset:0 auto 0 0;width:4px;background:var(--grad)}
   .stat .lbl{color:var(--muted);font-size:.85em;margin-bottom:6px}
   .stat .val{font-size:1.7em;font-weight:800;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-  input,select,textarea{width:100%;background:#0A122A;border:1px solid var(--line);border-radius:10px;padding:11px 12px;color:var(--text);font-size:.95em;font-family:inherit}
+  input,select,textarea{width:100%;background:#0A122A;border:1px solid var(--line);border-radius:7px;padding:10px 11px;color:var(--text);font-size:.95em;font-family:inherit}
   textarea{resize:vertical}
   label{display:block;font-size:.85em;color:var(--muted);margin:0 0 6px}
   .field{margin-bottom:12px}
   .row{display:flex;gap:10px;flex-wrap:wrap}
   .row>*{flex:1;min-width:150px}
-  .btn{background:var(--grad);color:#04121f;border:0;border-radius:11px;padding:11px 18px;font-weight:700;cursor:pointer;font-size:.92em}
+  .btn{background:var(--grad);color:#04121f;border:0;border-radius:7px;padding:10px 16px;font-weight:700;cursor:pointer;font-size:.92em}
   .btn:hover{filter:brightness(1.08)}
   .btn-outline{background:transparent;border:1px solid var(--cyan);color:var(--cyan)}
   .btn-danger{background:transparent;border:1px solid var(--danger);color:var(--danger)}
@@ -57,7 +57,7 @@
   table{width:100%;border-collapse:collapse;font-size:.9em}
   th,td{text-align:left;padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:top}
   th{color:var(--muted);font-weight:600;font-size:.82em;text-transform:uppercase;letter-spacing:.04em}
-  .scroll{overflow-x:auto}
+  .scroll{overflow-x:auto}.section-kicker{font-size:.72em;text-transform:uppercase;color:var(--cyan);letter-spacing:.12em;margin-bottom:5px}.split{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:16px}.quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.quick{border:1px solid var(--line);background:var(--panel2);padding:15px;border-radius:8px}.quick b{display:block;margin-bottom:4px}.quick p{margin:0}.switch-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.top-actions{display:flex;gap:8px;align-items:center}.danger-note{border-left:3px solid var(--warn);padding:10px 12px;background:rgba(251,191,36,.08);color:var(--muted);font-size:.85em}.product-form-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.product-form-head h3{margin:0}.hidden{display:none!important}
   .data-row{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);align-items:center;flex-wrap:wrap}
   .muted{color:var(--muted);font-size:.88em}
   .pane{display:none}
@@ -76,6 +76,7 @@
   .spinner{width:34px;height:34px;border-radius:50%;border:3px solid rgba(255,255,255,.12);border-top-color:var(--cyan);animation:sp .8s linear infinite;margin:0 auto}
   @keyframes sp{to{transform:rotate(360deg)}}
   .backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:40}
+  @media(max-width:1050px){.split{grid-template-columns:1fr}}
   @media(max-width:900px){
     .side{position:fixed;left:0;top:0;z-index:50;transform:translateX(-100%);transition:.25s}
     .side.open{transform:none}
@@ -91,9 +92,9 @@
   <div class="box">
     <div style="width:44px;height:44px;border-radius:14px;background:var(--grad);margin:0 auto 14px"></div>
     <h2 style="margin:0 0 6px">HVB Admin</h2>
-    <p class="muted" style="margin:0 0 18px">অ্যাডমিন পাসওয়ার্ড দিন</p>
+    <p class="muted" style="margin:0 0 18px">নিরাপদভাবে কাজ করতে Admin password দিন</p>
     <div class="field"><input type="password" id="adminPass" placeholder="Password" onkeydown="if(event.key==='Enter')login()" /></div>
-    <button class="btn" style="width:100%" onclick="login()">প্রবেশ করুন</button>
+    <button class="btn" style="width:100%" onclick="login()">Sign In</button>
     <div id="gateMsg" style="margin-top:12px;min-height:22px"></div>
   </div>
 </div>
@@ -104,52 +105,56 @@
   <aside class="side" id="side">
     <div class="brand"><span class="dot"></span> HVB Admin</div>
     <div class="nav-sep">Overview</div>
-    <div class="nav-item active" data-tab="dashboard" onclick="go('dashboard',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13h8V3H3zM13 21h8V11h-8zM3 21h8v-5H3zM13 8h8V3h-8z"/></svg> ড্যাশবোর্ড</div>
+    <div class="nav-item active" data-tab="dashboard" onclick="go('dashboard',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13h8V3H3zM13 21h8V11h-8zM3 21h8v-5H3zM13 8h8V3h-8z"/></svg> Dashboard</div>
+    <div class="nav-sep">Website</div>
+    <div class="nav-item" data-tab="branding" onclick="go('branding',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16M6 16l6-12 6 12z"/></svg> Branding</div>
+    <div class="nav-item" data-tab="theme" onclick="go('theme',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 000 18c2.5 0 2-3 0-3s-2-3 0-3h3a6 6 0 000-12z"/></svg> Theme & Colors</div>
+    <div class="nav-item" data-tab="social" onclick="go('social',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.7 10.7l6.6-4.2M8.7 13.3l6.6 4.2"/></svg> Social & Contact</div>
     <div class="nav-sep">Sales</div>
-    <div class="nav-item" data-tab="orders" onclick="go('orders',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h12l2 6H4zM4 8v12h16V8"/></svg> অর্ডার</div>
-    <div class="nav-item" data-tab="customers" onclick="go('customers',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5M17 8.5a3 3 0 100 5"/></svg> কাস্টমার</div>
-    <div class="nav-item" data-tab="reviews" onclick="go('reviews',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 16.4 6.8 19.2l1-5.9L3.5 9.2l5.9-.8z"/></svg> রিভিউ <span id="revBadge" class="badge warning" style="margin-left:auto;display:none">0</span></div>
+    <div class="nav-item" data-tab="orders" onclick="go('orders',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h12l2 6H4zM4 8v12h16V8"/></svg> Orders</div>
+    <div class="nav-item" data-tab="payments" onclick="go('payments',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg> Payments</div>
+    <div class="nav-item" data-tab="customers" onclick="go('customers',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5M17 8.5a3 3 0 100 5"/></svg> Customers</div>
+    <div class="nav-item" data-tab="reviews" onclick="go('reviews',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 16.4 6.8 19.2l1-5.9L3.5 9.2l5.9-.8z"/></svg> Reviews <span id="revBadge" class="badge warning" style="margin-left:auto;display:none">0</span></div>
     <div class="nav-sep">Catalog</div>
-    <div class="nav-item" data-tab="products" onclick="go('products',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4zM3 7v10l9 4 9-4V7"/></svg> কোর্স ও কনটেন্ট</div>
-    <div class="nav-item" data-tab="promos" onclick="go('promos',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12a2 2 0 010-4V5H4v3a2 2 0 010 4 2 2 0 010 4v3h16v-3a2 2 0 010-4z"/></svg> কুপন</div>
+    <div class="nav-item" data-tab="products" onclick="go('products',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4zM3 7v10l9 4 9-4V7"/></svg> Courses</div>
+    <div class="nav-item" data-tab="promos" onclick="go('promos',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12a2 2 0 010-4V5H4v3a2 2 0 010 4 2 2 0 010 4v3h16v-3a2 2 0 010-4z"/></svg> Coupons</div>
     <div class="nav-sep">Money</div>
-    <div class="nav-item" data-tab="wallet" onclick="go('wallet',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h15a3 3 0 013 3v7a3 3 0 01-3 3H5a2 2 0 01-2-2z"/><circle cx="17" cy="13.5" r="1.3"/></svg> ওয়ালেট</div>
-    <div class="nav-item" data-tab="withdrawals" onclick="go('withdrawals',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v13m0 0l-4.5-4.5M12 16l4.5-4.5M4 20h16"/></svg> উইথড্র</div>
-    <div class="nav-item" data-tab="affiliates" onclick="go('affiliates',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 7.5l7 9"/></svg> অ্যাফিলিয়েট</div>
+    <div class="nav-item" data-tab="withdrawals" onclick="go('withdrawals',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v13m0 0l-4.5-4.5M12 16l4.5-4.5M4 20h16"/></svg> Withdrawals</div>
+    <div class="nav-item" data-tab="affiliates" onclick="go('affiliates',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 7.5l7 9"/></svg> Affiliates</div>
     <div class="nav-sep">System</div>
-    <div class="nav-item" data-tab="settings" onclick="go('settings',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10l2 2M19 5l-2 2M7 17l-2 2"/></svg> সেটিংস</div>
-    <div class="nav-item" data-tab="tools" onclick="go('tools',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 6a4 4 0 105 5l-9 9-4-4z"/></svg> পুরোনো স্টুডেন্ট</div>
+    <div class="nav-item" data-tab="settings" onclick="go('settings',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10l2 2M19 5l-2 2M7 17l-2 2"/></svg> Settings</div>
+    <div class="nav-item" data-tab="tools" onclick="go('tools',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 6a4 4 0 105 5l-9 9-4-4z"/></svg> Legacy Access</div>
   </aside>
 
   <main class="main">
     <div class="top">
       <div style="display:flex;align-items:center;gap:12px">
         <button class="burger" onclick="toggleMenu(true)">☰</button>
-        <h1 id="pageTitle">ড্যাশবোর্ড</h1>
+        <div><div class="section-kicker">HVB CONTROL CENTER</div><h1 id="pageTitle">Dashboard</h1></div>
       </div>
-      <div class="muted" id="clock"></div>
+      <div class="top-actions"><a class="btn btn-outline btn-sm" href="/" target="_blank">View Website</a><div class="muted" id="clock"></div></div>
     </div>
 
     <!-- DASHBOARD -->
     <section class="pane active" id="p-dashboard">
       <div class="card">
         <div class="chips" id="rangeChips">
-          <span class="chip active" data-days="0" onclick="setRange(0,this)">আজ</span>
-          <span class="chip" data-days="7" onclick="setRange(7,this)">৭ দিন</span>
-          <span class="chip" data-days="30" onclick="setRange(30,this)">৩০ দিন</span>
-          <span class="chip" data-days="month" onclick="setRange('month',this)">এই মাস</span>
-          <span class="chip" data-days="all" onclick="setRange('all',this)">সব সময়</span>
+          <span class="chip active" data-days="0" onclick="setRange(0,this)">Today</span>
+          <span class="chip" data-days="7" onclick="setRange(7,this)">7 Days</span>
+          <span class="chip" data-days="30" onclick="setRange(30,this)">30 Days</span>
+          <span class="chip" data-days="month" onclick="setRange('month',this)">This Month</span>
+          <span class="chip" data-days="all" onclick="setRange('all',this)">All Time</span>
         </div>
         <div class="row" style="margin-top:14px">
           <div><label>শুরুর তারিখ</label><input type="date" id="dFrom" /></div>
           <div><label>শেষ তারিখ</label><input type="date" id="dTo" /></div>
-          <div style="display:flex;align-items:flex-end"><button class="btn" onclick="loadDashboard()">দেখুন</button></div>
+          <div style="display:flex;align-items:flex-end"><button class="btn" onclick="loadDashboard()">Apply</button></div>
         </div>
       </div>
       <div class="grid stats" id="statCards"><div class="spinner"></div></div>
-      <div class="card"><h3>দিনভিত্তিক আয়</h3><div class="bars" id="chart"></div><div class="muted" id="chartNote" style="margin-top:10px"></div></div>
-      <div class="card"><h3>সবচেয়ে বেশি বিক্রি</h3><div class="scroll"><table id="topCourses"></table></div></div>
-      <div class="card"><h3>সর্বশেষ অর্ডার</h3><div class="scroll"><table id="recentOrders"></table></div></div>
+      <div class="card"><h3>Revenue Trend</h3><div class="bars" id="chart"></div><div class="muted" id="chartNote" style="margin-top:10px"></div></div>
+      <div class="card"><h3>Top Courses</h3><div class="scroll"><table id="topCourses"></table></div></div>
+      <div class="card"><h3>Recent Orders</h3><div class="scroll"><table id="recentOrders"></table></div></div>
     </section>
 
     <!-- ORDERS -->
@@ -202,22 +207,35 @@
 
     <!-- PRODUCTS -->
     <section class="pane" id="p-products">
-      <div class="card"><h3>কোর্স যোগ / সম্পাদনা</h3>
-        <div class="row">
-          <div><label>স্লাগ (short / long / bundle)</label><input id="pSlug" /></div>
-          <div><label>নাম</label><input id="pTitle" /></div>
-          <div><label>দাম (৳)</label><input id="pPrice" type="number" /></div>
+      <div class="split">
+        <div class="card">
+          <div class="product-form-head"><div><div class="section-kicker">COURSE MANAGER</div><h3 id="courseFormTitle">Add Course</h3></div><button class="btn btn-outline btn-sm" onclick="resetProductForm()">New Course</button></div>
+          <div class="row">
+            <div><label>Course Slug</label><input id="pSlug" placeholder="ai-thumbnail-masterclass" /><div class="muted">ছোট English নাম দিন; space-এর বদলে hyphen ব্যবহার হবে।</div></div>
+            <div><label>Course Title</label><input id="pTitle" /></div>
+          </div>
+          <div class="row">
+            <div><label>Sale Price (৳)</label><input id="pPrice" type="number" min="1" /></div>
+            <div><label>Regular Price (৳)</label><input id="pRegularPrice" type="number" min="0" /></div>
+            <div><label>Sort Order</label><input id="pSort" type="number" value="0" /></div>
+          </div>
+          <div class="field"><label>Short Description</label><input id="pShortDescription" maxlength="180" /></div>
+          <div class="field"><label>Full Description</label><textarea id="pDescription" rows="4"></textarea></div>
+          <div class="row">
+            <div><label>Thumbnail URL</label><input id="pThumb" /></div>
+            <div><label>Delivery Link</label><input id="pDrive" /></div>
+          </div>
+          <div class="field"><label>Prompt / Course Notes</label><textarea id="pPrompt" rows="4"></textarea></div>
+          <div class="row">
+            <div><label>Visibility</label><select id="pActive"><option value="1">Published</option><option value="0">Unpublished</option></select></div>
+            <div><label>Homepage Feature</label><select id="pFeatured"><option value="0">Standard</option><option value="1">Featured</option></select></div>
+          </div>
+          <div class="danger-note">Unpublish করলে নতুন বিক্রি বন্ধ হবে; আগের শিক্ষার্থীর access থাকবে। অর্ডার থাকা course Delete করা যাবে না।</div>
+          <button class="btn" style="margin-top:14px" onclick="saveProduct()">Save Changes</button>
+          <div id="pMsg" class="muted" style="margin-top:8px"></div>
         </div>
-        <div class="row">
-          <div><label>থাম্বনেইল লিংক</label><input id="pThumb" /></div>
-          <div><label>ড্রাইভ লিংক</label><input id="pDrive" /></div>
-          <div><label>চালু?</label><select id="pActive"><option value="1">চালু</option><option value="0">বন্ধ</option></select></div>
-        </div>
-        <div class="field"><label>প্রম্পট / নোট</label><textarea id="pPrompt" rows="3"></textarea></div>
-        <button class="btn" onclick="saveProduct()">সেভ করুন</button>
-        <div id="pMsg" class="muted" style="margin-top:8px"></div>
+        <div class="card"><div class="section-kicker">LIVE CATALOG</div><h3>Courses</h3><div class="scroll"><table id="prodTable"></table></div><div id="prodWarn" class="muted" style="margin-top:10px"></div></div>
       </div>
-      <div class="card"><h3>কোর্স তালিকা</h3><div class="scroll"><table id="prodTable"></table></div><div id="prodWarn" class="muted" style="margin-top:10px"></div></div>
     </section>
 
     <!-- PROMOS -->
@@ -233,18 +251,6 @@
       <div class="card"><h3>কুপন তালিকা</h3><div id="promoList"></div></div>
     </section>
 
-    <!-- WALLET -->
-    <section class="pane" id="p-wallet">
-      <div class="card"><h3>ওয়ালেট ব্যালেন্স বদলান</h3>
-        <div class="row">
-          <div><label>ইমেইল</label><input id="walletEmail" /></div>
-          <div><label>পরিমাণ (মাইনাস দিলে কমবে)</label><input id="walletAmount" type="number" /></div>
-          <div style="display:flex;align-items:flex-end"><button class="btn" onclick="updateWallet()">আপডেট</button></div>
-        </div>
-        <div id="walletMsg" class="muted" style="margin-top:8px"></div>
-      </div>
-    </section>
-
     <!-- WITHDRAWALS -->
     <section class="pane" id="p-withdrawals">
       <div class="card"><h3>উইথড্র রিকোয়েস্ট (সর্বনিম্ন ৫০০৳)</h3><div id="withdrawList"></div></div>
@@ -255,20 +261,24 @@
       <div class="card"><h3>অ্যাফিলিয়েট</h3><div class="scroll"><table id="affTable"></table></div></div>
     </section>
 
+    <!-- BRANDING -->
+    <section class="pane" id="p-branding"><div class="card"><div class="section-kicker">BRAND CONTROL</div><h3>Branding</h3><div class="field"><label>Announcement Text</label><input id="brand_announcement" /></div><div class="field"><label>Announcement Visibility</label><select id="brand_announcement_enabled"><option value="1">Visible</option><option value="0">Hidden</option></select></div><div class="field"><label>Featured Course Slug</label><input id="brand_featured_course" placeholder="bundle" /></div><button class="btn" onclick="saveSiteGroup('branding')">Save Changes</button><div id="brandingMsg" class="muted"></div></div></section>
+    <!-- THEME -->
+    <section class="pane" id="p-theme"><div class="card"><div class="section-kicker">APPEARANCE</div><h3>Theme & Colors</h3><p class="muted">HVB-এর পরিচিত cyan–blue–violet style বজায় রেখে accent বদলাতে পারবেন।</p><div class="row"><div><label>Primary Accent</label><input id="theme_color_primary" type="color" value="#3FC7F2" /></div><div><label>Secondary Accent</label><input id="theme_color_secondary" type="color" value="#7C6BF5" /></div></div><button class="btn" onclick="saveSiteGroup('theme')">Save Changes</button><div id="themeMsg" class="muted"></div></div></section>
+    <!-- SOCIAL -->
+    <section class="pane" id="p-social"><div class="card"><div class="section-kicker">SUPPORT CHANNELS</div><h3>Social & Contact</h3><div class="field"><label>Messenger Link</label><input id="social_messenger_link" placeholder="https://m.me/hypervisionbangla" /></div><div class="field"><label>Facebook Page</label><input id="social_facebook_link" /></div><div class="field"><label>TikTok Profile</label><input id="social_tiktok_link" /></div><div class="field"><label>Support Email</label><input id="social_support_email" type="email" /></div><button class="btn" onclick="saveSiteGroup('social')">Save Changes</button><div id="socialMsg" class="muted"></div></div></section>
+    <!-- PAYMENTS -->
+    <section class="pane" id="p-payments"><div class="grid stats" id="paymentStats"></div><div class="card"><div class="section-kicker">ATTENTION NEEDED</div><h3>Pending & Failed Payments</h3><p class="muted">যেসব payment এখনো Paid হয়নি, সেগুলো এখান থেকে verify করুন।</p><div class="scroll"><table id="paymentsTable"></table></div></div></section>
+
     <!-- SETTINGS -->
     <section class="pane" id="p-settings">
       <div class="card"><h3>ওয়েবসাইট সেটিংস</h3>
-        <div class="row">
-          <div><label>শর্ট কোর্সের দাম</label><input id="set_price_short" /></div>
-          <div><label>বান্ডেল দাম</label><input id="set_price_bundle" /></div>
-        </div>
-        <div class="field"><label>Messenger লিংক</label><input id="set_messenger_link" placeholder="https://m.me/hypervisionbangla" /></div>
-        <div class="field"><label>অ্যানাউন্সমেন্ট ব্যানার লেখা</label><input id="set_announcement" /></div>
+        <p class="muted">দাম ও course content এখন Courses থেকে, আর branding/contact তাদের নিজস্ব section থেকে নিয়ন্ত্রণ করুন।</p>
         <div class="row">
           <div><label>শর্ট কোর্স ড্রাইভ লিংক</label><input id="set_drive_short" /></div>
           <div><label>লং কোর্স ড্রাইভ লিংক</label><input id="set_drive_long" /></div>
         </div>
-        <button class="btn" onclick="saveSettings()">সব সেভ করুন</button>
+        <button class="btn" onclick="saveSettings()">Save Changes</button>
         <div id="setMsg" class="muted" style="margin-top:8px"></div>
       </div>
     </section>
@@ -319,6 +329,7 @@ function go(tab, el) {
   window.scrollTo(0, 0);
   if (tab === 'dashboard') loadDashboard();
   if (tab === 'orders') loadOrders();
+  if (tab === 'payments') loadPayments();
   if (tab === 'customers') loadCustomers();
   if (tab === 'reviews') loadReviews();
   if (tab === 'products') loadProducts();
@@ -326,6 +337,7 @@ function go(tab, el) {
   if (tab === 'withdrawals') loadWithdrawals();
   if (tab === 'affiliates') loadAffiliates();
   if (tab === 'settings') loadSettings();
+  if (['branding','theme','social'].includes(tab)) loadSiteControls();
 }
 
 async function login() {
@@ -373,13 +385,15 @@ async function loadDashboard() {
   const d = await api(Object.assign({ action: 'dashboard' }, rangeParams()));
   if (d.error) { wrap.innerHTML = '<div class="card" style="color:var(--danger)">' + esc(d.error) + '</div>'; return; }
   const cards = [
-    ['মোট আয়', tk(d.revenue)],
-    ['পেইড অর্ডার', d.paid_orders],
-    ['পেন্ডিং অর্ডার', d.pending_orders],
-    ['মোট অর্ডার', d.total_orders],
-    ['কাস্টমার', d.customers],
-    ['অপেক্ষমাণ রিভিউ', d.pending_reviews],
-    ['অপেক্ষমাণ উইথড্র', d.pending_withdraws],
+    ['Revenue', tk(d.revenue)],
+    ['Paid Orders', d.paid_orders],
+    ['Pending Orders', d.pending_orders],
+    ['Total Orders', d.total_orders],
+    ['Customers', d.customers],
+    ['Pending Reviews', d.pending_reviews],
+    ['Pending Withdrawals', d.pending_withdraws],
+    ['Conversion Rate', (d.conversion_rate || 0) + '%'],
+    ['Avg. Order Value', tk(d.average_order_value)],
   ];
   wrap.innerHTML = cards.map((c) => '<div class="stat"><div class="lbl">' + c[0] + '</div><div class="val">' + esc(c[1]) + '</div></div>').join('');
 
@@ -483,8 +497,8 @@ async function loadCustomers() {
   if (d.error) { t.innerHTML = '<tr><td style="color:var(--danger)">' + esc(d.error) + '</td></tr>'; return; }
   const list = d.customers || [];
   t.innerHTML = list.length
-    ? '<tr><th>কাস্টমার</th><th>কোর্স</th><th>অর্ডার</th><th>মোট খরচ</th><th>ওয়ালেট</th></tr>' + list.map((c) =>
-      '<tr><td>' + esc(c.name || '—') + '<div class="muted">' + esc(c.contact) + '</div></td><td>' + esc((c.courses || []).join(', ') || '—') + '</td><td>' + c.orders + '</td><td>' + tk(c.spent) + '</td><td>' + tk(c.wallet || 0) + '</td></tr>').join('')
+    ? '<tr><th>Customer</th><th>Courses</th><th>Orders</th><th>Total Spend</th></tr>' + list.map((c) =>
+      '<tr><td>' + esc(c.name || '—') + '<div class="muted">' + esc(c.contact) + '</div></td><td>' + esc((c.courses || []).join(', ') || '—') + '</td><td>' + c.orders + '</td><td>' + tk(c.spent) + '</td></tr>').join('')
     : '<tr><td class="muted">কাস্টমার নেই</td></tr>';
 }
 
@@ -536,44 +550,75 @@ async function loadProducts() {
   document.getElementById('prodWarn').innerText = d.warning ? 'নোট: products টেবিল এখনো তৈরি হয়নি (' + d.warning + ')' : '';
   const list = d.products || [];
   t.innerHTML = list.length
-    ? '<tr><th>স্লাগ</th><th>নাম</th><th>দাম</th><th>ড্রাইভ</th><th>অবস্থা</th><th>কাজ</th></tr>' + list.map((p) =>
-      '<tr><td>' + esc(p.slug) + '</td><td>' + esc(p.title) + '</td><td>' + tk(p.price) + '</td>' +
-      '<td>' + (p.drive_link ? '<a href="' + esc(p.drive_link) + '" target="_blank" rel="noopener">লিংক</a>' : '—') + '</td>' +
-      '<td><span class="badge ' + (p.active ? 'success' : 'warning') + '">' + (p.active ? 'চালু' : 'বন্ধ') + '</span></td>' +
-      '<td><button class="btn btn-sm btn-outline" onclick=\'editProduct(' + JSON.stringify(p).replace(/'/g, '&#39;') + ')\'>এডিট</button> ' +
-      '<button class="btn btn-sm btn-danger" onclick="delProduct(\'' + esc(p.slug) + '\')">মুছুন</button></td></tr>').join('')
+    ? '<tr><th>Course</th><th>Price</th><th>Status</th><th>Actions</th></tr>' + list.map((p) =>
+      '<tr><td><b>' + esc(p.title) + '</b><div class="muted">' + esc(p.slug) + '</div></td>' +
+      '<td>' + tk(p.price) + (p.regular_price && p.regular_price > p.price ? '<div class="muted"><s>' + tk(p.regular_price) + '</s></div>' : '') + '</td>' +
+      '<td><span class="badge ' + (p.active ? 'success' : 'warning') + '">' + (p.active ? 'Published' : 'Unpublished') + '</span></td>' +
+      '<td><button class="btn btn-sm btn-outline" data-product-action="edit" data-product-index="' + list.indexOf(p) + '">Edit</button> ' +
+      '<button class="btn btn-sm btn-outline" data-product-action="duplicate" data-product-index="' + list.indexOf(p) + '">Duplicate</button> ' +
+      '<button class="btn btn-sm" data-product-action="toggle" data-product-index="' + list.indexOf(p) + '">' + (p.active ? 'Unpublish' : 'Publish') + '</button> ' +
+      '<button class="btn btn-sm btn-danger" data-product-action="delete" data-product-index="' + list.indexOf(p) + '">Delete</button></td></tr>').join('')
     : '<tr><td class="muted">কোনো কোর্স নেই</td></tr>';
+  t.querySelectorAll('[data-product-action]').forEach((button) => button.addEventListener('click', () => {
+    const p = list[Number(button.dataset.productIndex)];
+    if (!p) return;
+    if (button.dataset.productAction === 'edit') editProduct(p);
+    if (button.dataset.productAction === 'duplicate') duplicateProduct(p);
+    if (button.dataset.productAction === 'toggle') toggleProduct(p.slug, !p.active);
+    if (button.dataset.productAction === 'delete') delProduct(p.slug);
+  }));
 }
 function editProduct(p) {
   document.getElementById('pSlug').value = p.slug || '';
   document.getElementById('pTitle').value = p.title || '';
+  document.getElementById('courseFormTitle').innerText = 'Edit Course';
   document.getElementById('pPrice').value = p.price || 0;
+  document.getElementById('pRegularPrice').value = p.regular_price || 0;
+  document.getElementById('pShortDescription').value = p.short_description || '';
+  document.getElementById('pDescription').value = p.description || '';
+  document.getElementById('pSort').value = p.sort_order || 0;
   document.getElementById('pThumb').value = p.thumbnail || '';
   document.getElementById('pDrive').value = p.drive_link || '';
   document.getElementById('pPrompt').value = p.prompt || '';
   document.getElementById('pActive').value = p.active ? '1' : '0';
+  document.getElementById('pFeatured').value = p.featured ? '1' : '0';
   window.scrollTo(0, 0);
 }
 async function saveProduct() {
   const msg = document.getElementById('pMsg');
-  msg.innerText = 'সেভ হচ্ছে...';
+  msg.innerHTML = '<span class="spinner"></span>';
   const d = await api({ action: 'productSave', product: {
     slug: document.getElementById('pSlug').value,
     title: document.getElementById('pTitle').value,
     price: document.getElementById('pPrice').value,
+    regular_price: document.getElementById('pRegularPrice').value,
+    short_description: document.getElementById('pShortDescription').value,
+    description: document.getElementById('pDescription').value,
+    sort_order: document.getElementById('pSort').value,
     thumbnail: document.getElementById('pThumb').value,
     drive_link: document.getElementById('pDrive').value,
     prompt: document.getElementById('pPrompt').value,
     active: document.getElementById('pActive').value === '1',
+    featured: document.getElementById('pFeatured').value === '1',
   } });
-  msg.innerText = d.error ? d.error : 'সেভ হয়েছে ✅';
+  msg.innerText = d.error ? d.error : 'Changes saved successfully.';
+  if (!d.error) resetProductForm();
   loadProducts();
 }
 async function delProduct(slug) {
-  if (!confirm(slug + ' মুছে ফেলবেন?')) return;
-  await api({ action: 'productDelete', slug });
+  if (!confirm(slug + ' স্থায়ীভাবে Delete করবেন? অর্ডার থাকলে Delete হবে না।')) return;
+  const d = await api({ action: 'productDelete', slug });
+  if (d.error) alert(d.error);
   loadProducts();
 }
+
+function resetProductForm() {
+  ['pSlug','pTitle','pPrice','pRegularPrice','pShortDescription','pDescription','pThumb','pDrive','pPrompt'].forEach((id) => { document.getElementById(id).value = ''; });
+  document.getElementById('pSort').value = '0'; document.getElementById('pActive').value = '1'; document.getElementById('pFeatured').value = '0';
+  document.getElementById('pSlug').disabled = false; document.getElementById('courseFormTitle').innerText = 'Add Course';
+}
+function duplicateProduct(p) { editProduct(Object.assign({}, p, { slug: p.slug + '-copy', title: p.title + ' Copy', active: false, featured: false })); document.getElementById('pSlug').disabled = false; document.getElementById('courseFormTitle').innerText = 'Duplicate Course'; }
+async function toggleProduct(slug, active) { const d = await api({ action:'productToggle', slug, active }); if (d.error) alert(d.error); loadProducts(); }
 
 /* ---------- Promos ---------- */
 async function loadPromos() {
@@ -599,14 +644,6 @@ async function addPromo() {
 }
 async function togglePromo(code, active) { await api({ action: 'promoToggle', code, active }); loadPromos(); }
 async function delPromo(code) { if (!confirm(code + ' মুছবেন?')) return; await api({ action: 'promoDelete', code }); loadPromos(); }
-
-/* ---------- Wallet ---------- */
-async function updateWallet() {
-  const msg = document.getElementById('walletMsg');
-  msg.innerText = 'আপডেট হচ্ছে...';
-  const d = await api({ action: 'walletUpdate', email: document.getElementById('walletEmail').value, amount: document.getElementById('walletAmount').value });
-  msg.innerText = d.error ? d.error : 'নতুন ব্যালেন্স: ' + tk(d.balance);
-}
 
 /* ---------- Withdrawals ---------- */
 async function loadWithdrawals() {
@@ -648,11 +685,13 @@ async function toggleAff(ref, active) { await api({ action: 'affiliateToggle', r
 async function delAff(ref) { if (!confirm(ref + ' মুছবেন?')) return; await api({ action: 'affiliateDelete', refCode: ref }); loadAffiliates(); }
 
 /* ---------- Settings ---------- */
-const SET_KEYS = ['price_short', 'price_bundle', 'messenger_link', 'announcement', 'drive_short', 'drive_long'];
+const SET_KEYS = ['drive_short', 'drive_long'];
+const SITE_KEYS = ['announcement','announcement_enabled','featured_course','color_primary','color_secondary','messenger_link','facebook_link','tiktok_link','support_email'];
+let SETTINGS_MAP = {};
 async function loadSettings() {
   const d = await api({ action: 'settingsGet' });
   const map = {};
-  (d.settings || []).forEach((s) => { map[s.key] = s.value; });
+  (d.settings || []).forEach((s) => { map[s.key] = s.value; }); SETTINGS_MAP = map;
   SET_KEYS.forEach((k) => { const el = document.getElementById('set_' + k); if (el) el.value = map[k] || ''; });
 }
 async function saveSettings() {
@@ -663,6 +702,32 @@ async function saveSettings() {
     if (el) await api({ action: 'settingsSave', key: k, value: el.value });
   }
   msg.innerText = 'সব সেভ হয়েছে ✅';
+}
+
+async function loadSiteControls() {
+  const d = await api({ action:'settingsGet' }); SETTINGS_MAP = {}; (d.settings || []).forEach((x) => SETTINGS_MAP[x.key] = x.value);
+  [['brand_announcement','announcement'],['brand_announcement_enabled','announcement_enabled'],['brand_featured_course','featured_course'],['theme_color_primary','color_primary'],['theme_color_secondary','color_secondary'],['social_messenger_link','messenger_link'],['social_facebook_link','facebook_link'],['social_tiktok_link','tiktok_link'],['social_support_email','support_email']].forEach((pair) => { const el=document.getElementById(pair[0]); if(el && SETTINGS_MAP[pair[1]]) el.value=SETTINGS_MAP[pair[1]]; });
+}
+async function saveSiteGroup(group) {
+  const groups={branding:[['brand_announcement','announcement'],['brand_announcement_enabled','announcement_enabled'],['brand_featured_course','featured_course']],theme:[['theme_color_primary','color_primary'],['theme_color_secondary','color_secondary']],social:[['social_messenger_link','messenger_link'],['social_facebook_link','facebook_link'],['social_tiktok_link','tiktok_link'],['social_support_email','support_email']]};
+  const msg=document.getElementById(group+'Msg'); msg.innerHTML='<span class="spinner"></span>';
+  for(const pair of groups[group]) await api({action:'settingsSave',key:pair[1],value:document.getElementById(pair[0]).value});
+  msg.innerText='Changes saved successfully.';
+}
+async function loadPayments() {
+  const d=await api({action:'ordersList',status:'pending',limit:300}); const list=d.orders||[];
+  const failed=list.filter((x)=>x.status==='failed').length, pending=list.length-failed, amount=list.reduce((n,x)=>n+Number(x.amount||0),0);
+  document.getElementById('paymentStats').innerHTML=[['Pending',pending],['Failed',failed],['Potential Revenue',tk(amount)]].map((x)=>'<div class="stat"><div class="lbl">'+x[0]+'</div><div class="val">'+x[1]+'</div></div>').join('');
+  const t=document.getElementById('paymentsTable');
+  t.innerHTML=list.length
+    ? '<tr><th>Customer</th><th>Course</th><th>Amount</th><th>Status</th><th>Action</th></tr>'+list.map((o)=>
+      '<tr><td>'+esc(o.customer_name)+'<div class="muted">'+esc(o.customer_contact)+'</div></td><td>'+esc(o.course)+'</td><td>'+tk(o.amount)+'</td><td><span class="badge warning">'+esc(o.status)+'</span></td><td><button class="btn btn-sm btn-outline" data-payment-id="'+esc(o.id)+'">Mark Paid</button></td></tr>').join('')
+    : '<tr><td class="muted">কোনো payment attention প্রয়োজন নেই।</td></tr>';
+  t.querySelectorAll('[data-payment-id]').forEach((button) => button.addEventListener('click', async () => {
+    if (!confirm('পেমেন্ট ZiniPay-তে নিশ্চিত হয়েছেন? নিশ্চিত না হয়ে Paid করবেন না।')) return;
+    const out = await api({ action:'orderMarkPaid', id:button.dataset.paymentId });
+    if (out.error) alert(out.error); else loadPayments();
+  }));
 }
 
 /* ---------- Tools ---------- */

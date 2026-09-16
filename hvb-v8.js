@@ -21,7 +21,7 @@
     'border:1px solid rgba(120,200,255,.22);box-shadow:0 22px 50px -26px rgba(2,10,25,.9);background:#070b14}',
     '.hvb-banner img{display:block;width:100%;height:auto}',
     '.hvb-thumb-img{position:relative !important;overflow:hidden !important;background:#070b14 !important;',
-    'height:auto !important;min-height:0 !important;padding:0 !important;display:block !important}',
+    'height:auto !important;min-height:0 !important;aspect-ratio:16/9 !important;padding:0 !important;display:block !important;align-self:start !important}',
     '.hvb-thumb-img::after{content:none !important}',
     '.hvb-thumb-img>img.hvb-bimg{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;',
     'transition:transform .5s cubic-bezier(.2,.8,.2,1)}',

@@ -18,6 +18,15 @@ module.exports = async (req, res) => {
     body = body || {};
 
     const event = String(body.event || 'pageview').slice(0, 40);
+    if (event === 'products_get') {
+      const { data, error } = await supabase
+        .from('products')
+        .select('slug,title,price,regular_price,short_description,description,thumbnail,featured,sort_order')
+        .eq('active', true)
+        .order('sort_order', { ascending: true });
+      if (error) return res.status(200).json({ products: [], error: error.message });
+      return res.status(200).json({ products: data || [] });
+    }
     const page = String(body.page || '/').slice(0, 200);
     const visitorId = String(body.visitor_id || '').slice(0, 60);
     const refCode = String(body.ref_code || '').slice(0, 40) || null;
