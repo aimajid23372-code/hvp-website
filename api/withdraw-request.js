@@ -49,10 +49,25 @@ module.exports = async (req, res) => {
     const totalSales = (orders || []).reduce((sum, o) => sum + Number(o.amount), 0);
     const totalCommission = Math.round(totalSales * affiliate.commission_percent / 100);
     const paidOut = Number(affiliate.paid_out || 0);
-    const pending = totalCommission - paidOut;
 
-    if (pending < 500) {
-      return res.status(400).json({ error: 'কমপক্ষে ৫০০ টাকা পাওনা হলে তবেই Withdraw রিকোয়েস্ট পাঠানো যাবে। আপনার বর্তমান পাওনা: ' + pending + ' ৳' });
+    // অ্যাডমিন থেকে যোগ/কমানো টাকা
+    const { data: adjs } = await supabase
+      .from('affiliate_adjustments')
+      .select('amount')
+      .eq('ref_code', cleanRef);
+    const adjust = (adjs || []).reduce((sum, a) => sum + Number(a.amount || 0), 0);
+
+    const pending = totalCommission + adjust - paidOut;
+
+    // সর্বনিম্ন উইথড্র সীমা অ্যাডমিন সেটিংস থেকে
+    let minWithdraw = 500;
+    try {
+      const { data: setRow } = await supabase.from('settings').select('value').eq('key', 'min_withdraw').maybeSingle();
+      if (setRow && setRow.value) minWithdraw = Number(setRow.value) || 500;
+    } catch (err) {}
+
+    if (pending < minWithdraw) {
+      return res.status(400).json({ error: 'কমপক্ষে ' + minWithdraw + ' টাকা পাওনা হলে তবেই Withdraw রিকোয়েস্ট পাঠানো যাবে। আপনার বর্তমান পাওনা: ' + pending + ' ৳' });
     }
 
     // আগে থেকে pending রিকোয়েস্ট থাকলে আবার পাঠাতে দিব না
