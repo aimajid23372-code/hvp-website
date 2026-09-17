@@ -170,7 +170,6 @@
   <div id="joinBox" class="hide"></div>
   <div id="dashBox" class="hide"></div>
 
-  <p style="margin-top:22px;"><a href="/affiliate" class="back-link">← Affiliate Program পেজে ফিরে যান</a></p>
 </div>
 
 <script>
@@ -387,7 +386,8 @@
     $('dashBox').innerHTML =
       '<div class="card hero">' +
         '<div class="who"><div class="avatar">' + esc(initial) + '</div>' +
-          '<div><div class="nm">' + esc(d.name) + '</div><div class="rf">@' + esc(AFF.refCode) + '</div></div></div>' +
+          '<div><div class="nm">' + esc(d.name) + '</div><div class="rf">@' + esc(AFF.refCode) + '</div></div>' +
+          '<button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="_aff.logout()">Logout</button></div>' +
         '<div class="dash-grid">' +
           '<div class="dash-box"><div class="num">' + bn(d.totalOrders) + '</div><div class="lbl">মোট বিক্রি</div></div>' +
           '<div class="dash-box"><div class="num">' + taka(d.totalSales) + '</div><div class="lbl">বিক্রির টাকা</div></div>' +
@@ -406,6 +406,13 @@
       wdHistoryCard +
       (history ? '<div class="card"><h3><span class="ttl"><span class="ico">📊</span> কমিশনের হিসাব</span></h3>' + history + '</div>' : '');
   }
+
+  AFF.logout = function(){
+    try { sessionStorage.removeItem('hvb_aff_ref'); sessionStorage.removeItem('hvb_aff_pass'); } catch(e){}
+    AFF.token = ''; AFF.refCode = ''; AFF.password = ''; AFF.data = null;
+    if(window.HVBAuth && HVBAuth.signOut && HVBAuth.user){ HVBAuth.signOut(); }
+    location.href = '/';
+  };
 
   AFF.copy = function(btn){
     navigator.clipboard.writeText($('refLinkText').textContent).then(function(){
