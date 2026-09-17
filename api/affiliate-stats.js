@@ -66,6 +66,20 @@ module.exports = async (req, res) => {
 
     const pending = totalCommission + adjust - paidOut;
 
+    // pending withdraw রিকোয়েস্টের টাকা আটকে আছে
+    let held = 0;
+    let openRequests = [];
+    try {
+      const { data: wreqs } = await supabase
+        .from('withdraw_requests')
+        .select('amount, status, contact, created_at')
+        .eq('ref_code', cleanRef)
+        .eq('status', 'pending');
+      held = (wreqs || []).reduce((sum, r) => sum + Number(r.amount || 0), 0);
+      openRequests = (wreqs || []).map((r) => ({ amount: Number(r.amount || 0), contact: r.contact || '', date: r.created_at }));
+    } catch (e) { held = 0; }
+    const available = pending - held;
+
     // প্রতিটা বিক্রির বিস্তারিত (কবে, কোন কোর্স, কত টাকা, কমিশন কত) —
     // কাস্টমারের ফোন/ইমেইল দেখানো হচ্ছে না, কাস্টমারদের প্রাইভেসির জন্য
     const orderList = (orders || []).map(o => ({
@@ -86,6 +100,9 @@ module.exports = async (req, res) => {
       adjustments: (adjs || []).map((a) => ({ amount: Number(a.amount || 0), note: a.note || '', date: a.created_at })),
       minWithdraw,
       pending,
+      held,
+      available,
+      openRequests,
       orders: orderList,
     });
   } catch (err) {
