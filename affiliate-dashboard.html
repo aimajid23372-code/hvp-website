@@ -171,17 +171,35 @@
   }
 
   async function requestWithdraw(){
+    const btn = document.getElementById('wdSubmit');
+    const method = (document.getElementById('wdMethod') || {}).value || '';
+    const account = ((document.getElementById('wdAccount') || {}).value || '').trim();
+    const amount = ((document.getElementById('wdAmount') || {}).value || '').trim();
+    const note = document.getElementById('wdMsg');
+    function fail(t){ if(note){ note.textContent = ' \u26a0\ufe0f ' + t; note.style.color = '#ffb020'; } }
+    if(!method){ return fail('bKash / Nagad / Rocket বেছে নিন'); }
+    if(!/^01[3-9][0-9]{8}$/.test(account.replace(/[^0-9]/g,''))){ return fail('সঠিক ১১ ডিজিটের নাম্বার দিন'); }
+    if(!amount || Number(amount) <= 0){ return fail('কত টাকা তুলবেন লিখুন'); }
+    if(btn){ btn.disabled = true; }
+    if(note){ note.textContent = ''; }
     try {
       const res = await fetch('/api/withdraw-request', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ refCode: window._currentRefCode, password: window._currentPassword })
+        body: JSON.stringify({
+          refCode: window._currentRefCode,
+          password: window._currentPassword,
+          method: method,
+          account: account,
+          amount: Number(amount)
+        })
       });
       const data = await res.json();
-      if(!res.ok){ alert(' ⚠️ ' + (data.error || 'সমস্যা হয়েছে')); return; }
-      alert(' ✅ Withdraw রিকোয়েস্ট পাঠানো হয়েছে (' + data.amount + ' ৳)। ২৪-৪৮ ঘণ্টার মধ্যে টাকা পাঠানো হবে।');
+      if(btn){ btn.disabled = false; }
+      if(!res.ok){ return fail(data.error || 'সমস্যা হয়েছে'); }
+      alert(' \u2705 Withdraw রিকোয়েস্ট পাঠানো হয়েছে (' + data.amount + ' ৳ — ' + data.method + ' ' + data.account + ')। ২৪-৪৮ ঘণ্টার মধ্যে টাকা পাঠানো হবে।');
       loadStats(window._currentRefCode, window._currentPassword);
-    } catch(err){ alert('সমস্যা হয়েছে, আবার চেষ্টা করুন।'); }
+    } catch(err){ if(btn){ btn.disabled = false; } fail('সমস্যা হয়েছে, আবার চেষ্টা করুন।'); }
   }
 
   async function loadStats(refArg, passArg){
@@ -230,11 +248,29 @@
           historyHtml += '<div class="stat-row"><span>' + dateStr + ' — ' + (a.note || 'Admin Adjustment') + '</span><b>' + sign + a.amount + ' ৳</b></div>';
         });
       }
-      const canWithdraw = data.pending >= minW;
+      const available = Number(data.available != null ? data.available : data.pending);
+      const held = Number(data.held || 0);
+      const inputStyle = 'width:100%; padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,0.15); background:var(--surface-2); color:#fff; font-size:0.95em; margin-bottom:10px;';
+      const canWithdraw = available >= minW;
       const withdrawSection = canWithdraw
-        ? '<button class="withdraw-btn" onclick="requestWithdraw()"> 💰 টাকা তুলুন (Withdraw Request পাঠান)</button>' +
-          '<p class="withdraw-note">রিকোয়েস্ট পাঠানোর পর ২৪-৪৮ ঘণ্টার মধ্যে আপনার bKash/Nagad নাম্বারে টাকা পাঠানো হবে।</p>'
-        : '<p class="withdraw-note">কমপক্ষে ' + minW + ' ৳ পাওনা হলে Withdraw করা যাবে। আর ' + Math.max(0, minW - data.pending) + ' ৳ হলেই পারবেন।</p>';
+        ? '<div style="margin-top:14px; text-align:left;">' +
+            '<div style="font-family:Sora,sans-serif; font-weight:700; margin-bottom:10px;"> 💰 টাকা তুলুন</div>' +
+            '<select id="wdMethod" style="' + inputStyle + '">' +
+              '<option value="">পেমেন্ট মাধ্যম বেছে নিন</option>' +
+              '<option value="bKash">bKash</option>' +
+              '<option value="Nagad">Nagad</option>' +
+              '<option value="Rocket">Rocket</option>' +
+            '</select>' +
+            '<input id="wdAccount" type="tel" inputmode="numeric" maxlength="11" placeholder="যে নাম্বারে টাকা নিবেন (01XXXXXXXXX)" style="' + inputStyle + '">' +
+            '<input id="wdAmount" type="number" min="' + minW + '" max="' + available + '" placeholder="কত টাকা তুলবেন (সর্বনিম্ন ' + minW + ', সর্বোচ্চ ' + available + ')" style="' + inputStyle + '">' +
+            '<button id="wdSubmit" class="withdraw-btn" onclick="requestWithdraw()">Withdraw Request পাঠান</button>' +
+            '<p id="wdMsg" class="withdraw-note"></p>' +
+            '<p class="withdraw-note">রিকোয়েস্ট পাঠানোর পর ২৪-৪৮ ঘণ্টার মধ্যে আপনার দেওয়া নাম্বারে টাকা পাঠানো হবে।</p>' +
+          '</div>'
+        : '<p class="withdraw-note">কমপক্ষে ' + minW + ' ৳ ব্যালেন্স হলে Withdraw করা যাবে। আর ' + Math.max(0, minW - available) + ' ৳ হলেই পারবেন।</p>';
+      const heldSection = held > 0
+        ? '<p class="withdraw-note">' + held + ' ৳ এর রিকোয়েস্ট এখনো প্রসেসিং-এ আছে।</p>'
+        : '';
 
       card.innerHTML =
         '<div class="dashboard">' +
@@ -245,7 +281,8 @@
         '<div class="dash-box"><div class="num">' + data.commissionPercent + '%</div><div class="lbl">কমিশন রেট</div></div>' +
         '<div class="dash-box"><div class="num">' + data.paidOut + ' ৳</div><div class="lbl">এ পর্যন্ত পেয়েছেন</div></div>' +
         '</div>' +
-        '<div class="dash-pending"><div class="num">' + data.pending + ' ৳</div><div class="lbl">এখনো পাওনা (Pending)</div></div>' +
+        '<div class="dash-pending"><div class="num">' + available + ' ৳</div><div class="lbl">তোলার মতো ব্যালেন্স</div></div>' +
+        heldSection +
         withdrawSection +
         '</div>' +
         (historyHtml ? '<div class="history-title">বিক্রির হিস্টোরি</div><div class="stat-card">' + historyHtml + '</div>' : '');
