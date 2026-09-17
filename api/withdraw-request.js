@@ -1,6 +1,8 @@
 // /api/withdraw-request.js
-// Affiliate নিজের ব্যালেন্সের মধ্যে যেকোনো পরিমাণ withdraw রিকোয়েস্ট পাঠাতে পারবে
-// (সর্বনিম্ন সীমা অ্যাডমিন সেটিংস থেকে আসে), সাথে bKash/Nagad/Rocket নাম্বার দিতে হবে।
+// Affiliate নিজের ব্যালেন্সের মধ্যে যেকোনো পরিমাণ withdraw রিকোয়েস্ট পাঠাতে পারবে।
+// পেমেন্ট মাধ্যম (bKash/Nagad/Rocket) ও নাম্বার প্রোফাইলে সেভ থাকে — রিকোয়েস্টের সময়
+// সেটাই ব্যবহার হয়, চাইলে সেই সময় বদলেও দেওয়া যায়।
+// লগইন: সাইটের Google/ইমেইল অ্যাকাউন্টের token, অথবা ref code + পাসওয়ার্ড।
 
 const { createClient } = require('@supabase/supabase-js');
 const crypto = require('crypto');
@@ -16,43 +18,62 @@ function hashPassword(password) {
 
 const ALLOWED_METHODS = ['bKash', 'Nagad', 'Rocket'];
 
+async function emailFromToken(token) {
+  if (!token) return null;
+  try {
+    const { data, error } = await supabase.auth.getUser(token);
+    if (error || !data || !data.user || !data.user.email) return null;
+    return String(data.user.email).trim().toLowerCase();
+  } catch (err) {
+    return null;
+  }
+}
+
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const { refCode, password, amount, method, account } = req.body || {};
-    if (!refCode || !password) {
-      return res.status(400).json({ error: 'ref code ও পাসওয়ার্ড দিন' });
+    const { refCode, password, amount, method, account, token } = req.body || {};
+
+    let affiliate = null;
+    const email = await emailFromToken(token);
+
+    if (email) {
+      const { data: rows } = await supabase.from('affiliates').select('*').ilike('email', email).limit(1);
+      if (rows && rows.length) affiliate = rows[0];
+      if (!affiliate) return res.status(404).json({ error: 'এই অ্যাকাউন্টে অ্যাফিলিয়েট খোলা হয়নি' });
+    } else {
+      if (!refCode || !password) return res.status(400).json({ error: 'আগে লগইন করুন' });
+      const cleanRef = String(refCode).trim().toLowerCase();
+      const { data: aff } = await supabase.from('affiliates').select('*').eq('ref_code', cleanRef).single();
+      if (!aff) return res.status(404).json({ error: 'এই ref code খুঁজে পাওয়া যায়নি' });
+      if (aff.password_hash !== hashPassword(password)) return res.status(401).json({ error: 'পাসওয়ার্ড ভুল' });
+      affiliate = aff;
     }
 
-    const cleanRef = String(refCode).trim().toLowerCase();
+    const cleanRef = affiliate.ref_code;
 
-    const { data: affiliate, error: affErr } = await supabase
-      .from('affiliates')
-      .select('*')
-      .eq('ref_code', cleanRef)
-      .single();
-
-    if (affErr || !affiliate) {
-      return res.status(404).json({ error: 'এই ref code খুঁজে পাওয়া যায়নি' });
-    }
-    if (affiliate.password_hash !== hashPassword(password)) {
-      return res.status(401).json({ error: 'পাসওয়ার্ড ভুল' });
-    }
-
-    // পেমেন্ট মাধ্যম ও নাম্বার যাচাই
-    const cleanMethod = ALLOWED_METHODS.find((m) => m.toLowerCase() === String(method || '').trim().toLowerCase());
+    // মাধ্যম ও নাম্বার — রিকোয়েস্টে দেওয়া না থাকলে প্রোফাইলে সেভ করা তথ্য
+    const rawMethod = method || affiliate.pay_method || '';
+    const rawAccount = account || affiliate.pay_account || '';
+    const cleanMethod = ALLOWED_METHODS.find((m) => m.toLowerCase() === String(rawMethod).trim().toLowerCase());
     if (!cleanMethod) {
-      return res.status(400).json({ error: 'bKash / Nagad / Rocket — যেকোনো একটি বেছে নিন' });
+      return res.status(400).json({ error: 'আগে ড্যাশবোর্ডে bKash / Nagad / Rocket নাম্বার যোগ করুন' });
     }
-    const cleanAccount = String(account || '').replace(/[^0-9]/g, '');
+    const cleanAccount = String(rawAccount).replace(/[^0-9]/g, '');
     if (!/^01[3-9][0-9]{8}$/.test(cleanAccount)) {
       return res.status(400).json({ error: 'সঠিক ১১ ডিজিটের মোবাইল নাম্বার দিন (যেমন 01712345678)' });
     }
 
-    // পাওনা হিসাব করা
+    // নতুন নাম্বার দিলে প্রোফাইলেও সেভ করে রাখা
+    if (cleanMethod !== affiliate.pay_method || cleanAccount !== affiliate.pay_account) {
+      try {
+        await supabase.from('affiliates').update({ pay_method: cleanMethod, pay_account: cleanAccount }).eq('ref_code', cleanRef);
+      } catch (e) {}
+    }
+
     const { data: orders } = await supabase
       .from('orders')
       .select('amount')
@@ -63,7 +84,6 @@ module.exports = async (req, res) => {
     const totalCommission = Math.round(totalSales * affiliate.commission_percent / 100);
     const paidOut = Number(affiliate.paid_out || 0);
 
-    // অ্যাডমিন থেকে যোগ/কমানো টাকা
     const { data: adjs } = await supabase
       .from('affiliate_adjustments')
       .select('amount')
@@ -72,7 +92,6 @@ module.exports = async (req, res) => {
 
     const pending = totalCommission + adjust - paidOut;
 
-    // আগের pending রিকোয়েস্টের টাকা বাদ দিয়ে বাকি ব্যালেন্স
     const { data: openReqs } = await supabase
       .from('withdraw_requests')
       .select('amount')
@@ -81,7 +100,6 @@ module.exports = async (req, res) => {
     const held = (openReqs || []).reduce((sum, r) => sum + Number(r.amount || 0), 0);
     const available = pending - held;
 
-    // সর্বনিম্ন উইথড্র সীমা অ্যাডমিন সেটিংস থেকে
     let minWithdraw = 500;
     try {
       const { data: setRow } = await supabase.from('settings').select('value').eq('key', 'min_withdraw').maybeSingle();
@@ -111,7 +129,6 @@ module.exports = async (req, res) => {
       .from('withdraw_requests')
       .insert(Object.assign({}, baseRow, { method: cleanMethod, account: cleanAccount }));
 
-    // method/account কলাম না থাকলে contact-এ নাম্বার রেখেই সেভ হবে
     if (insertErr) {
       const retry = await supabase.from('withdraw_requests').insert(baseRow);
       insertErr = retry.error;
