@@ -114,11 +114,18 @@ module.exports = async (req, res) => {
 
     // Promos
     if (action === 'promoList') {
-      const { data } = await supabase.from('promo_codes').select('*').order('created_at', { ascending: false });
-      return res.status(200).json({ promos: data || [] });
+      let { data, error } = await supabase.from('promo_codes').select('*').order('created_at', { ascending: false });
+      if (error) {
+        const retry = await supabase.from('promo_codes').select('*');
+        data = retry.data; error = retry.error;
+      }
+      if (error) return res.status(200).json({ promos: [], error: error.message });
+      const promos = (data || []).slice().sort((a, b) => String(b.created_at || '').localeCompare(String(a.created_at || '')));
+      return res.status(200).json({ promos });
     }
     if (action === 'promoAdd') {
-      await supabase.from('promo_codes').upsert({ code: String(body.code).toUpperCase(), discount_percent: Number(body.discount), active: true });
+      const up = await supabase.from('promo_codes').upsert({ code: String(body.code).toUpperCase(), discount_percent: Number(body.discount), active: true });
+      if (up.error) return res.status(200).json({ error: up.error.message });
       return res.status(200).json({ success: true });
     }
     if (action === 'promoToggle') {

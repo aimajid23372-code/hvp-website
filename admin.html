@@ -641,15 +641,15 @@ async function loadPromos() {
     '<div><span class="badge ' + (p.active ? 'success' : 'warning') + '">' + (p.active ? 'ACTIVE' : 'OFF') + '</span> ' +
     '<button class="btn btn-sm btn-outline" onclick="togglePromo(\'' + esc(p.code) + '\',' + (!p.active) + ')">টগল</button> ' +
     '<button class="btn btn-sm btn-danger" onclick="delPromo(\'' + esc(p.code) + '\')">মুছুন</button></div></div>').join('')
-    : '<div class="muted">কোনো কুপন নেই</div>';
+    : '<div class="muted">' + (d.error ? 'কুপন তালিকা আনা যায়নি: ' + esc(d.error) : 'কোনো কুপন নেই') + '</div>';
 }
 async function addPromo() {
   const code = document.getElementById('newPromoCode').value;
   const discount = document.getElementById('newPromoDiscount').value;
   if (!code || !discount) return;
   document.getElementById('promoMsg').innerText = 'যোগ হচ্ছে...';
-  await api({ action: 'promoAdd', code, discount });
-  document.getElementById('promoMsg').innerText = 'যোগ হয়েছে ✅';
+  const r = await api({ action: 'promoAdd', code, discount });
+  document.getElementById('promoMsg').innerText = (r && r.error) ? ('যোগ হয়নি: ' + r.error) : 'যোগ হয়েছে ✅';
   loadPromos();
 }
 async function togglePromo(code, active) { await api({ action: 'promoToggle', code, active }); loadPromos(); }
