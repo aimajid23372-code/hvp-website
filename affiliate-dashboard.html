@@ -8,79 +8,131 @@
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Sora:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#090C13; --surface:#131826; --surface-2:#1A2133; --line:#242C42;
-    --text:#EAF0FF; --muted:#8891A8; --cyan:#5EEAD4; --violet:#A78BFA;
-    --grad: linear-gradient(90deg, var(--cyan), var(--violet));
+    --bg:#070A11; --surface:rgba(20,26,40,0.72); --surface-2:rgba(30,38,58,0.7); --line:rgba(255,255,255,0.08);
+    --line-2:rgba(255,255,255,0.14);
+    --text:#EDF2FF; --muted:#94A0BA; --mint:#B4F0F0; --cyan:#3FC7F2; --violet:#7C6BF5;
+    --grad: linear-gradient(100deg, var(--mint), var(--cyan) 45%, var(--violet));
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   body{
-    background: radial-gradient(circle at 15% 0%, rgba(94,234,212,0.06), transparent 40%),
-                radial-gradient(circle at 85% 10%, rgba(167,139,250,0.08), transparent 40%),
-                var(--bg);
-    color:var(--text); font-family:'Hind Siliguri', sans-serif; line-height:1.65;
+    background:
+      radial-gradient(900px 500px at 10% -5%, rgba(63,199,242,0.10), transparent 60%),
+      radial-gradient(700px 500px at 95% 5%, rgba(124,107,245,0.12), transparent 60%),
+      var(--bg);
+    color:var(--text); font-family:'Hind Siliguri', sans-serif; line-height:1.7;
+    -webkit-font-smoothing:antialiased;
   }
   a{ color:inherit; text-decoration:none; }
   header{
-    position:sticky; top:0; z-index:20; background:rgba(9,12,19,0.85); backdrop-filter:blur(10px);
+    position:sticky; top:0; z-index:20; background:rgba(7,10,17,0.72); backdrop-filter:blur(14px);
     border-bottom:1px solid var(--line); padding:14px 24px;
     display:flex; align-items:center; justify-content:space-between;
   }
   .brand{ display:flex; align-items:center; gap:10px; }
-  .brand img{ width:34px; height:34px; border-radius:8px; }
-  .brand-text{ display:flex; flex-direction:column; line-height:1.1; }
-  .brand-text b{ font-family:'Sora',sans-serif; font-size:1.02em; }
-  .brand-text span{ font-size:0.65em; color:var(--muted); letter-spacing:0.06em; text-transform:uppercase; }
-  .back-link{ color:var(--muted); font-size:0.9em; }
-  .wrap{ max-width:760px; margin:0 auto; padding:40px 24px 90px; }
-  h1{ font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.5em,5vw,2em); margin-bottom:10px; }
-  p.lead{ color:var(--muted); margin-bottom:22px; }
+  .brand img{ width:34px; height:34px; border-radius:9px; }
+  .brand-text{ display:flex; flex-direction:column; line-height:1.15; }
+  .brand-text b{ font-family:'Sora',sans-serif; font-size:1.02em; letter-spacing:-.01em; }
+  .brand-text span{ font-size:0.64em; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; }
+  .back-link{ color:var(--muted); font-size:0.9em; transition:color .2s; }
+  .back-link:hover{ color:var(--mint); }
+  .wrap{ max-width:820px; margin:0 auto; padding:44px 22px 100px; }
+  h1{ font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.6em,5vw,2.2em); letter-spacing:-.02em; margin-bottom:8px; }
+  h1 .dot{ background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  p.lead{ color:var(--muted); margin-bottom:26px; }
+
   .card{
-    background:var(--surface); border:1px solid var(--line); border-radius:14px;
-    padding:20px; margin-bottom:16px;
+    position:relative; background:var(--surface); border:1px solid var(--line); border-radius:20px;
+    padding:22px; margin-bottom:16px; backdrop-filter:blur(16px);
+    box-shadow:0 18px 40px -28px rgba(0,0,0,.9);
   }
-  .card h3{ font-family:'Sora',sans-serif; font-size:1.02em; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .card h3{
+    font-family:'Sora',sans-serif; font-size:0.96em; font-weight:600; letter-spacing:.01em;
+    margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .card h3 .ttl{ display:flex; align-items:center; gap:9px; }
+  .ico{
+    width:30px; height:30px; flex:none; border-radius:9px; display:grid; place-items:center; font-size:.9em;
+    background:linear-gradient(140deg, rgba(63,199,242,.18), rgba(124,107,245,.2));
+    border:1px solid var(--line-2);
+  }
   .field{ margin-bottom:12px; }
-  .field label{ display:block; font-size:0.85em; color:var(--muted); margin-bottom:6px; }
+  .field label{ display:block; font-size:0.82em; color:var(--muted); margin-bottom:6px; }
   .field input, .field select{
-    width:100%; padding:12px 14px; background:var(--surface-2); border:1px solid var(--line);
-    border-radius:10px; color:var(--text); font-size:0.95em; font-family:'Hind Siliguri';
+    width:100%; padding:13px 15px; background:rgba(10,14,23,.7); border:1px solid var(--line-2);
+    border-radius:12px; color:var(--text); font-size:0.95em; font-family:'Hind Siliguri'; transition:border-color .2s, box-shadow .2s;
   }
-  .field input:focus, .field select:focus{ outline:none; border-color:var(--cyan); }
+  .field input:focus, .field select:focus{ outline:none; border-color:var(--cyan); box-shadow:0 0 0 3px rgba(63,199,242,.15); }
   .btn{
-    width:100%; background:var(--grad); color:#0A0D14; border:none; padding:13px;
-    font-weight:700; border-radius:10px; cursor:pointer; font-size:0.98em; font-family:inherit;
+    width:100%; background:var(--grad); color:#061019; border:none; padding:14px;
+    font-weight:700; border-radius:12px; cursor:pointer; font-size:0.96em; font-family:inherit;
+    transition:transform .15s, filter .2s; box-shadow:0 12px 26px -16px rgba(63,199,242,.9);
   }
-  .btn[disabled]{ opacity:.6; cursor:default; }
-  .btn-ghost{
-    background:transparent; color:var(--text); border:1px solid var(--line);
-  }
-  .btn-sm{ width:auto; padding:7px 14px; font-size:0.82em; border-radius:8px; }
+  .btn:hover{ transform:translateY(-1px); filter:brightness(1.05); }
+  .btn[disabled]{ opacity:.55; cursor:default; transform:none; }
+  .btn-ghost{ background:transparent; color:var(--text); border:1px solid var(--line-2); box-shadow:none; }
+  .btn-ghost:hover{ border-color:var(--cyan); }
+  .btn-sm{ width:auto; padding:8px 15px; font-size:0.8em; border-radius:10px; }
   .msg{ font-size:0.88em; margin-top:10px; min-height:1.2em; }
-  .msg.error{ color:#ffb020; }
-  .msg.success{ color:var(--cyan); }
-  .dash-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:14px; }
-  .dash-box{ background:var(--surface-2); border:1px solid var(--line); border-radius:12px; padding:14px; text-align:center; }
-  .dash-box .num{ font-family:'Sora',sans-serif; font-weight:700; font-size:1.28em; color:var(--cyan); }
-  .dash-box .lbl{ color:var(--muted); font-size:0.78em; margin-top:4px; }
-  .dash-pending{
-    background:linear-gradient(135deg, rgba(94,234,212,0.12), rgba(167,139,250,0.14));
-    border:1px solid var(--cyan); border-radius:12px; padding:18px; text-align:center; margin-bottom:6px;
+  .msg.error{ color:#FFC46B; }
+  .msg.success{ color:var(--mint); }
+
+  .hero{
+    background:linear-gradient(150deg, rgba(63,199,242,.14), rgba(124,107,245,.14) 70%, transparent);
+    border:1px solid var(--line-2);
   }
-  .dash-pending .num{ font-family:'Sora',sans-serif; font-weight:700; font-size:1.7em; color:var(--cyan); }
-  .dash-pending .lbl{ color:var(--muted); font-size:0.85em; margin-top:4px; }
-  .note{ color:var(--muted); font-size:0.83em; margin-top:8px; }
-  .row{ display:flex; justify-content:space-between; gap:10px; padding:9px 0; border-bottom:1px solid var(--line); font-size:0.92em; }
+  .who{ display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+  .avatar{
+    width:44px; height:44px; border-radius:14px; flex:none; display:grid; place-items:center;
+    font-family:'Sora',sans-serif; font-weight:700; color:#061019; background:var(--grad); font-size:1.05em;
+  }
+  .who .nm{ font-family:'Sora',sans-serif; font-weight:600; font-size:1.05em; line-height:1.25; }
+  .who .rf{ font-size:.8em; color:var(--muted); font-family:'JetBrains Mono',monospace; }
+  .dash-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:14px; }
+  .dash-box{ background:rgba(10,14,23,.55); border:1px solid var(--line); border-radius:14px; padding:14px 10px; text-align:center; }
+  .dash-box .num{ font-family:'Sora',sans-serif; font-weight:700; font-size:1.18em; color:var(--mint); }
+  .dash-box .lbl{ color:var(--muted); font-size:0.74em; margin-top:2px; line-height:1.35; }
+  .dash-pending{
+    background:linear-gradient(120deg, rgba(180,240,240,.16), rgba(124,107,245,.18));
+    border:1px solid rgba(63,199,242,.5); border-radius:16px; padding:20px; text-align:center;
+  }
+  .dash-pending .num{ font-family:'Sora',sans-serif; font-weight:800; font-size:2em; letter-spacing:-.02em;
+    background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .dash-pending .lbl{ color:var(--muted); font-size:0.84em; }
+  .note{ color:var(--muted); font-size:0.84em; margin-top:8px; }
+
+  .row{ display:flex; justify-content:space-between; align-items:center; gap:10px; padding:11px 0; border-bottom:1px solid var(--line); font-size:0.92em; }
   .row:last-child{ border-bottom:none; }
-  .row b{ color:var(--cyan); }
-  .pay-line{ display:flex; align-items:center; gap:10px; background:var(--surface-2); border:1px solid var(--line);
-    border-radius:10px; padding:12px 14px; }
-  .pay-line .pm{ font-weight:700; color:var(--cyan); }
-  .pay-line .pn{ font-family:'JetBrains Mono',monospace; letter-spacing:.02em; }
-  .badge{ font-size:.72em; padding:3px 9px; border-radius:999px; border:1px solid var(--line); color:var(--muted); }
+  .row small{ display:block; color:var(--muted); font-size:.82em; }
+  .row b{ color:var(--mint); white-space:nowrap; font-family:'Sora',sans-serif; }
+  .row b.out{ color:var(--violet); }
+
+  .link-box{
+    display:flex; align-items:center; gap:10px; word-break:break-all;
+    background:rgba(10,14,23,.6); border:1px solid rgba(63,199,242,.4); border-radius:12px;
+    padding:14px 16px; font-weight:600; color:var(--mint); font-family:'JetBrains Mono',monospace; font-size:.9em;
+  }
+  .pay-line{ display:flex; align-items:center; gap:12px; background:rgba(10,14,23,.6); border:1px solid var(--line-2);
+    border-radius:12px; padding:13px 15px; }
+  .pay-line .pm{ font-weight:700; color:var(--cyan); font-family:'Sora',sans-serif; font-size:.9em; }
+  .pay-line .pn{ font-family:'JetBrains Mono',monospace; letter-spacing:.03em; }
+  .badge{ font-size:.72em; padding:4px 10px; border-radius:999px; border:1px solid var(--line-2); color:var(--muted); font-family:'JetBrains Mono',monospace; }
+  .chip{ font-size:.72em; padding:4px 11px; border-radius:999px; font-weight:700; white-space:nowrap; }
+  .chip.paid{ background:rgba(180,240,240,.14); color:var(--mint); border:1px solid rgba(180,240,240,.35); }
+  .chip.pending{ background:rgba(255,196,107,.12); color:#FFC46B; border:1px solid rgba(255,196,107,.3); }
+  .chip.rejected{ background:rgba(148,160,186,.12); color:var(--muted); border:1px solid var(--line-2); }
+  .empty{ color:var(--muted); font-size:.88em; text-align:center; padding:12px 0; }
   .hide{ display:none !important; }
   .split{ display:flex; gap:10px; }
   .split > *{ flex:1; }
-  @media (max-width:600px){ .wrap{ padding:26px 16px 70px; } }
+  .sum{ display:flex; gap:10px; margin-bottom:14px; }
+  .sum > div{ flex:1; background:rgba(10,14,23,.55); border:1px solid var(--line); border-radius:12px; padding:11px 12px; }
+  .sum .k{ color:var(--muted); font-size:.76em; }
+  .sum .v{ font-family:'Sora',sans-serif; font-weight:700; font-size:1.02em; }
+  @media (max-width:640px){
+    .wrap{ padding:28px 15px 80px; }
+    .dash-grid{ grid-template-columns:repeat(2,1fr); }
+    .card{ padding:18px; border-radius:16px; }
+  }
 </style>
 <link rel="stylesheet" href="hvb-theme.css">
 <link rel="stylesheet" href="hvb-ui.css">
@@ -235,6 +287,17 @@
   };
 
   /* ---------------- ড্যাশবোর্ড ---------------- */
+  var BN = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+  function bn(n){ return String(n == null ? '' : n).replace(/[0-9]/g, function(d){ return BN[+d]; }); }
+  var MON = ['জানু','ফেব','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্ট','অক্টো','নভে','ডিসে'];
+  function bdate(v){
+    var d = new Date(v);
+    if(isNaN(d.getTime())) return '';
+    var h = d.getHours(), ap = h < 12 ? 'AM' : 'PM', hh = h % 12 || 12;
+    return bn(d.getDate()) + ' ' + MON[d.getMonth()] + ' ' + bn(d.getFullYear()) + ', ' + bn(hh) + ':' + bn(('0'+d.getMinutes()).slice(-2)) + ' ' + ap;
+  }
+  function taka(n){ return bn(Math.round(Number(n) || 0)) + ' ৳'; }
+
   function renderDash(d){
     AFF.data = d;
     AFF.refCode = d.refCode || AFF.refCode;
@@ -245,22 +308,52 @@
     var available = Number(d.available != null ? d.available : d.pending);
     var held = Number(d.held || 0);
     var hasPay = !!(d.payMethod && d.payAccount);
+    var initial = (String(d.name || AFF.refCode || 'H').trim()[0] || 'H').toUpperCase();
 
-    var history = '';
+    /* ---- কমিশন হিস্টোরি ---- */
+    var items = [];
     (d.orders || []).forEach(function(o){
-      var dt = new Date(o.date);
-      history += '<div class="row"><span>' + dt.getDate() + '/' + (dt.getMonth()+1) + '/' + dt.getFullYear() +
-        ' — ' + (o.course === 'bundle' ? 'Long+Short' : 'Short') + '</span><b>+' + o.commission + ' ৳</b></div>';
+      items.push({ t:o.date, title: (o.course === 'bundle' ? 'Long + Short বিক্রি' : 'Short Course বিক্রি'), amt: Number(o.commission), out:false });
     });
     (d.adjustments || []).forEach(function(a){
-      var dt = new Date(a.date);
-      history += '<div class="row"><span>' + dt.getDate() + '/' + (dt.getMonth()+1) + '/' + dt.getFullYear() +
-        ' — ' + esc(a.note || 'Admin Adjustment') + '</span><b>' + (Number(a.amount) >= 0 ? '+' : '') + a.amount + ' ৳</b></div>';
+      items.push({ t:a.date, title: esc(a.note || 'Admin Adjustment'), amt: Number(a.amount), out:false });
     });
+    items.sort(function(a,b){ return new Date(b.t) - new Date(a.t); });
+    var history = items.map(function(i){
+      return '<div class="row"><span>' + i.title + '<small>' + bdate(i.t) + '</small></span><b>' +
+        (i.amt >= 0 ? '+' : '−') + taka(Math.abs(i.amt)) + '</b></div>';
+    }).join('');
+
+    /* ---- Withdraw হিস্টোরি ---- */
+    var wds = (d.withdrawals || []).slice();
+    var paidTotal = 0, pendingTotal = 0;
+    var wdRows = wds.map(function(w){
+      var st = String(w.status || 'pending').toLowerCase();
+      if(st === 'paid' || st === 'approved' || st === 'complete' || st === 'completed'){ paidTotal += w.amount; st = 'paid'; }
+      else if(st === 'pending'){ pendingTotal += w.amount; }
+      else { st = 'rejected'; }
+      var label = st === 'paid' ? 'পেমেন্ট হয়েছে' : (st === 'pending' ? 'প্রসেসিং' : 'বাতিল');
+      var to = (w.method || w.account) ? (esc(w.method || '') + ' ' + esc(w.account || '')) : '';
+      var when = st === 'paid' && w.paidAt ? bdate(w.paidAt) : bdate(w.date);
+      return '<div class="row"><span>' + taka(w.amount) + (to ? ' → ' + to : '') +
+        '<small>' + (st === 'paid' ? 'পাঠানো হয়েছে: ' : 'রিকোয়েস্ট: ') + when + '</small></span>' +
+        '<span class="chip ' + st + '">' + label + '</span></div>';
+    }).join('');
+
+    var wdHistoryCard =
+      '<div class="card">' +
+        '<h3><span class="ttl"><span class="ico">🧾</span> Withdraw History</span>' +
+          '<span class="badge">' + bn(wds.length) + ' টি রিকোয়েস্ট</span></h3>' +
+        '<div class="sum">' +
+          '<div><div class="k">পেমেন্ট পেয়েছেন</div><div class="v" style="color:var(--mint)">' + taka(paidTotal || d.paidOut) + '</div></div>' +
+          '<div><div class="k">প্রসেসিং-এ</div><div class="v" style="color:#FFC46B">' + taka(pendingTotal) + '</div></div>' +
+        '</div>' +
+        (wdRows || '<div class="empty">এখনো কোনো Withdraw রিকোয়েস্ট পাঠাননি।</div>') +
+      '</div>';
 
     var payCard =
       '<div class="card">' +
-        '<h3>💳 টাকা পাওয়ার নাম্বার' + (hasPay ? '<button class="btn btn-ghost btn-sm" onclick="_aff.editPay()">Edit</button>' : '') + '</h3>' +
+        '<h3><span class="ttl"><span class="ico">💳</span> টাকা পাওয়ার নাম্বার</span>' + (hasPay ? '<button class="btn btn-ghost btn-sm" onclick="_aff.editPay()">Edit</button>' : '') + '</h3>' +
         (hasPay
           ? '<div id="payView" class="pay-line"><span class="pm">' + esc(d.payMethod) + '</span><span class="pn">' + esc(d.payAccount) + '</span></div>'
           : '<p class="note" style="margin-top:0;">টাকা তোলার আগে আপনার bKash / Nagad / Rocket নাম্বার যোগ করুন।</p>') +
@@ -277,39 +370,41 @@
 
     var withdrawCard =
       '<div class="card">' +
-        '<h3>💰 টাকা তুলুন</h3>' +
+        '<h3><span class="ttl"><span class="ico">💰</span> টাকা তুলুন</span>' +
+          (held > 0 ? '<span class="chip pending">' + taka(held) + ' প্রসেসিং</span>' : '') + '</h3>' +
         (available < minW
-          ? '<p class="note" style="margin-top:0;">কমপক্ষে ' + minW + ' ৳ হলে Withdraw করা যাবে। আর ' + Math.max(0, minW - available) + ' ৳ হলেই পারবেন।</p>'
+          ? '<p class="note" style="margin-top:0;">কমপক্ষে ' + bn(minW) + ' ৳ হলে Withdraw করা যাবে। আর ' + taka(Math.max(0, minW - available)) + ' হলেই পারবেন।</p>'
           : (!hasPay
               ? '<p class="note" style="margin-top:0;">আগে উপরে আপনার bKash / Nagad / Rocket নাম্বার যোগ করুন।</p>'
-              : '<p class="note" style="margin-top:0;">টাকা যাবে: <b style="color:var(--cyan)">' + esc(d.payMethod) + ' — ' + esc(d.payAccount) + '</b></p>' +
-                '<div class="field" style="margin-top:12px;"><label>কত টাকা তুলবেন (সর্বনিম্ন ' + minW + ', সর্বোচ্চ ' + available + ')</label>' +
+              : '<p class="note" style="margin-top:0;">টাকা যাবে: <b style="color:var(--mint)">' + esc(d.payMethod) + ' — ' + esc(d.payAccount) + '</b></p>' +
+                '<div class="field" style="margin-top:12px;"><label>কত টাকা তুলবেন (সর্বনিম্ন ' + bn(minW) + ', সর্বোচ্চ ' + bn(available) + ')</label>' +
                 '<input id="wdAmount" type="number" min="' + minW + '" max="' + available + '" placeholder="' + available + '"></div>' +
                 '<button class="btn" id="wdBtn" onclick="_aff.withdraw()">Withdraw Request পাঠান</button>' +
                 '<p class="note">রিকোয়েস্টের ২৪-৪৮ ঘণ্টার মধ্যে আপনার দেওয়া নাম্বারে টাকা পাঠানো হবে।</p>')) +
-        (held > 0 ? '<p class="note">' + held + ' ৳ এর রিকোয়েস্ট এখনো প্রসেসিং-এ আছে।</p>' : '') +
         '<div id="wdMsg" class="msg"></div>' +
       '</div>';
 
     $('dashBox').innerHTML =
-      '<div class="card">' +
-        '<h3>👋 ' + esc(d.name) + '<span class="badge">' + esc(AFF.refCode) + '</span></h3>' +
+      '<div class="card hero">' +
+        '<div class="who"><div class="avatar">' + esc(initial) + '</div>' +
+          '<div><div class="nm">' + esc(d.name) + '</div><div class="rf">@' + esc(AFF.refCode) + '</div></div></div>' +
         '<div class="dash-grid">' +
-          '<div class="dash-box"><div class="num">' + d.totalOrders + '</div><div class="lbl">মোট বিক্রি</div></div>' +
-          '<div class="dash-box"><div class="num">' + d.totalSales + ' ৳</div><div class="lbl">মোট বিক্রির টাকা</div></div>' +
-          '<div class="dash-box"><div class="num">' + d.commissionPercent + '%</div><div class="lbl">কমিশন রেট</div></div>' +
-          '<div class="dash-box"><div class="num">' + d.paidOut + ' ৳</div><div class="lbl">এ পর্যন্ত পেয়েছেন</div></div>' +
+          '<div class="dash-box"><div class="num">' + bn(d.totalOrders) + '</div><div class="lbl">মোট বিক্রি</div></div>' +
+          '<div class="dash-box"><div class="num">' + taka(d.totalSales) + '</div><div class="lbl">বিক্রির টাকা</div></div>' +
+          '<div class="dash-box"><div class="num">' + bn(d.commissionPercent) + '%</div><div class="lbl">কমিশন রেট</div></div>' +
+          '<div class="dash-box"><div class="num">' + taka(d.paidOut) + '</div><div class="lbl">পেমেন্ট পেয়েছেন</div></div>' +
         '</div>' +
-        '<div class="dash-pending"><div class="num">' + available + ' ৳</div><div class="lbl">তোলার মতো ব্যালেন্স</div></div>' +
+        '<div class="dash-pending"><div class="num">' + taka(available) + '</div><div class="lbl">তোলার মতো ব্যালেন্স</div></div>' +
       '</div>' +
       '<div class="card">' +
-        '<h3>🔗 আপনার রেফার লিংক</h3>' +
-        '<div id="refLinkText" style="word-break:break-all; background:var(--surface-2); border:1px solid var(--cyan); border-radius:10px; padding:14px; font-weight:700; color:var(--cyan);">' + esc(link) + '</div>' +
-        '<button class="btn" style="margin-top:12px;" onclick="_aff.copy(this)">📋 লিংক কপি করুন</button>' +
+        '<h3><span class="ttl"><span class="ico">🔗</span> আপনার রেফার লিংক</span></h3>' +
+        '<div id="refLinkText" class="link-box">' + esc(link) + '</div>' +
+        '<button class="btn" style="margin-top:12px;" onclick="_aff.copy(this)">লিংক কপি করুন</button>' +
       '</div>' +
       payCard +
       withdrawCard +
-      (history ? '<div class="card"><h3>হিসাবের হিস্টোরি</h3>' + history + '</div>' : '');
+      wdHistoryCard +
+      (history ? '<div class="card"><h3><span class="ttl"><span class="ico">📊</span> কমিশনের হিসাব</span></h3>' + history + '</div>' : '');
   }
 
   AFF.copy = function(btn){
