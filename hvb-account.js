@@ -159,8 +159,7 @@
       ['reviews', IC.star, 'শিক্ষার্থীদের রিভিউ'],
     ]},
     { g: 'ইনকাম', items: [
-      ['affiliate', IC.coin, 'অ্যাফিলিয়েট প্রোগ্রাম'],
-      ['affiliate-dashboard', IC.chart, 'অ্যাফিলিয়েট ড্যাশবোর্ড'],
+      ['affiliate-dashboard', IC.coin, 'অ্যাফিলিয়েট'],
     ]},
     { g: 'প্রতিষ্ঠান', items: [
       ['about', IC.info, 'আমাদের সম্পর্কে'],
