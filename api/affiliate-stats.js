@@ -1,5 +1,8 @@
 // /api/affiliate-stats.js
-// Affiliate ref code + password দিয়ে লগইন করে তার বিস্তারিত সেল হিস্টোরি দেখবে
+// Affiliate ড্যাশবোর্ডের সব ডেটা।
+// লগইন দুইভাবে: (১) সাইটের Google/ইমেইল অ্যাকাউন্টের token দিয়ে — পাসওয়ার্ড লাগে না
+//               (২) পুরোনো নিয়মে ref code + পাসওয়ার্ড
+// একই এন্ডপয়েন্টে action:'savePayout' দিয়ে bKash/Nagad/Rocket নাম্বার সেভ/এডিট করা যায়।
 
 const { createClient } = require('@supabase/supabase-js');
 const crypto = require('crypto');
@@ -13,31 +16,75 @@ function hashPassword(password) {
   return crypto.createHash('sha256').update(password + 'hvb_static_salt_2026').digest('hex');
 }
 
+const ALLOWED_METHODS = ['bKash', 'Nagad', 'Rocket'];
+
+async function emailFromToken(token) {
+  if (!token) return null;
+  try {
+    const { data, error } = await supabase.auth.getUser(token);
+    if (error || !data || !data.user || !data.user.email) return null;
+    return String(data.user.email).trim().toLowerCase();
+  } catch (err) {
+    return null;
+  }
+}
+
+// token বা ref+password দিয়ে affiliate খুঁজে বের করা
+async function resolveAffiliate(body) {
+  const { refCode, password, token } = body || {};
+  const email = await emailFromToken(token);
+
+  if (email) {
+    const { data: rows } = await supabase.from('affiliates').select('*').ilike('email', email).limit(1);
+    if (rows && rows.length) return { affiliate: rows[0], email };
+    return { affiliate: null, email, code: 'no_affiliate' };
+  }
+
+  if (!refCode || !password) return { affiliate: null, code: 'need_login' };
+
+  const cleanRef = String(refCode).trim().toLowerCase();
+  const { data: affiliate } = await supabase.from('affiliates').select('*').eq('ref_code', cleanRef).single();
+  if (!affiliate) return { affiliate: null, code: 'not_found' };
+  if (affiliate.password_hash !== hashPassword(password)) return { affiliate: null, code: 'bad_password' };
+  return { affiliate, email: null };
+}
+
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const { refCode, password } = req.body;
-    if (!refCode || !password) {
-      return res.status(400).json({ error: 'ref code ও পাসওয়ার্ড দিন' });
+    const body = req.body || {};
+    const found = await resolveAffiliate(body);
+
+    if (!found.affiliate) {
+      if (found.code === 'no_affiliate') {
+        return res.status(404).json({ code: 'no_affiliate', email: found.email, error: 'এই অ্যাকাউন্টে এখনো অ্যাফিলিয়েট খোলা হয়নি' });
+      }
+      if (found.code === 'bad_password') return res.status(401).json({ error: 'পাসওয়ার্ড ভুল' });
+      if (found.code === 'not_found') return res.status(404).json({ error: 'এই ref code খুঁজে পাওয়া যায়নি' });
+      return res.status(400).json({ error: 'আগে লগইন করুন' });
     }
 
-    const cleanRef = refCode.trim().toLowerCase();
+    const affiliate = found.affiliate;
+    const cleanRef = affiliate.ref_code;
 
-    const { data: affiliate, error: affErr } = await supabase
-      .from('affiliates')
-      .select('*')
-      .eq('ref_code', cleanRef)
-      .single();
-
-    if (affErr || !affiliate) {
-      return res.status(404).json({ error: 'এই ref code খুঁজে পাওয়া যায়নি' });
-    }
-
-    if (affiliate.password_hash !== hashPassword(password)) {
-      return res.status(401).json({ error: 'পাসওয়ার্ড ভুল' });
+    // পেমেন্ট নাম্বার সেভ/এডিট
+    if (body.action === 'savePayout') {
+      const cleanMethod = ALLOWED_METHODS.find((m) => m.toLowerCase() === String(body.payMethod || '').trim().toLowerCase());
+      if (!cleanMethod) return res.status(400).json({ error: 'bKash / Nagad / Rocket — যেকোনো একটি বেছে নিন' });
+      const cleanAccount = String(body.payAccount || '').replace(/[^0-9]/g, '');
+      if (!/^01[3-9][0-9]{8}$/.test(cleanAccount)) {
+        return res.status(400).json({ error: 'সঠিক ১১ ডিজিটের মোবাইল নাম্বার দিন (যেমন 01712345678)' });
+      }
+      const { error: upErr } = await supabase
+        .from('affiliates')
+        .update({ pay_method: cleanMethod, pay_account: cleanAccount })
+        .eq('ref_code', cleanRef);
+      if (upErr) return res.status(500).json({ error: 'সেভ করা যায়নি: ' + upErr.message });
+      affiliate.pay_method = cleanMethod;
+      affiliate.pay_account = cleanAccount;
     }
 
     const { data: orders } = await supabase
@@ -66,7 +113,6 @@ module.exports = async (req, res) => {
 
     const pending = totalCommission + adjust - paidOut;
 
-    // pending withdraw রিকোয়েস্টের টাকা আটকে আছে
     let held = 0;
     let openRequests = [];
     try {
@@ -80,8 +126,6 @@ module.exports = async (req, res) => {
     } catch (e) { held = 0; }
     const available = pending - held;
 
-    // প্রতিটা বিক্রির বিস্তারিত (কবে, কোন কোর্স, কত টাকা, কমিশন কত) —
-    // কাস্টমারের ফোন/ইমেইল দেখানো হচ্ছে না, কাস্টমারদের প্রাইভেসির জন্য
     const orderList = (orders || []).map(o => ({
       date: o.created_at,
       course: o.course,
@@ -90,7 +134,12 @@ module.exports = async (req, res) => {
     }));
 
     return res.status(200).json({
+      refCode: cleanRef,
       name: affiliate.name,
+      contact: affiliate.contact || '',
+      email: affiliate.email || found.email || '',
+      payMethod: affiliate.pay_method || '',
+      payAccount: affiliate.pay_account || '',
       commissionPercent: affiliate.commission_percent,
       totalOrders: (orders || []).length,
       totalSales,
