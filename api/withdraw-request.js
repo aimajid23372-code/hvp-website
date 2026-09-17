@@ -99,15 +99,23 @@ module.exports = async (req, res) => {
       return res.status(400).json({ error: 'আপনার ব্যালেন্সে আছে ' + available + ' ৳ — এর বেশি তোলা যাবে না।' });
     }
 
-    const { error: insertErr } = await supabase.from('withdraw_requests').insert({
+    const baseRow = {
       ref_code: cleanRef,
       name: affiliate.name,
       contact: cleanMethod + ' - ' + cleanAccount,
-      method: cleanMethod,
-      account: cleanAccount,
       amount: reqAmount,
       status: 'pending',
-    });
+    };
+
+    let { error: insertErr } = await supabase
+      .from('withdraw_requests')
+      .insert(Object.assign({}, baseRow, { method: cleanMethod, account: cleanAccount }));
+
+    // method/account কলাম না থাকলে contact-এ নাম্বার রেখেই সেভ হবে
+    if (insertErr) {
+      const retry = await supabase.from('withdraw_requests').insert(baseRow);
+      insertErr = retry.error;
+    }
 
     if (insertErr) {
       return res.status(500).json({ error: 'সমস্যা হয়েছে: ' + insertErr.message });
