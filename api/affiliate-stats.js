@@ -115,16 +115,30 @@ module.exports = async (req, res) => {
 
     let held = 0;
     let openRequests = [];
+    let withdrawals = [];
     try {
       const { data: wreqs } = await supabase
         .from('withdraw_requests')
-        .select('amount, status, contact, created_at')
+        .select('*')
         .eq('ref_code', cleanRef)
-        .eq('status', 'pending');
-      held = (wreqs || []).reduce((sum, r) => sum + Number(r.amount || 0), 0);
-      openRequests = (wreqs || []).map((r) => ({ amount: Number(r.amount || 0), contact: r.contact || '', date: r.created_at }));
+        .order('created_at', { ascending: false });
+      const all = wreqs || [];
+      held = all.filter((r) => r.status === 'pending').reduce((sum, r) => sum + Number(r.amount || 0), 0);
+      openRequests = all
+        .filter((r) => r.status === 'pending')
+        .map((r) => ({ amount: Number(r.amount || 0), contact: r.contact || '', date: r.created_at }));
+      withdrawals = all.map((r) => ({
+        amount: Number(r.amount || 0),
+        status: r.status || 'pending',
+        method: r.method || '',
+        account: r.account || '',
+        date: r.created_at,
+        paidAt: r.paid_at || r.updated_at || null,
+        note: r.note || r.admin_note || '',
+      }));
     } catch (e) { held = 0; }
     const available = pending - held;
+
 
     const orderList = (orders || []).map(o => ({
       date: o.created_at,
@@ -152,6 +166,8 @@ module.exports = async (req, res) => {
       held,
       available,
       openRequests,
+      withdrawals,
+
       orders: orderList,
     });
   } catch (err) {
