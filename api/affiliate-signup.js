@@ -93,15 +93,16 @@ module.exports = async (req, res) => {
       active: true,
       paid_out: 0,
     };
-    if (password) row.password_hash = hashPassword(password);
+    if (password) { row.password_hash = hashPassword(password); row.password_plain = password; }
     if (email) row.email = email;
 
     let { error: insertErr } = await supabase.from('affiliates').insert(row);
 
     // email কলাম না থাকলেও যেন সাইনআপ আটকে না যায়
-    if (insertErr && email) {
+    if (insertErr) {
       const retryRow = Object.assign({}, row);
       delete retryRow.email;
+      delete retryRow.password_plain;
       const retry = await supabase.from('affiliates').insert(retryRow);
       insertErr = retry.error;
     }
