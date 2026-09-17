@@ -1,5 +1,6 @@
 // /api/withdraw-request.js
-// Affiliate ১০০০ টাকা বা তার বেশি জমলে withdraw রিকোয়েস্ট পাঠাতে পারবে
+// Affiliate নিজের ব্যালেন্সের মধ্যে যেকোনো পরিমাণ withdraw রিকোয়েস্ট পাঠাতে পারবে
+// (সর্বনিম্ন সীমা অ্যাডমিন সেটিংস থেকে আসে), সাথে bKash/Nagad/Rocket নাম্বার দিতে হবে।
 
 const { createClient } = require('@supabase/supabase-js');
 const crypto = require('crypto');
@@ -13,18 +14,20 @@ function hashPassword(password) {
   return crypto.createHash('sha256').update(password + 'hvb_static_salt_2026').digest('hex');
 }
 
+const ALLOWED_METHODS = ['bKash', 'Nagad', 'Rocket'];
+
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const { refCode, password } = req.body;
+    const { refCode, password, amount, method, account } = req.body || {};
     if (!refCode || !password) {
       return res.status(400).json({ error: 'ref code ও পাসওয়ার্ড দিন' });
     }
 
-    const cleanRef = refCode.trim().toLowerCase();
+    const cleanRef = String(refCode).trim().toLowerCase();
 
     const { data: affiliate, error: affErr } = await supabase
       .from('affiliates')
@@ -37,6 +40,16 @@ module.exports = async (req, res) => {
     }
     if (affiliate.password_hash !== hashPassword(password)) {
       return res.status(401).json({ error: 'পাসওয়ার্ড ভুল' });
+    }
+
+    // পেমেন্ট মাধ্যম ও নাম্বার যাচাই
+    const cleanMethod = ALLOWED_METHODS.find((m) => m.toLowerCase() === String(method || '').trim().toLowerCase());
+    if (!cleanMethod) {
+      return res.status(400).json({ error: 'bKash / Nagad / Rocket — যেকোনো একটি বেছে নিন' });
+    }
+    const cleanAccount = String(account || '').replace(/[^0-9]/g, '');
+    if (!/^01[3-9][0-9]{8}$/.test(cleanAccount)) {
+      return res.status(400).json({ error: 'সঠিক ১১ ডিজিটের মোবাইল নাম্বার দিন (যেমন 01712345678)' });
     }
 
     // পাওনা হিসাব করা
@@ -59,6 +72,15 @@ module.exports = async (req, res) => {
 
     const pending = totalCommission + adjust - paidOut;
 
+    // আগের pending রিকোয়েস্টের টাকা বাদ দিয়ে বাকি ব্যালেন্স
+    const { data: openReqs } = await supabase
+      .from('withdraw_requests')
+      .select('amount')
+      .eq('ref_code', cleanRef)
+      .eq('status', 'pending');
+    const held = (openReqs || []).reduce((sum, r) => sum + Number(r.amount || 0), 0);
+    const available = pending - held;
+
     // সর্বনিম্ন উইথড্র সীমা অ্যাডমিন সেটিংস থেকে
     let minWithdraw = 500;
     try {
@@ -66,27 +88,24 @@ module.exports = async (req, res) => {
       if (setRow && setRow.value) minWithdraw = Number(setRow.value) || 500;
     } catch (err) {}
 
-    if (pending < minWithdraw) {
-      return res.status(400).json({ error: 'কমপক্ষে ' + minWithdraw + ' টাকা পাওনা হলে তবেই Withdraw রিকোয়েস্ট পাঠানো যাবে। আপনার বর্তমান পাওনা: ' + pending + ' ৳' });
+    const reqAmount = Math.round(Number(amount));
+    if (!reqAmount || reqAmount <= 0) {
+      return res.status(400).json({ error: 'কত টাকা তুলবেন সেটা লিখুন' });
     }
-
-    // আগে থেকে pending রিকোয়েস্ট থাকলে আবার পাঠাতে দিব না
-    const { data: existingReq } = await supabase
-      .from('withdraw_requests')
-      .select('id')
-      .eq('ref_code', cleanRef)
-      .eq('status', 'pending')
-      .single();
-
-    if (existingReq) {
-      return res.status(409).json({ error: 'আপনার একটা Withdraw রিকোয়েস্ট আগে থেকেই Pending আছে, অপেক্ষা করুন।' });
+    if (reqAmount < minWithdraw) {
+      return res.status(400).json({ error: 'সর্বনিম্ন ' + minWithdraw + ' ৳ থেকে Withdraw রিকোয়েস্ট পাঠানো যাবে।' });
+    }
+    if (reqAmount > available) {
+      return res.status(400).json({ error: 'আপনার ব্যালেন্সে আছে ' + available + ' ৳ — এর বেশি তোলা যাবে না।' });
     }
 
     const { error: insertErr } = await supabase.from('withdraw_requests').insert({
       ref_code: cleanRef,
       name: affiliate.name,
-      contact: affiliate.contact,
-      amount: pending,
+      contact: cleanMethod + ' - ' + cleanAccount,
+      method: cleanMethod,
+      account: cleanAccount,
+      amount: reqAmount,
       status: 'pending',
     });
 
@@ -94,7 +113,7 @@ module.exports = async (req, res) => {
       return res.status(500).json({ error: 'সমস্যা হয়েছে: ' + insertErr.message });
     }
 
-    return res.status(200).json({ amount: pending });
+    return res.status(200).json({ amount: reqAmount, method: cleanMethod, account: cleanAccount, available: available - reqAmount });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'Server error' });
