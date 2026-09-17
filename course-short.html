@@ -393,21 +393,36 @@
 <script>
   var BASE_PRICE = 499;
   window.hvbOnPrices = function (p) { if (p && p.short) { BASE_PRICE = Number(p.short); } };
-  const promoCodes = { 'HVB10': 10, 'WELCOME50': 50, 'LAUNCH50': 50 };
   const bnDigits = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
-  function toBn(n){ return String(n).split('').map(d => bnDigits[d] || d).join(''); }
-  function applyPromo(){
+  function toBn(n){ return String(n).split('').map(function(d){ return bnDigits[d] || d; }).join(''); }
+  var HVB_PROMO = null;
+  async function applyPromo(){
     const code = document.getElementById('promoInput').value.trim().toUpperCase();
     const msg = document.getElementById('promoMsg');
-    if(promoCodes[code]){
-      const discount = promoCodes[code];
-      const newPrice = Math.round(BASE_PRICE - (BASE_PRICE*discount/100));
-      document.getElementById('modalPrice').textContent = toBn(newPrice) + ' ৳';
-      msg.textContent = ' ✅ ' + discount + '% ছাড় প্রয়োগ হয়েছে! (পেমেন্ট পেজে দেখানো হবে)';
-      msg.className = 'promo-msg success';
-    } else {
-      msg.textContent = ' ❌ ভুল প্রোমো কোড';
+    const btn = document.querySelector('.promo-btn');
+    if(!code){ msg.textContent = ' প্রোমো কোড লিখুন।'; msg.className = 'promo-msg error'; return; }
+    msg.textContent = ''; msg.className = 'promo-msg';
+    if(btn){ btn.classList.add('hvb-busy'); btn.disabled = true; }
+    try{
+      const r = await fetch('/api/create-invoice', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'checkPromo', promoCode: code }) });
+      const d = await r.json();
+      if(d && d.valid){
+        HVB_PROMO = { code: code, discount: Number(d.discount) || 0 };
+        const newPrice = Math.round(BASE_PRICE - (BASE_PRICE * HVB_PROMO.discount / 100));
+        document.getElementById('modalPrice').textContent = toBn(newPrice) + ' ৳';
+        msg.textContent = ' ✅ ' + toBn(HVB_PROMO.discount) + '% ছাড় প্রযোগ হয়েছে — পেমেন্টে এই দামই যাবে।';
+        msg.className = 'promo-msg success';
+      } else {
+        HVB_PROMO = null;
+        document.getElementById('modalPrice').textContent = toBn(BASE_PRICE) + ' ৳';
+        msg.textContent = ' ❌ এই কোডটি কাজ করছে না বা বন্ধ আছে।';
+        msg.className = 'promo-msg error';
+      }
+    } catch(x){
+      msg.textContent = ' কোড যাচাই করা যায়নি, আবার চেষ্টা করুন।';
       msg.className = 'promo-msg error';
+    } finally {
+      if(btn){ btn.classList.remove('hvb-busy'); btn.disabled = false; }
     }
   }
 
