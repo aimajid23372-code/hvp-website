@@ -164,7 +164,11 @@ module.exports = async (req, res) => {
 
     // Affiliate Management
     if (action === 'affiliateList') {
-      const { data, error } = await supabase.from('affiliates').select('ref_code, name, contact, commission_percent, active, paid_out');
+      let { data, error } = await supabase.from('affiliates').select('ref_code, name, contact, email, password_plain, commission_percent, active, paid_out');
+      if (error) {
+        const retry = await supabase.from('affiliates').select('ref_code, name, contact, commission_percent, active, paid_out');
+        data = retry.data; error = retry.error;
+      }
       if (error) return res.status(500).json({ error: error.message, detail: error });
       const minWithdraw = Number(await getSetting('min_withdraw', 500)) || 500;
       const out = [];
@@ -208,6 +212,16 @@ module.exports = async (req, res) => {
       const { error } = await supabase.from('affiliates').update({ commission_percent: pct }).eq('ref_code', ref);
       if (error) return res.status(500).json({ error: error.message });
       return res.status(200).json({ success: true, ref_code: ref, commission_percent: pct });
+    }
+    if (action === 'affiliateSetPassword') {
+      const ref = String(body.refCode || '').trim().toLowerCase();
+      const pass = String(body.password || '');
+      if (!ref) return res.status(400).json({ error: 'refCode required' });
+      if (pass.length < 4) return res.status(400).json({ error: 'পাসওয়ার্ড কমপক্ষে ৪ অক্ষরের হতে হবে' });
+      const hash = require('crypto').createHash('sha256').update(pass + 'hvb_static_salt_2026').digest('hex');
+      const { error } = await supabase.from('affiliates').update({ password_hash: hash, password_plain: pass }).eq('ref_code', ref);
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json({ success: true });
     }
     if (action === 'affiliateToggle') {
       const ref = String(body.refCode || '').trim().toLowerCase();
