@@ -13,4 +13,4 @@ Allow: /
 User-agent: Bingbot
 Allow: /
 
-Sitemap: https://hvb1.vercel.app/sitemap.xml
+Sitemap: https://www.hypervisionbd.com/sitemap.xml
