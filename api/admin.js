@@ -112,6 +112,11 @@ module.exports = async (req, res) => {
       return res.status(200).json({ success: true });
     }
 
+    if (action === 'withdrawDelete') {
+      await supabase.from('withdraw_requests').delete().eq('id', body.requestId);
+      return res.status(200).json({ success: true });
+    }
+
     // Promos
     if (action === 'promoList') {
       let { data, error } = await supabase.from('promo_codes').select('*').order('created_at', { ascending: false });
