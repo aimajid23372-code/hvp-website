@@ -705,9 +705,13 @@ async function loadAffiliates() {
   if (d.error) { t.innerHTML = '<tr><td style="color:var(--danger)">' + esc(d.error) + '</td></tr>'; return; }
   const list = d.affiliates || [];
   t.innerHTML = list.length
-    ? '<tr><th>রেফ কোড</th><th>নাম</th><th>কমিশন %</th><th>কমিশন আয়</th><th>অ্যাডমিন যোগ</th><th>পেইড</th><th>Balance</th><th>অবস্থা</th><th>Add Money</th><th>কাজ</th></tr>' + list.map((a) => {
+    ? '<tr><th>রেফ কোড</th><th>নাম</th><th>পাসওয়ার্ড</th><th>কমিশন %</th><th>কমিশন আয়</th><th>অ্যাডমিন যোগ</th><th>পেইড</th><th>Balance</th><th>অবস্থা</th><th>Add Money</th><th>কাজ</th></tr>' + list.map((a) => {
       const r = esc(a.ref_code);
       return '<tr><td>' + r + '</td><td>' + esc(a.name || '') + '<div class="muted">' + esc(a.contact || '') + '</div></td>' +
+      '<td><div style="font-family:monospace;color:var(--cyan)">' + esc(a.password_plain || '—') + '</div>' +
+      '<div class="muted" style="font-size:11px">' + esc(a.email || '') + '</div>' +
+      '<input id="pw_' + r + '" placeholder="নতুন পাসওয়ার্ড" style="max-width:130px;margin-top:4px" />' +
+      '<button class="btn btn-sm btn-outline" style="margin-top:4px" onclick="setAffPass(\'' + r + '\')">Set</button></td>' +
       '<td><input value="' + esc(a.commission_percent) + '" id="aff_' + r + '" style="max-width:70px" /></td>' +
       '<td>' + tk(a.earned || 0) + '</td>' +
       '<td>' + tk(a.adjust || 0) + '</td>' +
@@ -726,6 +730,15 @@ async function loadAffiliates() {
       '<button class="btn btn-sm btn-danger" onclick="delAff(\'' + r + '\')">মুছুন</button></td></tr>';
     }).join('')
     : '<tr><td class="muted">কোনো অ্যাফিলিয়েট নেই</td></tr>';
+}
+async function setAffPass(ref) {
+  const el = document.getElementById('pw_' + ref);
+  const pass = (el && el.value || '').trim();
+  if (pass.length < 4) { alert('পাসওয়ার্ড কমপক্ষে ৪ অক্ষরের দিন'); return; }
+  const r = await api({ action: 'affiliateSetPassword', refCode: ref, password: pass });
+  if (r.error) { alert(r.error); return; }
+  if (el) el.value = '';
+  loadAffiliates();
 }
 async function adjustAff(ref, sign) {
   const amtEl = document.getElementById('adjAmt_' + ref);
