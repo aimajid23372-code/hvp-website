@@ -410,7 +410,7 @@
         HVB_PROMO = { code: code, discount: Number(d.discount) || 0 };
         const newPrice = Math.round(BASE_PRICE - (BASE_PRICE * HVB_PROMO.discount / 100));
         document.getElementById('modalPrice').textContent = toBn(newPrice) + ' ৳';
-        msg.textContent = ' ✅ ' + toBn(HVB_PROMO.discount) + '% ছাড় প্রযোগ হয়েছে — পেমেন্টে এই দামই যাবে।';
+        msg.textContent = ' ✅ ' + toBn(HVB_PROMO.discount) + '% ছাড় প্রয়োগ হয়েছে — পেমেন্টে এই দামই যাবে।';
         msg.className = 'promo-msg success';
       } else {
         HVB_PROMO = null;
