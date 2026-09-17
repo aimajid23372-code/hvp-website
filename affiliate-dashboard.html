@@ -31,74 +31,56 @@
   .brand-text b{ font-family:'Sora',sans-serif; font-size:1.02em; }
   .brand-text span{ font-size:0.65em; color:var(--muted); letter-spacing:0.06em; text-transform:uppercase; }
   .back-link{ color:var(--muted); font-size:0.9em; }
-  .wrap{ max-width:700px; margin:0 auto; padding:44px 24px 90px; }
-  h1{ font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.5em,5vw,2em); margin-bottom:12px; }
-  p.lead{ color:var(--muted); margin-bottom:20px; }
-  .info-box{
-    background:var(--surface); border:1px solid var(--line); border-radius:12px;
-    padding:20px; margin-bottom:30px;
-  }
-  .info-box h3{ font-family:'Sora',sans-serif; font-size:1.05em; margin-bottom:10px; }
-  .info-box li{ color:var(--muted); font-size:0.92em; margin:6px 0 6px 18px; }
-  .tabs{ display:flex; gap:8px; margin-bottom:20px; }
-  .tab-btn{
-    flex:1; padding:12px; background:var(--surface); border:1px solid var(--line);
-    border-radius:8px; color:var(--muted); font-weight:600; cursor:pointer; font-size:0.92em;
-  }
-  .tab-btn.active{ background:var(--grad); color:#0A0D14; border-color:transparent; }
-  .panel{ display:none; }
-  .panel.active{ display:block; }
-  .form-group{ margin-bottom:14px; }
-  .form-group label{ display:block; font-size:0.85em; color:var(--muted); margin-bottom:6px; }
-  .form-group input{
-    width:100%; padding:12px 14px; background:var(--surface); border:1px solid var(--line);
-    border-radius:8px; color:var(--text); font-size:0.95em; font-family:'Hind Siliguri';
-  }
-  .form-group input:focus{ outline:none; border-color:var(--cyan); }
-  .submit-btn{
-    width:100%; background:var(--grad); color:#0A0D14; border:none; padding:13px;
-    font-weight:700; border-radius:8px; cursor:pointer; font-size:1em;
-  }
-  .msg{ font-size:0.88em; margin-top:12px; min-height:1.2em; }
-  .msg.error{ color:#F87171; }
-  .msg.success{ color:var(--cyan); }
-  .stat-card{
-    background:var(--surface); border:1px solid var(--line); border-radius:10px;
-    padding:16px; margin-top:14px;
-  }
-  .stat-row{ display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--line); font-size:0.92em; }
-  .stat-row:last-child{ border-bottom:none; }
-  .stat-row b{ color:var(--cyan); }
-  .dashboard{
+  .wrap{ max-width:760px; margin:0 auto; padding:40px 24px 90px; }
+  h1{ font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.5em,5vw,2em); margin-bottom:10px; }
+  p.lead{ color:var(--muted); margin-bottom:22px; }
+  .card{
     background:var(--surface); border:1px solid var(--line); border-radius:14px;
-    padding:22px; margin-top:16px;
+    padding:20px; margin-bottom:16px;
   }
-  .dash-name{ font-family:'Sora',sans-serif; font-size:1.1em; font-weight:700; margin-bottom:16px; }
-  .dash-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
-  .dash-box{ background:var(--surface-2); border:1px solid var(--line); border-radius:10px; padding:14px; text-align:center; }
-  .dash-box .num{ font-family:'Sora',sans-serif; font-weight:700; font-size:1.3em; color:var(--cyan); }
+  .card h3{ font-family:'Sora',sans-serif; font-size:1.02em; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .field{ margin-bottom:12px; }
+  .field label{ display:block; font-size:0.85em; color:var(--muted); margin-bottom:6px; }
+  .field input, .field select{
+    width:100%; padding:12px 14px; background:var(--surface-2); border:1px solid var(--line);
+    border-radius:10px; color:var(--text); font-size:0.95em; font-family:'Hind Siliguri';
+  }
+  .field input:focus, .field select:focus{ outline:none; border-color:var(--cyan); }
+  .btn{
+    width:100%; background:var(--grad); color:#0A0D14; border:none; padding:13px;
+    font-weight:700; border-radius:10px; cursor:pointer; font-size:0.98em; font-family:inherit;
+  }
+  .btn[disabled]{ opacity:.6; cursor:default; }
+  .btn-ghost{
+    background:transparent; color:var(--text); border:1px solid var(--line);
+  }
+  .btn-sm{ width:auto; padding:7px 14px; font-size:0.82em; border-radius:8px; }
+  .msg{ font-size:0.88em; margin-top:10px; min-height:1.2em; }
+  .msg.error{ color:#ffb020; }
+  .msg.success{ color:var(--cyan); }
+  .dash-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:14px; }
+  .dash-box{ background:var(--surface-2); border:1px solid var(--line); border-radius:12px; padding:14px; text-align:center; }
+  .dash-box .num{ font-family:'Sora',sans-serif; font-weight:700; font-size:1.28em; color:var(--cyan); }
   .dash-box .lbl{ color:var(--muted); font-size:0.78em; margin-top:4px; }
   .dash-pending{
     background:linear-gradient(135deg, rgba(94,234,212,0.12), rgba(167,139,250,0.14));
-    border:1px solid var(--cyan); border-radius:10px; padding:16px; text-align:center; margin-bottom:16px;
+    border:1px solid var(--cyan); border-radius:12px; padding:18px; text-align:center; margin-bottom:6px;
   }
-  .dash-pending .num{ font-family:'Sora',sans-serif; font-weight:700; font-size:1.6em; color:var(--cyan); }
+  .dash-pending .num{ font-family:'Sora',sans-serif; font-weight:700; font-size:1.7em; color:var(--cyan); }
   .dash-pending .lbl{ color:var(--muted); font-size:0.85em; margin-top:4px; }
-  .withdraw-btn{
-    width:100%; background:var(--grad); color:#0A0D14; border:none; padding:13px;
-    border-radius:8px; font-weight:700; cursor:pointer; font-size:0.95em;
-  }
-  .withdraw-note{ color:var(--muted); font-size:0.82em; text-align:center; margin-top:8px; }
-  .history-title{ font-family:'Sora',sans-serif; font-size:0.95em; margin:20px 0 10px; color:var(--muted); }
-  @media (max-width:600px){ .wrap{ padding:30px 18px 70px; } }
-
-  /* Affiliate tutorial চলন্ত ব্যানার */
-  .hvb-marquee{ display:block; background:linear-gradient(90deg, rgba(94,234,212,.14), rgba(167,139,250,.16));
-    border-bottom:1px solid var(--line); overflow:hidden; white-space:nowrap; cursor:pointer; }
-  .hvb-marquee span{ display:inline-block; padding:9px 0; font-weight:600; font-size:.95em;
-    animation:hvbslide 18s linear infinite; }
-  .hvb-marquee:hover span{ animation-play-state:paused; }
-  @keyframes hvbslide{ from{ transform:translateX(100%);} to{ transform:translateX(-100%);} }
+  .note{ color:var(--muted); font-size:0.83em; margin-top:8px; }
+  .row{ display:flex; justify-content:space-between; gap:10px; padding:9px 0; border-bottom:1px solid var(--line); font-size:0.92em; }
+  .row:last-child{ border-bottom:none; }
+  .row b{ color:var(--cyan); }
+  .pay-line{ display:flex; align-items:center; gap:10px; background:var(--surface-2); border:1px solid var(--line);
+    border-radius:10px; padding:12px 14px; }
+  .pay-line .pm{ font-weight:700; color:var(--cyan); }
+  .pay-line .pn{ font-family:'JetBrains Mono',monospace; letter-spacing:.02em; }
+  .badge{ font-size:.72em; padding:3px 9px; border-radius:999px; border:1px solid var(--line); color:var(--muted); }
+  .hide{ display:none !important; }
+  .split{ display:flex; gap:10px; }
+  .split > *{ flex:1; }
+  @media (max-width:600px){ .wrap{ padding:26px 16px 70px; } }
 </style>
 <link rel="stylesheet" href="hvb-theme.css">
 <link rel="stylesheet" href="hvb-ui.css">
@@ -107,7 +89,7 @@
 </head>
 <body>
 <script src="hvb-ref.js"></script>
-<script src="/hvb-track.js?v=20260916-2"></script>
+<script src="/hvb-track.js?v=20260917-1"></script>
 
 <header>
   <a href="/" class="brand">
@@ -124,206 +106,279 @@
   </a>
 </div>
 
-
-
-
 <div class="wrap">
   <h1>Affiliate Dashboard</h1>
-  <p class="lead">আপনার রেফার লিংক, বিক্রি ও কমিশনের সব হিসাব এখানে।</p>
+  <p class="lead">আপনার রেফার লিংক, বিক্রি, কমিশন ও টাকা তোলার সব হিসাব এক জায়গায়।</p>
 
-  <div class="panel active" id="loginPanel">
-    <div class="form-group">
-      <label>আপনার Ref Code</label>
-      <input type="text" id="statsRefCode" placeholder="যেমন: karim123">
-    </div>
-    <div class="form-group">
-      <label>পাসওয়ার্ড</label>
-      <input type="password" id="statsPassword" placeholder="পাসওয়ার্ড">
-    </div>
-    <button type="button" class="submit-btn" onclick="loadStats()">ড্যাশবোর্ড দেখুন</button>
-    <div id="statsMsg" class="msg"></div>
+  <div id="bootBox" class="card" style="text-align:center;">
+    <span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>
   </div>
 
-  <div id="linkBox" class="info-box" style="display:none;"></div>
-  <div id="statsCard"></div>
+  <div id="authBox" class="hide"></div>
+  <div id="joinBox" class="hide"></div>
+  <div id="dashBox" class="hide"></div>
+
   <p style="margin-top:22px;"><a href="/affiliate" class="back-link">← Affiliate Program পেজে ফিরে যান</a></p>
 </div>
 
 <script>
-  function copyRefLink(btn){
-    const text = document.getElementById('refLinkText').textContent;
-    navigator.clipboard.writeText(text).then(function(){
-      const old = btn.textContent;
-      btn.textContent = 'কপি হয়েছে ✓ ';
-      setTimeout(function(){ btn.textContent = old; }, 2000);
-    });
+(function(){
+  var AFF = { token:'', refCode:'', password:'', data:null };
+  window._aff = AFF;
+
+  function $(id){ return document.getElementById(id); }
+  function show(id){ $(id).classList.remove('hide'); }
+  function hide(id){ $(id).classList.add('hide'); }
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); }
+  function note(id, text, ok){
+    var el = $(id); if(!el) return;
+    el.textContent = text || '';
+    el.className = 'msg ' + (ok ? 'success' : 'error');
+  }
+  function auth(extra){
+    var body = extra || {};
+    if(AFF.token) body.token = AFF.token;
+    else { body.refCode = AFF.refCode; body.password = AFF.password; }
+    return body;
+  }
+  async function post(url, body){
+    var res = await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
+    var data = {};
+    try { data = await res.json(); } catch(e){}
+    return { ok: res.ok, status: res.status, data: data };
   }
 
-  function showLink(refCode){
-    const link = window.location.origin + '/?ref=' + refCode;
-    const box = document.getElementById('linkBox');
-    box.style.display = 'block';
-    box.innerHTML =
-      '<h3 style="font-family:Sora,sans-serif; margin-bottom:8px;"> 🔗 আপনার রেফার লিংক</h3>' +
-      '<p style="color:var(--muted); font-size:0.9em; margin-bottom:12px;">এই লিংক দিয়ে কেউ সাইটে ঢুকে যেকোনো কোর্স কিনলেই ২০% কমিশন আপনার।</p>' +
-      '<div id="refLinkText" style="word-break:break-all; background:var(--surface-2); border:1px solid var(--cyan); border-radius:8px; padding:14px; font-weight:700; color:var(--cyan);">' + link + '</div>' +
-      '<button type="button" class="submit-btn" style="margin-top:12px;" onclick="copyRefLink(this)"> 📋 লিংক কপি করুন</button>';
-  }
-
-  async function requestWithdraw(){
-    const btn = document.getElementById('wdSubmit');
-    const method = (document.getElementById('wdMethod') || {}).value || '';
-    const account = ((document.getElementById('wdAccount') || {}).value || '').trim();
-    const amount = ((document.getElementById('wdAmount') || {}).value || '').trim();
-    const note = document.getElementById('wdMsg');
-    function fail(t){ if(note){ note.textContent = ' \u26a0\ufe0f ' + t; note.style.color = '#ffb020'; } }
-    if(!method){ return fail('bKash / Nagad / Rocket বেছে নিন'); }
-    if(!/^01[3-9][0-9]{8}$/.test(account.replace(/[^0-9]/g,''))){ return fail('সঠিক ১১ ডিজিটের নাম্বার দিন'); }
-    if(!amount || Number(amount) <= 0){ return fail('কত টাকা তুলবেন লিখুন'); }
-    if(btn){ btn.disabled = true; }
-    if(note){ note.textContent = ''; }
-    try {
-      const res = await fetch('/api/withdraw-request', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          refCode: window._currentRefCode,
-          password: window._currentPassword,
-          method: method,
-          account: account,
-          amount: Number(amount)
-        })
-      });
-      const data = await res.json();
-      if(btn){ btn.disabled = false; }
-      if(!res.ok){ return fail(data.error || 'সমস্যা হয়েছে'); }
-      alert(' \u2705 Withdraw রিকোয়েস্ট পাঠানো হয়েছে (' + data.amount + ' ৳ — ' + data.method + ' ' + data.account + ')। ২৪-৪৮ ঘণ্টার মধ্যে টাকা পাঠানো হবে।');
-      loadStats(window._currentRefCode, window._currentPassword);
-    } catch(err){ if(btn){ btn.disabled = false; } fail('সমস্যা হয়েছে, আবার চেষ্টা করুন।'); }
-  }
-
-  async function loadStats(refArg, passArg){
-    const refCode = (refArg || document.getElementById('statsRefCode').value || '').trim();
-    const password = passArg || document.getElementById('statsPassword').value;
-    const msg = document.getElementById('statsMsg');
-    const card = document.getElementById('statsCard');
-    card.innerHTML = '';
-    if(!refCode || !password){
-      msg.textContent = ' ⚠️ Ref Code ও পাসওয়ার্ড দিন';
-      msg.className = 'msg error';
-      return;
-    }
-    msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
-    msg.className = 'msg';
-    try {
-      const res = await fetch('/api/affiliate-stats', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ refCode: refCode, password: password })
-      });
-      const data = await res.json();
-      if(!res.ok){
-        msg.textContent = ' ⚠️ ' + (data.error || 'সমস্যা হয়েছে');
-        msg.className = 'msg error';
-        return;
-      }
-      msg.textContent = '';
-      document.getElementById('loginPanel').style.display = 'none';
-      showLink(refCode);
-
-      let historyHtml = '';
-      (data.orders || []).forEach(function(o){
-        const courseName = o.course === 'bundle' ? 'Long+Short' : 'Short';
-        const d = new Date(o.date);
-        const dateStr = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear();
-        historyHtml += '<div class="stat-row"><span>' + dateStr + ' — ' + courseName + '</span><b>+' + o.commission + ' ৳</b></div>';
-      });
-
-      const minW = Number(data.minWithdraw || 500);
-      if (Number(data.adjust || 0) !== 0) {
-        (data.adjustments || []).forEach(function(a){
-          const d = new Date(a.date);
-          const dateStr = d.getDate() + '/' + (d.getMonth()+1) + '/' + d.getFullYear();
-          const sign = Number(a.amount) >= 0 ? '+' : '';
-          historyHtml += '<div class="stat-row"><span>' + dateStr + ' — ' + (a.note || 'Admin Adjustment') + '</span><b>' + sign + a.amount + ' ৳</b></div>';
-        });
-      }
-      const available = Number(data.available != null ? data.available : data.pending);
-      const held = Number(data.held || 0);
-      const inputStyle = 'width:100%; padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,0.15); background:var(--surface-2); color:#fff; font-size:0.95em; margin-bottom:10px;';
-      const canWithdraw = available >= minW;
-      const withdrawSection = canWithdraw
-        ? '<div style="margin-top:14px; text-align:left;">' +
-            '<div style="font-family:Sora,sans-serif; font-weight:700; margin-bottom:10px;"> 💰 টাকা তুলুন</div>' +
-            '<select id="wdMethod" style="' + inputStyle + '">' +
-              '<option value="">পেমেন্ট মাধ্যম বেছে নিন</option>' +
-              '<option value="bKash">bKash</option>' +
-              '<option value="Nagad">Nagad</option>' +
-              '<option value="Rocket">Rocket</option>' +
-            '</select>' +
-            '<input id="wdAccount" type="tel" inputmode="numeric" maxlength="11" placeholder="যে নাম্বারে টাকা নিবেন (01XXXXXXXXX)" style="' + inputStyle + '">' +
-            '<input id="wdAmount" type="number" min="' + minW + '" max="' + available + '" placeholder="কত টাকা তুলবেন (সর্বনিম্ন ' + minW + ', সর্বোচ্চ ' + available + ')" style="' + inputStyle + '">' +
-            '<button id="wdSubmit" class="withdraw-btn" onclick="requestWithdraw()">Withdraw Request পাঠান</button>' +
-            '<p id="wdMsg" class="withdraw-note"></p>' +
-            '<p class="withdraw-note">রিকোয়েস্ট পাঠানোর পর ২৪-৪৮ ঘণ্টার মধ্যে আপনার দেওয়া নাম্বারে টাকা পাঠানো হবে।</p>' +
+  /* ---------------- লগইন স্ক্রিন ---------------- */
+  function renderAuth(hasGoogle){
+    hide('bootBox'); hide('joinBox'); hide('dashBox'); show('authBox');
+    $('authBox').innerHTML =
+      (hasGoogle
+        ? '<div class="card">' +
+            '<h3>অ্যাফিলিয়েট অ্যাকাউন্ট</h3>' +
+            '<p class="note" style="margin-top:0;">আপনার Gmail দিয়ে একবার লগইন করলেই হবে — এরপর আর বারবার পাসওয়ার্ড লাগবে না।</p>' +
+            '<button class="btn" style="margin-top:12px;" onclick="_aff.google()">Google দিয়ে লগইন / সাইনআপ</button>' +
           '</div>'
-        : '<p class="withdraw-note">কমপক্ষে ' + minW + ' ৳ ব্যালেন্স হলে Withdraw করা যাবে। আর ' + Math.max(0, minW - available) + ' ৳ হলেই পারবেন।</p>';
-      const heldSection = held > 0
-        ? '<p class="withdraw-note">' + held + ' ৳ এর রিকোয়েস্ট এখনো প্রসেসিং-এ আছে।</p>'
-        : '';
+        : '') +
+      '<div class="card">' +
+        '<h3>Ref Code দিয়ে লগইন <span class="badge">পুরোনো নিয়ম</span></h3>' +
+        '<div class="field"><label>Ref Code / Username</label><input id="lgRef" type="text" placeholder="যেমন: karim123"></div>' +
+        '<div class="field"><label>পাসওয়ার্ড</label><input id="lgPass" type="password" placeholder="পাসওয়ার্ড"></div>' +
+        '<button class="btn" onclick="_aff.legacyLogin()">ড্যাশবোর্ড দেখুন</button>' +
+        '<div id="lgMsg" class="msg"></div>' +
+      '</div>';
+  }
 
-      card.innerHTML =
-        '<div class="dashboard">' +
-        '<div class="dash-name"> 👋 ' + data.name + '</div>' +
+  AFF.google = function(){
+    if(window.HVBAuth && HVBAuth.signInWithGoogle) HVBAuth.signInWithGoogle('affiliate-dashboard');
+    else location.href = '/login';
+  };
+
+  AFF.legacyLogin = async function(){
+    var ref = ($('lgRef').value || '').trim().toLowerCase();
+    var pass = $('lgPass').value || '';
+    if(!ref || !pass) return note('lgMsg', 'Ref Code ও পাসওয়ার্ড দিন');
+    note('lgMsg', '');
+    AFF.token = ''; AFF.refCode = ref; AFF.password = pass;
+    var r = await post('/api/affiliate-stats', auth({}));
+    if(!r.ok) return note('lgMsg', r.data.error || 'সমস্যা হয়েছে');
+    try { sessionStorage.setItem('hvb_aff_ref', ref); sessionStorage.setItem('hvb_aff_pass', pass); } catch(e){}
+    renderDash(r.data);
+  };
+
+  /* ---------------- নতুন অ্যাফিলিয়েট খোলা ---------------- */
+  function renderJoin(email, name){
+    hide('bootBox'); hide('authBox'); hide('dashBox'); show('joinBox');
+    $('joinBox').innerHTML =
+      '<div class="card">' +
+        '<h3>অ্যাফিলিয়েট শুরু করুন <span class="badge">' + esc(email) + '</span></h3>' +
+        '<p class="note" style="margin-top:0;">শুধু নাম, নাম্বার আর নিজের পছন্দের একটা Ref Code দিন। পাসওয়ার্ড লাগবে না — এই Gmail দিয়েই সবসময় ঢুকতে পারবেন।</p>' +
+        '<div class="field" style="margin-top:14px;"><label>আপনার নাম</label><input id="jnName" type="text" value="' + esc(name || '') + '" placeholder="পুরো নাম"></div>' +
+        '<div class="field"><label>যোগাযোগের নাম্বার</label><input id="jnContact" type="tel" inputmode="numeric" maxlength="11" placeholder="01XXXXXXXXX"></div>' +
+        '<div class="field"><label>Ref Code (username)</label><input id="jnRef" type="text" placeholder="ইংরেজি অক্ষর/সংখ্যা, যেমন: karim123"></div>' +
+        '<button class="btn" id="jnBtn" onclick="_aff.join()">অ্যাফিলিয়েট অ্যাকাউন্ট খুলুন</button>' +
+        '<div id="jnMsg" class="msg"></div>' +
+      '</div>' +
+      '<div class="card">' +
+        '<h3>আগে থেকেই অ্যাফিলিয়েট আছে?</h3>' +
+        '<p class="note" style="margin-top:0;">পুরোনো Ref Code ও পাসওয়ার্ড দিলে সেই অ্যাকাউন্ট এই Gmail-এর সাথে জুড়ে যাবে — এরপর আর পাসওয়ার্ড লাগবে না।</p>' +
+        '<div class="split" style="margin-top:12px;">' +
+          '<div class="field"><input id="lnRef" type="text" placeholder="Ref Code"></div>' +
+          '<div class="field"><input id="lnPass" type="password" placeholder="পাসওয়ার্ড"></div>' +
+        '</div>' +
+        '<button class="btn btn-ghost" onclick="_aff.link()">অ্যাকাউন্ট যুক্ত করুন</button>' +
+        '<div id="lnMsg" class="msg"></div>' +
+      '</div>';
+  }
+
+  AFF.join = async function(){
+    var name = ($('jnName').value || '').trim();
+    var contact = ($('jnContact').value || '').trim();
+    var ref = ($('jnRef').value || '').trim().toLowerCase();
+    if(!name) return note('jnMsg', 'আপনার নাম লিখুন');
+    if(!/^01[3-9][0-9]{8}$/.test(contact.replace(/[^0-9]/g,''))) return note('jnMsg', 'সঠিক ১১ ডিজিটের নাম্বার দিন');
+    if(ref.replace(/[^a-z0-9]/g,'').length < 3) return note('jnMsg', 'Ref Code কমপক্ষে ৩ অক্ষরের হতে হবে');
+    $('jnBtn').disabled = true; note('jnMsg','');
+    var r = await post('/api/affiliate-signup', auth({ name:name, contact:contact, refCode:ref }));
+    $('jnBtn').disabled = false;
+    if(!r.ok) return note('jnMsg', r.data.error || 'সমস্যা হয়েছে');
+    boot();
+  };
+
+  AFF.link = async function(){
+    var ref = ($('lnRef').value || '').trim().toLowerCase();
+    var pass = $('lnPass').value || '';
+    if(!ref || !pass) return note('lnMsg', 'Ref Code ও পাসওয়ার্ড দিন');
+    note('lnMsg','');
+    var r = await post('/api/affiliate-signup', { token: AFF.token, action:'link', refCode: ref, password: pass });
+    if(!r.ok) return note('lnMsg', r.data.error || 'সমস্যা হয়েছে');
+    boot();
+  };
+
+  /* ---------------- ড্যাশবোর্ড ---------------- */
+  function renderDash(d){
+    AFF.data = d;
+    AFF.refCode = d.refCode || AFF.refCode;
+    hide('bootBox'); hide('authBox'); hide('joinBox'); show('dashBox');
+
+    var link = location.origin + '/?ref=' + AFF.refCode;
+    var minW = Number(d.minWithdraw || 500);
+    var available = Number(d.available != null ? d.available : d.pending);
+    var held = Number(d.held || 0);
+    var hasPay = !!(d.payMethod && d.payAccount);
+
+    var history = '';
+    (d.orders || []).forEach(function(o){
+      var dt = new Date(o.date);
+      history += '<div class="row"><span>' + dt.getDate() + '/' + (dt.getMonth()+1) + '/' + dt.getFullYear() +
+        ' — ' + (o.course === 'bundle' ? 'Long+Short' : 'Short') + '</span><b>+' + o.commission + ' ৳</b></div>';
+    });
+    (d.adjustments || []).forEach(function(a){
+      var dt = new Date(a.date);
+      history += '<div class="row"><span>' + dt.getDate() + '/' + (dt.getMonth()+1) + '/' + dt.getFullYear() +
+        ' — ' + esc(a.note || 'Admin Adjustment') + '</span><b>' + (Number(a.amount) >= 0 ? '+' : '') + a.amount + ' ৳</b></div>';
+    });
+
+    var payCard =
+      '<div class="card">' +
+        '<h3>💳 টাকা পাওয়ার নাম্বার' + (hasPay ? '<button class="btn btn-ghost btn-sm" onclick="_aff.editPay()">Edit</button>' : '') + '</h3>' +
+        (hasPay
+          ? '<div id="payView" class="pay-line"><span class="pm">' + esc(d.payMethod) + '</span><span class="pn">' + esc(d.payAccount) + '</span></div>'
+          : '<p class="note" style="margin-top:0;">টাকা তোলার আগে আপনার bKash / Nagad / Rocket নাম্বার যোগ করুন।</p>') +
+        '<div id="payForm" class="' + (hasPay ? 'hide' : '') + '" style="margin-top:12px;">' +
+          '<div class="field"><label>পেমেন্ট মাধ্যম</label><select id="pmMethod">' +
+            '<option value="">বেছে নিন</option>' +
+            ['bKash','Nagad','Rocket'].map(function(m){ return '<option value="' + m + '"' + (d.payMethod === m ? ' selected' : '') + '>' + m + '</option>'; }).join('') +
+          '</select></div>' +
+          '<div class="field"><label>নাম্বার</label><input id="pmAccount" type="tel" inputmode="numeric" maxlength="11" value="' + esc(d.payAccount || '') + '" placeholder="01XXXXXXXXX"></div>' +
+          '<button class="btn" id="pmBtn" onclick="_aff.savePay()">নাম্বার সেভ করুন</button>' +
+        '</div>' +
+        '<div id="pmMsg" class="msg"></div>' +
+      '</div>';
+
+    var withdrawCard =
+      '<div class="card">' +
+        '<h3>💰 টাকা তুলুন</h3>' +
+        (available < minW
+          ? '<p class="note" style="margin-top:0;">কমপক্ষে ' + minW + ' ৳ হলে Withdraw করা যাবে। আর ' + Math.max(0, minW - available) + ' ৳ হলেই পারবেন।</p>'
+          : (!hasPay
+              ? '<p class="note" style="margin-top:0;">আগে উপরে আপনার bKash / Nagad / Rocket নাম্বার যোগ করুন।</p>'
+              : '<p class="note" style="margin-top:0;">টাকা যাবে: <b style="color:var(--cyan)">' + esc(d.payMethod) + ' — ' + esc(d.payAccount) + '</b></p>' +
+                '<div class="field" style="margin-top:12px;"><label>কত টাকা তুলবেন (সর্বনিম্ন ' + minW + ', সর্বোচ্চ ' + available + ')</label>' +
+                '<input id="wdAmount" type="number" min="' + minW + '" max="' + available + '" placeholder="' + available + '"></div>' +
+                '<button class="btn" id="wdBtn" onclick="_aff.withdraw()">Withdraw Request পাঠান</button>' +
+                '<p class="note">রিকোয়েস্টের ২৪-৪৮ ঘণ্টার মধ্যে আপনার দেওয়া নাম্বারে টাকা পাঠানো হবে।</p>')) +
+        (held > 0 ? '<p class="note">' + held + ' ৳ এর রিকোয়েস্ট এখনো প্রসেসিং-এ আছে।</p>' : '') +
+        '<div id="wdMsg" class="msg"></div>' +
+      '</div>';
+
+    $('dashBox').innerHTML =
+      '<div class="card">' +
+        '<h3>👋 ' + esc(d.name) + '<span class="badge">' + esc(AFF.refCode) + '</span></h3>' +
         '<div class="dash-grid">' +
-        '<div class="dash-box"><div class="num">' + data.totalOrders + '</div><div class="lbl">মোট বিক্রি</div></div>' +
-        '<div class="dash-box"><div class="num">' + data.totalSales + ' ৳</div><div class="lbl">মোট বিক্রির টাকা</div></div>' +
-        '<div class="dash-box"><div class="num">' + data.commissionPercent + '%</div><div class="lbl">কমিশন রেট</div></div>' +
-        '<div class="dash-box"><div class="num">' + data.paidOut + ' ৳</div><div class="lbl">এ পর্যন্ত পেয়েছেন</div></div>' +
+          '<div class="dash-box"><div class="num">' + d.totalOrders + '</div><div class="lbl">মোট বিক্রি</div></div>' +
+          '<div class="dash-box"><div class="num">' + d.totalSales + ' ৳</div><div class="lbl">মোট বিক্রির টাকা</div></div>' +
+          '<div class="dash-box"><div class="num">' + d.commissionPercent + '%</div><div class="lbl">কমিশন রেট</div></div>' +
+          '<div class="dash-box"><div class="num">' + d.paidOut + ' ৳</div><div class="lbl">এ পর্যন্ত পেয়েছেন</div></div>' +
         '</div>' +
         '<div class="dash-pending"><div class="num">' + available + ' ৳</div><div class="lbl">তোলার মতো ব্যালেন্স</div></div>' +
-        heldSection +
-        withdrawSection +
-        '</div>' +
-        (historyHtml ? '<div class="history-title">বিক্রির হিস্টোরি</div><div class="stat-card">' + historyHtml + '</div>' : '');
+      '</div>' +
+      '<div class="card">' +
+        '<h3>🔗 আপনার রেফার লিংক</h3>' +
+        '<div id="refLinkText" style="word-break:break-all; background:var(--surface-2); border:1px solid var(--cyan); border-radius:10px; padding:14px; font-weight:700; color:var(--cyan);">' + esc(link) + '</div>' +
+        '<button class="btn" style="margin-top:12px;" onclick="_aff.copy(this)">📋 লিংক কপি করুন</button>' +
+      '</div>' +
+      payCard +
+      withdrawCard +
+      (history ? '<div class="card"><h3>হিসাবের হিস্টোরি</h3>' + history + '</div>' : '');
+  }
 
-      window._currentRefCode = refCode;
-      window._currentPassword = password;
-    } catch(err){
-      msg.textContent = 'সমস্যা হয়েছে, আবার চেষ্টা করুন।';
-      msg.className = 'msg error';
+  AFF.copy = function(btn){
+    navigator.clipboard.writeText($('refLinkText').textContent).then(function(){
+      var old = btn.textContent; btn.textContent = 'কপি হয়েছে ✓';
+      setTimeout(function(){ btn.textContent = old; }, 2000);
+    });
+  };
+
+  AFF.editPay = function(){ $('payForm').classList.remove('hide'); };
+
+  AFF.savePay = async function(){
+    var m = $('pmMethod').value || '';
+    var a = ($('pmAccount').value || '').replace(/[^0-9]/g,'');
+    if(!m) return note('pmMsg', 'bKash / Nagad / Rocket বেছে নিন');
+    if(!/^01[3-9][0-9]{8}$/.test(a)) return note('pmMsg', 'সঠিক ১১ ডিজিটের নাম্বার দিন');
+    $('pmBtn').disabled = true; note('pmMsg','');
+    var r = await post('/api/affiliate-stats', auth({ action:'savePayout', payMethod:m, payAccount:a }));
+    $('pmBtn').disabled = false;
+    if(!r.ok) return note('pmMsg', r.data.error || 'সেভ করা যায়নি');
+    renderDash(r.data);
+    note('pmMsg', 'নাম্বার সেভ হয়েছে ✓', true);
+  };
+
+  AFF.withdraw = async function(){
+    var amount = ($('wdAmount').value || '').trim();
+    if(!amount || Number(amount) <= 0) return note('wdMsg', 'কত টাকা তুলবেন লিখুন');
+    $('wdBtn').disabled = true; note('wdMsg','');
+    var r = await post('/api/withdraw-request', auth({ amount: Number(amount) }));
+    $('wdBtn').disabled = false;
+    if(!r.ok) return note('wdMsg', r.data.error || 'সমস্যা হয়েছে');
+    note('wdMsg', 'রিকোয়েস্ট পাঠানো হয়েছে ✓ (' + r.data.amount + ' ৳ — ' + r.data.method + ' ' + r.data.account + ')', true);
+    boot(true);
+  };
+
+  /* ---------------- শুরু ---------------- */
+  async function boot(keepMsg){
+    if(!keepMsg){ show('bootBox'); }
+    var r = await post('/api/affiliate-stats', auth({}));
+    if(r.ok) return renderDash(r.data);
+    if(r.data && r.data.code === 'no_affiliate'){
+      var u = (window.HVBAuth && HVBAuth.user) || null;
+      var nm = u && u.user_metadata && (u.user_metadata.full_name || u.user_metadata.name);
+      return renderJoin(r.data.email || (u && u.email) || '', nm || '');
     }
+    renderAuth(!!(window.HVBAuth && HVBAuth.sb));
+  }
+
+  function start(){
+    var A = window.HVBAuth;
+    if(A && A.session && A.session.access_token){
+      AFF.token = A.session.access_token;
+      return boot();
+    }
+    var r = '', p = '';
+    try { r = sessionStorage.getItem('hvb_aff_ref') || ''; p = sessionStorage.getItem('hvb_aff_pass') || ''; } catch(e){}
+    if(r && p){ AFF.refCode = r; AFF.password = p; return boot(); }
+    renderAuth(!!(A && A.sb));
   }
 
   window.addEventListener('DOMContentLoaded', function(){
-    let r = '', p = '';
-    try {
-      r = sessionStorage.getItem('hvb_aff_ref') || '';
-      p = sessionStorage.getItem('hvb_aff_pass') || '';
-    } catch(e){}
-    if(r && p){
-      document.getElementById('statsRefCode').value = r;
-      document.getElementById('statsPassword').value = p;
-      loadStats(r, p);
-    }
+    if(window.HVBAuth && HVBAuth.whenReady) HVBAuth.whenReady(start);
+    else setTimeout(start, 600);
   });
+})();
 </script>
 
 <a class="hvb-msgr-float" href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" aria-label="Messenger-এ প্রশ্ন করুন"><i>💬 </i> Messenger-এ প্রশ্ন করুন</a>
 
-<script>
-/* HVB scroll reveal */
-(function(){
-  var sel = 'section, .hvb-stats, .hvb-policy-box, .course-card, .why-item, .hvb-idcard, .hvb-contact-card, .payment-strip, .hvb-tut-cta';
-  var els = [];
-  document.querySelectorAll(sel).forEach(function(el){ el.classList.add('hvb-reveal'); els.push(el); });
-  if(!('IntersectionObserver' in window)){ els.forEach(function(e){ e.classList.add('is-in'); }); return; }
-  var io = new IntersectionObserver(function(entries){
-    entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('is-in'); io.unobserve(en.target); } });
-  }, { threshold:0.08, rootMargin:'0px 0px -40px 0px' });
-  els.forEach(function(el){ io.observe(el); });
-})();
-</script>
 <script src="hvb-account.js"></script>
 </body>
 </html>
