@@ -665,10 +665,18 @@ async function loadWithdrawals() {
   const ml = document.getElementById('minWLabel'); if (ml) ml.innerText = '(সর্বনিম্ন ' + minW + '৳)';
   const list = d.requests || [];
   box.innerHTML = list.length ? list.map((r) =>
-    '<div class="data-row"><div><b>' + esc(r.ref_code || r.affiliate_id || '') + '</b><div class="muted">' + esc(r.method || '') + ' · ' + esc(r.account || '') + '</div></div>' +
+    '<div class="data-row"><div><b>' + esc(r.ref_code || r.affiliate_id || '') + '</b>' +
+      '<div class="muted">' + esc(r.name || '') + '</div>' +
+      '<div style="color:var(--cyan); font-weight:700;">' + esc(r.method || '') + ' — ' + esc(r.account || r.contact || 'নাম্বার দেওয়া হয়নি') + '</div></div>' +
     '<div><b style="color:var(--cyan)">' + tk(r.amount) + '</b> <span class="badge ' + (r.status === 'paid' ? 'success' : 'warning') + '">' + esc(r.status || 'pending') + '</span> ' +
-    (r.status !== 'paid' ? '<button class="btn btn-sm" onclick="approveWithdraw(\'' + esc(r.id) + '\')">পেমেন্ট হয়েছে</button>' : '') + '</div></div>').join('')
+    (r.status !== 'paid' ? '<button class="btn btn-sm" onclick="approveWithdraw(\'' + esc(r.id) + '\')">পেমেন্ট হয়েছে</button> ' : '') +
+    '<button class="btn btn-sm" onclick="deleteWithdraw(\'' + esc(r.id) + '\')">Delete</button></div></div>').join('')
     : '<div class="muted">কোনো রিকোয়েস্ট নেই</div>';
+}
+async function deleteWithdraw(id) {
+  if (!confirm('এই রিকোয়েস্টটি মুছে ফেলবেন? অ্যাফিলিয়েটের ব্যালেন্স ঠিক থাকবে, সে আবার রিকোয়েস্ট পাঠাতে পারবে।')) return;
+  await api({ action: 'withdrawDelete', requestId: id });
+  loadWithdrawals();
 }
 async function approveWithdraw(id) {
   if (!confirm('টাকা পাঠিয়েছেন? তাহলেই কনফার্ম করুন।')) return;
