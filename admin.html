@@ -6,173 +6,9 @@
 <meta name="robots" content="noindex, nofollow" />
 <title>HVB Admin Panel</title>
 <style>
-  :root{
-    --bg:#060912; --bg2:#080D1A; --panel:#0D1425; --panel2:#131C30; --panel3:#18233C;
-    --line:rgba(180,240,240,.10); --line2:rgba(180,240,240,.18);
-    --text:#EAF1FF; --muted:#8FA0C4; --dim:#6B7A9C;
-    --cyan:#3FC7F2; --blue:#2E8BFF; --violet:#7C6BF5; --ice:#B4F0F0;
-    --ok:#34D399; --warn:#FBBF24; --danger:#F87171;
-    --grad:linear-gradient(135deg,var(--ice),var(--cyan) 45%,var(--violet));
-    --glass:linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.01));
-    --sh:0 18px 40px -22px rgba(0,0,0,.9);
-    --r:16px;
-  }
-  *{box-sizing:border-box}
-  ::-webkit-scrollbar{width:9px;height:9px}
-  ::-webkit-scrollbar-thumb{background:#1d2947;border-radius:20px}
-  html,body{margin:0}
-  body{background:radial-gradient(1100px 600px at 12% -10%,rgba(124,107,245,.16),transparent 60%),radial-gradient(900px 500px at 100% 0%,rgba(63,199,242,.12),transparent 55%),var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,'Noto Sans Bengali',sans-serif;font-size:15px}
-  a{color:var(--cyan);text-decoration:none}
-  .shell{display:flex;min-height:100vh}
-
-  /* ---------- Sidebar ---------- */
-  .side{width:252px;flex:0 0 252px;background:linear-gradient(180deg,#0B1223,#080D1A);border-right:1px solid var(--line);padding:18px 14px 26px;position:sticky;top:0;height:100vh;overflow:auto;display:flex;flex-direction:column}
-  .brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:1.08em;padding:4px 6px 20px}
-  .brand .dot{width:36px;height:36px;border-radius:12px;background:var(--grad);display:grid;place-items:center;color:#04121f;font-weight:900;font-size:.85em;box-shadow:0 8px 20px -8px var(--cyan)}
-  .brand small{display:block;font-weight:500;font-size:.68em;color:var(--dim);letter-spacing:.08em}
-  .nav-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:11px;color:var(--muted);cursor:pointer;font-size:.9em;margin-bottom:2px;transition:.16s;position:relative;user-select:none}
-  .nav-item:hover{background:var(--panel2);color:var(--text)}
-  .nav-item.active{background:linear-gradient(90deg,rgba(63,199,242,.18),rgba(124,107,245,.10));color:#fff;font-weight:700}
-  .nav-item.active:before{content:'';position:absolute;left:0;top:9px;bottom:9px;width:3px;border-radius:0 4px 4px 0;background:var(--grad)}
-  .nav-item svg{width:18px;height:18px;flex:0 0 18px;opacity:.95}
-  .nav-sep{font-size:.66em;letter-spacing:.16em;color:#4E5C7E;margin:18px 12px 8px;text-transform:uppercase;font-weight:700}
-  .side-foot{margin-top:auto;padding-top:16px;border-top:1px solid var(--line)}
-
-  /* ---------- Main ---------- */
-  .main{flex:1;min-width:0;padding:0 26px 70px}
-  .topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:14px;justify-content:space-between;flex-wrap:wrap;padding:16px 0 14px;margin-bottom:18px;background:linear-gradient(180deg,rgba(6,9,18,.97),rgba(6,9,18,.75) 70%,transparent);backdrop-filter:blur(6px)}
-  .topbar h1{font-size:1.45em;margin:0;letter-spacing:-.01em}
-  .kicker{font-size:.66em;text-transform:uppercase;color:var(--cyan);letter-spacing:.18em;font-weight:700;margin-bottom:3px}
-  .burger{display:none;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:12px;padding:9px 13px;font-size:1.05em;cursor:pointer}
-  .top-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
-  .who{display:flex;align-items:center;gap:9px;background:var(--panel);border:1px solid var(--line);border-radius:30px;padding:5px 13px 5px 5px;font-size:.82em;color:var(--muted)}
-  .who i{width:28px;height:28px;border-radius:50%;background:var(--grad);display:grid;place-items:center;color:#04121f;font-style:normal;font-weight:800;font-size:.85em}
-
-  .card{background:var(--glass),var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px;margin-bottom:16px;box-shadow:var(--sh)}
-  .card h3{margin:0 0 6px;font-size:1.04em}
-  .card .sub{color:var(--muted);font-size:.85em;margin:0 0 14px}
-  .card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:14px}
-  .card-head h3{margin:0}
-  .grid{display:grid;gap:14px}
-  .stats{grid-template-columns:repeat(auto-fit,minmax(196px,1fr))}
-  .stat{background:var(--glass),var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px 17px;display:flex;align-items:center;gap:14px;transition:.18s;box-shadow:var(--sh)}
-  .stat:hover{border-color:var(--line2);transform:translateY(-2px)}
-  .stat .ic{width:42px;height:42px;border-radius:13px;flex:0 0 42px;display:grid;place-items:center;background:rgba(63,199,242,.12);color:var(--cyan)}
-  .stat .ic svg{width:20px;height:20px}
-  .stat .lbl{color:var(--muted);font-size:.78em;margin-bottom:3px;letter-spacing:.02em}
-  .stat .val{font-size:1.45em;font-weight:800}
-
-  input,select,textarea{width:100%;background:#0A1226;border:1px solid var(--line);border-radius:11px;padding:11px 12px;color:var(--text);font-size:.93em;font-family:inherit;transition:.15s}
-  input:focus,select:focus,textarea:focus{outline:0;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(63,199,242,.13)}
-  input[type=color]{padding:4px;height:44px}
-  textarea{resize:vertical}
-  label{display:block;font-size:.8em;color:var(--muted);margin:0 0 6px;font-weight:600}
-  .hint{color:var(--dim);font-size:.76em;margin-top:5px}
-  .field{margin-bottom:14px}
-  .row{display:flex;gap:12px;flex-wrap:wrap}
-  .row>*{flex:1;min-width:160px}
-  .end{display:flex;align-items:flex-end}
-
-  .btn{background:var(--grad);color:#04121f;border:0;border-radius:11px;padding:11px 18px;font-weight:700;cursor:pointer;font-size:.9em;display:inline-flex;align-items:center;gap:7px;transition:.15s;font-family:inherit}
-  .btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
-  .btn svg{width:16px;height:16px}
-  .btn-ghost{background:var(--panel2);color:var(--text);border:1px solid var(--line)}
-  .btn-ghost:hover{border-color:var(--cyan);color:var(--cyan)}
-  .btn-outline{background:transparent;border:1px solid var(--cyan);color:var(--cyan)}
-  .btn-danger{background:transparent;border:1px solid rgba(248,113,113,.5);color:var(--danger)}
-  .btn-sm{padding:7px 12px;font-size:.8em;border-radius:9px}
-  .btn-ico{padding:7px 9px}
-
-  .badge{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:.73em;font-weight:700;letter-spacing:.02em}
-  .badge.success{background:rgba(52,211,153,.14);color:var(--ok)}
-  .badge.warning{background:rgba(251,191,36,.14);color:var(--warn)}
-  .badge.info{background:rgba(63,199,242,.14);color:var(--cyan)}
-  .badge.off{background:rgba(143,160,196,.12);color:var(--muted)}
-
-  table{width:100%;border-collapse:collapse;font-size:.89em}
-  th,td{text-align:left;padding:13px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
-  tr:last-child td{border-bottom:0}
-  tbody tr:hover td{background:rgba(255,255,255,.02)}
-  th{color:var(--dim);font-weight:700;font-size:.74em;text-transform:uppercase;letter-spacing:.09em;white-space:nowrap}
-  .scroll{overflow-x:auto;margin:0 -6px;padding:0 6px}
-  .muted{color:var(--muted);font-size:.86em}
-  .dim{color:var(--dim);font-size:.8em}
-  .data-row{display:flex;justify-content:space-between;gap:14px;padding:14px;border:1px solid var(--line);background:var(--panel2);border-radius:13px;margin-bottom:10px;align-items:center;flex-wrap:wrap}
-  .pane{display:none;animation:fade .22s ease}
-  .pane.active{display:block}
-  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-  .chips{display:flex;gap:8px;flex-wrap:wrap}
-  .chip{background:var(--panel2);border:1px solid var(--line);border-radius:20px;padding:7px 15px;font-size:.83em;cursor:pointer;color:var(--muted);transition:.15s;user-select:none}
-  .chip:hover{color:var(--text)}
-  .chip.active{background:var(--grad);color:#04121f;font-weight:700;border-color:transparent}
-  .bars{display:flex;align-items:flex-end;gap:5px;height:180px;padding-top:12px}
-  .bar{flex:1;min-width:6px;background:var(--grad);border-radius:6px 6px 0 0;position:relative;opacity:.8;transition:.15s}
-  .bar:hover{opacity:1}
-  .bar span{position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-size:.7em;background:var(--panel3);border:1px solid var(--line);padding:3px 8px;border-radius:7px;white-space:nowrap;display:none;z-index:2}
-  .bar:hover span{display:block}
-  .empty{text-align:center;color:var(--dim);padding:34px 10px;font-size:.9em}
-
-  /* switch */
-  .sw{position:relative;width:46px;height:26px;border-radius:20px;background:#22304f;border:1px solid var(--line);cursor:pointer;flex:0 0 46px;transition:.18s}
-  .sw:after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#7C89A8;transition:.18s}
-  .sw.on{background:rgba(63,199,242,.25);border-color:var(--cyan)}
-  .sw.on:after{left:22px;background:var(--grad)}
-  .sw-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 0;border-bottom:1px solid var(--line)}
-  .sw-row:last-child{border-bottom:0}
-
-  /* gate */
-  .gate{position:fixed;inset:0;background:radial-gradient(800px 500px at 50% 0%,rgba(124,107,245,.2),transparent 60%),var(--bg);display:flex;align-items:center;justify-content:center;z-index:120;padding:20px}
-  .gate .box{background:var(--glass),var(--panel);border:1px solid var(--line);border-radius:22px;padding:34px 30px;width:100%;max-width:370px;text-align:center;box-shadow:var(--sh)}
-  .spinner{width:32px;height:32px;border-radius:50%;border:3px solid rgba(255,255,255,.1);border-top-color:var(--cyan);animation:sp .8s linear infinite;margin:14px auto}
-  .spinner.sm{width:18px;height:18px;border-width:2px;margin:0}
-  @keyframes sp{to{transform:rotate(360deg)}}
-  .backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:40}
-
-  /* modal */
-  .modal{position:fixed;inset:0;z-index:100;display:none;align-items:flex-start;justify-content:center;padding:28px 16px;background:rgba(3,6,14,.72);backdrop-filter:blur(4px);overflow:auto}
-  .modal.open{display:flex}
-  .modal .box{width:100%;max-width:860px;background:var(--panel);border:1px solid var(--line2);border-radius:20px;box-shadow:0 30px 80px -30px #000;animation:pop .2s ease}
-  @keyframes pop{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
-  .modal .mhead{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid var(--line)}
-  .modal .mhead h3{margin:0;font-size:1.1em}
-  .modal .mbody{padding:20px 22px;max-height:66vh;overflow:auto}
-  .modal .mfoot{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 22px;border-top:1px solid var(--line);flex-wrap:wrap}
-  .x{background:transparent;border:0;color:var(--muted);font-size:1.5em;cursor:pointer;line-height:1;padding:2px 6px;border-radius:8px}
-  .x:hover{color:var(--text);background:var(--panel2)}
-  .tabs{display:flex;gap:6px;padding:12px 22px 0;flex-wrap:wrap}
-  .tab{padding:9px 16px;border-radius:11px 11px 0 0;font-size:.85em;color:var(--muted);cursor:pointer;border:1px solid transparent;border-bottom:0;user-select:none}
-  .tab:hover{color:var(--text)}
-  .tab.active{background:var(--panel2);color:var(--text);border-color:var(--line);font-weight:700}
-  .tabpane{display:none}.tabpane.active{display:block}
-  .thumbprev{width:100%;height:150px;object-fit:cover;border-radius:13px;border:1px solid var(--line);background:var(--panel2)}
-
-  /* toast */
-  #toasts{position:fixed;right:18px;bottom:18px;z-index:200;display:flex;flex-direction:column;gap:9px}
-  .toast{background:var(--panel3);border:1px solid var(--line2);border-left:3px solid var(--cyan);border-radius:12px;padding:12px 16px;font-size:.87em;box-shadow:var(--sh);animation:pop .2s ease;max-width:330px}
-  .toast.ok{border-left-color:var(--ok)}.toast.err{border-left-color:var(--danger)}
-
-  /* course cards */
-  .course-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
-  .course{background:var(--panel2);border:1px solid var(--line);border-radius:15px;overflow:hidden;transition:.18s;display:flex;flex-direction:column}
-  .course:hover{border-color:var(--line2);transform:translateY(-3px)}
-  .course .thumb{height:132px;background:linear-gradient(135deg,#132038,#1b2a4a);position:relative;display:grid;place-items:center;color:var(--dim);font-size:.8em}
-  .course .thumb img{width:100%;height:100%;object-fit:cover}
-  .course .thumb .st{position:absolute;top:10px;left:10px}
-  .course .thumb .ft{position:absolute;top:10px;right:10px}
-  .course .body{padding:14px;flex:1;display:flex;flex-direction:column;gap:6px}
-  .course .body b{font-size:.98em}
-  .price{font-size:1.15em;font-weight:800;color:var(--ice)}
-  .price s{color:var(--dim);font-size:.7em;font-weight:500;margin-left:6px}
-  .course .acts{display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 14px}
-
-  @media(max-width:1050px){.split{grid-template-columns:1fr}}
-  @media(max-width:900px){
-    .side{position:fixed;left:0;top:0;z-index:50;transform:translateX(-100%);transition:.25s}
-    .side.open{transform:none}
-    .burger{display:block}
-    .main{padding:0 14px 60px}
-    .backdrop.open{display:block}
-  }
+:root{--bg:#f4f7f6;--panel:#fff;--panel2:#f7faf9;--panel3:#edf4f2;--line:#dbe6e3;--line2:#b9d3cd;--text:#17332f;--muted:#627b76;--dim:#879b97;--cyan:#3FC7F2;--blue:#2E8BFF;--violet:#7C6BF5;--ice:#B4F0F0;--brand:#087f75;--brand2:#075e57;--ok:#138a68;--warn:#b67814;--danger:#b53a50;--grad:linear-gradient(135deg,var(--ice),var(--cyan) 48%,var(--violet));--glass:linear-gradient(160deg,rgba(255,255,255,.92),rgba(245,250,249,.92));--sh:0 10px 30px rgba(33,73,65,.08);--r:10px}
+*{box-sizing:border-box}html,body{margin:0}body{background:var(--bg);color:var(--text);font-family:"Noto Sans Bengali","Segoe UI",system-ui,sans-serif;font-size:14px}button,input,select,textarea{font:inherit}a{color:var(--brand);text-decoration:none}::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#bfd0cc;border-radius:10px}.shell{display:flex;min-height:100vh}.side{width:226px;flex:0 0 226px;background:var(--panel);border-right:1px solid var(--line);padding:16px 10px;position:sticky;top:0;height:100vh;overflow:auto;display:flex;flex-direction:column;z-index:50}.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.08em;padding:3px 7px 14px;border-bottom:1px solid var(--line)}.brand .dot{width:34px;height:34px;border-radius:10px;background:var(--grad);display:grid;place-items:center;color:#052e2b;font-weight:900}.brand small{display:block;font-size:.62em;color:var(--dim);letter-spacing:.12em}.nav-sep{font-size:.63em;letter-spacing:.14em;color:var(--dim);margin:17px 10px 7px;text-transform:uppercase;font-weight:800}.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;color:var(--muted);cursor:pointer;font-size:.85em;margin-bottom:2px;transition:.14s;position:relative;user-select:none}.nav-item:hover{background:var(--panel3);color:var(--text)}.nav-item.active{background:#e5f4f1;color:var(--brand2);font-weight:750}.nav-item.active:before{content:"";position:absolute;left:-10px;top:7px;bottom:7px;width:3px;background:var(--brand);border-radius:0 4px 4px 0}.nav-item svg{width:16px;height:16px;flex:none}.side-foot{margin-top:auto;padding-top:12px;border-top:1px solid var(--line)}.main{flex:1;min-width:0;padding:0 22px 60px}.topbar{position:sticky;top:0;z-index:30;height:66px;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:0 0;margin-bottom:18px;background:rgba(244,247,246,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}.topbar h1{font-size:1.35em;margin:0}.kicker{font-size:.62em;color:var(--brand);letter-spacing:.16em;font-weight:800;margin-bottom:2px}.top-actions,.toolbar,.device-switch{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.who{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:4px 11px 4px 4px;color:var(--muted);font-size:.78em}.who i{width:27px;height:27px;border-radius:50%;background:var(--grad);display:grid;place-items:center;color:#052e2b;font-style:normal;font-weight:900}.burger{display:none}.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:var(--sh)}.card h3{margin:0 0 4px;font-size:1em}.sub{color:var(--muted);font-size:.82em;margin:0 0 13px}.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:14px}.page-banner{background:linear-gradient(105deg,var(--brand),#136d70 62%,#273d63);color:#fff;border:0;padding:19px 20px}.page-banner .sub{color:rgba(255,255,255,.78);margin:3px 0 0}.grid{display:grid;gap:12px}.stats{grid-template-columns:repeat(auto-fit,minmax(170px,1fr));margin-bottom:14px}.stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;align-items:center;gap:12px;box-shadow:var(--sh)}.stat .ic{width:38px;height:38px;border-radius:9px;display:grid;place-items:center;background:#e6f5f2;color:var(--brand)}.stat .ic svg{width:18px}.stat .lbl{color:var(--muted);font-size:.75em}.stat .val{font-size:1.3em;font-weight:800;margin-top:2px}.row{display:flex;gap:11px;flex-wrap:wrap}.row>*{flex:1;min-width:150px}.field{margin-bottom:13px}.end{display:flex;align-items:flex-end}label{display:block;color:var(--muted);font-size:.77em;font-weight:700;margin:0 0 6px}.hint,.dim{color:var(--dim);font-size:.76em}.muted{color:var(--muted);font-size:.84em}input,select,textarea{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:10px 11px;color:var(--text);font-size:.88em;transition:.14s}textarea{resize:vertical}input:focus,select:focus,textarea:focus{outline:0;border-color:var(--brand);box-shadow:0 0 0 3px rgba(8,127,117,.1)}input[type=color]{height:42px;padding:3px}.btn{background:var(--brand);color:#fff;border:1px solid var(--brand);border-radius:7px;padding:9px 14px;font-weight:750;cursor:pointer;font-size:.82em;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:.14s}.btn:hover{background:var(--brand2);border-color:var(--brand2)}.btn svg{width:15px;height:15px}.btn-ghost{background:var(--panel);color:var(--text);border-color:var(--line)}.btn-ghost:hover{background:var(--panel3);color:var(--brand);border-color:var(--line2)}.btn-outline{background:transparent;color:var(--brand)}.btn-danger{background:transparent;color:var(--danger);border-color:#e8bbc3}.btn-sm{padding:7px 10px;font-size:.76em}.btn-ico{width:32px;height:32px;padding:0}.badge{display:inline-flex;align-items:center;padding:3px 8px;border-radius:12px;font-size:.67em;font-weight:800}.badge.success{background:#e3f5ed;color:var(--ok)}.badge.warning{background:#fff2d9;color:var(--warn)}.badge.info{background:#e5f3fb;color:#247da5}.badge.off{background:#edf0ef;color:var(--muted)}table{width:100%;border-collapse:collapse;font-size:.83em}th,td{text-align:left;padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:middle}th{background:#f4f8f7;color:var(--muted);font-size:.69em;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}tbody tr:hover td{background:#fbfdfc}.scroll{overflow-x:auto}.pane{display:none;animation:fade .18s ease}.pane.active{display:block}@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}.chips{display:flex;gap:6px;flex-wrap:wrap}.chip{background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:7px 12px;font-size:.77em;cursor:pointer;color:var(--muted)}.chip.active{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:750}.bars{display:flex;align-items:flex-end;gap:5px;height:170px;padding-top:12px}.bar{flex:1;min-width:6px;background:linear-gradient(var(--brand),var(--cyan));border-radius:4px 4px 0 0;position:relative}.bar span{position:absolute;top:-27px;left:50%;transform:translateX(-50%);font-size:.68em;background:var(--text);color:#fff;padding:3px 7px;border-radius:5px;white-space:nowrap;display:none}.bar:hover span{display:block}.empty{text-align:center;color:var(--dim);padding:34px 10px}.data-row{display:flex;justify-content:space-between;gap:14px;padding:13px;border:1px solid var(--line);background:var(--panel2);border-radius:8px;margin-bottom:8px;align-items:center;flex-wrap:wrap}.sw{position:relative;width:42px;height:23px;border-radius:20px;background:#c7d3d0;cursor:pointer;flex:none}.sw:after{content:"";position:absolute;top:3px;left:3px;width:17px;height:17px;border-radius:50%;background:#fff;transition:.18s}.sw.on{background:var(--brand)}.sw.on:after{left:22px}.sw-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}.gate{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:120;padding:20px}.gate .box{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:30px;width:100%;max-width:370px;text-align:center;box-shadow:0 22px 60px rgba(33,73,65,.15)}.spinner{width:30px;height:30px;border-radius:50%;border:3px solid #dce8e5;border-top-color:var(--brand);animation:sp .75s linear infinite;margin:14px auto}.spinner.sm{width:17px;height:17px;border-width:2px;margin:0}@keyframes sp{to{transform:rotate(360deg)}}.backdrop{display:none;position:fixed;inset:0;background:rgba(17,42,37,.4);z-index:40}.modal{position:fixed;inset:0;z-index:100;display:none;align-items:flex-start;justify-content:center;padding:22px 14px;background:rgba(19,43,39,.45);backdrop-filter:blur(4px);overflow:auto}.modal.open{display:flex}.modal .box{width:100%;max-width:1040px;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 28px 80px rgba(20,60,52,.22);animation:pop .18s ease}@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}.mhead,.mfoot{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 19px;border-bottom:1px solid var(--line)}.mfoot{border-top:1px solid var(--line);border-bottom:0}.mbody{padding:18px 20px;max-height:70vh;overflow:auto}.x{background:transparent;border:0;font-size:1.5em;color:var(--muted);cursor:pointer}.tabs{display:flex;gap:2px;padding:0 18px;border-bottom:1px solid var(--line)}.tab{padding:12px 14px;font-size:.8em;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent}.tab.active{color:var(--brand);border-color:var(--brand);font-weight:800}.tabpane{display:none}.tabpane.active{display:block}.editor-layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px}.preview-stick{position:sticky;top:0}.thumbprev{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:8px;border:1px solid var(--line);background:var(--panel3)}#toasts{position:fixed;right:18px;bottom:18px;z-index:200;display:flex;flex-direction:column;gap:8px}.toast{background:var(--text);color:#fff;border-left:3px solid var(--cyan);border-radius:8px;padding:11px 14px;box-shadow:var(--sh);max-width:330px}.toast.ok{border-color:var(--ok)}.toast.err{border-color:var(--danger)}.course-table-thumb{width:46px;height:46px;object-fit:cover;border-radius:7px;background:var(--panel3);border:1px solid var(--line)}.course-title{display:flex;align-items:center;gap:10px;min-width:220px}.course-preview{border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--panel);box-shadow:var(--sh)}.course-preview img,.course-preview .ph{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:linear-gradient(135deg,#dcebea,#edf4f3);display:grid;place-items:center;color:var(--dim)}.course-preview .cp-body{padding:14px}.course-preview .cp-price{font-size:1.3em;font-weight:900;color:var(--brand);margin:8px 0}.studio-layout{display:grid;grid-template-columns:minmax(0,1fr) 410px;gap:16px}.studio-preview{position:sticky;top:82px;background:#e8efed;border:1px solid var(--line);padding:10px;border-radius:10px}.studio-preview.mobile .site-frame{max-width:270px;margin:auto}.site-frame{background:#07111e;color:#eaf6ff;min-height:430px;border-radius:7px;overflow:hidden;box-shadow:0 14px 35px rgba(20,55,49,.16)}.mini-nav{height:35px;background:#0d1b2d;display:flex;align-items:center;justify-content:space-between;padding:0 13px;font-size:8px}.mini-hero{min-height:170px;padding:28px 22px;background:linear-gradient(135deg,#101f3c,#122b47);display:flex;flex-direction:column;justify-content:center}.mini-hero h2{font-size:19px;margin:0 0 7px}.mini-hero p{font-size:8px;max-width:75%;color:#9fb7c7}.mini-cta{display:inline-block;background:var(--preview-primary,#3FC7F2);color:#07111e;border-radius:4px;padding:6px 10px;font-weight:800;font-size:8px;width:max-content}.mini-courses{padding:15px;display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.mini-course{height:70px;background:#132239;border:1px solid rgba(255,255,255,.1);border-radius:5px}.themes{display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:12px}.theme-card{border:1px solid var(--line);border-radius:10px;padding:10px;cursor:pointer;background:var(--panel);transition:.14s}.theme-card:hover,.theme-card.active{border-color:var(--brand);box-shadow:0 0 0 2px rgba(8,127,117,.09)}.theme-card.active:after{content:"✓ Active";float:right;color:var(--brand);font-weight:800;font-size:.72em}.theme-mock{height:92px;border-radius:7px;padding:10px;margin-bottom:9px}.mock-line{height:6px;border-radius:4px;margin-bottom:7px}.mock-btns{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:15px}.mock-btns i{height:23px;border-radius:4px}.swatches{display:flex;gap:5px;margin-top:8px}.swatches i{width:15px;height:15px;border-radius:50%;border:1px solid rgba(0,0,0,.1)}.color-row{display:grid;grid-template-columns:1fr 105px;gap:8px}.dirty{display:none;color:var(--warn);font-size:.76em;font-weight:700}.dirty.show{display:inline}.section-order{display:flex;gap:7px;flex-wrap:wrap}.order-pill{padding:8px 10px;border:1px solid var(--line);border-radius:7px;background:var(--panel2);font-size:.78em}.split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:1100px){.studio-layout,.editor-layout{grid-template-columns:1fr}.studio-preview,.preview-stick{position:static}.themes{grid-template-columns:1fr 1fr}}@media(max-width:900px){.side{position:fixed;left:0;transform:translateX(-100%);transition:.2s}.side.open{transform:none}.main{padding:0 12px 50px}.burger{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:8px}.backdrop.open{display:block}.topbar{height:60px}.who span{display:none}}@media(max-width:620px){.themes,.split{grid-template-columns:1fr}.card{padding:14px}.top-actions .btn span{display:none}.main{font-size:13px}.modal{padding:0}.modal .box{min-height:100vh;border-radius:0}.mbody{max-height:none}.tabs{overflow-x:auto;flex-wrap:nowrap}.tab{white-space:nowrap}}
 </style>
 </head>
 <body>
@@ -208,9 +44,11 @@
     <div class="nav-sep">Money</div>
     <div class="nav-item" data-tab="withdrawals" onclick="go('withdrawals',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v13m0 0l-4.5-4.5M12 16l4.5-4.5M4 20h16"/></svg> Withdrawals <span id="wdBadge" class="badge warning" style="margin-left:auto;display:none">0</span></div>
     <div class="nav-item" data-tab="affiliates" onclick="go('affiliates',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 7.5l7 9"/></svg> Affiliates</div>
-    <div class="nav-sep">Website</div>
+    <div class="nav-sep">Website Studio</div>
+    <div class="nav-item" data-tab="theme" onclick="go('theme',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 9v11"/></svg> Templates & Colors</div>
     <div class="nav-item" data-tab="branding" onclick="go('branding',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16M6 16l6-12 6 12z"/></svg> Branding</div>
-    <div class="nav-item" data-tab="theme" onclick="go('theme',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 000 18c2.5 0 2-3 0-3s-2-3 0-3h3a6 6 0 000-12z"/></svg> Theme & Colors</div>
+    <div class="nav-item" data-tab="homepage" onclick="go('homepage',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8v9H3z"/><path d="M9 20v-6h6v6"/></svg> Homepage</div>
+    <div class="nav-item" data-tab="coursepage" onclick="go('coursepage',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v14H4zM8 9h8M8 13h6"/></svg> Course Page</div>
     <div class="nav-item" data-tab="social" onclick="go('social',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.7 10.7l6.6-4.2M8.7 13.3l6.6 4.2"/></svg> Social & Contact</div>
     <div class="nav-sep">System</div>
     <div class="nav-item" data-tab="settings" onclick="go('settings',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10l2 2M19 5l-2 2M7 17l-2 2"/></svg> Settings</div>
@@ -227,7 +65,7 @@
         <div><div class="kicker" id="pageKicker">OVERVIEW</div><h1 id="pageTitle">Dashboard</h1></div>
       </div>
       <div class="top-actions">
-        <button class="btn btn-ghost btn-sm" onclick="refreshCurrent()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 11A8 8 0 006 6L4 8m0-4v4h4M4 13a8 8 0 0014 5l2-2m0 4v-4h-4"/></svg> Refresh</button>
+        <a class="btn btn-ghost btn-sm" href="/" target="_blank">View Website</a><button class="btn btn-ghost btn-sm" onclick="refreshCurrent()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 11A8 8 0 006 6L4 8m0-4v4h4M4 13a8 8 0 0014 5l2-2m0 4v-4h-4"/></svg> Refresh</button>
         <span class="who"><i>A</i> <span>Administrator</span></span>
       </div>
     </div>
@@ -257,21 +95,9 @@
 
     <!-- PRODUCTS -->
     <section class="pane" id="p-products">
-      <div class="card">
-        <div class="card-head">
-          <div><h3>Course Manager</h3><p class="sub" style="margin:4px 0 0">নতুন কোর্স যোগ করতে ডানপাশের বোতামে চাপুন — একটি ফর্মেই সব</p></div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn btn-ghost btn-sm" onclick="loadProducts()">Reload</button>
-            <button class="btn" onclick="openProduct(null)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg> Add Course</button>
-          </div>
-        </div>
-        <div class="row">
-          <div><input id="prodSearch" placeholder="কোর্স খুঁজুন (নাম বা slug)" oninput="renderProducts()" /></div>
-          <div style="max-width:190px"><select id="prodFilter" onchange="renderProducts()"><option value="all">সব কোর্স</option><option value="1">শুধু Published</option><option value="0">শুধু Unpublished</option></select></div>
-        </div>
-        <div id="prodWarn" class="dim" style="margin-top:10px"></div>
-      </div>
-      <div id="prodGrid" class="course-grid"><div class="spinner"></div></div>
+      <div class="card page-banner"><div class="card-head" style="margin:0"><div><h3>Courses</h3><p class="sub">কোর্স, দাম, ছবি ও delivery এক জায়গা থেকে পরিচালনা করুন</p></div><button class="btn" style="background:#fff;color:var(--brand);border-color:#fff" onclick="openProduct(null)">＋ Add Course</button></div></div>
+      <div class="card"><div class="toolbar"><input id="prodSearch" style="flex:1;min-width:220px" placeholder="নাম বা slug দিয়ে খুঁজুন" oninput="renderProducts()"/><select id="prodFilter" style="width:160px" onchange="renderProducts()"><option value="all">সব Status</option><option value="1">Published</option><option value="0">Draft</option></select><button class="btn btn-ghost" onclick="loadProducts()">↻ Reload</button></div><div id="prodWarn" class="dim" style="margin-top:8px"></div></div>
+      <div class="card" style="padding:0;overflow:hidden"><div class="scroll"><table><thead><tr><th>Order</th><th>Course</th><th>Price</th><th>Status</th><th>Featured</th><th style="text-align:right">Actions</th></tr></thead><tbody id="prodGrid"><tr><td colspan="6"><div class="spinner"></div></td></tr></tbody></table></div></div>
     </section>
 
     <!-- PROMOS -->
@@ -367,28 +193,21 @@
     </section>
 
     <!-- BRANDING -->
-    <section class="pane" id="p-branding"><div class="card"><h3>Branding</h3><p class="sub">সাইটের উপরের ঘোষণা ও ফিচার্ড কোর্স নিয়ন্ত্রণ করুন</p>
-      <div class="field"><label>Announcement Text</label><input id="brand_announcement" /></div>
-      <div class="field"><label>Announcement Visibility</label><select id="brand_announcement_enabled"><option value="1">Visible</option><option value="0">Hidden</option></select></div>
-      <div class="field"><label>Featured Course Slug</label><input id="brand_featured_course" placeholder="bundle" /></div>
-      <button class="btn" onclick="saveSiteGroup('branding')">Save Changes</button><div id="brandingMsg" class="muted" style="margin-top:8px"></div></div></section>
+    <section class="pane" id="p-branding"><div class="card page-banner"><h3>Brand Identity</h3><p class="sub">সাইটের পরিচয়, ঘোষণা ও ফিচার্ড কোর্স</p></div><div class="studio-layout"><div class="card"><div class="row"><div class="field"><label>Site Name</label><input id="brand_site_name" value="Hyper Vision Bangla" oninput="markDirty();studioPreview()"/></div><div class="field"><label>Tagline</label><input id="brand_tagline" placeholder="AI Video Creation Course" oninput="markDirty();studioPreview()"/></div></div><div class="row"><div class="field"><label>Logo URL</label><input id="brand_logo_url" oninput="markDirty()"/></div><div class="field"><label>Favicon URL</label><input id="brand_favicon_url" oninput="markDirty()"/></div></div><div class="field"><label>Announcement Text</label><input id="brand_announcement" oninput="markDirty()"/></div><div class="row"><div class="field"><label>Announcement</label><select id="brand_announcement_enabled" onchange="markDirty()"><option value="1">Visible</option><option value="0">Hidden</option></select></div><div class="field"><label>Featured Course</label><select id="brand_featured_course" onchange="markDirty()"><option value="">কোনোটি নয়</option></select></div></div><button class="btn" onclick="saveStudioGroup('branding')">Save Branding</button><div id="brandingMsg" class="muted" style="margin-top:8px"></div></div><div class="studio-preview"><div id="brandingPreview" class="site-frame"></div></div></div></section>
 
-    <!-- THEME -->
-    <section class="pane" id="p-theme"><div class="card"><h3>Theme & Colors</h3><p class="sub">HVB-এর পরিচিত cyan–blue–violet style বজায় রেখে accent বদলাতে পারবেন।</p>
-      <div class="row">
-        <div><label>Primary Accent</label><input id="theme_color_primary" type="color" value="#3FC7F2" oninput="themePreview()" /></div>
-        <div><label>Secondary Accent</label><input id="theme_color_secondary" type="color" value="#7C6BF5" oninput="themePreview()" /></div>
-      </div>
-      <div style="margin-top:14px"><label>Preview</label><div id="themePrev" style="height:70px;border-radius:14px;background:linear-gradient(135deg,#3FC7F2,#7C6BF5)"></div></div>
-      <button class="btn" style="margin-top:16px" onclick="saveSiteGroup('theme')">Save Changes</button><div id="themeMsg" class="muted" style="margin-top:8px"></div></div></section>
+    <!-- THEME STUDIO -->
+    <section class="pane" id="p-theme"><div class="card page-banner"><div class="card-head" style="margin:0"><div><h3>Website Theme Studio</h3><p class="sub">Template বেছে live preview দেখুন, তারপর publish করুন</p></div><span><span id="studioDirty" class="dirty">● Unsaved changes</span> <button class="btn" style="background:#fff;color:var(--brand);border-color:#fff" onclick="saveStudioGroup('theme')">Publish Changes</button></span></div></div>
+      <div class="studio-layout"><div><div class="card"><div class="card-head"><div><h3>HVB Template Collection</h3><p class="sub">HVB-এর জন্য তৈরি সম্পূর্ণ প্রস্তুত রঙ ও style</p></div></div><div class="themes" id="themeGallery"></div></div><div class="card"><h3>Custom Colors</h3><p class="sub">নির্বাচিত template আরও নিজের মতো করুন</p><div class="split"><div class="field"><label>Primary Accent</label><div class="color-row"><input id="theme_color_primary_text" oninput="syncColor('primary','text')"/><input id="theme_color_primary" type="color" value="#3FC7F2" oninput="syncColor('primary','picker')"/></div></div><div class="field"><label>Secondary Accent</label><div class="color-row"><input id="theme_color_secondary_text" oninput="syncColor('secondary','text')"/><input id="theme_color_secondary" type="color" value="#7C6BF5" oninput="syncColor('secondary','picker')"/></div></div><div class="field"><label>Background</label><div class="color-row"><input id="theme_color_background_text" oninput="syncColor('background','text')"/><input id="theme_color_background" type="color" value="#07111E" oninput="syncColor('background','picker')"/></div></div><div class="field"><label>Surface</label><div class="color-row"><input id="theme_color_surface_text" oninput="syncColor('surface','text')"/><input id="theme_color_surface" type="color" value="#132239" oninput="syncColor('surface','picker')"/></div></div></div><button class="btn btn-ghost" onclick="applyTheme('hvb-signature')">Reset Default</button></div></div><div class="studio-preview" id="studioPreviewWrap"><div class="card-head"><b>Live Preview</b><div class="device-switch"><button class="btn btn-sm" onclick="previewDevice(false,this)">Desktop</button><button class="btn btn-sm btn-ghost" onclick="previewDevice(true,this)">Mobile</button></div></div><div id="themePrev" class="site-frame"></div></div></div><div id="themeMsg" class="muted"></div>
+    </section>
+
+    <!-- HOMEPAGE -->
+    <section class="pane" id="p-homepage"><div class="card page-banner"><h3>Homepage Editor</h3><p class="sub">হোমপেজের লেখা, ছবি ও বিভাগগুলো নিয়ন্ত্রণ করুন</p></div><div class="studio-layout"><div class="card"><div class="field"><label>Hero Title</label><input id="home_hero_title" oninput="markDirty();studioPreview()"/></div><div class="field"><label>Hero Subtitle</label><textarea id="home_hero_subtitle" rows="3" oninput="markDirty();studioPreview()"></textarea></div><div class="row"><div class="field"><label>Button Label</label><input id="home_cta_label" oninput="markDirty();studioPreview()"/></div><div class="field"><label>Hero Image URL</label><input id="home_hero_image" oninput="markDirty();studioPreview()"/></div></div><h3 style="margin-top:18px">Visible Sections</h3><div class="sw-row"><div><b>Featured Courses</b></div><div id="home_show_courses" class="sw on" onclick="toggleStudioSwitch(this)"></div></div><div class="sw-row"><div><b>Verified Reviews</b></div><div id="home_show_reviews" class="sw on" onclick="toggleStudioSwitch(this)"></div></div><div class="sw-row"><div><b>FAQ</b></div><div id="home_show_faq" class="sw on" onclick="toggleStudioSwitch(this)"></div></div><div style="margin:15px 0"><label>Section Order</label><div class="section-order"><span class="order-pill">↕ Hero</span><span class="order-pill">↕ Courses</span><span class="order-pill">↕ Reviews</span><span class="order-pill">↕ FAQ</span></div></div><button class="btn" onclick="saveStudioGroup('homepage')">Publish Homepage</button><div id="homepageMsg" class="muted" style="margin-top:8px"></div></div><div class="studio-preview"><div id="homepagePreview" class="site-frame"></div></div></div></section>
+
+    <!-- COURSE PAGE -->
+    <section class="pane" id="p-coursepage"><div class="card page-banner"><h3>Course Page Editor</h3><p class="sub">সব কোর্সের detail page-এর লেখা ও দৃশ্যমান অংশ</p></div><div class="studio-layout"><div class="card"><div class="field"><label>Heading Label</label><input id="course_heading_label" oninput="markDirty();coursePagePreview()"/></div><div class="row"><div class="field"><label>Buy Button Label</label><input id="course_cta_label" oninput="markDirty();coursePagePreview()"/></div><div class="field"><label>Trust Text</label><input id="course_trust_text" oninput="markDirty();coursePagePreview()"/></div></div><div class="field"><label>Delivery Note</label><textarea id="course_delivery_note" rows="3" oninput="markDirty();coursePagePreview()"></textarea></div><div class="sw-row"><div><b>Course Description</b></div><div id="course_show_description" class="sw on" onclick="toggleStudioSwitch(this)"></div></div><div class="sw-row"><div><b>Verified Reviews</b></div><div id="course_show_reviews" class="sw on" onclick="toggleStudioSwitch(this)"></div></div><div class="sw-row"><div><b>Related Courses</b></div><div id="course_show_related" class="sw on" onclick="toggleStudioSwitch(this)"></div></div><button class="btn" style="margin-top:15px" onclick="saveStudioGroup('coursepage')">Publish Course Page</button><div id="coursepageMsg" class="muted" style="margin-top:8px"></div></div><div class="studio-preview"><div id="coursePagePreview" class="site-frame"></div></div></div></section>
 
     <!-- SOCIAL -->
-    <section class="pane" id="p-social"><div class="card"><h3>Social & Contact</h3><p class="sub">সাপোর্ট ও সোশ্যাল লিংক</p>
-      <div class="field"><label>Messenger Link</label><input id="social_messenger_link" placeholder="https://m.me/hypervisionbangla" /></div>
-      <div class="field"><label>Facebook Page</label><input id="social_facebook_link" /></div>
-      <div class="field"><label>TikTok Profile</label><input id="social_tiktok_link" /></div>
-      <div class="field"><label>Support Email</label><input id="social_support_email" type="email" /></div>
-      <button class="btn" onclick="saveSiteGroup('social')">Save Changes</button><div id="socialMsg" class="muted" style="margin-top:8px"></div></div></section>
+    <section class="pane" id="p-social"><div class="card page-banner"><h3>Social & Contact</h3><p class="sub">সাপোর্ট ও সামাজিক যোগাযোগের ঠিকানা</p></div><div class="card"><div class="field"><label>Messenger Support</label><input id="social_messenger_link" placeholder="https://m.me/hypervisionbangla" /></div><div class="field"><label>Facebook Page</label><input id="social_facebook_link" /></div><div class="field"><label>TikTok Profile</label><input id="social_tiktok_link" /></div><div class="field"><label>Support Email</label><input id="social_support_email" type="email" /></div><button class="btn" onclick="saveStudioGroup('social')">Save Changes</button><div id="socialMsg" class="muted" style="margin-top:8px"></div></div></section>
 
     <!-- SETTINGS -->
     <section class="pane" id="p-settings">
@@ -415,53 +234,14 @@
   </main>
 </div>
 
-<!-- COURSE MODAL -->
-<div class="modal" id="prodModal">
-  <div class="box">
-    <div class="mhead"><div><h3 id="pmTitle">Add Course</h3><div class="dim" id="pmSub">নতুন কোর্স যোগ করুন</div></div><button class="x" onclick="closeProduct()">×</button></div>
-    <div class="tabs">
-      <div class="tab active" onclick="pmTab('basic',this)">Basic Info</div>
-      <div class="tab" onclick="pmTab('price',this)">Pricing</div>
-      <div class="tab" onclick="pmTab('media',this)">Media & Delivery</div>
-      <div class="tab" onclick="pmTab('publish',this)">Publish</div>
-    </div>
-    <div class="mbody">
-      <div class="tabpane active" id="pt-basic">
-        <div class="field"><label>Course Title *</label><input id="pTitle" placeholder="AI Thumbnail Masterclass" oninput="autoSlug()" /></div>
-        <div class="field"><label>Course Slug (লিংকে যা থাকবে) *</label><input id="pSlug" placeholder="ai-thumbnail-masterclass" /><div class="hint">টাইটেল লিখলেই নিজে থেকে তৈরি হয়ে যায় — চাইলে বদলাতে পারেন।</div></div>
-        <div class="field"><label>Short Description</label><input id="pShortDescription" maxlength="180" placeholder="এক লাইনে কোর্সের সারাংশ" /></div>
-        <div class="field"><label>Full Description</label><textarea id="pDescription" rows="5"></textarea></div>
-      </div>
-      <div class="tabpane" id="pt-price">
-        <div class="row">
-          <div><label>Sale Price (৳) *</label><input id="pPrice" type="number" min="1" placeholder="999" /></div>
-          <div><label>Regular Price (৳)</label><input id="pRegularPrice" type="number" min="0" placeholder="1500" /><div class="hint">কাটা দাম — বেশি দিলে ডিসকাউন্ট দেখাবে।</div></div>
-        </div>
-        <div id="discNote" class="muted" style="margin-top:6px"></div>
-        <div class="field" style="margin-top:14px"><label>Sort Order</label><input id="pSort" type="number" value="0" /><div class="hint">ছোট সংখ্যা আগে দেখাবে।</div></div>
-      </div>
-      <div class="tabpane" id="pt-media">
-        <div class="row">
-          <div>
-            <div class="field"><label>Thumbnail URL</label><input id="pThumb" oninput="thumbPreview()" /></div>
-            <div class="field"><label>Delivery Link (Drive / Class Link)</label><input id="pDrive" /></div>
-          </div>
-          <div style="max-width:280px"><label>Preview</label><img id="pThumbPrev" class="thumbprev" alt="thumbnail preview" src="" onerror="this.style.opacity=.25" /></div>
-        </div>
-        <div class="field"><label>Prompt / Course Notes</label><textarea id="pPrompt" rows="5"></textarea></div>
-      </div>
-      <div class="tabpane" id="pt-publish">
-        <div class="sw-row"><div><b>Published</b><div class="dim">চালু থাকলে ওয়েবসাইটে বিক্রি হবে</div></div><div class="sw on" id="swActive" onclick="this.classList.toggle('on')"></div></div>
-        <div class="sw-row"><div><b>Homepage Feature</b><div class="dim">হোমপেজে আলাদাভাবে দেখাবে</div></div><div class="sw" id="swFeatured" onclick="this.classList.toggle('on')"></div></div>
-        <div class="muted" style="margin-top:14px;border-left:3px solid var(--warn);padding:10px 12px;background:rgba(251,191,36,.07);border-radius:0 10px 10px 0">Unpublish করলে নতুন বিক্রি বন্ধ হবে; আগের শিক্ষার্থীর access থাকবে। অর্ডার থাকা course Delete করা যাবে না।</div>
-      </div>
-    </div>
-    <div class="mfoot">
-      <div id="pMsg" class="muted"></div>
-      <div style="display:flex;gap:8px"><button class="btn btn-ghost" onclick="closeProduct()">Cancel</button><button class="btn" onclick="saveProduct()">Save Course</button></div>
-    </div>
-  </div>
-</div>
+<!-- COURSE EDITOR -->
+<div class="modal" id="prodModal"><div class="box"><div class="mhead"><div><h3 id="pmTitle">Add Course</h3><div class="dim" id="pmSub"></div></div><button class="x" onclick="closeProduct()">×</button></div><div class="tabs"><div class="tab active" onclick="pmTab('basic',this)">Basic Info</div><div class="tab" onclick="pmTab('content',this)">Content</div><div class="tab" onclick="pmTab('price',this)">Pricing</div><div class="tab" onclick="pmTab('media',this)">Media & Delivery</div><div class="tab" onclick="pmTab('publish',this)">SEO & Publish</div></div><div class="mbody"><div class="editor-layout"><div>
+<div class="tabpane active" id="pt-basic"><div class="field"><label>Course Title *</label><input id="pTitle" placeholder="AI Video Masterclass" oninput="autoSlug();productLivePreview()"/></div><div class="field"><label>Course Slug *</label><input id="pSlug" placeholder="ai-video-masterclass"/><div class="hint">নাম লিখলে নিজে তৈরি হবে।</div></div><div class="field"><label>Short Description</label><textarea id="pShortDescription" rows="3" maxlength="180" oninput="productLivePreview()"></textarea></div></div>
+<div class="tabpane" id="pt-content"><div class="field"><label>Full Description</label><textarea id="pDescription" rows="9"></textarea></div><div class="field"><label>Course Notes / Prompt</label><textarea id="pPrompt" rows="5"></textarea></div></div>
+<div class="tabpane" id="pt-price"><div class="row"><div><label>Sale Price (৳) *</label><input id="pPrice" type="number" min="1" oninput="productLivePreview()"/></div><div><label>Regular Price (৳)</label><input id="pRegularPrice" type="number" min="0" oninput="productLivePreview()"/></div></div><div id="discNote" class="muted"></div><div class="field" style="margin-top:14px"><label>Display Order</label><input id="pSort" type="number" value="0"/></div></div>
+<div class="tabpane" id="pt-media"><div class="field"><label>Thumbnail URL</label><input id="pThumb" oninput="thumbPreview();productLivePreview()"/></div><div class="field"><label>Delivery Link (Drive / Class)</label><input id="pDrive"/></div></div>
+<div class="tabpane" id="pt-publish"><div class="sw-row"><div><b>Published</b><div class="dim">চালু থাকলে সাইটে বিক্রি হবে</div></div><div class="sw on" id="swActive" onclick="this.classList.toggle('on');productLivePreview()"></div></div><div class="sw-row"><div><b>Homepage Featured</b></div><div class="sw" id="swFeatured" onclick="this.classList.toggle('on');productLivePreview()"></div></div><div class="field" style="margin-top:14px"><label>SEO Title</label><input id="pSeoTitle" placeholder="খালি রাখলে Course Title ব্যবহার হবে"/></div><div class="field"><label>SEO Description</label><textarea id="pSeoDescription" rows="3"></textarea></div><div class="muted">Unpublish করলে আগের শিক্ষার্থীর access থাকবে। অর্ডার থাকা course Delete করা যাবে না।</div></div>
+</div><div class="preview-stick"><label>Live Course Preview</label><div class="course-preview"><div id="pPreviewMedia" class="ph">Image Preview</div><div class="cp-body"><span id="pPreviewStatus" class="badge success">Published</span><h3 id="pPreviewTitle" style="margin-top:10px">Course title</h3><p id="pPreviewDesc" class="muted">Course description</p><div id="pPreviewPrice" class="cp-price">৳০</div><button class="btn" style="width:100%">Enroll Now</button></div></div></div></div></div><div class="mfoot"><div id="pMsg" class="muted"></div><div class="toolbar"><button class="btn btn-ghost" onclick="closeProduct()">Cancel</button><button class="btn" onclick="saveProduct()">Save Course</button></div></div></div></div>
 
 <script>
 let PASS = '';
@@ -507,7 +287,7 @@ function toggleMenu(open) {
   document.getElementById('backdrop').classList.toggle('open', open);
 }
 
-const KICKERS = { dashboard:'OVERVIEW', products:'CATALOG', promos:'CATALOG', orders:'SALES', payments:'SALES', customers:'SALES', reviews:'SALES', withdrawals:'MONEY', affiliates:'MONEY', branding:'WEBSITE', theme:'WEBSITE', social:'WEBSITE', settings:'SYSTEM', tools:'SYSTEM' };
+const KICKERS = { dashboard:'OVERVIEW', products:'CATALOG', promos:'CATALOG', orders:'SALES', payments:'SALES', customers:'SALES', reviews:'SALES', withdrawals:'MONEY', affiliates:'MONEY', branding:'WEBSITE STUDIO', theme:'WEBSITE STUDIO', homepage:'WEBSITE STUDIO', coursepage:'WEBSITE STUDIO', social:'WEBSITE STUDIO', settings:'SYSTEM', tools:'SYSTEM' };
 
 function go(tab, el) {
   CURRENT_TAB = tab;
@@ -534,7 +314,7 @@ function refreshCurrent() {
   if (tab === 'withdrawals') loadWithdrawals();
   if (tab === 'affiliates') loadAffiliates();
   if (tab === 'settings') loadSettings();
-  if (['branding','theme','social'].includes(tab)) loadSiteControls();
+  if (['branding','theme','homepage','coursepage','social'].includes(tab)) loadSiteControls();
 }
 
 async function login() {
@@ -759,43 +539,11 @@ async function loadProducts() {
 }
 
 function renderProducts() {
-  const g = document.getElementById('prodGrid');
-  const q = (document.getElementById('prodSearch').value || '').toLowerCase().trim();
-  const f = document.getElementById('prodFilter').value;
-  const list = PRODUCTS.filter((p) => {
-    if (f === '1' && !p.active) return false;
-    if (f === '0' && p.active) return false;
-    if (!q) return true;
-    return (String(p.title || '') + ' ' + String(p.slug || '')).toLowerCase().includes(q);
-  });
-  if (!list.length) { g.innerHTML = '<div class="card"><div class="empty">কোনো কোর্স পাওয়া যায়নি। উপরে <b>Add Course</b> চেপে নতুন কোর্স যোগ করুন।</div></div>'; return; }
-  g.innerHTML = list.map((p, i) => {
-    const idx = PRODUCTS.indexOf(p);
-    const thumb = p.thumbnail ? '<img src="' + esc(p.thumbnail) + '" alt="" onerror="this.style.display=\'none\'" />' : 'No image';
-    return '<div class="course">' +
-      '<div class="thumb">' + thumb +
-        '<span class="st badge ' + (p.active ? 'success' : 'off') + '">' + (p.active ? 'Published' : 'Draft') + '</span>' +
-        (p.featured ? '<span class="ft badge info">★ Featured</span>' : '') +
-      '</div>' +
-      '<div class="body"><b>' + esc(p.title || p.slug) + '</b><div class="dim">/' + esc(p.slug) + '</div>' +
-        '<div class="price">' + tk(p.price) + (p.regular_price && p.regular_price > p.price ? '<s>' + tk(p.regular_price) + '</s>' : '') + '</div>' +
-        '<div class="dim">' + esc((p.short_description || '').slice(0, 70)) + '</div>' +
-      '</div>' +
-      '<div class="acts">' +
-        '<button class="btn btn-sm" data-pa="edit" data-pi="' + idx + '">Edit</button>' +
-        '<button class="btn btn-sm btn-ghost" data-pa="toggle" data-pi="' + idx + '">' + (p.active ? 'Unpublish' : 'Publish') + '</button>' +
-        '<button class="btn btn-sm btn-ghost" data-pa="duplicate" data-pi="' + idx + '">Duplicate</button>' +
-        '<button class="btn btn-sm btn-danger" data-pa="delete" data-pi="' + idx + '">Delete</button>' +
-      '</div></div>';
-  }).join('');
-  g.querySelectorAll('[data-pa]').forEach((b) => b.addEventListener('click', () => {
-    const p = PRODUCTS[Number(b.dataset.pi)];
-    if (!p) return;
-    if (b.dataset.pa === 'edit') openProduct(p);
-    if (b.dataset.pa === 'duplicate') openProduct(Object.assign({}, p, { slug: p.slug + '-copy', title: p.title + ' Copy', active: false, featured: false }), 'Duplicate Course');
-    if (b.dataset.pa === 'toggle') toggleProduct(p.slug, !p.active);
-    if (b.dataset.pa === 'delete') delProduct(p.slug);
-  }));
+  const g=document.getElementById('prodGrid'), q=(document.getElementById('prodSearch').value||'').toLowerCase().trim(), f=document.getElementById('prodFilter').value;
+  const list=PRODUCTS.filter(p=>(f==='all'||String(Number(!!p.active))===f)&&(!q||(String(p.title||'')+' '+String(p.slug||'')).toLowerCase().includes(q)));
+  if(!list.length){g.innerHTML='<tr><td colspan="6"><div class="empty">কোনো কোর্স পাওয়া যায়নি।</div></td></tr>';return}
+  g.innerHTML=list.map(p=>{const idx=PRODUCTS.indexOf(p),img=p.thumbnail?'<img class="course-table-thumb" src="'+esc(p.thumbnail)+'" alt="" onerror="this.style.visibility=\'hidden\'">':'<span class="course-table-thumb"></span>';return '<tr><td><b>'+esc(p.sort_order||0)+'</b></td><td><div class="course-title">'+img+'<div><b>'+esc(p.title||p.slug)+'</b><div class="dim">/'+esc(p.slug)+'</div></div></div></td><td><b>'+tk(p.price)+'</b>'+(p.regular_price>p.price?'<div class="dim"><s>'+tk(p.regular_price)+'</s></div>':'')+'</td><td><span class="badge '+(p.active?'success':'off')+'">'+(p.active?'Published':'Draft')+'</span></td><td>'+(p.featured?'<span class="badge info">★ Featured</span>':'—')+'</td><td style="text-align:right;white-space:nowrap"><button class="btn btn-sm" data-pa="edit" data-pi="'+idx+'">Edit</button> <button class="btn btn-sm btn-ghost" data-pa="toggle" data-pi="'+idx+'">'+(p.active?'Unpublish':'Publish')+'</button> <button class="btn btn-sm btn-ghost" data-pa="duplicate" data-pi="'+idx+'">Duplicate</button> <button class="btn btn-sm btn-danger" data-pa="delete" data-pi="'+idx+'">Delete</button></td></tr>'}).join('');
+  g.querySelectorAll('[data-pa]').forEach(b=>b.addEventListener('click',()=>{const p=PRODUCTS[Number(b.dataset.pi)];if(!p)return;if(b.dataset.pa==='edit')openProduct(p);if(b.dataset.pa==='duplicate')openProduct(Object.assign({},p,{slug:p.slug+'-copy',title:p.title+' Copy',active:false,featured:false}),'Duplicate Course');if(b.dataset.pa==='toggle')toggleProduct(p.slug,!p.active);if(b.dataset.pa==='delete')delProduct(p.slug)}));
 }
 
 function pmTab(name, el) {
@@ -810,9 +558,7 @@ function autoSlug() {
   s.value = document.getElementById('pTitle').value.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
 }
 function thumbPreview() {
-  const img = document.getElementById('pThumbPrev');
-  img.src = document.getElementById('pThumb').value || '';
-  img.style.opacity = 1;
+  productLivePreview();
 }
 function openProduct(p, titleText) {
   const set = (id, v) => { document.getElementById(id).value = v == null ? '' : v; };
@@ -820,7 +566,7 @@ function openProduct(p, titleText) {
   set('pShortDescription', p ? p.short_description : ''); set('pDescription', p ? p.description : '');
   set('pPrice', p ? p.price : ''); set('pRegularPrice', p ? p.regular_price : '');
   set('pSort', p ? (p.sort_order || 0) : 0);
-  set('pThumb', p ? p.thumbnail : ''); set('pDrive', p ? p.drive_link : ''); set('pPrompt', p ? p.prompt : '');
+  set('pThumb', p ? p.thumbnail : ''); set('pDrive', p ? p.drive_link : ''); set('pPrompt', p ? p.prompt : ''); set('pSeoTitle',''); set('pSeoDescription','');
   document.getElementById('pSlug').dataset.locked = p ? '1' : '0';
   document.getElementById('swActive').classList.toggle('on', p ? !!p.active : true);
   document.getElementById('swFeatured').classList.toggle('on', p ? !!p.featured : false);
@@ -828,7 +574,7 @@ function openProduct(p, titleText) {
   document.getElementById('pmSub').innerText = p ? ('/' + (p.slug || '')) : 'কয়েকটি ঘর পূরণ করলেই কোর্স লাইভ';
   document.getElementById('pMsg').innerText = '';
   pmTab('basic', document.querySelector('#prodModal .tab'));
-  thumbPreview();
+  thumbPreview(); productLivePreview();
   document.getElementById('prodModal').classList.add('open');
 }
 function closeProduct() { document.getElementById('prodModal').classList.remove('open'); }
@@ -839,7 +585,7 @@ async function saveProduct() {
   const slug = document.getElementById('pSlug').value.trim();
   const price = document.getElementById('pPrice').value;
   if (!title || !slug) { msg.innerHTML = '<span style="color:var(--danger)">টাইটেল ও slug দিন</span>'; pmTab('basic', document.querySelector('#prodModal .tab')); return; }
-  if (!price) { msg.innerHTML = '<span style="color:var(--danger)">দাম দিন</span>'; pmTab('price', document.querySelectorAll('#prodModal .tab')[1]); return; }
+  if (!price) { msg.innerHTML = '<span style="color:var(--danger)">দাম দিন</span>'; pmTab('price', document.querySelectorAll('#prodModal .tab')[2]); return; }
   msg.innerHTML = '<span class="spinner sm"></span>';
   const d = await api({ action: 'productSave', product: {
     slug, title, price,
@@ -1058,21 +804,30 @@ async function saveSettings() {
   toast('সেটিংস সেভ হয়েছে', 'ok');
 }
 
-function themePreview() {
-  document.getElementById('themePrev').style.background = 'linear-gradient(135deg,' + document.getElementById('theme_color_primary').value + ',' + document.getElementById('theme_color_secondary').value + ')';
-}
-async function loadSiteControls() {
-  const d = await api({ action:'settingsGet' }); SETTINGS_MAP = {}; (d.settings || []).forEach((x) => SETTINGS_MAP[x.key] = x.value);
-  [['brand_announcement','announcement'],['brand_announcement_enabled','announcement_enabled'],['brand_featured_course','featured_course'],['theme_color_primary','color_primary'],['theme_color_secondary','color_secondary'],['social_messenger_link','messenger_link'],['social_facebook_link','facebook_link'],['social_tiktok_link','tiktok_link'],['social_support_email','support_email']].forEach((pair) => { const el=document.getElementById(pair[0]); if(el && SETTINGS_MAP[pair[1]]) el.value=SETTINGS_MAP[pair[1]]; });
-  themePreview();
-}
-async function saveSiteGroup(group) {
-  const groups={branding:[['brand_announcement','announcement'],['brand_announcement_enabled','announcement_enabled'],['brand_featured_course','featured_course']],theme:[['theme_color_primary','color_primary'],['theme_color_secondary','color_secondary']],social:[['social_messenger_link','messenger_link'],['social_facebook_link','facebook_link'],['social_tiktok_link','tiktok_link'],['social_support_email','support_email']]};
-  const msg=document.getElementById(group+'Msg'); msg.innerHTML='<span class="spinner sm"></span>';
-  for(const pair of groups[group]) await api({action:'settingsSave',key:pair[1],value:document.getElementById(pair[0]).value});
-  msg.innerText='Changes saved successfully.';
-  toast('সেভ হয়েছে ✅', 'ok');
-}
+const THEMES={
+'hvb-signature':{name:'HVB Signature',desc:'Original cyan, blue and violet',p:'#3FC7F2',s:'#7C6BF5',bg:'#07111E',surface:'#132239'},
+'aqua-ivory':{name:'Aqua Ivory',desc:'Clean light course experience',p:'#087F75',s:'#5B83D8',bg:'#F5F8F7',surface:'#FFFFFF'},
+'neon-night':{name:'Neon Night',desc:'Cinematic dark launch style',p:'#35E4D0',s:'#667CFF',bg:'#050B14',surface:'#101C2D'},
+'ocean-focus':{name:'Ocean Focus',desc:'Trusted blue learning style',p:'#168CB7',s:'#2462B8',bg:'#EFF7FA',surface:'#FFFFFF'},
+'fresh-growth':{name:'Fresh Growth',desc:'Calm green student experience',p:'#2A9D79',s:'#70B77E',bg:'#F2F8F4',surface:'#FFFFFF'},
+'violet-academy':{name:'Violet Academy',desc:'Premium creator education',p:'#6D6AE8',s:'#3FC7F2',bg:'#F6F5FB',surface:'#FFFFFF'}
+};
+let ACTIVE_THEME='hvb-signature';
+function renderThemeGallery(){const g=document.getElementById('themeGallery');if(!g)return;g.innerHTML=Object.entries(THEMES).map(([id,t])=>'<div class="theme-card '+(id===ACTIVE_THEME?'active':'')+'" onclick="applyTheme(\''+id+'\')"><div class="theme-mock" style="background:'+t.bg+'"><div class="mock-line" style="width:38%;background:'+t.p+'"></div><div class="mock-line" style="width:68%;background:'+t.s+';opacity:.65"></div><div class="mock-btns"><i style="background:'+t.p+'"></i><i style="background:'+t.s+'"></i></div></div><b>'+t.name+'</b><div class="dim">'+t.desc+'</div><div class="swatches"><i style="background:'+t.bg+'"></i><i style="background:'+t.surface+'"></i><i style="background:'+t.p+'"></i><i style="background:'+t.s+'"></i></div></div>').join('')}
+function applyTheme(id){const t=THEMES[id];if(!t)return;ACTIVE_THEME=id;[['primary',t.p],['secondary',t.s],['background',t.bg],['surface',t.surface]].forEach(([k,v])=>{document.getElementById('theme_color_'+k).value=v;document.getElementById('theme_color_'+k+'_text').value=v});renderThemeGallery();markDirty();studioPreview()}
+function syncColor(k,source){const picker=document.getElementById('theme_color_'+k),text=document.getElementById('theme_color_'+k+'_text');if(source==='picker')text.value=picker.value;else if(/^#[0-9a-f]{6}$/i.test(text.value))picker.value=text.value;ACTIVE_THEME='custom';renderThemeGallery();markDirty();studioPreview()}
+function markDirty(){const d=document.getElementById('studioDirty');if(d)d.classList.add('show')}
+function previewDevice(mobile,btn){document.getElementById('studioPreviewWrap').classList.toggle('mobile',mobile);btn.parentNode.querySelectorAll('.btn').forEach(x=>x.classList.add('btn-ghost'));btn.classList.remove('btn-ghost')}
+function studioHtml(){const title=(document.getElementById('home_hero_title')?.value)||'AI Video Creation শিখুন',sub=(document.getElementById('home_hero_subtitle')?.value)||'শুরু থেকে প্রফেশনাল ভিডিও বানানোর সম্পূর্ণ গাইড',cta=(document.getElementById('home_cta_label')?.value)||'কোর্স দেখুন',p=document.getElementById('theme_color_primary')?.value||'#3FC7F2',s=document.getElementById('theme_color_secondary')?.value||'#7C6BF5',bg=document.getElementById('theme_color_background')?.value||'#07111E',surface=document.getElementById('theme_color_surface')?.value||'#132239';return '<div style="--preview-primary:'+p+';background:'+bg+';min-height:430px"><div class="mini-nav"><b>HVB</b><span>Courses &nbsp; Reviews &nbsp; Account</span></div><div class="mini-hero" style="background:linear-gradient(135deg,'+bg+','+surface+')"><h2>'+esc(title)+'</h2><p>'+esc(sub)+'</p><span class="mini-cta" style="background:linear-gradient(135deg,'+p+','+s+')">'+esc(cta)+'</span></div><div class="mini-courses"><i class="mini-course" style="background:'+surface+'"></i><i class="mini-course" style="background:'+surface+'"></i><i class="mini-course" style="background:'+surface+'"></i></div></div>'}
+function studioPreview(){const a=document.getElementById('themePrev'),b=document.getElementById('homepagePreview'),c=document.getElementById('brandingPreview');if(a)a.innerHTML=studioHtml();if(b)b.innerHTML=studioHtml();if(c)c.innerHTML=studioHtml()}
+function coursePagePreview(){const b=document.getElementById('coursePagePreview');if(!b)return;const h=document.getElementById('course_heading_label').value||'Complete AI Video Course',cta=document.getElementById('course_cta_label').value||'এখনই ভর্তি হোন',trust=document.getElementById('course_trust_text').value||'নিরাপদ পেমেন্ট · আজীবন অ্যাক্সেস';b.innerHTML='<div class="mini-nav"><b>HVB</b><span>Course Details</span></div><div class="mini-hero"><span class="badge info">'+esc(h)+'</span><h2>AI Video Creation Course</h2><p>'+esc(trust)+'</p><span class="mini-cta">'+esc(cta)+'</span></div><div class="mini-courses"><i class="mini-course"></i><i class="mini-course"></i><i class="mini-course"></i></div>'}
+function toggleStudioSwitch(el){el.classList.toggle('on');markDirty();studioPreview()}
+function productLivePreview(){const title=document.getElementById('pTitle')?.value||'Course title',desc=document.getElementById('pShortDescription')?.value||'Course description',price=document.getElementById('pPrice')?.value||0,regular=document.getElementById('pRegularPrice')?.value||0,url=document.getElementById('pThumb')?.value||'',active=document.getElementById('swActive')?.classList.contains('on');document.getElementById('pPreviewTitle').innerText=title;document.getElementById('pPreviewDesc').innerText=desc;document.getElementById('pPreviewPrice').innerHTML=tk(price)+(Number(regular)>Number(price)?' <s class="dim">'+tk(regular)+'</s>':'');const st=document.getElementById('pPreviewStatus');st.innerText=active?'Published':'Draft';st.className='badge '+(active?'success':'off');document.getElementById('pPreviewMedia').innerHTML=url?'<img src="'+esc(url)+'" style="width:100%;height:100%;object-fit:cover" onerror="this.parentNode.innerText=\'Image load হয়নি\'">':'Image Preview'}
+async function loadSiteControls(){const d=await api({action:'settingsGet'});SETTINGS_MAP={};(d.settings||[]).forEach(x=>SETTINGS_MAP[x.key]=x.value);const fields={brand_site_name:'site_name',brand_tagline:'tagline',brand_logo_url:'logo_url',brand_favicon_url:'favicon_url',brand_announcement:'announcement',brand_announcement_enabled:'announcement_enabled',brand_featured_course:'featured_course',theme_color_primary:'color_primary',theme_color_secondary:'color_secondary',theme_color_background:'color_background',theme_color_surface:'color_surface',home_hero_title:'home_hero_title',home_hero_subtitle:'home_hero_subtitle',home_cta_label:'home_cta_label',home_hero_image:'home_hero_image',course_heading_label:'course_heading_label',course_cta_label:'course_cta_label',course_trust_text:'course_trust_text',course_delivery_note:'course_delivery_note',social_messenger_link:'messenger_link',social_facebook_link:'facebook_link',social_tiktok_link:'tiktok_link',social_support_email:'support_email'};Object.entries(fields).forEach(([id,key])=>{const el=document.getElementById(id);if(el&&SETTINGS_MAP[key]!=null)el.value=SETTINGS_MAP[key]});ACTIVE_THEME=SETTINGS_MAP.theme_template||'hvb-signature';['primary','secondary','background','surface'].forEach(k=>{const pick=document.getElementById('theme_color_'+k),txt=document.getElementById('theme_color_'+k+'_text');if(pick&&txt)txt.value=pick.value});const featured=document.getElementById('brand_featured_course');if(featured&&featured.options.length<2)(PRODUCTS||[]).forEach(p=>featured.add(new Option(p.title||p.slug,p.slug)));[['home_show_courses','home_show_courses'],['home_show_reviews','home_show_reviews'],['home_show_faq','home_show_faq'],['course_show_description','course_show_description'],['course_show_reviews','course_show_reviews'],['course_show_related','course_show_related']].forEach(([id,key])=>{const el=document.getElementById(id);if(el)el.classList.toggle('on',SETTINGS_MAP[key]!=='0')});renderThemeGallery();studioPreview();coursePagePreview()}
+async function saveStudioGroup(group){const groups={branding:{brand_site_name:'site_name',brand_tagline:'tagline',brand_logo_url:'logo_url',brand_favicon_url:'favicon_url',brand_announcement:'announcement',brand_announcement_enabled:'announcement_enabled',brand_featured_course:'featured_course'},theme:{theme_color_primary:'color_primary',theme_color_secondary:'color_secondary',theme_color_background:'color_background',theme_color_surface:'color_surface'},homepage:{home_hero_title:'home_hero_title',home_hero_subtitle:'home_hero_subtitle',home_cta_label:'home_cta_label',home_hero_image:'home_hero_image'},coursepage:{course_heading_label:'course_heading_label',course_cta_label:'course_cta_label',course_trust_text:'course_trust_text',course_delivery_note:'course_delivery_note'},social:{social_messenger_link:'messenger_link',social_facebook_link:'facebook_link',social_tiktok_link:'tiktok_link',social_support_email:'support_email'}};const msg=document.getElementById(group+'Msg');if(msg)msg.innerHTML='<span class="spinner sm"></span>';const jobs=Object.entries(groups[group]).map(([id,key])=>api({action:'settingsSave',key,value:document.getElementById(id).value}));if(group==='theme')jobs.push(api({action:'settingsSave',key:'theme_template',value:ACTIVE_THEME}));if(group==='homepage')['home_show_courses','home_show_reviews','home_show_faq'].forEach(id=>jobs.push(api({action:'settingsSave',key:id,value:document.getElementById(id).classList.contains('on')?'1':'0'})));if(group==='coursepage')['course_show_description','course_show_reviews','course_show_related'].forEach(id=>jobs.push(api({action:'settingsSave',key:id,value:document.getElementById(id).classList.contains('on')?'1':'0'})));const out=await Promise.all(jobs);const failed=out.find(x=>x.error);if(msg)msg.innerText=failed?'সেভ হয়নি: '+failed.error:'সফলভাবে সেভ হয়েছে';if(failed)toast(failed.error,'err');else{toast('পরিবর্তন প্রকাশ হয়েছে','ok');document.getElementById('studioDirty')?.classList.remove('show')}}
+function themePreview(){studioPreview()}
+async function saveSiteGroup(group){return saveStudioGroup(group)}
+
 async function loadPayments() {
   const d=await api({action:'ordersList',status:'pending',limit:300}); const list=d.orders||[];
   const failed=list.filter((x)=>x.status==='failed').length, pending=list.length-failed, amount=list.reduce((n,x)=>n+Number(x.amount||0),0);
