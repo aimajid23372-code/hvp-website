@@ -62,6 +62,7 @@
     width:52px; height:52px; border-radius:50%; background:rgba(255,255,255,.07);
     border:1px solid rgba(255,255,255,.2); display:flex; align-items:center; justify-content:center; font-size:1.2em;
   }
+  .cthumb img{ width:100%; height:100%; object-fit:cover; display:block; }
   .cthumb small{ font-family:'JetBrains Mono',monospace; font-size:.68em; color:var(--muted); letter-spacing:.1em; }
   .cbody{ padding:22px; display:flex; flex-direction:column; gap:12px; }
   .cbody .badge{
@@ -157,7 +158,7 @@
 <div class="page-head">
   <div class="eyebrow"> সব কোর্স · একবার কিনলেই দীর্ঘসময় এক্সেস</div>
   <h1>আপনার জন্য কোন কোর্সটা?</h1>
-  <p>দুটোই সম্পূর্ণ বাংলায়, ধাপে ধাপে — শুধু ফোন দিয়েই করা যাবে। নতুন আপডেট এলে সেটাও ফ্রি পাবেন।</p>
+  <p>পছন্দের কোর্স দেখুন, বিস্তারিত জানতে কোর্সটি খুলুন।</p>
 </div>
 
 <section>
@@ -168,13 +169,7 @@
       <div class="cbody">
         <span class="badge"> সবচেয়ে জনপ্রিয়</span>
         <h2>Long + Short Video Course</h2>
-        <p>Short আর Long — দুইটাই একসাথে। YouTube/Facebook-এর ২-৫ মিনিটের ভিডিও থেকে TikTok ও Reels-এর ভাইরাল ক্লিপ, পুরো প্রসেস A থেকে Z।</p>
-        <div class="feat">
-          <span> Long ভিডিওর সম্পূর্ণ প্রম্পট সিস্টেম</span>
-          <span> Short/Reels-এর ভাইরাল ফর্মুলা</span>
-          <span> এডিটিং, ভয়েস ও আপলোড — সব ধাপ</span>
-          <span> ডিরেক্ট Messenger সাপোর্ট + প্রিমিয়াম গ্রুপ</span>
-        </div>
+        <p>Long ও Short—দুই ধরনের AI ভিডিও তৈরির সম্পূর্ণ কোর্স।</p>
         <div class="cfoot">
           <div style="display:flex; align-items:baseline; gap:8px;">
             <span data-hvb-oldprice="bundle" style="font-family:'Sora',sans-serif; text-decoration:line-through; color:#8891A8; font-size:1.05em; font-weight:600;">১,৫০০ ৳</span>
@@ -193,12 +188,7 @@
       <div class="cbody">
         <span class="badge plain">শর্ট কোর্স</span>
         <h2>Short Video Course</h2>
-        <p>কম খরচে শুরু করতে চান? ৩৫ সেকেন্ডের ভাইরাল Short ভিডিও বানানোর পুরো কৌশল — আজ শিখে কালই পোস্ট করতে পারবেন।</p>
-        <div class="feat">
-          <span> Short ভিডিওর রেডি প্রম্পট</span>
-          <span> ক্যারেক্টার ও ডায়ালগ বানানোর নিয়ম</span>
-          <span> ফোনেই এডিটিং ও আপলোড</span>
-        </div>
+        <p>AI দিয়ে দ্রুত আকর্ষণীয় Short ভিডিও বানানোর সম্পূর্ণ কোর্স।</p>
         <div class="cfoot">
           <div style="display:flex; align-items:baseline; gap:8px;">
             <span data-hvb-oldprice="short" style="font-family:'Sora',sans-serif; text-decoration:line-through; color:#8891A8; font-size:1.05em; font-weight:600;">৮০০ ৳</span>
@@ -217,7 +207,7 @@
       <div class="cbody">
         <span class="badge plain">ফ্রি</span>
         <h2>ফ্রি লেসন — প্রথমে দেখে নিন</h2>
-        <p>কেনার আগে দেখে নিন শেখানোর ধরন কেমন। একটি সম্পূর্ণ লেসন একেবারে ফ্রি।</p>
+        <p>কেনার আগে একটি সম্পূর্ণ লেসন ফ্রি দেখে নিন।</p>
         <div class="cfoot">
           <div class="price">০ ৳</div>
           <div class="cbtns"><a class="btn-ghost" href="/free-lesson">Watch Free Lesson</a></div>
@@ -257,7 +247,7 @@
         var card=document.createElement('article');card.className='ccard'+(p.featured?' featured':'');
         var image=p.thumbnail?'<img src="'+esc(hvbImg(p.thumbnail))+'" alt="'+esc(p.title)+'" loading="lazy">':'<small>HVB COURSE</small>';
         var old=p.regular_price>p.price?'<span style="text-decoration:line-through;color:var(--muted)">'+money(p.regular_price)+'</span>':'';
-        card.innerHTML='<div class="cthumb">'+image+'</div><div class="cbody"><span class="badge '+(p.featured?'':'plain')+'">'+(p.featured?'Featured':'New Course')+'</span><h2>'+esc(p.title)+'</h2><p>'+esc(p.short_description||p.description||'সম্পূর্ণ বাংলায় ধাপে ধাপে শেখানো হবে।')+'</p><div class="cfoot"><div style="display:flex;align-items:baseline;gap:8px">'+old+'<div class="price">'+money(p.price)+'</div></div><div class="cbtns"><a class="btn-ghost" href="/course?course='+encodeURIComponent(p.slug)+'">View Details</a><a class="btn-primary" href="/course?course='+encodeURIComponent(p.slug)+'#buy" data-hvb-gate>Enroll Now</a></div></div></div>';
+        card.innerHTML='<div class="cthumb">'+image+'</div><div class="cbody"><span class="badge '+(p.featured?'':'plain')+'">'+(p.featured?'Featured':'New Course')+'</span><h2>'+esc(p.title)+'</h2><p>'+esc(p.slug==='ai-kids-comedy'?'AI Kids Comedy ভিডিও তৈরি থেকে আপলোড—সম্পূর্ণ কোর্স।':(p.short_description||'সম্পূর্ণ বাংলায় ধাপে ধাপে শেখানো হবে।'))+'</p><div class="cfoot"><div style="display:flex;align-items:baseline;gap:8px">'+old+'<div class="price">'+money(p.price)+'</div></div><div class="cbtns"><a class="btn-ghost" href="/course?course='+encodeURIComponent(p.slug)+'">View Details</a><a class="btn-primary" href="/course?course='+encodeURIComponent(p.slug)+'#buy" data-hvb-gate>Enroll Now</a></div></div></div>';
         list.appendChild(card);
       });
     }).catch(function(){});
@@ -265,3 +255,4 @@
 </script>
 </body>
 </html>
+
