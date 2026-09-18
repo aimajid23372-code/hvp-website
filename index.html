@@ -128,13 +128,14 @@
     border:1px solid rgba(255,255,255,0.2);
     display:flex; align-items:center; justify-content:center; color:var(--text); font-size:1.1em;
   }
-  .course-thumb img { width:100%; height:100%; object-fit:cover; }
+  .course-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
   .course-body{ padding:18px; flex:1; display:flex; flex-direction:column; gap:10px; }
   .course-body .badge{
     font-size:0.72em; color:var(--violet); letter-spacing:0.05em; text-transform:uppercase;
   }
   .course-body h3{ font-size:1.1em; font-weight:600; }
-  .course-body p{ color:var(--muted); font-size:0.9em; }
+  .course-body p{ color:var(--muted); font-size:0.9em; line-height:1.55; }
+  #courses .course-features{display:none}
   .course-footer{
     display:flex; align-items:center; justify-content:space-between;
     margin-top:auto; padding-top:12px; border-top:1px solid var(--line);
@@ -303,10 +304,10 @@
   <div class="section-head">
     <span class="tag mono">// MASTERCLASSES</span>
     <h2>আপনার জন্য কোনটা?</h2>
-    <p>নিচে দুটি জনপ্রিয় কোর্স — বিস্তারিত তুলনা ও সব কোর্স দেখতে কোর্স পেজে যান।</p>
+    <p>কোর্স বেছে নিন—সম্পূর্ণ তথ্য ভেতরে দেখুন।</p>
   </div>
   
-  <div class="courses">
+  <div class="courses" id="homeCourses">
     <a class="course-card glass-card" href="/course-bundle" style="display: flex; flex-direction: column;">
       <div class="course-thumb">
         <img src="bundle-thumb.jpg" alt="Long + Short Video Course" loading="lazy">
@@ -318,7 +319,7 @@
           TRENDING NOW
         </span>
         <h3 style="font-size: 1.22em; font-weight: 800; color: #FFFFFF; margin-top: 4px;">Long + Short Video Course</h3>
-        <p style="color: #CBD5E1; font-size: 0.92em; line-height: 1.6;">Short আর Long — দুইটাই একসাথে। YouTube-এর ২-৫ মিনিটের ভিডিও থেকে TikTok/Reels-এর ভাইরাল ক্লিপ, পুরো A থেকে Z।</p>
+        <p style="color: #CBD5E1; font-size: 0.92em; line-height: 1.6;">Long ও Short—দুই ধরনের AI ভিডিও তৈরির সম্পূর্ণ কোর্স।</p>
         
         <ul class="course-features">
           <li style="color: #F8FAFC; font-weight: 500;"><svg viewBox="0 0 24 24" fill="none" style="stroke: #2DD4BF; filter: drop-shadow(0 0 5px rgba(45, 212, 191, 0.45));"><path d="M20 6L9 17l-5-5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> ২-৫ মিনিট Long + Short ভিডিও</li>
@@ -344,7 +345,7 @@
       <div class="course-body">
         <span class="badge" style="background: rgba(45, 212, 191, 0.16); color: #2DD4BF; border: 1px solid rgba(45, 212, 191, 0.4); padding: 5px 12px; border-radius: 20px; align-self: flex-start; font-weight: 800; font-size: 0.72em; letter-spacing: 0.6px; box-shadow: 0 0 12px rgba(45, 212, 191, 0.25);">শর্ট কোর্স</span>
         <h3 style="font-size: 1.22em; font-weight: 800; color: #FFFFFF; margin-top: 4px;">Short Video Course</h3>
-        <p style="color: #CBD5E1; font-size: 0.92em; line-height: 1.6;">কম খরচে শুরু করতে চান? ৩৫ সেকেন্ডের ভাইরাল Short ভিডিও বানানোর পুরো কৌশল — আজ শিখে কালই পোস্ট করতে পারবেন।</p>
+        <p style="color: #CBD5E1; font-size: 0.92em; line-height: 1.6;">AI দিয়ে দ্রুত আকর্ষণীয় Short ভিডিও বানানোর সম্পূর্ণ কোর্স।</p>
         
         <ul class="course-features">
           <li style="color: #F8FAFC; font-weight: 500;"><svg viewBox="0 0 24 24" fill="none" style="stroke: #2DD4BF; filter: drop-shadow(0 0 5px rgba(45, 212, 191, 0.45));"><path d="M20 6L9 17l-5-5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> ৩৫ সেকেন্ডের ভাইরাল Short ভিডিও</li>
@@ -659,7 +660,28 @@
   els.forEach(function(el){ io.observe(el); });
 })();
 </script>
+<script>
+(function(){
+  var list=document.getElementById('homeCourses');
+  if(!list)return;
+  function esc(v){var d=document.createElement('div');d.textContent=String(v||'');return d.innerHTML}
+  function hvbImg(u){u=String(u||'');var m=u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=|thumbnail\?id=)([-\w]{20,})/);return m?'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w1200':u}
+  function money(v){return Number(v||0).toLocaleString('bn-BD')+' ৳'}
+  fetch('/api/track',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'products_get'})})
+    .then(function(r){return r.json()}).then(function(data){
+      (data.products||[]).filter(function(p){return !['short','bundle','long'].includes(p.slug)}).forEach(function(p){
+        var a=document.createElement('a');a.className='course-card glass-card';a.href='/course?course='+encodeURIComponent(p.slug);
+        var image=p.thumbnail?'<img src="'+esc(hvbImg(p.thumbnail))+'" alt="'+esc(p.title)+'" loading="lazy">':'<div class="play">▶</div>';
+        var old=p.regular_price>p.price?'<span style="text-decoration:line-through;color:var(--muted);font-size:.75em">'+money(p.regular_price)+'</span>':'';
+        var line=p.slug==='ai-kids-comedy'?'AI Kids Comedy ভিডিও তৈরি থেকে আপলোড—সম্পূর্ণ কোর্স।':(p.short_description||'সম্পূর্ণ বাংলায় ধাপে ধাপে শেখানো হবে।');
+        a.innerHTML='<div class="course-thumb">'+image+'</div><div class="course-body"><span class="badge">'+(p.featured?'FEATURED':'NEW COURSE')+'</span><h3>'+esc(p.title)+'</h3><p>'+esc(line)+'</p><div class="course-footer"><div>'+old+' <span class="price">'+money(p.price)+'</span></div><span class="buy-btn">View Details</span></div></div>';
+        list.appendChild(a);
+      });
+    }).catch(function(){});
+})();
+</script>
 <script src="hvb-account.js"></script>
 <script src="hvb-reviews.js"></script>
 </body>
 </html>
+
