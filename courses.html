@@ -176,8 +176,8 @@
             <div class="price dyn-price-bundle" data-hvb-price="bundle">৯৯৯ ৳</div>
           </div>
           <div class="cbtns">
-            <a class="btn-ghost" href="/course-bundle">View Details</a>
-            <a class="btn-primary" href="/course-bundle#buy" data-hvb-gate>Enroll Now</a>
+            <a class="btn-ghost" href="/course-bundle">বিস্তারিত দেখুন</a>
+            <a class="btn-primary" href="/course-bundle#buy" data-hvb-gate>কিনুন</a>
           </div>
         </div>
       </div>
@@ -195,8 +195,8 @@
             <div class="price dyn-price-short" data-hvb-price="short">৪৯৯ ৳</div>
           </div>
           <div class="cbtns">
-            <a class="btn-ghost" href="/course-short">View Details</a>
-            <a class="btn-primary" href="/course-short#buy" data-hvb-gate>Enroll Now</a>
+            <a class="btn-ghost" href="/course-short">বিস্তারিত দেখুন</a>
+            <a class="btn-primary" href="/course-short#buy" data-hvb-gate>কিনুন</a>
           </div>
         </div>
       </div>
@@ -210,7 +210,7 @@
         <p>কেনার আগে একটি সম্পূর্ণ লেসন ফ্রি দেখে নিন।</p>
         <div class="cfoot">
           <div class="price">০ ৳</div>
-          <div class="cbtns"><a class="btn-ghost" href="/free-lesson">Watch Free Lesson</a></div>
+          <div class="cbtns"><a class="btn-ghost" href="/free-lesson">ফ্রি লেসন দেখুন</a></div>
         </div>
       </div>
     </article>
@@ -224,7 +224,7 @@
       <b>আগেই কোর্স কিনেছেন?</b>
       <p>লগইন করলে আপনার কেনা কোর্স নিজেই খুলে যাবে — যেকোনো ডিভাইসে।</p>
     </div>
-    <a class="btn-primary" href="/my-courses">Go to My Courses</a>
+    <a class="btn-primary" href="/my-courses">আমার কোর্স</a>
   </div>
 </div>
 
@@ -247,7 +247,7 @@
         var card=document.createElement('article');card.className='ccard'+(p.featured?' featured':'');
         var image=p.thumbnail?'<img src="'+esc(hvbImg(p.thumbnail))+'" alt="'+esc(p.title)+'" loading="lazy">':'<small>HVB COURSE</small>';
         var old=p.regular_price>p.price?'<span style="text-decoration:line-through;color:var(--muted)">'+money(p.regular_price)+'</span>':'';
-        card.innerHTML='<div class="cthumb">'+image+'</div><div class="cbody"><span class="badge '+(p.featured?'':'plain')+'">'+(p.featured?'Featured':'New Course')+'</span><h2>'+esc(p.title)+'</h2><p>'+esc(p.slug==='ai-kids-comedy'?'AI Kids Comedy ভিডিও তৈরি থেকে আপলোড—সম্পূর্ণ কোর্স।':(p.short_description||'সম্পূর্ণ বাংলায় ধাপে ধাপে শেখানো হবে।'))+'</p><div class="cfoot"><div style="display:flex;align-items:baseline;gap:8px">'+old+'<div class="price">'+money(p.price)+'</div></div><div class="cbtns"><a class="btn-ghost" href="/course?course='+encodeURIComponent(p.slug)+'">View Details</a><a class="btn-primary" href="/course?course='+encodeURIComponent(p.slug)+'#buy" data-hvb-gate>Enroll Now</a></div></div></div>';
+        card.innerHTML='<div class="cthumb">'+image+'</div><div class="cbody"><span class="badge '+(p.featured?'':'plain')+'">'+(p.featured?'জনপ্রিয়':'নতুন কোর্স')+'</span><h2>'+esc(p.title)+'</h2><p>'+esc(p.slug==='ai-kids-comedy'?'AI Kids Comedy ভিডিও তৈরি থেকে আপলোড—সম্পূর্ণ কোর্স।':(p.short_description||'সম্পূর্ণ বাংলায় ধাপে ধাপে শেখানো হবে।'))+'</p><div class="cfoot"><div style="display:flex;align-items:baseline;gap:8px">'+old+'<div class="price">'+money(p.price)+'</div></div><div class="cbtns"><a class="btn-ghost" href="/course?course='+encodeURIComponent(p.slug)+'">বিস্তারিত দেখুন</a><a class="btn-primary" href="/course?course='+encodeURIComponent(p.slug)+'#buy" data-hvb-gate>কিনুন</a></div></div></div>';
         list.appendChild(card);
       });
     }).catch(function(){});
