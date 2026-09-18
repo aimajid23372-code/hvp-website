@@ -249,12 +249,13 @@
 (function(){
   var list=document.getElementById('courseList');
   function esc(v){var d=document.createElement('div');d.textContent=String(v||'');return d.innerHTML}
+  function hvbImg(u){u=String(u||'');var m=u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=|thumbnail\?id=)([-\w]{20,})/);return m?'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w1200':u}
   function money(v){return Number(v||0).toLocaleString('bn-BD')+' ৳'}
   fetch('/api/track',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'products_get'})})
     .then(function(r){return r.json()}).then(function(data){
       (data.products||[]).filter(function(p){return !['short','bundle','long'].includes(p.slug)}).forEach(function(p){
         var card=document.createElement('article');card.className='ccard'+(p.featured?' featured':'');
-        var image=p.thumbnail?'<img src="'+esc(p.thumbnail)+'" alt="'+esc(p.title)+'" loading="lazy">':'<small>HVB COURSE</small>';
+        var image=p.thumbnail?'<img src="'+esc(hvbImg(p.thumbnail))+'" alt="'+esc(p.title)+'" loading="lazy">':'<small>HVB COURSE</small>';
         var old=p.regular_price>p.price?'<span style="text-decoration:line-through;color:var(--muted)">'+money(p.regular_price)+'</span>':'';
         card.innerHTML='<div class="cthumb">'+image+'</div><div class="cbody"><span class="badge '+(p.featured?'':'plain')+'">'+(p.featured?'Featured':'New Course')+'</span><h2>'+esc(p.title)+'</h2><p>'+esc(p.short_description||p.description||'সম্পূর্ণ বাংলায় ধাপে ধাপে শেখানো হবে।')+'</p><div class="cfoot"><div style="display:flex;align-items:baseline;gap:8px">'+old+'<div class="price">'+money(p.price)+'</div></div><div class="cbtns"><a class="btn-ghost" href="/course?course='+encodeURIComponent(p.slug)+'">View Details</a><a class="btn-primary" href="/course?course='+encodeURIComponent(p.slug)+'#buy" data-hvb-gate>Enroll Now</a></div></div></div>';
         list.appendChild(card);
