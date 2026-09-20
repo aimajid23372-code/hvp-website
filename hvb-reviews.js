@@ -104,13 +104,17 @@
       '<div class="hvb-rv-pick" id="hvbRvStars">' +
       '<i data-v="1">★</i><i data-v="2">★</i><i data-v="3">★</i><i data-v="4">★</i><i data-v="5">★</i></div>' +
       '<label>অভিজ্ঞতা</label><textarea name="body" maxlength="1200" placeholder="কোর্স করে কী শিখলেন, কী উপকার হলো — সংক্ষেপে লিখুন" required></textarea>' +
-      '<label>স্ক্রিনশট / ছবির লিংক (ঐচ্ছিক)</label>' +
-      '<input name="image_url" type="url" placeholder="https://... (ছবির সরাসরি লিংক)">' +
+      '<label>স্ক্রিনশট / ছবি (ঐচ্ছিক)</label>' +
+      '<div class="hvb-up"><input type="file" id="hvbRvFile" accept="image/*" style="display:none">' +
+      '<button type="button" class="hvb-up-btn" id="hvbRvPick">ছবি আপলোড করুন</button>' +
+      '<span class="hvb-up-state" id="hvbRvUpState">ফোন বা কম্পিউটার থেকে সরাসরি ছবি দিন</span></div>' +
+      '<img id="hvbRvPrev" class="hvb-up-prev" alt="" style="display:none">' +
+      '<input name="image_url" type="hidden">' +
       '<label>আপনার কাজের লিংক (ঐচ্ছিক)</label>' +
       '<input name="link" type="url" placeholder="https://... (YouTube/Facebook ভিডিও বা পেজ)">' +
       '<div style="margin-top:16px"><button class="hvb-btn-accent" type="submit" id="hvbRvSend">রিভিউ পাঠান</button></div>' +
       '<div class="hvb-rv-msg" id="hvbRvMsg"></div>' +
-      '<p class="hvb-rv-note">ছবি আপলোড করতে চাইলে ছবিটি Google Drive/Imgur/Facebook-এ রেখে তার সরাসরি লিংক দিন।</p>' +
+      '<p class="hvb-rv-note">ছবি সরাসরি এখান থেকেই আপলোড হবে — কোনো Drive বা অন্য সাইটের লিংক লাগবে না।</p>' +
       '</form>'
     );
   }
@@ -147,6 +151,41 @@
           });
           paint();
 
+          var upBtn = wrap.querySelector('#hvbRvPick');
+          var upFile = wrap.querySelector('#hvbRvFile');
+          var upState = wrap.querySelector('#hvbRvUpState');
+          var upPrev = wrap.querySelector('#hvbRvPrev');
+          var upHidden = wrap.querySelector('input[name="image_url"]');
+          var uploading = false;
+          if (upBtn && upFile) {
+            upBtn.addEventListener('click', function () { upFile.click(); });
+            upFile.addEventListener('change', function () {
+              var f = upFile.files && upFile.files[0];
+              if (!f || !window.HVBUpload) return;
+              uploading = true;
+              upState.textContent = 'আপলোড হচ্ছে…';
+              upBtn.classList.add('hvb-busy');
+              window.HVBUpload.upload({
+                file: f,
+                endpoint: API,
+                action: 'upload_image',
+                payload: { access_token: token },
+              }).then(function (url) {
+                uploading = false;
+                upBtn.classList.remove('hvb-busy');
+                upHidden.value = url;
+                upPrev.src = url;
+                upPrev.style.display = 'block';
+                upState.textContent = 'ছবি যোগ হয়েছে';
+                upBtn.textContent = 'ছবি বদলান';
+              }).catch(function (err) {
+                uploading = false;
+                upBtn.classList.remove('hvb-busy');
+                upState.textContent = err.message || 'ছবি আপলোড করা যায়নি';
+              });
+            });
+          }
+
           wrap.querySelector('#hvbRvForm').addEventListener('submit', function (e) {
             e.preventDefault();
             var f = e.target;
@@ -154,6 +193,11 @@
             var msg = f.querySelector('#hvbRvMsg');
             msg.className = 'hvb-rv-msg';
             msg.textContent = '';
+            if (uploading) {
+              msg.className = 'hvb-rv-msg err';
+              msg.textContent = 'ছবি আপলোড শেষ হওয়া পর্যন্ত একটু অপেক্ষা করুন।';
+              return;
+            }
             btn.classList.add('hvb-busy');
             fetch(API, {
               method: 'POST',
