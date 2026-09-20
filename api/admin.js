@@ -1,6 +1,7 @@
 const { createClient } = require('@supabase/supabase-js');
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 const crypto = require('crypto');
+const { uploadDataUrl } = require('../lib/hvb_upload');
 
 function daysAgoISO(n) { return new Date(Date.now() - n * 24 * 60 * 60 * 1000).toISOString(); }
 
@@ -49,6 +50,13 @@ module.exports = async (req, res) => {
     }
 
     if (action === 'auth') return res.status(200).json({ ok: true });
+
+    // ছবি সরাসরি আপলোড (কোর্স থাম্বনেইল, ব্যানার ইত্যাদি)
+    if (action === 'upload_image') {
+      const r = await uploadDataUrl(supabase, String(body.folder || 'courses'), body.data_url);
+      if (r.error || !r.url) return res.status(400).json({ error: r.error || 'ছবি আপলোড করা যায়নি' });
+      return res.status(200).json({ ok: true, url: r.url });
+    }
 
     // Orders search/verify
     if (action === 'search') {
