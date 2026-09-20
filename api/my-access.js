@@ -12,6 +12,7 @@ const supabase = createClient(
 
 // SECURE CONTENT STORAGE & HELPERS
 const { COURSE_CONTENT, normalizeCourse, buildContentResponse, loadOverrides } = require('../lib/course_content');
+const { uploadDataUrl } = require('../lib/hvb_upload');
 
 async function getUserFromToken(token) {
   try {
@@ -111,6 +112,13 @@ module.exports = async (req, res) => {
 
     const email = String(user.email).toLowerCase();
 
+
+    // ছবি সরাসরি আপলোড (রিভিউয়ের স্ক্রিনশট) — কোনো Drive লিংক লাগে না
+    if (body.action === 'upload_image') {
+      const r = await uploadDataUrl(supabase, 'reviews', body.data_url);
+      if (r.error || !r.url) return res.status(400).json({ error: r.error || 'ছবি আপলোড করা যায়নি' });
+      return res.status(200).json({ ok: true, url: r.url });
+    }
 
     if (body.action === 'review_add') {
       const orders = await ordersForEmail(email);
