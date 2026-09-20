@@ -27,6 +27,13 @@ module.exports = async (req, res) => {
       if (error) return res.status(200).json({ products: [], error: error.message });
       return res.status(200).json({ products: data || [] });
     }
+    if (event === 'settings_get') {
+      const allow = ['home_slides','home_hero_title','home_hero_subtitle','home_cta_label','home_hero_image','home_show_courses','home_show_reviews','home_show_faq','announcement','announcement_enabled','site_name','tagline','logo_url','favicon_url','messenger_link','facebook_link','tiktok_link','support_email'];
+      const { data } = await supabase.from('settings').select('key, value');
+      const out = {};
+      (data || []).forEach((s2) => { if (allow.includes(s2.key)) out[s2.key] = s2.value; });
+      return res.status(200).json({ settings: out });
+    }
     const page = String(body.page || '/').slice(0, 200);
     const visitorId = String(body.visitor_id || '').slice(0, 60);
     const refCode = String(body.ref_code || '').slice(0, 40) || null;
