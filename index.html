@@ -300,6 +300,46 @@
   </div>
 </div>
 
+<div id="hvbBanner" class="hvb-banner" style="display:none">
+  <div class="hvb-banner-track" id="hvbBannerTrack"></div>
+  <div class="hvb-banner-dots" id="hvbBannerDots"></div>
+</div>
+<style>
+.hvb-banner{max-width:1100px;margin:0 auto 46px;padding:0 20px}
+.hvb-banner-track{position:relative;border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);aspect-ratio:16/6}
+.hvb-banner-track a,.hvb-banner-track span{position:absolute;inset:0;opacity:0;transition:opacity .6s ease;display:block}
+.hvb-banner-track .on{opacity:1}
+.hvb-banner-track img{width:100%;height:100%;object-fit:cover;display:block}
+.hvb-banner-dots{display:flex;gap:8px;justify-content:center;margin-top:12px}
+.hvb-banner-dots i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25);cursor:pointer}
+.hvb-banner-dots i.on{background:var(--cyan);width:20px;border-radius:6px}
+@media(max-width:640px){.hvb-banner-track{aspect-ratio:16/9}}
+</style>
+<script>
+(function(){
+  function dImg(u){u=String(u||'');var m=u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=|thumbnail\?id=)([-\w]{20,})/);return m?'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w1600':u}
+  fetch('/api/track',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'settings_get'})})
+    .then(function(r){return r.json()}).catch(function(){return {}})
+    .then(function(d){
+      var slides=[];try{slides=JSON.parse((d&&d.settings&&d.settings.home_slides)||'[]')||[]}catch(e){slides=[]}
+      slides=slides.filter(function(s){return s&&s.image});
+      if(!slides.length)return;
+      var wrap=document.getElementById('hvbBanner'),track=document.getElementById('hvbBannerTrack'),dots=document.getElementById('hvbBannerDots');
+      track.innerHTML=slides.map(function(s,i){
+        var img='<img src="'+dImg(s.image)+'" alt="Banner">';
+        return s.link?'<a class="'+(i?'':'on')+'" href="'+s.link+'">'+img+'</a>':'<span class="'+(i?'':'on')+'">'+img+'</span>';
+      }).join('');
+      dots.innerHTML=slides.map(function(s,i){return '<i class="'+(i?'':'on')+'" data-i="'+i+'"></i>'}).join('');
+      wrap.style.display='block';
+      var idx=0,items=track.children,dotEls=dots.children,timer;
+      function go(n){idx=(n+slides.length)%slides.length;for(var i=0;i<items.length;i++){items[i].classList.toggle('on',i===idx);dotEls[i].classList.toggle('on',i===idx)}}
+      function start(){if(slides.length>1)timer=setInterval(function(){go(idx+1)},4500)}
+      dots.addEventListener('click',function(e){var i=e.target&&e.target.dataset?e.target.dataset.i:null;if(i==null)return;clearInterval(timer);go(Number(i));start()});
+      start();
+    });
+})();
+</script>
+
 <section id="courses">
   <div class="section-head">
     <span class="tag mono">// MASTERCLASSES</span>
