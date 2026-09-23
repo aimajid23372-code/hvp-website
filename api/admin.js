@@ -367,6 +367,29 @@ module.exports = async (req, res) => {
       return res.status(200).json({ customers: out.slice(0, 500) });
     }
 
+    // ===== Course Requests =====
+    if (action === 'courseRequestList') {
+      const { data, error } = await supabase.from('site_events').select('id,page,meta,created_at')
+        .eq('event', 'course_request').order('created_at', { ascending: false }).limit(500);
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json({ requests: data || [] });
+    }
+    if (action === 'courseRequestSet') {
+      const allowed = ['new', 'reviewed', 'planned'];
+      const status = allowed.includes(String(body.status)) ? String(body.status) : 'new';
+      const { data: row, error: readError } = await supabase.from('site_events').select('meta').eq('id', body.id).eq('event', 'course_request').maybeSingle();
+      if (readError || !row) return res.status(404).json({ error: 'অনুরোধটি পাওয়া যায়নি' });
+      const meta = Object.assign({}, row.meta || {}, { status });
+      const { error } = await supabase.from('site_events').update({ meta }).eq('id', body.id).eq('event', 'course_request');
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json({ success: true });
+    }
+    if (action === 'courseRequestDelete') {
+      const { error } = await supabase.from('site_events').delete().eq('id', body.id).eq('event', 'course_request');
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json({ success: true });
+    }
+
     // ===== Reviews =====
     if (action === 'reviewList') {
       let q = supabase.from('reviews').select('*');
