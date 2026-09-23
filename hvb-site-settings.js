@@ -4,6 +4,7 @@
   function visible(sel,on){document.querySelectorAll(sel).forEach(function(e){e.style.display=on===false?'none':''})}
   fetch('/api/track',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'settings_get'})}).then(function(r){return r.json()}).then(function(d){
     var s=d.settings||{},r=document.documentElement;
+    if(s.announcement&&typeof s.announcement==='object'){if(s.announcement_enabled==null)s.announcement_enabled=s.announcement.active===false?'0':'1';s.announcement=String(s.announcement.text||'')}
     r.style.setProperty('--cyan',safeColor(s.color_primary,'#3FC7F2'));r.style.setProperty('--violet',safeColor(s.color_secondary,'#7C6BF5'));r.style.setProperty('--bg',safeColor(s.color_background,'#07111E'));r.style.setProperty('--surface',safeColor(s.color_surface,'#132239'));
     text('.brand-text b',s.site_name);text('.hero h1',s.home_hero_title);text('.hero p.sub',s.home_hero_subtitle);text('.hero-actions .btn-primary',s.home_cta_label);
     if(s.logo_url)document.querySelectorAll('.brand img').forEach(function(i){i.src=s.logo_url});
@@ -20,3 +21,4 @@
     if(s.favicon_url){var f=document.querySelector('link[rel="icon"]')||document.createElement('link');f.rel='icon';f.href=s.favicon_url;document.head.appendChild(f)}
   }).catch(function(){})
 })();
+
