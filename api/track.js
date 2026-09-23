@@ -31,7 +31,15 @@ module.exports = async (req, res) => {
       const allow = ['home_slides','home_hero_title','home_hero_subtitle','home_cta_label','home_hero_image','home_show_courses','home_show_reviews','home_show_faq','announcement','announcement_enabled','site_name','tagline','logo_url','favicon_url','messenger_link','facebook_link','tiktok_link','support_email','theme_template','color_primary','color_secondary','color_background','color_surface','course_heading_label','course_cta_label','course_trust_text','course_delivery_note','course_show_description','course_show_reviews','course_show_related','footer_text','support_label','faq_heading','refund_summary','seo_home_title','seo_home_description','faq_1_q','faq_1_a','faq_2_q','faq_2_a','faq_3_q','faq_3_a','faq_4_q','faq_4_a'];
       const { data } = await supabase.from('settings').select('key, value');
       const out = {};
-      (data || []).forEach((s2) => { if (allow.includes(s2.key)) out[s2.key] = s2.value; });
+      (data || []).forEach((s2) => {
+        if (!allow.includes(s2.key)) return;
+        if (s2.key === 'announcement' && s2.value && typeof s2.value === 'object') {
+          out.announcement = String(s2.value.text || '');
+          if (out.announcement_enabled == null) out.announcement_enabled = s2.value.active === false ? '0' : '1';
+          return;
+        }
+        out[s2.key] = s2.value;
+      });
       return res.status(200).json({ settings: out });
     }
     const page = String(body.page || '/').slice(0, 200);
@@ -64,3 +72,4 @@ module.exports = async (req, res) => {
     return res.status(200).json({ ok: true });
   }
 };
+
