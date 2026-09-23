@@ -158,7 +158,12 @@ module.exports = async (req, res) => {
       return res.status(200).json({ settings: data || [] });
     }
     if (action === 'settingsSave') {
-      await supabase.from('settings').upsert({ id: body.key, key: body.key, value: body.value });
+      const { data: existing } = await supabase.from('settings').select('id').eq('key', body.key).maybeSingle();
+      if (existing?.id) {
+        await supabase.from('settings').update({ value: body.value }).eq('id', existing.id);
+      } else {
+        await supabase.from('settings').insert({ id: body.key, key: body.key, value: body.value });
+      }
       return res.status(200).json({ result: 'Saved' });
     }
 
