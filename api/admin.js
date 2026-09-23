@@ -137,16 +137,27 @@ module.exports = async (req, res) => {
       return res.status(200).json({ promos });
     }
     if (action === 'promoAdd') {
-      const up = await supabase.from('promo_codes').upsert({ code: String(body.code).toUpperCase(), discount_percent: Number(body.discount), active: true });
+      const code = String(body.code || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+      const discount = Number(body.discount);
+      if (code.length < 3) return res.status(200).json({ error: 'কোড কমপক্ষে ৩ অক্ষরের হতে হবে' });
+      if (!discount || discount < 1 || discount > 95) return res.status(200).json({ error: 'ডিসকাউন্ট ১–৯৫ এর মধ্যে দিন' });
+      let up = await supabase.from('promo_codes').upsert({ code, discount_percent: discount, active: true }, { onConflict: 'code' });
+      if (up.error) {
+        const exist = await supabase.from('promo_codes').select('code').eq('code', code).maybeSingle();
+        if (exist.data) up = await supabase.from('promo_codes').update({ discount_percent: discount, active: true }).eq('code', code);
+        else up = await supabase.from('promo_codes').insert({ code, discount_percent: discount, active: true });
+      }
       if (up.error) return res.status(200).json({ error: up.error.message });
-      return res.status(200).json({ success: true });
+      return res.status(200).json({ success: true, code, discount });
     }
     if (action === 'promoToggle') {
-      await supabase.from('promo_codes').update({ active: body.active }).eq('code', body.code);
+      const t = await supabase.from('promo_codes').update({ active: !!body.active }).eq('code', String(body.code || '').toUpperCase());
+      if (t.error) return res.status(200).json({ error: t.error.message });
       return res.status(200).json({ success: true });
     }
     if (action === 'promoDelete') {
-      await supabase.from('promo_codes').delete().eq('code', body.code);
+      const t = await supabase.from('promo_codes').delete().eq('code', String(body.code || '').toUpperCase());
+      if (t.error) return res.status(200).json({ error: t.error.message });
       return res.status(200).json({ success: true });
     }
 
