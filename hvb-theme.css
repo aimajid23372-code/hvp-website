@@ -405,3 +405,96 @@ footer{ border-top:1px solid var(--line-soft) !important; padding:44px 24px 34px
   position:relative; z-index:1;
 }
 @media(max-width:520px){ .hvb-poster{ padding:24px 16px; } .hvb-poster .p-title{ font-size:1.2em; } }
+
+/* ============================================================
+   HVB Premium Polish v3 — সব পেজে একই প্রিমিয়াম ফিনিশ
+   ============================================================ */
+
+:root{
+  --r-lg:22px;
+  --edge:1px solid rgba(255,255,255,.07);
+  --glass:linear-gradient(160deg, rgba(255,255,255,.055), rgba(255,255,255,.015));
+}
+
+/* সেকশনের ছন্দ */
+section{ position:relative; }
+section + section{ margin-top:clamp(28px, 5vw, 64px); }
+
+/* হিরো — আরও গভীর ও পরিষ্কার */
+.hero{
+  position:relative; overflow:hidden;
+  border-radius:var(--r-lg);
+  border:var(--edge);
+  background:var(--glass), radial-gradient(900px 420px at 18% -20%, rgba(79,227,193,.14), transparent 62%);
+  box-shadow:var(--shadow-soft);
+}
+.hero::before{
+  content:""; position:absolute; inset:-40% -10% auto -10%; height:80%;
+  background:radial-gradient(closest-side, rgba(155,140,255,.20), transparent 70%);
+  filter:blur(18px); pointer-events:none;
+}
+.hero h1{
+  font-weight:800;
+  letter-spacing:-.015em;
+  line-height:1.18;
+  background:linear-gradient(100deg,#ffffff 0%, #d9fff4 45%, #cfd0ff 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.hero p.sub{ color:var(--muted); max-width:58ch; }
+
+/* কার্ড — গ্লাস ও হোভার */
+.course-card, .why-item, .hvb-policy-box, .review-card, .faq-item, .hvb-contact-card, .hvb-idcard, .deliver-block, .course-section{
+  border-radius:var(--r-lg) !important;
+  border:var(--edge) !important;
+  background:var(--glass) !important;
+  backdrop-filter:blur(10px);
+  box-shadow:var(--shadow-soft);
+  transition:transform .32s cubic-bezier(.2,.8,.2,1), box-shadow .32s, border-color .32s;
+}
+.course-card:hover, .why-item:hover, .review-card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(79,227,193,.35) !important;
+  box-shadow:0 26px 60px -28px rgba(79,227,193,.45);
+}
+.course-card img, .course-thumb img{ border-radius:14px; }
+
+/* বাটন — একই প্রিমিয়াম ভাষা */
+.btn-primary, .promo-btn, .deliver-link{
+  border-radius:14px !important;
+  font-weight:700;
+  letter-spacing:.01em;
+  box-shadow:0 14px 34px -18px rgba(79,227,193,.75);
+  transition:transform .2s cubic-bezier(.2,.8,.2,1), box-shadow .2s, filter .2s;
+}
+.btn-primary:hover, .deliver-link:hover{ transform:translateY(-2px); filter:brightness(1.06); }
+.btn-primary:active, .deliver-link:active{ transform:translateY(0); }
+.btn-primary:focus-visible, a:focus-visible, button:focus-visible{
+  outline:2px solid rgba(79,227,193,.7); outline-offset:3px; border-radius:12px;
+}
+
+/* ইনপুট */
+input, select, textarea{ border-radius:13px !important; }
+input:focus, select:focus, textarea:focus{
+  outline:none; border-color:rgba(79,227,193,.55) !important;
+  box-shadow:0 0 0 4px rgba(79,227,193,.12) !important;
+}
+
+/* সেকশন হেডিং */
+.section-head h2{
+  letter-spacing:-.01em;
+  font-weight:800;
+}
+.section-head h2::after{
+  content:""; display:block; width:58px; height:3px; margin-top:10px;
+  border-radius:99px; background:var(--grad);
+}
+
+/* মোবাইল ফিনিশ */
+@media (max-width:640px){
+  .hero{ border-radius:18px; }
+  .course-card, .why-item, .hvb-policy-box, .review-card, .course-section, .deliver-block{ border-radius:16px !important; }
+  .btn-primary{ width:100%; }
+}
+
+/* ছবি লোড না হলেও লেআউট ভাঙবে না */
+img{ max-width:100%; height:auto; }
