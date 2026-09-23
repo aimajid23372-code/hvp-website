@@ -110,7 +110,15 @@
   }
   .hvb-signout:hover{ border-color:#ff9b9b; }
   .hvb-drawer-foot small{ display:block; color:var(--muted,#8891A8); font-size:.74em; margin-top:12px; text-align:center; }
-  @media (max-width:520px){ .hvb-acc-login{ display:none; } }
+  .hvb-request-link{color:var(--cyan,#5EEAD4)!important;background:rgba(94,234,212,.07)}
+  .hvb-request-overlay{position:fixed;inset:0;z-index:160;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(4,6,12,.76);backdrop-filter:blur(5px)}
+  .hvb-request-overlay.open{display:flex}.hvb-request-box{width:min(520px,100%);background:var(--bg-2,#0D1119);border:1px solid var(--line,#242C42);border-radius:12px;box-shadow:0 24px 70px rgba(0,0,0,.5);overflow:hidden}
+  .hvb-request-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:start;padding:18px;border-bottom:1px solid var(--line,#242C42)}
+  .hvb-request-head h2{margin:0 0 4px;font:700 1.15em 'Sora',sans-serif}.hvb-request-head p{margin:0;color:var(--muted,#8891A8);font-size:.82em}
+  .hvb-request-form{padding:18px}.hvb-request-form label{display:block;margin:0 0 6px;color:#c9d2e6;font-size:.8em;font-weight:600}.hvb-request-form input,.hvb-request-form textarea{box-sizing:border-box;width:100%;margin:0 0 14px;padding:12px 13px;border:1px solid var(--line,#242C42);border-radius:8px;background:var(--surface,#131826);color:var(--text,#EAF0FF);font:inherit;font-size:16px}.hvb-request-form textarea{min-height:96px;resize:vertical}.hvb-request-form input:focus,.hvb-request-form textarea:focus{outline:0;border-color:var(--cyan,#5EEAD4);box-shadow:0 0 0 3px rgba(94,234,212,.1)}
+  .hvb-request-actions{display:flex;justify-content:flex-end;align-items:center;gap:10px}.hvb-request-state{margin-right:auto;color:var(--muted,#8891A8);font-size:.82em}.hvb-request-submit:disabled{opacity:.6;cursor:not-allowed}
+  .hvb-request-spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(8,13,24,.28);border-top-color:#081018;border-radius:50%;animation:hvbReqSpin .7s linear infinite}@keyframes hvbReqSpin{to{transform:rotate(360deg)}}
+  @media (max-width:520px){ .hvb-acc-login{ display:none; }.hvb-userblock{padding:14px 16px}.hvb-guest p{display:none}.hvb-nav{padding-top:7px}.hvb-nav h6{padding-top:9px}.hvb-nav a{padding:10px 12px}.hvb-drawer-foot{padding-top:10px}.hvb-request-overlay{align-items:flex-end;padding:0}.hvb-request-box{border-radius:12px 12px 0 0}.hvb-request-actions{display:grid;grid-template-columns:1fr 1fr}.hvb-request-state{grid-column:1/-1;margin:0}.hvb-request-actions button{width:100%} }
   `;
   var st = document.createElement('style');
   st.textContent = css;
@@ -148,6 +156,7 @@
     info: ic('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.1"/>'),
     mail: ic('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5 12 13l8.5-6.5"/>'),
     doc: ic('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/>'),
+    request: ic('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4z"/>'),
   };
 
   var LINKS = [
@@ -156,14 +165,15 @@
       ['courses', IC.cap, 'কোর্সসমূহ'],
       ['free-lesson', IC.gift, 'ফ্রি লেসন'],
       ['my-courses', IC.book, 'আমার কোর্স'],
+      ['request-course', IC.request, 'Request a Course', 'request'],
+    ]},
+    { g: 'আরও', items: [
       ['reviews', IC.star, 'শিক্ষার্থীদের রিভিউ'],
-    ]},
-    { g: 'ইনকাম', items: [
       ['affiliate-dashboard', IC.coin, 'অ্যাফিলিয়েট'],
-    ]},
-    { g: 'প্রতিষ্ঠান', items: [
-      ['about', IC.info, 'আমাদের সম্পর্কে'],
       ['contact', IC.mail, 'যোগাযোগ'],
+    ]},
+    { g: 'তথ্য', items: [
+      ['about', IC.info, 'আমাদের সম্পর্কে'],
       ['refund', IC.doc, 'এক্সেস ও রিফান্ড পলিসি'],
     ]},
   ];
@@ -185,7 +195,8 @@
       nav += '<h6>' + grp.g + '</h6>';
       grp.items.forEach(function (it) {
         nav +=
-          '<a href="/' + (it[0] === 'index' ? '' : it[0]) + '"' + (it[0] === here() ? ' class="active"' : '') + '>' +
+          '<a href="' + (it[3] === 'request' ? '#' : '/' + (it[0] === 'index' ? '' : it[0])) + '"' +
+          (it[3] === 'request' ? ' data-hvb-request class="hvb-request-link"' : (it[0] === here() ? ' class="active"' : '')) + '>' +
           '<i>' + it[1] + '</i>' + it[2] + '</a>';
       });
     });
@@ -205,6 +216,33 @@
       if (e.key === 'Escape') closeDrawer();
     });
   }
+
+  function buildRequestModal() {
+    var overlay = document.createElement('div');
+    overlay.className = 'hvb-request-overlay'; overlay.id = 'hvbRequestOverlay';
+    overlay.innerHTML = '<div class="hvb-request-box" role="dialog" aria-modal="true" aria-labelledby="hvbRequestTitle">' +
+      '<div class="hvb-request-head"><div><h2 id="hvbRequestTitle">Request a Course</h2><p>আপনি যে ধরনের AI ভিডিও বানানো শিখতে চান, আমাদের জানান।</p></div><button class="hvb-x" type="button" data-hvb-request-close aria-label="বন্ধ করুন">✕</button></div>' +
+      '<form class="hvb-request-form" id="hvbRequestForm"><input name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">' +
+      '<label for="hvbReqName">আপনার নাম *</label><input id="hvbReqName" name="name" maxlength="80" required placeholder="আপনার নাম">' +
+      '<label for="hvbReqContact">মোবাইল নাম্বার বা ইমেইল *</label><input id="hvbReqContact" name="contact" maxlength="120" required placeholder="01XXXXXXXXX অথবা email@example.com">' +
+      '<label for="hvbReqTopic">কোন ধরনের AI ভিডিও শিখতে চান? *</label><input id="hvbReqTopic" name="topic" maxlength="180" required placeholder="যেমন: AI ইসলামিক গল্পের ভিডিও">' +
+      '<label for="hvbReqDetails">আরও কিছু জানাতে চান? (ঐচ্ছিক)</label><textarea id="hvbReqDetails" name="details" maxlength="800" placeholder="কী কী শিখতে চান সংক্ষেপে লিখুন"></textarea>' +
+      '<div class="hvb-request-actions"><span class="hvb-request-state" id="hvbRequestState"></span><button type="button" class="hvb-btn-quiet" data-hvb-request-close>Cancel</button><button type="submit" class="hvb-btn-accent hvb-request-submit">Send Request</button></div></form></div>';
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', function(e){ if(e.target===overlay || e.target.closest('[data-hvb-request-close]')) closeRequest(); });
+    overlay.querySelector('form').addEventListener('submit', submitRequest);
+  }
+  function openRequest() { closeDrawer(); var o=document.getElementById('hvbRequestOverlay'); if(o){o.classList.add('open');document.body.style.overflow='hidden';setTimeout(function(){document.getElementById('hvbReqName').focus()},50)} }
+  function closeRequest() { var o=document.getElementById('hvbRequestOverlay'); if(o)o.classList.remove('open');document.body.style.overflow=''; }
+  async function submitRequest(e) {
+    e.preventDefault(); var f=e.currentTarget, st=document.getElementById('hvbRequestState'), btn=f.querySelector('.hvb-request-submit');
+    var data={event:'course_request',name:f.name.value.trim(),contact:f.contact.value.trim(),topic:f.topic.value.trim(),details:f.details.value.trim(),website:f.website.value,page:location.pathname,visitor_id:localStorage.getItem('hvb_vid')||'course-request',referrer:document.referrer||''};
+    if(data.name.length<2||data.contact.length<5||data.topic.length<5){st.textContent='নাম, যোগাযোগের তথ্য ও কোর্সের বিষয় লিখুন।';return}
+    btn.disabled=true;btn.innerHTML='<span class="hvb-request-spin"></span>';st.textContent='';
+    try{var r=await fetch('/api/track',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});var d=await r.json();if(!r.ok||!d.ok)throw new Error(d.error||'অনুরোধ পাঠানো যায়নি');f.reset();st.textContent='অনুরোধটি পাঠানো হয়েছে। ধন্যবাদ!';setTimeout(closeRequest,1400)}catch(err){st.textContent=err.message||'অনুরোধ পাঠানো যায়নি। আবার চেষ্টা করুন।'}finally{btn.disabled=false;btn.textContent='Send Request'}
+  }
+  window.openCourseRequest = openRequest;
+  document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('[data-hvb-request]');if(a){e.preventDefault();openRequest()}});
 
   function openDrawer() {
     scrim.classList.add('open');
@@ -235,12 +273,16 @@
       'stroke-width="1.9" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>';
 
     var nav = header.querySelector('nav');
+    var links = nav && nav.querySelector('.links');
+    if (links && !links.querySelector('[data-hvb-request]')) {
+      var req = document.createElement('a'); req.href='#'; req.setAttribute('data-hvb-request',''); req.textContent='Request a Course'; links.appendChild(req);
+    }
     (nav || header).appendChild(actions);
 
     actions.querySelector('#hvbMenuBtn').addEventListener('click', openDrawer);
     actions.querySelector('#hvbTopCta').addEventListener('click', function () {
       if (HVB.user) location.href = '/my-courses';
-      else go('/login');
+      else location.href = '/courses';
     });
   }
 
@@ -480,6 +522,7 @@
   function boot() {
     mountUiLayer();
     buildDrawer();
+    buildRequestModal();
     buildHeaderActions();
     render();
     HVB.init();
