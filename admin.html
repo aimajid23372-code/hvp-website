@@ -88,6 +88,25 @@ input,select,textarea{min-height:44px;border-radius:7px;font-size:.93em;backgrou
 @media(max-width:620px){.topbar h1{font-size:1.15em}.quick-actions{gap:9px}.quick-action{padding:13px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stat{min-width:0;display:block}.stat .ic{margin-bottom:8px}.page-banner .card-head{grid-template-columns:1fr}.page-banner .btn{width:100%}.upload-box{grid-template-columns:1fr}.upload-preview{width:100%;height:auto;aspect-ratio:16/7}.mhead,.mfoot{background:var(--panel)}.tabs{background:var(--panel)}.card-head{grid-template-columns:1fr}.admin-home-intro{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
+
+/* Fix: মডাল/গেট হালকা রঙ, সব লেখা স্পষ্ট */
+.gate .box,.modal .box{background:var(--panel);color:var(--text);box-shadow:0 28px 80px rgba(16,24,40,.22)}
+.modal{background:rgba(16,24,40,.45)}
+.mhead,.mfoot,.tabs{background:var(--panel)}
+.mhead h3{color:var(--text);font-size:1.12em}
+.mhead .dim{color:var(--dim);font-size:.78em;margin-top:2px}
+.tab{color:var(--muted)}
+.tab.active{color:var(--brand);border-color:var(--brand)}
+.example-box{background:#f0f7fb;border-color:var(--line);color:#344054}
+.example-box b{color:var(--brand)}
+.step-note{color:var(--dim)}
+.step-note strong{background:rgba(8,127,150,.1);color:var(--brand)}
+.course-preview .cp-price{color:var(--brand)}
+.course-preview .cp-body h3{color:var(--text)}
+.course-preview .cp-body .muted{color:var(--muted)}
+.x{color:var(--dim)}
+.mfoot .btn-ghost{border-color:var(--line2)}
+@media(max-width:900px){.mhead,.mfoot{background:var(--panel)}}
 </style>
 </head>
 <body>
@@ -711,8 +730,8 @@ function openProduct(p, titleText) {
   document.getElementById('pSlug').dataset.locked = p ? '1' : '0';
   document.getElementById('swActive').classList.toggle('on', p ? !!p.active : true);
   document.getElementById('swFeatured').classList.toggle('on', p ? !!p.featured : false);
-  document.getElementById('pmTitle').innerText = titleText || (p ? 'Edit Course' : 'Add Course');
-  document.getElementById('pmSub').innerText = p ? ('/' + (p.slug || '')) : 'কয়েকটি ঘর পূরণ করলেই কোর্স লাইভ';
+  document.getElementById('pmTitle').innerText = titleText || (p ? ('কোর্স এডিট: ' + (p.title || '')) : 'নতুন কোর্স যোগ করুন');
+  document.getElementById('pmSub').innerText = p ? ('সাইটের লিংক: /course/' + (p.slug || '')) : 'কয়েকটি ঘর পূরণ করলেই কোর্স লাইভ হবে';
   document.getElementById('pMsg').innerText = '';
   pmTab('basic', document.querySelector('#prodModal .tab'));
   thumbPreview(); productLivePreview();
