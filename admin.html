@@ -395,14 +395,28 @@ function toast(msg, kind) {
   setTimeout(() => el.remove(), 3600);
 }
 
-async function api(payload) {
-  const r = await fetch('/api/admin', {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(Object.assign({ adminPassword: PASS }, payload)),
-  });
-  let d = {};
-  try { d = await r.json(); } catch (e) { d = { error: 'Server error' }; }
-  return d;
+async function api(payload, _try) {
+  const attempt = _try || 1;
+  let r = null, text = '';
+  try {
+    r = await fetch('/api/admin', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.assign({ adminPassword: PASS }, payload)),
+    });
+    text = await r.text();
+  } catch (e) {
+    if (attempt < 3) { await new Promise((z) => setTimeout(z, 700 * attempt)); return api(payload, attempt + 1); }
+    return { error: 'ইন্টারনেট সংযোগে সমস্যা হচ্ছে। একটু পরে আবার চেষ্টা করুন।' };
+  }
+  if (r.status === 401) return { error: 'পাসওয়ার্ড মেলেনি। আবার লগইন করুন।' };
+  if (!text || !text.trim()) {
+    if (attempt < 3) { await new Promise((z) => setTimeout(z, 700 * attempt)); return api(payload, attempt + 1); }
+    return { error: 'সার্ভার এখন সাড়া দিচ্ছে না। কিছুক্ষণ পরে আবার চেষ্টা করুন।' };
+  }
+  try { return JSON.parse(text); } catch (e) {
+    if (attempt < 3) { await new Promise((z) => setTimeout(z, 700 * attempt)); return api(payload, attempt + 1); }
+    return { error: 'সার্ভার থেকে ভুল উত্তর এসেছে। আবার চেষ্টা করুন।' };
+  }
 }
 
 function toggleMenu(open) {
@@ -812,26 +826,54 @@ async function loadPromos() {
   const box = document.getElementById('promoList');
   box.innerHTML = '<div class="spinner"></div>';
   const d = await api({ action: 'promoList' });
-  const list = d.promos || [];
+  renderPromos(d);
+}
+function renderPromos(d) {
+  const box = document.getElementById('promoList');
+  const list = (d && d.promos) || [];
   box.innerHTML = list.length ? list.map((p) =>
     '<div class="data-row"><div><b style="font-family:monospace;font-size:1.05em">' + esc(p.code) + '</b><div class="dim">ডিসকাউন্ট ' + esc(p.discount_percent) + '%</div></div>' +
     '<div style="display:flex;gap:6px;align-items:center"><span class="badge ' + (p.active ? 'success' : 'off') + '">' + (p.active ? 'ACTIVE' : 'OFF') + '</span> ' +
     '<button class="btn btn-sm btn-ghost" onclick="togglePromo(\'' + esc(p.code) + '\',' + (!p.active) + ')">টগল</button> ' +
     '<button class="btn btn-sm btn-danger" onclick="delPromo(\'' + esc(p.code) + '\')">মুছুন</button></div></div>').join('')
-    : '<div class="empty">' + (d.error ? 'কুপন তালিকা আনা যায়নি: ' + esc(d.error) : 'কোনো কুপন নেই') + '</div>';
+    : '<div class="empty">' + (d && d.error ? 'কুপন তালিকা আনা যায়নি: ' + esc(d.error) : 'কোনো কুপন নেই') + '</div>';
 }
 async function addPromo() {
-  const code = document.getElementById('newPromoCode').value;
-  const discount = document.getElementById('newPromoDiscount').value;
-  if (!code || !discount) return;
-  document.getElementById('promoMsg').innerHTML = '<span class="spinner sm"></span>';
+  const msg = document.getElementById('promoMsg');
+  const codeEl = document.getElementById('newPromoCode');
+  const discEl = document.getElementById('newPromoDiscount');
+  const code = String(codeEl.value || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  const discount = Number(discEl.value);
+  if (code.length < 3) { msg.innerText = 'কোড কমপক্ষে ৩ অক্ষরের হতে হবে (শুধু ইংরেজি অক্ষর ও সংখ্যা)।'; return; }
+  if (!discount || discount < 1 || discount > 95) { msg.innerText = 'ডিসকাউন্ট ১ থেকে ৯৫-এর মধ্যে দিন।'; return; }
+  codeEl.value = code;
+  msg.innerHTML = '<span class="spinner sm"></span>';
   const r = await api({ action: 'promoAdd', code, discount });
-  document.getElementById('promoMsg').innerText = (r && r.error) ? ('যোগ হয়নি: ' + r.error) : 'যোগ হয়েছে ✅';
-  if (!(r && r.error)) toast('কুপন যোগ হয়েছে', 'ok');
+  if (r && r.error) { msg.innerText = 'যোগ হয়নি: ' + r.error; toast('কুপন যোগ হয়নি', 'err'); loadPromos(); return; }
+  const check = await api({ action: 'promoList' });
+  const ok = (check.promos || []).some((p) => String(p.code).toUpperCase() === code);
+  if (ok) {
+    msg.innerText = 'কুপন ' + code + ' চালু হয়েছে — ' + discount + '% ছাড়।';
+    toast('কুপন যোগ হয়েছে', 'ok');
+    codeEl.value = ''; discEl.value = '';
+  } else {
+    msg.innerText = 'কুপনটি সেভ হয়েছে কিনা নিশ্চিত হওয়া যায়নি। একবার Reload করে দেখুন।';
+  }
+  renderPromos(check);
+}
+async function togglePromo(code, active) {
+  const r = await api({ action: 'promoToggle', code, active });
+  if (r && r.error) { toast('বদলানো যায়নি: ' + r.error, 'err'); return; }
+  toast(active ? 'কুপন চালু হয়েছে' : 'কুপন বন্ধ হয়েছে', 'ok');
   loadPromos();
 }
-async function togglePromo(code, active) { await api({ action: 'promoToggle', code, active }); loadPromos(); }
-async function delPromo(code) { if (!confirm(code + ' মুছবেন?')) return; await api({ action: 'promoDelete', code }); loadPromos(); }
+async function delPromo(code) {
+  if (!confirm(code + ' মুছবেন?')) return;
+  const r = await api({ action: 'promoDelete', code });
+  if (r && r.error) { toast('মোছা যায়নি: ' + r.error, 'err'); return; }
+  toast('কুপন মুছে ফেলা হয়েছে', 'ok');
+  loadPromos();
+}
 
 /* ---------- Withdrawals ---------- */
 function setWdFilter(f, el) {
