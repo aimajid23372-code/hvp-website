@@ -161,6 +161,22 @@
 
   function renderCourseBlock(idx, type, title, contentObj) {
     if(!contentObj) return '';
+    var pr = String(contentObj.prompt || '');
+    var promptHtml = pr ? ('<div class="deliver-block">' +
+        '<span class="deliver-label"> Master Chatting Prompt</span>' +
+        '<div class="prompt-box">' +
+          '<pre id="promptText' + idx + '">' + pr.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</pre>' +
+          '<button type="button" class="copy-btn" onclick="copyPrompt(\'promptText' + idx + '\', this)">Copy</button>' +
+        '</div>' +
+      '</div>') : '';
+    var linkHtml = contentObj.link ? ('<div class="deliver-block">' +
+        '<span class="deliver-label"> 📁 Course Link</span>' +
+        '<a href="' + contentObj.link + '" target="_blank" rel="noopener" class="deliver-link">কোর্স দেখুন →</a>' +
+      '</div>') : '';
+    return '<div class="course-section">' +
+      '<h3> 🎬 ' + title + '</h3>' +
+      (pr ? '<p class="step-note">১) প্রথমে নিচের Master Chatting Prompt কপি করুন, ২) তারপর কোর্স লিংকে ক্লিক করে ভিডিও দেখুন</p>' : '') +
+      promptHtml + linkHtml + '</div>';
     return '<div class="course-section">' +
       '<h3> 🎬 ' + title + '</h3>' +
       '<p class="step-note">১) প্রথমে নিচের Master Chatting Prompt কপি করুন, ২) তারপর কোর্স লিংকে ক্লিক করে ভিডিও দেখুন</p>' +
