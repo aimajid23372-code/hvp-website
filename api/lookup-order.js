@@ -4,7 +4,7 @@
 // এখনো pending থাকা অর্ডার থাকলে ZiniPay-তে যাচাই করে paid করে দেয়।
 
 const { createClient } = require('@supabase/supabase-js');
-const { normalizeCourse, buildContentResponse } = require('../lib/course_content');
+const { normalizeCourse, buildContentResponse, loadOverrides } = require('../lib/course_content');
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -92,7 +92,7 @@ module.exports = async (req, res) => {
     const rawCourses = paid.map(o => o.course);
     const courses = [...new Set(rawCourses.map(normalizeCourse))];
     const contactOfPaid = paid.length ? paid[0].customer_contact : null;
-    const content = buildContentResponse(rawCourses);
+    const content = buildContentResponse(rawCourses, await loadOverrides(supabase));
 
     return res.status(200).json({ courses, content, contact: contactOfPaid, found: orders.length });
   } catch (err) {
