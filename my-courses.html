@@ -98,6 +98,30 @@
   }
   .hvb-or{ text-align:center; margin:0 0 14px; position:relative; color:var(--muted); font-size:0.8em; }
   .hvb-or span{ background:var(--bg,transparent); padding:0 10px; }
+  .hvb-course{padding:0;overflow:hidden;border-radius:18px;background:linear-gradient(180deg,rgba(63,199,242,.06),rgba(124,107,245,.03));border:1px solid rgba(63,199,242,.22)}
+  .hvb-course-head{padding:20px 22px 14px;border-bottom:1px solid var(--line)}
+  .hvb-course-head h3{margin:8px 0 0!important;font-size:1.25em!important}
+  .hvb-badge{display:inline-block;font-size:.75em;font-weight:700;padding:4px 10px;border-radius:99px;background:rgba(180,240,240,.12);color:#B4F0F0;border:1px solid rgba(180,240,240,.3)}
+  .hvb-how{padding:16px 22px}
+  .hvb-how>b{font-size:.9em;color:var(--text)}
+  .hvb-steps{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px}
+  .hvb-steps li{display:flex;gap:10px;align-items:flex-start;font-size:.9em;color:var(--muted);line-height:1.5}
+  .hvb-steps li b{color:var(--text)}
+  .hvb-steps i{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:700;font-size:.8em;background:linear-gradient(135deg,#B4F0F0,#3FC7F2,#7C6BF5);color:#0A0D14}
+  .hvb-prompt,.hvb-watch,.hvb-note{margin:0 22px 16px;border-radius:14px;border:1px solid var(--line);background:rgba(10,13,20,.45)}
+  .hvb-prompt{padding:14px}
+  .hvb-prompt-head,.hvb-watch{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+  .hvb-prompt-head b,.hvb-watch b{display:block;font-family:'Sora',sans-serif;font-size:1em;color:var(--text)}
+  .hvb-prompt-head small,.hvb-watch small{display:block;color:var(--muted);font-size:.78em;margin-top:2px}
+  .hvb-tag{display:inline-block;font-size:.7em;font-weight:700;color:#3FC7F2;letter-spacing:.04em;margin-bottom:3px}
+  .hvb-copy,.hvb-watch-btn{background:linear-gradient(135deg,#B4F0F0,#3FC7F2,#7C6BF5);color:#0A0D14;border:none;font-weight:800;padding:11px 20px;border-radius:12px;cursor:pointer;font-size:.92em;box-shadow:0 8px 22px -10px rgba(63,199,242,.7);text-decoration:none;white-space:nowrap}
+  .hvb-copy.done{background:#B4F0F0}
+  .hvb-pre{margin:12px 0 0;max-height:120px;overflow:hidden;position:relative;font-family:'JetBrains Mono',monospace;font-size:.74em;color:var(--muted);white-space:pre-wrap;word-break:break-word;line-height:1.55;padding:12px;border-radius:10px;background:rgba(0,0,0,.25);-webkit-mask-image:linear-gradient(180deg,#000 60%,transparent)}
+  .hvb-pre.open{max-height:420px;overflow-y:auto;-webkit-mask-image:none}
+  .hvb-more{margin-top:8px;background:none;border:none;color:#3FC7F2;font-weight:600;cursor:pointer;font-size:.85em;padding:4px 0}
+  .hvb-watch{padding:14px}
+  .hvb-note{padding:12px 14px;font-size:.87em;color:var(--muted)}
+  @media(max-width:600px){.hvb-copy,.hvb-watch-btn{width:100%;text-align:center}.hvb-course-head,.hvb-how{padding-left:16px;padding-right:16px}.hvb-prompt,.hvb-watch,.hvb-note{margin-left:16px;margin-right:16px}}
 </style>
 <link rel="stylesheet" href="hvb-theme.css">
 <link rel="stylesheet" href="hvb-ui.css">
@@ -154,44 +178,41 @@
     const text = document.getElementById(elId).innerText;
     navigator.clipboard.writeText(text).then(function(){
       const old = btn.textContent;
-      btn.textContent = 'Copied ✓ ';
-      setTimeout(function(){ btn.textContent = old; }, 2000);
+      btn.textContent = 'Copied ✓'; btn.classList.add('done');
+      setTimeout(function(){ btn.textContent = old; btn.classList.remove('done'); }, 2000);
     });
   }
 
+  function togglePrompt(id, btn){
+    var el=document.getElementById(id); if(!el) return;
+    var open=el.classList.toggle('open');
+    btn.textContent = open ? 'ছোট করুন ↑' : 'পুরোটা দেখুন ↓';
+  }
   function renderCourseBlock(idx, type, title, contentObj) {
     if(!contentObj) return '';
-    var pr = String(contentObj.prompt || '');
-    var promptHtml = pr ? ('<div class="deliver-block">' +
-        '<span class="deliver-label"> Master Chatting Prompt</span>' +
-        '<div class="prompt-box">' +
-          '<pre id="promptText' + idx + '">' + pr.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</pre>' +
-          '<button type="button" class="copy-btn" onclick="copyPrompt(\'promptText' + idx + '\', this)">Copy</button>' +
-        '</div>' +
-      '</div>') : '';
-    var linkHtml = contentObj.link ? ('<div class="deliver-block">' +
-        '<span class="deliver-label"> 📁 Course Link</span>' +
-        '<a href="' + contentObj.link + '" target="_blank" rel="noopener" class="deliver-link">কোর্স দেখুন →</a>' +
-      '</div>') : '';
-    return '<div class="course-section">' +
-      '<h3> 🎬 ' + title + '</h3>' +
-      (pr ? '<p class="step-note">১) প্রথমে নিচের Master Chatting Prompt কপি করুন, ২) তারপর কোর্স লিংকে ক্লিক করে ভিডিও দেখুন</p>' : '') +
+    var pr = String(contentObj.prompt || '').trim();
+    var esc = function(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
+    var pid = 'promptText' + idx;
+    var steps = pr
+      ? ['নিচের <b>Copy Prompt</b> চাপুন', 'ChatGPT / Gemini খুলে পেস্ট করে পাঠান', 'এরপর শুধু আপনার টপিক লিখুন — AI স্ক্রিপ্ট ও প্রম্পট বানিয়ে দেবে', '<b>ভিডিও দেখুন</b> চেপে পুরো ধাপগুলো শিখুন']
+      : ['<b>ভিডিও দেখুন</b> চেপে কোর্স খুলুন', 'ধাপে ধাপে ভিডিও দেখে সাথে সাথে করুন', 'কোথাও আটকালে Messenger বা WhatsApp-এ জানান'];
+    var stepsHtml = '<ol class="hvb-steps">' + steps.map(function(t,i){ return '<li><i>'+(i+1)+'</i><span>'+t+'</span></li>'; }).join('') + '</ol>';
+    var promptHtml = pr
+      ? '<div class="hvb-prompt">' +
+          '<div class="hvb-prompt-head"><div><span class="hvb-tag">ধাপ ১</span><b>Master Chatting Prompt</b><small>' + pr.length.toLocaleString('bn-BD') + ' অক্ষর · পুরোটা একবারে কপি হবে</small></div>' +
+          '<button type="button" class="hvb-copy" onclick="copyPrompt(\'' + pid + '\', this)">Copy Prompt</button></div>' +
+          '<pre id="' + pid + '" class="hvb-pre">' + esc(pr) + '</pre>' +
+          '<button type="button" class="hvb-more" onclick="togglePrompt(\'' + pid + '\', this)">পুরোটা দেখুন ↓</button>' +
+        '</div>'
+      : '<div class="hvb-note">ℹ️ এই কোর্সের প্রম্পট ও নির্দেশনা ভিডিওর ভেতরেই দেখানো হয়েছে।</div>';
+    var linkHtml = contentObj.link
+      ? '<div class="hvb-watch"><div><span class="hvb-tag">' + (pr ? 'ধাপ ২' : 'কোর্স') + '</span><b>কোর্স ভিডিও</b><small>নতুন ট্যাবে খুলবে · ৬ মাস অ্যাকসেস</small></div>' +
+        '<a href="' + contentObj.link + '" target="_blank" rel="noopener" class="hvb-watch-btn">ভিডিও দেখুন →</a></div>'
+      : '';
+    return '<div class="course-section hvb-course">' +
+      '<div class="hvb-course-head"><span class="hvb-badge">✓ কেনা হয়েছে</span><h3>' + esc(String(title)) + '</h3></div>' +
+      '<div class="hvb-how"><b>কীভাবে শুরু করবেন</b>' + stepsHtml + '</div>' +
       promptHtml + linkHtml + '</div>';
-    return '<div class="course-section">' +
-      '<h3> 🎬 ' + title + '</h3>' +
-      '<p class="step-note">১) প্রথমে নিচের Master Chatting Prompt কপি করুন, ২) তারপর কোর্স লিংকে ক্লিক করে ভিডিও দেখুন</p>' +
-      '<div class="deliver-block">' +
-        '<span class="deliver-label"> Master Chatting Prompt</span>' +
-        '<div class="prompt-box">' +
-          '<pre id="promptText' + idx + '">' + contentObj.prompt.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</pre>' +
-          '<button type="button" class="copy-btn" onclick="copyPrompt(\'promptText' + idx + '\', this)">Copy</button>' +
-        '</div>' +
-      '</div>' +
-      '<div class="deliver-block">' +
-        '<span class="deliver-label"> 📁 Course Link</span>' +
-        '<a href="' + contentObj.link + '" target="_blank" rel="noopener" class="deliver-link">কোর্স দেখুন →</a>' +
-      '</div>' +
-    '</div>';
   }
 
   // ---------- কোর্সগুলো স্ক্রিনে দেখানোর ফাংশন ----------
