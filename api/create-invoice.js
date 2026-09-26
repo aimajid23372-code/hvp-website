@@ -104,7 +104,16 @@ module.exports = async (req, res) => {
 
     if (!zpRes.ok || !zpData || !zpData.payment_url) {
       console.error("ZiniPay create failed:", zpRes.status, zpText.slice(0, 500));
-      return res.status(502).json({ error: "Payment gateway error. Please try again later." });
+      const providerMessage = String(zpData && zpData.message || "").toLowerCase();
+      const providerCode = String(zpData && zpData.code || "").toLowerCase();
+      const error = /api key|unauthori|invalid key|brand.*(inactive|disabled)/.test(providerMessage + " " + providerCode)
+        ? "পেমেন্ট সেবার সংযোগে সমস্যা হয়েছে। অনুগ্রহ করে Messenger-এ জানান।"
+        : /domain|redirect_url|website url|url.*match/.test(providerMessage + " " + providerCode)
+        ? "পেমেন্ট সেবায় ওয়েবসাইটের ঠিকানা মেলেনি। অনুগ্রহ করে Messenger-এ জানান।"
+        : /balance|limit|maintenance|unavailable/.test(providerMessage + " " + providerCode)
+        ? "পেমেন্ট সেবা এখন পাওয়া যাচ্ছে না। কিছুক্ষণ পর আবার চেষ্টা করুন।"
+        : "পেমেন্ট শুরু করা যাচ্ছে না। কিছুক্ষণ পর আবার চেষ্টা করুন বা Messenger-এ জানান।";
+      return res.status(502).json({ error, diagnostic: providerCode.replace(/[^a-z0-9_-]/g, "").slice(0, 40) || "GATEWAY_REJECTED" });
     }
 
     const invoiceId = extractInvoiceId(zpData);
