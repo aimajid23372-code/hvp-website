@@ -113,7 +113,7 @@ module.exports = async (req, res) => {
         : /balance|limit|maintenance|unavailable/.test(providerMessage + " " + providerCode)
         ? "পেমেন্ট সেবা এখন পাওয়া যাচ্ছে না। কিছুক্ষণ পর আবার চেষ্টা করুন।"
         : "পেমেন্ট শুরু করা যাচ্ছে না। কিছুক্ষণ পর আবার চেষ্টা করুন বা Messenger-এ জানান।";
-      return res.status(502).json({ error, diagnostic: providerCode.replace(/[^a-z0-9_-]/g, "").slice(0, 40) || "GATEWAY_REJECTED" });
+      return res.status(502).json({ error, diagnostic: "GATEWAY_" + zpRes.status + "_" + (providerCode.replace(/[^a-z0-9_-]/g, "").slice(0, 30) || "REJECTED") });
     }
 
     const invoiceId = extractInvoiceId(zpData);
