@@ -536,7 +536,7 @@ Understood? If you understand, reply ONLY with this exact sentence:
       }
       window.location.href = data.payment_url;
     } catch(err){
-      errEl.textContent = ' ⚠️ কিছু একটা সমস্যা হয়েছে, আবার চেষ্টা করুন। সমস্যা থাকলে khadimulhasanshuvo@gmail.com-এ জানান।';
+      errEl.textContent = err && err.message && err.message !== 'Payment gateway error' ? err.message : 'পেমেন্ট শুরু করা যাচ্ছে না। কিছুক্ষণ পর আবার চেষ্টা করুন বা Messenger-এ জানান।';
       btn.disabled = false; btn.classList.remove('hvb-busy');
       btn.textContent = 'এগিয়ে যান পেমেন্টে →';
     }
