@@ -118,6 +118,16 @@
   .hvb-request-form{padding:18px}.hvb-request-form label{display:block;margin:0 0 6px;color:#c9d2e6;font-size:.8em;font-weight:600}.hvb-request-form input,.hvb-request-form textarea{box-sizing:border-box;width:100%;margin:0 0 14px;padding:12px 13px;border:1px solid var(--line,#242C42);border-radius:8px;background:var(--surface,#131826);color:var(--text,#EAF0FF);font:inherit;font-size:16px}.hvb-request-form textarea{min-height:96px;resize:vertical}.hvb-request-form input:focus,.hvb-request-form textarea:focus{outline:0;border-color:var(--cyan,#5EEAD4);box-shadow:0 0 0 3px rgba(94,234,212,.1)}
   .hvb-request-actions{display:flex;justify-content:flex-end;align-items:center;gap:10px}.hvb-request-state{margin-right:auto;color:var(--muted,#8891A8);font-size:.82em}.hvb-request-submit:disabled{opacity:.6;cursor:not-allowed}
   .hvb-request-spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(8,13,24,.28);border-top-color:#081018;border-radius:50%;animation:hvbReqSpin .7s linear infinite}@keyframes hvbReqSpin{to{transform:rotate(360deg)}}
+  .hvb-wa-float{
+    position:fixed; right:16px; bottom:96px; z-index:110;
+    display:flex; align-items:center; gap:8px;
+    background:#25D366; color:#062b13; font-weight:700; font-size:.85em;
+    padding:11px 16px; border-radius:999px; text-decoration:none;
+    box-shadow:0 6px 24px rgba(37,211,102,.35);
+    font-family:'Hind Siliguri',sans-serif; border:none;
+  }
+  .hvb-wa-float:hover{ transform:translateY(-2px); }
+  .hvb-wa-float svg{ width:18px; height:18px; }
   @media (max-width:520px){ .hvb-acc-login{ display:none; }.hvb-userblock{padding:14px 16px}.hvb-guest p{display:none}.hvb-nav{padding-top:7px}.hvb-nav h6{padding-top:9px}.hvb-nav a{padding:10px 12px}.hvb-drawer-foot{padding-top:10px}.hvb-request-overlay{align-items:flex-end;padding:0}.hvb-request-box{border-radius:12px 12px 0 0}.hvb-request-actions{display:grid;grid-template-columns:1fr 1fr}.hvb-request-state{grid-column:1/-1;margin:0}.hvb-request-actions button{width:100%} }
   `;
   var st = document.createElement('style');
@@ -157,6 +167,7 @@
     mail: ic('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 6.5 12 13l8.5-6.5"/>'),
     doc: ic('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/>'),
     request: ic('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4z"/>'),
+    chat: ic('<path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.5L3 21l2-5.6A8.5 8.5 0 1 1 21 11.5z"/>'),
   };
 
   var LINKS = [
@@ -168,6 +179,7 @@
       ['request-course', IC.request, 'Request a Course', 'request'],
     ]},
     { g: 'আরও', items: [
+      ['https://chat.whatsapp.com/J3OFu9XaZWPFQktnSFzjV0', IC.chat, 'WhatsApp Group (ফ্রি)', 'ext'],
       ['reviews', IC.star, 'শিক্ষার্থীদের রিভিউ'],
       ['affiliate-dashboard', IC.coin, 'অ্যাফিলিয়েট'],
       ['contact', IC.mail, 'যোগাযোগ'],
@@ -195,8 +207,8 @@
       nav += '<h6>' + grp.g + '</h6>';
       grp.items.forEach(function (it) {
         nav +=
-          '<a href="' + (it[3] === 'request' ? '#' : '/' + (it[0] === 'index' ? '' : it[0])) + '"' +
-          (it[3] === 'request' ? ' data-hvb-request class="hvb-request-link"' : (it[0] === here() ? ' class="active"' : '')) + '>' +
+          '<a href="' + (it[3] === 'request' ? '#' : (it[3] === 'ext' ? it[0] : '/' + (it[0] === 'index' ? '' : it[0]))) + '"' +
+          (it[3] === 'request' ? ' data-hvb-request class="hvb-request-link"' : (it[3] === 'ext' ? ' target="_blank" rel="noopener" style="color:#25D366;"' : (it[0] === here() ? ' class="active"' : ''))) + '>' +
           '<i>' + it[1] + '</i>' + it[2] + '</a>';
       });
     });
@@ -212,6 +224,16 @@
     drawer.querySelector('.hvb-x').addEventListener('click', closeDrawer);
     document.body.appendChild(scrim);
     document.body.appendChild(drawer);
+
+    if (!document.querySelector('.hvb-wa-float')) {
+      var wa = document.createElement('a');
+      wa.className = 'hvb-wa-float';
+      wa.href = 'https://chat.whatsapp.com/J3OFu9XaZWPFQktnSFzjV0';
+      wa.target = '_blank';
+      wa.rel = 'noopener';
+      wa.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.5L3 21l2-5.6A8.5 8.5 0 1 1 21 11.5z"/></svg>Join Group';
+      document.body.appendChild(wa);
+    }
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') closeDrawer();
     });
