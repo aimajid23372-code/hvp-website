@@ -7,6 +7,13 @@
 (function () {
   'use strict';
 
+  /* পুরোনো vercel.app ঠিকানায় এলে আসল ডোমেইনে পাঠাও (লগইন টোকেনসহ) */
+  var HVB_HOME = 'https://www.hypervisionbd.com';
+  if (/\.vercel\.app$/i.test(location.hostname)) {
+    location.replace(HVB_HOME + location.pathname + location.search + location.hash);
+    return;
+  }
+
   var CFG_URL = '/api/my-access?config=1';
   var SB_CDN = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
 
@@ -409,7 +416,7 @@
     if (!HVB.sb) return false;
     await HVB.sb.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: location.origin + '/' + String(nextUrl || 'my-courses').replace(/^\//, '').replace(/\.html$/i, '') },
+      options: { redirectTo: HVB_HOME + '/' + String(nextUrl || 'my-courses').replace(/^\//, '').replace(/\.html$/i, '') },
     });
     return true;
   };
