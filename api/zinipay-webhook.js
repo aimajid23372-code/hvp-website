@@ -1,113 +1,107 @@
 // /api/zinipay-webhook.js
-// ZiniPay পেমেন্ট সফল হলে এখানে কল করে: { invoice_id, status: "true" }
-// লক্ষ্য: কেউ টাকা দিলে সাথে সাথেই কোর্স খুলে যাবে — কোনো ম্যানুয়াল অনুমোদন লাগবে না।
-// নিরাপত্তা: প্রথমে ZiniPay-তে verify করা হয়। verify সাময়িকভাবে না পাওয়া গেলেও
-// callback-টি ZiniPay শুধু সফল পেমেন্টেই পাঠায়, তাই ওই invoice_id-র pending অর্ডারটি paid করা হয়।
+// ShohojPay অটো-ভেরিফাই পেমেন্ট সফল হলে এই Webhook-এ কল করবে এবং সাথে সাথেই কোর্স আনলক হয়ে যাবে।
 
-const { createClient } = require('@supabase/supabase-js');
+const { createClient } = require("@supabase/supabase-js");
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_KEY
 );
 
-async function verifyWithZiniPay(invoiceId) {
-  try {
-    const r = await fetch('https://api.zinipay.com/v1/payment/verify', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'zini-api-key': process.env.ZINIPAY_API_KEY,
-      },
-      body: JSON.stringify({ invoice_id: invoiceId }),
-    });
-    const data = await r.json();
-    if (!r.ok) {
-      console.error('verify failed:', r.status, JSON.stringify(data));
-      return null;
-    }
-    return data;
-  } catch (err) {
-    console.error('verify error:', err);
-    return null;
-  }
-}
-
 module.exports = async (req, res) => {
   try {
     const body = req.body || {};
     const query = req.query || {};
-    const invoiceId = body.invoice_id || query.invoice_id || body.invoiceId || query.invoiceId;
-    const rawStatus = String(body.status || query.status || '').toUpperCase();
 
-    if (!invoiceId) {
-      return res.status(200).json({ received: true, note: 'no invoice_id' });
+    const orderId = body.order_id || body.orderId || body.our_ref || query.order_id || null;
+    const invoiceId = body.invoice_id || body.invoiceId || body.payment_id || query.invoice_id || null;
+    const trxId = body.transaction_id || body.trx_id || body.trxId || null;
+    const payMethod = body.payment_method || body.method || body.gateway || "ShohojPay";
+    const rawStatus = String(body.status || query.status || "completed").toUpperCase();
+
+    if (!orderId && !invoiceId) {
+      return res.status(200).json({ received: true, note: "no order_id or invoice_id" });
     }
 
-    const verified = await verifyWithZiniPay(invoiceId);
-    const vStatus = String((verified && verified.status) || '').toUpperCase();
-    const callbackOk = rawStatus === 'TRUE' || rawStatus === 'COMPLETED' || rawStatus === 'SUCCESS' || rawStatus === '1';
-
-    if (vStatus === 'FAILED') {
-      await supabase.from('orders').update({ status: 'failed' }).eq('invoice_id', invoiceId);
-      return res.status(200).json({ received: true, marked: 'failed' });
+    if (rawStatus === "FAILED" || rawStatus === "CANCELLED" || rawStatus === "REJECTED") {
+      if (orderId) {
+        await supabase.from("orders").update({ status: "failed" }).eq("our_ref", orderId);
+      } else if (invoiceId) {
+        await supabase.from("orders").update({ status: "failed" }).eq("invoice_id", invoiceId);
+      }
+      return res.status(200).json({ received: true, marked: "failed" });
     }
 
-    if (vStatus === 'COMPLETED' || callbackOk) {
-      const { data: orderData, error } = await supabase
-        .from('orders')
+    const isPaid =
+      rawStatus === "COMPLETED" ||
+      rawStatus === "PAID" ||
+      rawStatus === "SUCCESS" ||
+      rawStatus === "VERIFIED" ||
+      rawStatus === "APPROVED" ||
+      rawStatus === "TRUE" ||
+      rawStatus === "1";
+
+    if (isPaid) {
+      let updateQuery = supabase
+        .from("orders")
         .update({
-          status: 'paid',
-          transaction_id: (verified && verified.transaction_id) || null,
-          payment_method: (verified && verified.payment_method) || null,
-        })
-        .eq('invoice_id', invoiceId)
-        .select('*')
-        .single();
-        
-      if (error) console.error('order update error:', error);
-      // Customer Wallet is disabled. Historical wallet rows remain untouched.
+          status: "paid",
+          transaction_id: trxId,
+          payment_method: payMethod,
+        });
 
-      // Auto-Email Delivery
-      if (process.env.RESEND_API_KEY && orderData && orderData.course !== 'wallet_topup') {
-        try {
-          const { Resend } = require('resend');
-          const resend = new Resend(process.env.RESEND_API_KEY);
-          
-          const userEmail = orderData.c_email || orderData.customer_email || orderData.customer_contact;
-          const userName = orderData.c_name || orderData.customer_name || 'Customer';
-
-          if (userEmail) {
-            await resend.emails.send({
-              from: 'HVB <onboarding@resend.dev>', // Should be a verified domain like info@hypervisionbangla.com
-              to: userEmail,
-              subject: 'HVB এ আপনার কোর্সটি সফলভাবে চালু হয়েছে! 🎉',
-              html: `
-              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0f1421; color: #ffffff; padding: 30px; border-radius: 12px;">
-                <h2 style="color: #4FE3C1; text-align: center;">HVB-তে স্বাগতম! 🎉</h2>
-                <p style="font-size: 16px; color: #eaf0ff;">হ্যালো ${userName},</p>
-                <p style="font-size: 16px; color: #eaf0ff;">আপনার পেমেন্টটি সফলভাবে ভেরিফাই হয়েছে এবং HVB তে আপনার কোর্সটি এখন সম্পূর্ণ চালু!</p>
-                <div style="background: #161d2e; padding: 20px; border-radius: 8px; margin: 25px 0; border: 1px solid #212a42;">
-                  <h3 style="margin-top: 0; color: #9B8CFF;">অর্ডারের বিস্তারিত:</h3>
-                  <p style="margin: 5px 0; color: #9aa5bf;">ইনভয়েস নাম্বার: <span style="color: #ffffff;">${invoiceId}</span></p>
-                  <p style="margin: 5px 0; color: #9aa5bf;">স্ট্যাটাস: <strong style="color: #4FE3C1;">Paid</strong></p>
-                </div>
-                <p style="font-size: 16px; color: #eaf0ff;">আপনার কোর্সটি দেখার জন্য নিচের বাটনে ক্লিক করে <strong>My Courses</strong> পেজে যান এবং আপনার ইমেইল দিয়ে লগইন করুন.</p>
-                <a href="https://hvb1.vercel.app/my-courses" style="display: block; width: 100%; text-align: center; background-color: #4FE3C1; color: #000000; padding: 15px 0; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin: 30px 0;">কোর্স শুরু করুন</a>
-                <p style="font-size: 14px; color: #9aa5bf; text-align: center;">যেকোনো প্রয়োজনে আমাদের সাপোর্ট টিমের সাথে যোগাযোগ করুন।<br>Happy Learning! 🚀</p>
-              </div>
-              `
-            });
-          }
-        } catch(e) { console.error('Email Error:', e); }
+      if (orderId && invoiceId) {
+        updateQuery = updateQuery.or(`our_ref.eq.${orderId},invoice_id.eq.${invoiceId}`);
+      } else if (orderId) {
+        updateQuery = updateQuery.eq("our_ref", orderId);
+      } else {
+        updateQuery = updateQuery.eq("invoice_id", invoiceId);
       }
 
-      return res.status(200).json({ received: true, marked: 'paid' });
+      const { data: updatedRows, error } = await updateQuery.select("*");
+      if (error) console.error("order update error:", error);
+
+      const orderData = updatedRows && updatedRows[0] ? updatedRows[0] : null;
+
+      // Auto-Email Delivery (if Resend is configured)
+      if (process.env.RESEND_API_KEY && orderData && orderData.course !== "wallet_topup") {
+        try {
+          const { Resend } = require("resend");
+          const resend = new Resend(process.env.RESEND_API_KEY);
+          const userEmail = orderData.linked_email || orderData.customer_contact;
+          const userName = orderData.customer_name || "Customer";
+
+          if (userEmail && String(userEmail).includes("@")) {
+            await resend.emails.send({
+              from: "HVB <onboarding@resend.dev>",
+              to: userEmail,
+              subject: "HVB-এ আপনার কোর্সটি সফলভাবে চালু হয়েছে!",
+              html: `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0f1421; color: #ffffff; padding: 30px; border-radius: 12px;">
+                <h2 style="color: #00E5FF; text-align: center;">Hyper Vision Bangla-তে স্বাগতম!</h2>
+                <p style="font-size: 16px; color: #eaf0ff;">হ্যালো ${userName},</p>
+                <p style="font-size: 16px; color: #eaf0ff;">আপনার পেমেন্টটি সফলভাবে ভেরিফাই হয়েছে এবং আপনার কোর্সটি এখন সম্পূর্ণ চালু!</p>
+                <div style="background: #161d2e; padding: 20px; border-radius: 8px; margin: 25px 0; border: 1px solid #212a42;">
+                  <p style="margin: 5px 0; color: #9aa5bf;">অর্ডার আইডি: <span style="color: #ffffff;">${orderId || invoiceId}</span></p>
+                  <p style="margin: 5px 0; color: #9aa5bf;">TrxID: <span style="color: #ffffff;">${trxId || "Verified"}</span></p>
+                  <p style="margin: 5px 0; color: #9aa5bf;">স্ট্যাটাস: <strong style="color: #4FE3C1;">Paid</strong></p>
+                </div>
+                <a href="https://hypervisionbd.com/my-courses" style="display: block; width: 100%; text-align: center; background-color: #00E5FF; color: #000000; padding: 15px 0; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px; margin: 30px 0;">কোর্স শুরু করুন</a>
+              </div>
+              `,
+            });
+          }
+        } catch (e) {
+          console.error("Email Error:", e);
+        }
+      }
+
+      return res.status(200).json({ received: true, marked: "paid", order: orderId || invoiceId });
     }
 
-    return res.status(200).json({ received: true, marked: 'pending' });
+    return res.status(200).json({ received: true, marked: "pending" });
   } catch (err) {
-    console.error('Webhook error:', err);
+    console.error("ShohojPay Webhook error:", err);
     return res.status(200).json({ received: true });
   }
 };
