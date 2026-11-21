@@ -561,7 +561,8 @@
     HVB.loadStart = start;
     HVB.loadDone = done;
     HVB.overlay = function (on) {
-      document.getElementById('hvbLoader').classList.toggle('on', !!on);
+      var el = document.getElementById('hvbLoader');
+      if (el) el.classList.remove('on');
     };
 
     var origFetch = window.fetch;

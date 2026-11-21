@@ -1,22 +1,13 @@
 // /api/my-access.js
 // Google লগইন করা ইউজারের টোকেন যাচাই করে তার কেনা কোর্স ফেরত দেয়।
-// action:'link' দিলে পুরোনো (ফোন নাম্বার দিয়ে কেনা) অর্ডারকে এই ইমেইলের সাথে যুক্ত করে,
-// যাতে পরের বার শুধু Google লগইনেই কোর্স চলে আসে।
 
-const { createClient } = require('@supabase/supabase-js');
-
-let supabase = null;
-try {
-  if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
-    supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
-  }
-} catch (e) {
-  console.error('Supabase init error:', e);
+let _supabase = null;
+function getSupabase() {
+  if (_supabase) return _supabase;
+  const { createClient } = require('@supabase/supabase-js');
+  _supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+  return _supabase;
 }
-
-// SECURE CONTENT STORAGE & HELPERS
-const { COURSE_CONTENT, normalizeCourse, buildContentResponse, loadOverrides } = require('../lib/course_content');
-const { uploadDataUrl } = require('../lib/hvb_upload');
 
 async function getUserFromToken(token) {
   try {
@@ -55,9 +46,9 @@ async function verifyWithZiniPay(invoiceId) {
 
 async function ordersForEmail(email) {
   const out = [];
-  const a = await supabase.from('orders').select('*').ilike('customer_contact', email);
+  const a = await getSupabase().from('orders').select('*').ilike('customer_contact', email);
   if (a.data) out.push(...a.data);
-  const b = await supabase.from('orders').select('*').ilike('linked_email', email);
+  const b = await getSupabase().from('orders').select('*').ilike('linked_email', email);
   if (b.data) out.push(...b.data);
   const seen = new Set();
   return out.filter((o) => {
@@ -78,6 +69,8 @@ module.exports = async (req, res) => {
     res.setHeader('Cache-Control', 'no-store');
     return res.status(200).json({ enabled: true, url, anonKey });
   }
+  const { normalizeCourse, buildContentResponse, loadOverrides } = require('../lib/course_content');
+  const { uploadDataUrl } = require('../lib/hvb_upload');
   if (req.method === 'GET') {
     if (req.query && req.query.reviews) {
       const course = String(req.query.reviews);
@@ -128,7 +121,7 @@ module.exports = async (req, res) => {
 
     // ছবি সরাসরি আপলোড (রিভিউয়ের স্ক্রিনশট) — কোনো Drive লিংক লাগে না
     if (body.action === 'upload_image') {
-      const r = await uploadDataUrl(supabase, 'reviews', body.data_url);
+      const r = await uploadDataUrl(getSupabase(), 'reviews', body.data_url);
       if (r.error || !r.url) return res.status(400).json({ error: r.error || 'ছবি আপলোড করা যায়নি' });
       return res.status(200).json({ ok: true, url: r.url });
     }
@@ -155,7 +148,7 @@ module.exports = async (req, res) => {
         status: 'pending',
       };
 
-      const { error } = await supabase.from('reviews').insert(row);
+      const { error } = await getSupabase().from('reviews').insert(row);
       if (error) {
         console.error('review insert error:', error);
         return res.status(500).json({ error: 'রিভিউ সেভ করা যায়নি' });
@@ -171,7 +164,7 @@ module.exports = async (req, res) => {
       const looksLikeId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(contact)
         || (!contact.includes('@') && /[a-z]/i.test(contact) && contact.length >= 10);
 
-      let q = supabase.from('orders').select('*');
+      let q = getSupabase().from('orders').select('*');
       if (looksLikeId) {
         q = q.or(`our_ref.eq.${contact},invoice_id.eq.${contact}`);
       } else if (contact.includes('@')) {
@@ -190,7 +183,7 @@ module.exports = async (req, res) => {
         if (o.status !== 'paid' && o.invoice_id) {
           const v = await verifyWithZiniPay(o.invoice_id);
           if (v && String(v.status || '').toUpperCase() === 'COMPLETED') {
-            await supabase.from('orders').update({ status: 'paid' }).eq('invoice_id', o.invoice_id);
+            await getSupabase().from('orders').update({ status: 'paid' }).eq('invoice_id', o.invoice_id);
             o.status = 'paid';
           }
         }
@@ -202,7 +195,7 @@ module.exports = async (req, res) => {
       }
       let linkedCount = 0;
       for (const o of paid) {
-        const upd = await supabase.from('orders').update({ linked_email: email }).eq('id', o.id);
+        const upd = await getSupabase().from('orders').update({ linked_email: email }).eq('id', o.id);
         if (upd.error) console.error('link save error:', upd.error);
         else linkedCount++;
       }
@@ -213,7 +206,7 @@ module.exports = async (req, res) => {
         ...paid.map((o) => o.course),
       ];
       const courses = [...new Set(rawAll.map(normalizeCourse))];
-      return res.status(200).json({ email, linked: linkedCount, courses, content: buildContentResponse(rawAll, await loadOverrides(supabase)) });
+      return res.status(200).json({ email, linked: linkedCount, courses, content: buildContentResponse(rawAll, await loadOverrides(getSupabase())) });
     }
 
     const orders = await ordersForEmail(email);
@@ -221,7 +214,7 @@ module.exports = async (req, res) => {
       if (o.status !== 'paid' && o.invoice_id) {
         const v = await verifyWithZiniPay(o.invoice_id);
         if (v && String(v.status || '').toUpperCase() === 'COMPLETED') {
-          await supabase.from('orders').update({ status: 'paid' }).eq('invoice_id', o.invoice_id);
+          await getSupabase().from('orders').update({ status: 'paid' }).eq('invoice_id', o.invoice_id);
           o.status = 'paid';
         }
       }
@@ -230,7 +223,7 @@ module.exports = async (req, res) => {
     const courses = [...new Set(rawOrders.map(normalizeCourse))];
     
     // Return both the list of courses AND the secure content payload
-    return res.status(200).json({ email, courses, content: buildContentResponse(rawOrders, await loadOverrides(supabase)) });
+    return res.status(200).json({ email, courses, content: buildContentResponse(rawOrders, await loadOverrides(getSupabase())) });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'Server error' });
