@@ -40,19 +40,16 @@ h1, h2, h3, h4, .font-display { font-family: var(--font-display); letter-spacing
   background:
     radial-gradient(65% 45% at 15% 8%, rgba(0,229,255,0.11) 0%, transparent 70%),
     radial-gradient(55% 45% at 88% 18%, rgba(124,58,237,0.14) 0%, transparent 72%),
-    radial-gradient(50% 45% at 50% 92%, rgba(124,58,237,0.08) 0%, transparent 70%),
     var(--bg-obsidian);
 }
 .glass-nav {
   background: rgba(5, 7, 14, 0.82);
   backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border-hairline);
 }
 .lux-card {
   background: linear-gradient(180deg, rgba(17, 24, 39, 0.74) 0%, rgba(11, 15, 26, 0.94) 100%);
   border: 1px solid var(--border-hairline);
-  backdrop-filter: blur(16px);
   transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 .lux-card:hover {
@@ -107,7 +104,6 @@ input[type="range"].hvb-slider::-webkit-slider-thumb {
 <body class="min-h-screen selection:bg-cyan-400/30 selection:text-white">
   <div class="ambient-canvas" aria-hidden="true"></div>
 
-  <!-- Full-screen ShohojPay Loading Spinner -->
   <div id="hvb-pay-loader" role="status" aria-live="polite">
     <div class="hvb-spinner"></div>
     <div class="text-center px-4">
@@ -119,17 +115,17 @@ input[type="range"].hvb-slider::-webkit-slider-thumb {
 <header class="glass-nav sticky top-0 z-40">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
     <a href="/" class="flex items-center gap-3 group shrink-0">
-      <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden shrink-0 ring-2 ring-cyan-400/40 shadow-lg shadow-cyan-500/20 bg-[#05070E] relative">
+      <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden shrink-0 ring-2 ring-cyan-400/40 bg-[#05070E]">
         <img src="/hvb-logo.png" alt="Hyper Vision Bangla Logo" class="w-full h-full object-cover hvb-custom-logo-img" onerror="this.style.display='none';" />
       </div>
       <div>
-        <div class="font-display font-bold text-white text-base sm:text-lg leading-none tracking-tight group-hover:text-cyan-300 transition">Hyper Vision Bangla</div>
-        <div class="text-[10px] text-pink-300/80 font-num mt-0.5 tracking-wide">&#8212; &#9829; sayora &#9829; &#8212;</div>
+        <div class="font-display font-bold text-white text-base sm:text-lg leading-none">Hyper Vision Bangla</div>
+        <div class="text-[10px] text-pink-300/80 font-num mt-0.5">&#8212; &#9829; sayora &#9829; &#8212;</div>
       </div>
     </a>
 
-    <nav class="hidden lg:flex items-center gap-7 text-sm font-medium text-slate-300" aria-label="Main Navigation">
-      <a href="/#courses" class="hover:text-cyan-300 transition">কোর্সসমূহ (৬টি)</a>
+    <nav class="hidden lg:flex items-center gap-7 text-sm font-medium text-slate-300">
+      <a href="/#courses" class="hover:text-cyan-300 transition">কোর্সসমূহ</a>
       <a href="/#home-monetization" class="hover:text-cyan-300 transition">Facebook আয়</a>
       <a href="/#reviews" class="hover:text-cyan-300 transition">রিভিউ (5.0★)</a>
       <a href="/#demo" class="hover:text-cyan-300 transition">ফ্রি লেসন</a>
@@ -152,9 +148,8 @@ input[type="range"].hvb-slider::-webkit-slider-thumb {
     </div>
   </div>
 
-  <!-- Mobile Dropdown (All 7 Options Restored!) -->
   <div id="mobile-nav-drawer" class="hidden lg:hidden border-t border-white/10 bg-[#070B14]/95 backdrop-blur-xl px-4 py-4 space-y-2">
-    <a href="/#courses" class="mobile-nav-link block px-3.5 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-white/5">কোর্সসমূহ (৬টি কোর্স)</a>
+    <a href="/#courses" class="mobile-nav-link block px-3.5 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-white/5">কোর্সসমূহ</a>
     <a href="/#home-monetization" class="mobile-nav-link block px-3.5 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-white/5">Facebook আয় ক্যালকুলেটর</a>
     <a href="/#reviews" class="mobile-nav-link block px-3.5 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-white/5">শিক্ষার্থীদের ১২টি রিভিউ</a>
     <a href="/#demo" class="mobile-nav-link block px-3.5 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-white/5">ফ্রি লেসন ও প্রম্পট ডেমো</a>
@@ -166,7 +161,6 @@ input[type="range"].hvb-slider::-webkit-slider-thumb {
 </header>
 
 <main>
-  <!-- COMPACT HERO (Courses right below, zero long scrolling!) -->
   <section id="home" class="pt-7 pb-5 sm:pt-10 sm:pb-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
     <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-5">
       <div class="max-w-3xl">
@@ -190,177 +184,19 @@ input[type="range"].hvb-slider::-webkit-slider-thumb {
     </div>
   </section>
 
-  <!-- 6 COURSES CATALOG (Compact 3-column grid, dedicated page for every single course!) -->
+  <!-- DYNAMIC COURSES GRID (Synced live with Admin Panel + Supabase!) -->
   <section id="courses" class="py-6 pb-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
     <div class="flex flex-wrap items-center gap-2 mb-6" role="group" aria-label="Course Filter">
-      <button type="button" data-cat-filter="all" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-500/20 text-cyan-200 border border-cyan-400/40">সব কোর্স (৬)</button>
+      <button type="button" data-cat-filter="all" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-500/20 text-cyan-200 border border-cyan-400/40">সব কোর্স (<span id="hvb-total-count">৫</span>)</button>
       <button type="button" data-cat-filter="2d" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white/5 text-slate-300 border border-white/10 hover:text-white">2D অ্যানিমেশন 🔥</button>
       <button type="button" data-cat-filter="comedy" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white/5 text-slate-300 border border-white/10 hover:text-white">কমেডি শর্টস 🔥</button>
-      <button type="button" data-cat-filter="bundle" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white/5 text-slate-300 border border-white/10 hover:text-white">বান্ডেল</button>
+      <button type="button" data-cat-filter="bundle" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white/5 text-slate-300 border border-white/10 hover:text-white">লং + শর্ট বান্ডেল</button>
       <button type="button" data-cat-filter="short" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white/5 text-slate-300 border border-white/10 hover:text-white">3D শর্টস</button>
-      <button type="button" data-cat-filter="long" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white/5 text-slate-300 border border-white/10 hover:text-white">3D লং স্টোরি</button>
     </div>
 
-    <div id="hvb-courses-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-      <!-- 1. 2D Animation Course -->
-      <article data-course-cat="2d" class="course-card lux-card rounded-2xl overflow-hidden flex flex-col border-emerald-400/35">
-        <a href="/course-2d-animation" class="relative aspect-video overflow-hidden bg-[#070B14] block">
-          <img data-course-img="2d-animation" src="/banner-long-short.webp" alt="2D Animation AI Course" class="w-full h-full object-cover transition duration-500 hover:scale-105" loading="lazy" />
-          <div class="absolute inset-0 bg-gradient-to-t from-[#0B0F1A] via-transparent to-transparent"></div>
-          <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500 text-[#040711]">নতুন · ফ্রি সাবস্ক্রিপশন 🎁</span>
-          <span class="absolute top-3 right-3 px-2 py-0.5 rounded-full text-[11px] font-num font-bold bg-[#05070E]/85 text-cyan-300 border border-cyan-400/30">50% ছাড়</span>
-        </a>
-        <div class="p-4 flex-1 flex flex-col justify-between gap-4">
-          <div>
-            <h3 class="text-lg font-bold text-white leading-snug">2D অ্যানিমেশন কমপ্লিট AI কোর্স</h3>
-            <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">১০–১৫ মিনিটের কাজে AI দিয়ে ২–৩+ মিনিটের ফুল 2D অ্যানিমেশন, স্ক্রিপ্ট, হাই-কোয়ালিটি ভয়েস ও এডিটিং। ১ দিনেই শেখা সম্ভব + ফ্রি সাবস্ক্রিপশন!</p>
-          </div>
-          <div class="pt-3 border-t border-white/10 space-y-3">
-            <div class="flex items-center justify-between">
-              <div class="flex items-baseline gap-2"><span class="text-2xl font-extrabold font-num text-white">৳399</span><span class="text-xs font-num text-slate-500 line-through">৳800</span></div>
-              <span class="text-[11px] text-emerald-300 font-semibold">কেনার পর WhatsApp সাপোর্ট</span>
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-              <a href="/course-2d-animation" class="btn-secondary py-2 px-3 rounded-xl text-xs font-semibold text-center">বিস্তারিত দেখুন</a>
-              <button type="button" data-enroll="2d-animation" class="enroll-trigger btn-primary py-2 px-3 rounded-xl text-xs">এনরোল করুন</button>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- 2. Snake Comedy Course -->
-      <article data-course-cat="comedy" class="course-card lux-card rounded-2xl overflow-hidden flex flex-col border-amber-400/35">
-        <a href="/course-snake-comedy" class="relative aspect-video overflow-hidden bg-[#070B14] block">
-          <img data-course-img="snake-comedy" src="/banner-short.webp" alt="Snake-People Comedy Shorts Course" class="w-full h-full object-cover transition duration-500 hover:scale-105" loading="lazy" />
-          <div class="absolute inset-0 bg-gradient-to-t from-[#0B0F1A] via-transparent to-transparent"></div>
-          <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-400 text-[#040711]">ভাইরাল · নতুন কোর্স 🔥</span>
-          <span class="absolute top-3 right-3 px-2 py-0.5 rounded-full text-[11px] font-num font-bold bg-[#05070E]/85 text-cyan-300 border border-cyan-400/30">50% ছাড়</span>
-        </a>
-        <div class="p-4 flex-1 flex flex-col justify-between gap-4">
-          <div>
-            <h3 class="text-lg font-bold text-white leading-snug">স্নেক কমেডি শর্টস (Snake Comedy) কোর্স</h3>
-            <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">মাস্টার চ্যাটিং প্রম্পট দিয়ে কম সময়ে হাই-কোয়ালিটি ভাইরাল কমেডি ভিডিও, AI আইডিয়া, টাইটেল, থাম্বনেইল, এডিটিং ও আপলোড গাইড।</p>
-          </div>
-          <div class="pt-3 border-t border-white/10 space-y-3">
-            <div class="flex items-center justify-between">
-              <div class="flex items-baseline gap-2"><span class="text-2xl font-extrabold font-num text-white">৳299</span><span class="text-xs font-num text-slate-500 line-through">৳600</span></div>
-              <span class="text-[11px] text-emerald-300 font-semibold">কেনার পর WhatsApp সাপোর্ট</span>
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-              <a href="/course-snake-comedy" class="btn-secondary py-2 px-3 rounded-xl text-xs font-semibold text-center">বিস্তারিত দেখুন</a>
-              <button type="button" data-enroll="snake-comedy" class="enroll-trigger btn-primary py-2 px-3 rounded-xl text-xs">এনরোল করুন</button>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- 3. Bundle Course -->
-      <article data-course-cat="bundle" class="course-card lux-card rounded-2xl overflow-hidden flex flex-col border-cyan-400/35">
-        <a href="/course-bundle" class="relative aspect-video overflow-hidden bg-[#070B14] block">
-          <img data-course-img="bundle" src="/banner-long-short.webp" alt="লং + শর্ট 3D AI অ্যানিমেশন বান্ডেল" class="w-full h-full object-cover transition duration-500 hover:scale-105" loading="lazy" />
-          <div class="absolute inset-0 bg-gradient-to-t from-[#0B0F1A] via-transparent to-transparent"></div>
-          <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#05070E]/85 border border-cyan-400/35 text-cyan-200">বেস্টসেলার · ১২ মডিউল</span>
-          <span class="absolute top-3 right-3 px-2 py-0.5 rounded-full text-[11px] font-num font-bold bg-emerald-500/90 text-[#040711]">33% ছাড়</span>
-        </a>
-        <div class="p-4 flex-1 flex flex-col justify-between gap-4">
-          <div>
-            <h3 class="text-lg font-bold text-white leading-snug">লং + শর্ট 3D AI অ্যানিমেশন বান্ডেল</h3>
-            <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">ফেসবুক রিলস, শর্টস এবং ৫–১৫ মিনিটের সিনেমাটিক বাংলা 3D গল্প বানানোর সম্পূর্ণ A-to-Z প্রো রোডম্যাপ।</p>
-          </div>
-          <div class="pt-3 border-t border-white/10 space-y-3">
-            <div class="flex items-center justify-between">
-              <div class="flex items-baseline gap-2"><span class="text-2xl font-extrabold font-num text-white">৳999</span><span class="text-xs font-num text-slate-500 line-through">৳1500</span></div>
-              <span class="text-[10px] font-mono-num px-2 py-0.5 rounded bg-violet-500/15 border border-violet-400/30 text-violet-200">কোড: HVB50</span>
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-              <a href="/course-bundle" class="btn-secondary py-2 px-3 rounded-xl text-xs font-semibold text-center">বিস্তারিত দেখুন</a>
-              <button type="button" data-enroll="bundle" class="enroll-trigger btn-primary py-2 px-3 rounded-xl text-xs">এনরোল করুন</button>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- 4. Short Video Course -->
-      <article data-course-cat="short" class="course-card lux-card rounded-2xl overflow-hidden flex flex-col">
-        <a href="/course-short" class="relative aspect-video overflow-hidden bg-[#070B14] block">
-          <img data-course-img="short" src="/banner-short.webp" alt="শর্ট ভিডিও 3D কোর্স" class="w-full h-full object-cover transition duration-500 hover:scale-105" loading="lazy" />
-          <div class="absolute inset-0 bg-gradient-to-t from-[#0B0F1A] via-transparent to-transparent"></div>
-          <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#05070E]/85 border border-cyan-400/35 text-cyan-200">পপুলার · ৭ মডিউল</span>
-          <span class="absolute top-3 right-3 px-2 py-0.5 rounded-full text-[11px] font-num font-bold bg-emerald-500/90 text-[#040711]">38% ছাড়</span>
-        </a>
-        <div class="p-4 flex-1 flex flex-col justify-between gap-4">
-          <div>
-            <h3 class="text-lg font-bold text-white leading-snug">শর্ট ভিডিও (Reels / Shorts) 3D কোর্স</h3>
-            <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">মাত্র ৩০–৬০ সেকেন্ডের ভাইরাল 3D অ্যানিমেশন রিলস ও শর্টস বানিয়ে দ্রুত ফলোয়ার ও Facebook মনিটাইজেশন।</p>
-          </div>
-          <div class="pt-3 border-t border-white/10 space-y-3">
-            <div class="flex items-center justify-between">
-              <div class="flex items-baseline gap-2"><span class="text-2xl font-extrabold font-num text-white">৳499</span><span class="text-xs font-num text-slate-500 line-through">৳800</span></div>
-              <span class="text-[10px] font-mono-num px-2 py-0.5 rounded bg-violet-500/15 border border-violet-400/30 text-violet-200">SHORT445</span>
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-              <a href="/course-short" class="btn-secondary py-2 px-3 rounded-xl text-xs font-semibold text-center">বিস্তারিত দেখুন</a>
-              <button type="button" data-enroll="short" class="enroll-trigger btn-primary py-2 px-3 rounded-xl text-xs">এনরোল করুন</button>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- 5. Long Video Course -->
-      <article data-course-cat="long" class="course-card lux-card rounded-2xl overflow-hidden flex flex-col">
-        <a href="/course-long" class="relative aspect-video overflow-hidden bg-[#070B14] block">
-          <img data-course-img="long" src="/banner-long-short.webp" alt="লং ভিডিও 3D স্টোরি কোর্স" class="w-full h-full object-cover transition duration-500 hover:scale-105" loading="lazy" />
-          <div class="absolute inset-0 bg-gradient-to-t from-[#0B0F1A] via-transparent to-transparent"></div>
-          <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#05070E]/85 border border-cyan-400/35 text-cyan-200">১৬:৯ সিনেমা · ৯ মডিউল</span>
-          <span class="absolute top-3 right-3 px-2 py-0.5 rounded-full text-[11px] font-num font-bold bg-emerald-500/90 text-[#040711]">33% ছাড়</span>
-        </a>
-        <div class="p-4 flex-1 flex flex-col justify-between gap-4">
-          <div>
-            <h3 class="text-lg font-bold text-white leading-snug">লং ভিডিও (সিনেমাটিক 3D স্টোরি) কোর্স</h3>
-            <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">ইউটিউব ও ফেসবুকে ৫–১৫ মিনিটের হাই-রিটেনশন 3D অ্যানিমেটেড বাংলা গল্প ও শর্ট ফিল্ম তৈরি শিখুন।</p>
-          </div>
-          <div class="pt-3 border-t border-white/10 space-y-3">
-            <div class="flex items-center justify-between">
-              <div class="flex items-baseline gap-2"><span class="text-2xl font-extrabold font-num text-white">৳799</span><span class="text-xs font-num text-slate-500 line-through">৳1200</span></div>
-              <span class="text-[10px] font-mono-num px-2 py-0.5 rounded bg-violet-500/15 border border-violet-400/30 text-violet-200">HVB50</span>
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-              <a href="/course-long" class="btn-secondary py-2 px-3 rounded-xl text-xs font-semibold text-center">বিস্তারিত দেখুন</a>
-              <button type="button" data-enroll="long" class="enroll-trigger btn-primary py-2 px-3 rounded-xl text-xs">এনরোল করুন</button>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- 6. AI Kids Comedy -->
-      <article data-course-cat="comedy" class="course-card lux-card rounded-2xl overflow-hidden flex flex-col">
-        <a href="/ai-kids-comedy" class="relative aspect-video overflow-hidden bg-[#070B14] block">
-          <img data-course-img="kids" src="/ai-kids-comedy.jpg" alt="AI কিডস কমেডি অ্যানিমেশন" class="w-full h-full object-cover transition duration-500 hover:scale-105" loading="lazy" />
-          <div class="absolute inset-0 bg-gradient-to-t from-[#0B0F1A] via-transparent to-transparent"></div>
-          <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#05070E]/85 border border-cyan-400/35 text-cyan-200">কিডস নিশ · ৬ মডিউল</span>
-          <span class="absolute top-3 right-3 px-2 py-0.5 rounded-full text-[11px] font-num font-bold bg-emerald-500/90 text-[#040711]">43% ছাড়</span>
-        </a>
-        <div class="p-4 flex-1 flex flex-col justify-between gap-4">
-          <div>
-            <h3 class="text-lg font-bold text-white leading-snug">AI কিডস কমেডি ও টকিং কার্টুন কোর্স</h3>
-            <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">মজার টকিং বিড়াল ও দুষ্টু বাচ্চার 3D কিডস কমেডি কার্টুন বানিয়ে বিশ্বব্যাপী ও বাংলা অডিয়েন্সে ভাইরাল হোন।</p>
-          </div>
-          <div class="pt-3 border-t border-white/10 space-y-3">
-            <div class="flex items-center justify-between">
-              <div class="flex items-baseline gap-2"><span class="text-2xl font-extrabold font-num text-white">৳399</span><span class="text-xs font-num text-slate-500 line-through">৳700</span></div>
-              <span class="text-[10px] font-mono-num px-2 py-0.5 rounded bg-violet-500/15 border border-violet-400/30 text-violet-200">HVB50</span>
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-              <a href="/ai-kids-comedy" class="btn-secondary py-2 px-3 rounded-xl text-xs font-semibold text-center">বিস্তারিত দেখুন</a>
-              <button type="button" data-enroll="kids" class="enroll-trigger btn-primary py-2 px-3 rounded-xl text-xs">এনরোল করুন</button>
-            </div>
-          </div>
-        </div>
-      </article>
-    </div>
+    <div id="hvb-courses-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
   </section>
 
-  <!-- 3-STEP BUYING GUIDE (Messenger Support BEFORE purchase) -->
   <section class="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
     <div class="lux-card rounded-3xl p-5 sm:p-7 border border-cyan-400/20">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
@@ -390,7 +226,6 @@ input[type="range"].hvb-slider::-webkit-slider-thumb {
     </div>
   </section>
 
-  <!-- FACEBOOK MONETIZATION CALCULATOR -->
   <section id="home-monetization" class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
     <div class="lux-card rounded-3xl p-6 sm:p-8 border border-violet-400/25">
       <div class="grid lg:grid-cols-12 gap-8 items-center">
@@ -420,7 +255,6 @@ input[type="range"].hvb-slider::-webkit-slider-thumb {
     </div>
   </section>
 
-  <!-- STUDENT REVIEWS -->
   <section id="reviews" class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
     <div class="flex items-end justify-between gap-4 mb-6">
       <div>
@@ -436,7 +270,6 @@ input[type="range"].hvb-slider::-webkit-slider-thumb {
     </div>
   </section>
 
-  <!-- FREE LESSON & COURSE REQUEST -->
   <section id="demo" class="py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
     <div class="grid lg:grid-cols-2 gap-6">
       <div class="lux-card rounded-3xl p-6 space-y-4">
@@ -474,13 +307,12 @@ input[type="range"].hvb-slider::-webkit-slider-thumb {
   </div>
 </footer>
 
-<!-- Floating Facebook Messenger Support Button (NO WhatsApp before purchase!) -->
 <a href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" class="fixed bottom-5 right-5 z-40 inline-flex items-center gap-2 px-4 py-3 rounded-full bg-[#0084FF] hover:bg-[#0073E6] text-white text-xs sm:text-sm font-bold shadow-2xl shadow-sky-500/30 transition">
   <i data-lucide="message-circle" class="w-4 h-4"></i>
   <span>Messenger সাপোর্ট</span>
 </a>
 
-<!-- CHECKOUT MODAL (ShohojPay + Full-Screen Spinner + Messenger fallback only) -->
+<!-- CHECKOUT MODAL -->
 <div id="hvb-checkout-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md">
   <div class="lux-card rounded-3xl max-w-md w-full p-6 border border-cyan-400/30 max-h-[92vh] overflow-y-auto">
     <div class="flex items-start justify-between gap-3 mb-3">
@@ -536,16 +368,83 @@ input[type="range"].hvb-slider::-webkit-slider-thumb {
 
 <script>
 (function () {
-  const COURSE_META = {
-    '2d-animation': { title: '2D অ্যানিমেশন কমপ্লিট AI কোর্স', price: 399, reg: 800 },
-    'snake-comedy': { title: 'স্নেক কমেডি শর্টস (Snake Comedy) কোর্স', price: 299, reg: 600 },
-    bundle: { title: 'লং + শর্ট 3D AI অ্যানিমেশন কমপ্লিট বান্ডেল', price: 999, reg: 1500 },
-    short: { title: 'শর্ট ভিডিও (Reels / Shorts / TikTok) 3D কোর্স', price: 499, reg: 800 },
-    long: { title: 'লং ভিডিও (১৬:৯ সিনেমাটিক 3D স্টোরি) কোর্স', price: 799, reg: 1200 },
-    kids: { title: 'AI কিডস কমেডি ও টকিং কার্টুন অ্যানিমেশন', price: 399, reg: 700 }
-  };
+  const DEFAULT_COURSES = [{"id": "2d-animation", "slug": "course-2d-animation", "url": "/course-2d-animation", "order": 1, "badge": "নতুন · ফ্রি সাবস্ক্রিপশন 🎁", "category": "2d", "title": "2D Animation Complete AI Course", "bnTitle": "2D অ্যানিমেশন কমপ্লিট AI কোর্স", "subtitle": "১০–১৫ মিনিটের কাজে AI দিয়ে ২–৩+ মিনিটের ফুল 2D অ্যানিমেশন, স্ক্রিপ্ট, হাই-কোয়ালিটি ভয়েস ও এডিটিং। ১ দিনেই শেখা সম্ভব + ফ্রি সাবস্ক্রিপশন!", "regularPrice": 800, "price": 399, "couponCode": "HVB50", "couponDiscount": 50, "modulesCount": 6, "duration": "৬ মাসের সম্পূর্ণ অ্যাকসেস", "repoBanner": "/banner-long-short.webp", "repoThumb": "/banner-long-short.webp", "borderClass": "border-emerald-400/35", "badgeClass": "bg-emerald-500 text-[#040711]", "noteText": "কেনার পর WhatsApp সাপোর্ট", "modules": [{"num": "০১", "title": "2D অ্যানিমেশন সেটআপ ও মাস্টার প্রম্পট গাইড", "lessons": ["সম্পূর্ণ ভিডিও ওয়ার্কফ্লো"]}, {"num": "০২", "title": "স্ক্রিপ্ট, AI ভয়েস ও সম্পূর্ণ অটো ভিডিও এডিটিং", "lessons": ["১০-১৫ মিনিটে ফুল ভিডিও তৈরি"]}]}, {"id": "snake-comedy", "slug": "course-snake-comedy", "url": "/course-snake-comedy", "order": 2, "badge": "ভাইরাল · নতুন কোর্স 🔥", "category": "comedy", "title": "Snake-People Comedy Shorts Course", "bnTitle": "স্নেক কমেডি শর্টস (Snake Comedy) কোর্স", "subtitle": "মাস্টার চ্যাটিং প্রম্পট দিয়ে কম সময়ে হাই-কোয়ালিটি ভাইরাল কমেডি ভিডিও, AI আইডিয়া, টাইটেল, থাম্বনেইল, এডিটিং ও আপলোড গাইড।", "regularPrice": 600, "price": 299, "couponCode": "HVB50", "couponDiscount": 50, "modulesCount": 5, "duration": "৬ মাসের সম্পূর্ণ অ্যাকসেস", "repoBanner": "/banner-short.webp", "repoThumb": "/banner-short.webp", "borderClass": "border-amber-400/35", "badgeClass": "bg-amber-400 text-[#040711]", "noteText": "কেনার পর WhatsApp সাপোর্ট", "modules": [{"num": "০১", "title": "Snake-People মাস্টার প্রম্পট ও আইডিয়া জেনারেশন", "lessons": ["কমেডি স্টোরি ও প্রম্পট"]}, {"num": "০২", "title": "এডিটিং, থাম্বনেইল ও ভাইরাল আপলোড", "lessons": ["হাই-কোয়ালিটি শর্টস এক্সপোর্ট"]}]}, {"id": "bundle", "slug": "course-bundle", "url": "/course-bundle", "order": 3, "badge": "বেস্টসেলার · ১২ মডিউল", "category": "bundle", "title": "Long + Short Video Complete Bundle", "bnTitle": "লং + শর্ট 3D AI অ্যানিমেশন বান্ডেল", "subtitle": "ফেসবুক রিলস, শর্টস এবং ৫–১৫ মিনিটের সিনেমাটিক বাংলা 3D গল্প বানানোর সম্পূর্ণ A-to-Z প্রো রোডম্যাপ।", "regularPrice": 1500, "price": 999, "couponCode": "HVB50", "couponDiscount": 50, "modulesCount": 12, "duration": "৬ মাসের সম্পূর্ণ অ্যাকসেস", "repoBanner": "/banner-long-short.webp", "repoThumb": "/banner-long-short.webp", "borderClass": "border-cyan-400/35", "badgeClass": "bg-[#05070E]/85 border border-cyan-400/35 text-cyan-200", "noteText": "কোড: HVB50", "modules": [{"num": "০১", "title": "AI অ্যানিমেশন ফাউন্ডেশন ও ভাইরাল নিশ", "lessons": ["বেসিক সেটআপ"]}, {"num": "০২", "title": "লং ও শর্ট 3D প্রোডাকশন রোডম্যাপ", "lessons": ["স্টোরি ও ক্যারেক্টার"]}]}, {"id": "short", "slug": "course-short", "url": "/course-short", "order": 4, "badge": "পপুলার · ৭ মডিউল", "category": "short", "title": "Short Video AI Animation Course", "bnTitle": "শর্ট ভিডিও (Reels / Shorts) 3D কোর্স", "subtitle": "মাত্র ৩০–৬০ সেকেন্ডের ভাইরাল 3D অ্যানিমেশন রিলস ও শর্টস বানিয়ে দ্রুত ফলোয়ার ও Facebook মনিটাইজেশন।", "regularPrice": 800, "price": 499, "couponCode": "SHORT445", "couponDiscount": 54, "modulesCount": 7, "duration": "৬ মাসের সম্পূর্ণ অ্যাকসেস", "repoBanner": "/banner-short.webp", "repoThumb": "/banner-short.webp", "borderClass": "", "badgeClass": "bg-[#05070E]/85 border border-cyan-400/35 text-cyan-200", "noteText": "কোড: SHORT445", "modules": [{"num": "০১", "title": "ভাইরাল শর্টস নিশ ও ৯:১৬ ফরম্যাট", "lessons": ["শর্টস প্রোডাকশন"]}]}, {"id": "kids", "slug": "ai-kids-comedy", "url": "/ai-kids-comedy", "order": 5, "badge": "কিডস নিশ · ৬ মডিউল", "category": "comedy", "title": "AI Kids Comedy Animation", "bnTitle": "AI কিডস কমেডি ও টকিং কার্টুন কোর্স", "subtitle": "মজার টকিং বিড়াল ও দুষ্টু বাচ্চার 3D কিডস কমেডি কার্টুন বানিয়ে বিশ্বব্যাপী ও বাংলা অডিয়েন্সে ভাইরাল হোন।", "regularPrice": 700, "price": 399, "couponCode": "HVB50", "couponDiscount": 50, "modulesCount": 6, "duration": "৬ মাসের সম্পূর্ণ অ্যাকসেস", "repoBanner": "/ai-kids-comedy.jpg", "repoThumb": "/ai-kids-comedy.jpg", "borderClass": "", "badgeClass": "bg-[#05070E]/85 border border-cyan-400/35 text-cyan-200", "noteText": "কোড: HVB50", "modules": [{"num": "০১", "title": "কিডস কমেডি নিশ ও ক্যারেক্টার", "lessons": ["টকিং কার্টুন তৈরি"]}]}];
+  let liveCourses = DEFAULT_COURSES.slice();
+  let currentFilter = 'all';
 
-  // Mobile hamburger menu toggle
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function renderCoursesGrid() {
+    const grid = document.getElementById('hvb-courses-grid');
+    if (!grid) return;
+    const sorted = liveCourses.slice().sort((a, b) => (Number(a.order) || 99) - (Number(b.order) || 99));
+    const countEl = document.getElementById('hvb-total-count');
+    if (countEl) countEl.textContent = sorted.length;
+
+    grid.innerHTML = sorted.map(c => {
+      const imgSrc = c.customBannerDataUrl || c.repoBanner || '/banner-short.webp';
+      const disc = c.regularPrice > c.price ? Math.round(((c.regularPrice - c.price) / c.regularPrice) * 100) : 0;
+      const href = c.url || ('/' + c.slug);
+      const show = (currentFilter === 'all' || c.category === currentFilter) ? '' : 'display:none;';
+      const badgeCls = c.badgeClass || 'bg-[#05070E]/85 border border-cyan-400/35 text-cyan-200';
+      return '<article data-course-cat="' + esc(c.category || 'short') + '" style="' + show + '" class="course-card lux-card rounded-2xl overflow-hidden flex flex-col ' + esc(c.borderClass || '') + '">' +
+        '<a href="' + esc(href) + '" class="relative aspect-video overflow-hidden bg-[#070B14] block">' +
+          '<img src="' + esc(imgSrc) + '" alt="' + esc(c.bnTitle) + '" class="w-full h-full object-cover transition duration-500 hover:scale-105" loading="lazy" />' +
+          '<div class="absolute inset-0 bg-gradient-to-t from-[#0B0F1A] via-transparent to-transparent"></div>' +
+          '<span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-bold ' + badgeCls + '">' + esc(c.badge || 'কোর্স') + '</span>' +
+          (disc > 0 ? '<span class="absolute top-3 right-3 px-2 py-0.5 rounded-full text-[11px] font-num font-bold bg-emerald-500/90 text-[#040711]">' + disc + '% ছাড়</span>' : '') +
+        '</a>' +
+        '<div class="p-4 flex-1 flex flex-col justify-between gap-4">' +
+          '<div>' +
+            '<h3 class="text-lg font-bold text-white leading-snug">' + esc(c.bnTitle) + '</h3>' +
+            '<p class="text-xs text-slate-300 mt-1.5 leading-relaxed">' + esc(c.subtitle) + '</p>' +
+          '</div>' +
+          '<div class="pt-3 border-t border-white/10 space-y-3">' +
+            '<div class="flex items-center justify-between">' +
+              '<div class="flex items-baseline gap-2">' +
+                '<span class="text-2xl font-extrabold font-num text-white">৳' + Number(c.price) + '</span>' +
+                (c.regularPrice > c.price ? '<span class="text-xs font-num text-slate-500 line-through">৳' + Number(c.regularPrice) + '</span>' : '') +
+              '</div>' +
+              '<span class="text-[11px] text-emerald-300 font-semibold">' + esc(c.noteText || ('কোড: ' + (c.couponCode || 'HVB50'))) + '</span>' +
+            '</div>' +
+            '<div class="grid grid-cols-2 gap-2">' +
+              '<a href="' + esc(href) + '" class="btn-secondary py-2 px-3 rounded-xl text-xs font-semibold text-center">বিস্তারিত দেখুন</a>' +
+              '<button type="button" data-enroll="' + esc(c.id) + '" class="enroll-trigger btn-primary py-2 px-3 rounded-xl text-xs">এনরোল করুন</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</article>';
+    }).join('');
+  }
+
+  // 1) Load instantly from localStorage if v6 exists, then 2) fetch LIVE CMS state from Supabase (/api/admin?public=cms)
+  try {
+    const saved = localStorage.getItem('hvb_v6_cms_state');
+    if (saved) {
+      const cms = JSON.parse(saved);
+      if (cms.customLogoDataUrl) document.querySelectorAll('.hvb-custom-logo-img').forEach(img => { img.src = cms.customLogoDataUrl; img.style.display = 'block'; });
+      if (Array.isArray(cms.courses) && cms.courses.length) liveCourses = cms.courses;
+    }
+  } catch (e) {}
+  renderCoursesGrid();
+
+  fetch('/api/admin?public=cms', { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if (data && data.cms) {
+        if (data.cms.customLogoDataUrl) {
+          document.querySelectorAll('.hvb-custom-logo-img').forEach(img => { img.src = data.cms.customLogoDataUrl; img.style.display = 'block'; });
+        }
+        if (Array.isArray(data.cms.courses) && data.cms.courses.length) {
+          liveCourses = data.cms.courses;
+          renderCoursesGrid();
+        }
+      }
+    }).catch(() => {});
+
+  // Mobile menu
   const navToggle = document.getElementById('mobile-nav-toggle');
   const navDrawer = document.getElementById('mobile-nav-drawer');
   if (navToggle && navDrawer) {
@@ -553,64 +452,38 @@ input[type="range"].hvb-slider::-webkit-slider-thumb {
     navDrawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navDrawer.classList.add('hidden')));
   }
 
-  // Apply Admin-uploaded course preview thumbnails & custom prices from CMS state
-  try {
-    const saved = localStorage.getItem('hvb_v5_cms_state');
-    if (saved) {
-      const cms = JSON.parse(saved);
-      if (cms.customLogoDataUrl) {
-        document.querySelectorAll('.hvb-custom-logo-img').forEach(img => { img.src = cms.customLogoDataUrl; img.style.display = 'block'; });
-      }
-      if (Array.isArray(cms.courses)) {
-        cms.courses.forEach(c => {
-          document.querySelectorAll('img[data-course-img="' + c.id + '"]').forEach(img => {
-            if (c.customBannerDataUrl) img.src = c.customBannerDataUrl;
-          });
-          if (COURSE_META[c.id] && Number(c.price) > 0) COURSE_META[c.id].price = Number(c.price);
-        });
-      }
-    }
-  } catch (e) {}
-
-  // Category filter (on homepage)
+  // Category filter
   document.querySelectorAll('.cat-filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const cat = btn.getAttribute('data-cat-filter');
+      currentFilter = btn.getAttribute('data-cat-filter');
       document.querySelectorAll('.cat-filter-btn').forEach(b => {
         const active = b === btn;
         b.className = 'cat-filter-btn px-4 py-2 rounded-xl text-xs font-semibold border ' +
           (active ? 'bg-cyan-500/20 text-cyan-200 border-cyan-400/40' : 'bg-white/5 text-slate-300 border-white/10 hover:text-white');
       });
-      document.querySelectorAll('.course-card').forEach(card => {
-        card.style.display = (cat === 'all' || card.getAttribute('data-course-cat') === cat) ? '' : 'none';
-      });
+      renderCoursesGrid();
     });
   });
 
-  // Facebook Income Calculator
+  // Income Calculator
   const slider = document.getElementById('fb-views-slider');
   if (slider) {
     const updateCalc = () => {
       const lakhs = Number(slider.value);
-      const usdLow = Math.round(lakhs * 2);
-      const usdHigh = Math.round(lakhs * 3);
-      const bdtLow = (usdLow * 120).toLocaleString('en-US');
-      const bdtHigh = (usdHigh * 120).toLocaleString('en-US');
-      const label = lakhs >= 10 ? (lakhs / 10).toFixed(1) + ' মিলিয়ন ভিউ' : lakhs + ' লাখ ভিউ';
-      document.getElementById('fb-views-label').textContent = label;
+      const usdLow = Math.round(lakhs * 2), usdHigh = Math.round(lakhs * 3);
+      document.getElementById('fb-views-label').textContent = lakhs >= 10 ? (lakhs / 10).toFixed(1) + ' মিলিয়ন ভিউ' : lakhs + ' লাখ ভিউ';
       document.getElementById('fb-usd-out').textContent = '$' + usdLow + ' – $' + usdHigh;
-      document.getElementById('fb-bdt-out').textContent = '৳' + bdtLow + ' – ৳' + bdtHigh;
+      document.getElementById('fb-bdt-out').textContent = '৳' + (usdLow * 120).toLocaleString('en-US') + ' – ৳' + (usdHigh * 120).toLocaleString('en-US');
     };
     slider.addEventListener('input', updateCalc);
     updateCalc();
   }
 
-  // Course Request Form
+  // Request Form
   const reqForm = document.getElementById('hvb-request-form');
   if (reqForm) {
     reqForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const status = document.getElementById('req-status');
       const topic = document.getElementById('req-topic').value.trim();
       const details = document.getElementById('req-details').value.trim();
       if (!topic) return;
@@ -620,37 +493,40 @@ input[type="range"].hvb-slider::-webkit-slider-thumb {
           body: JSON.stringify({ event: 'course_request', page: window.location.pathname, meta: { topic, details, status: 'new' } })
         });
       } catch (err) {}
-      status.textContent = '✓ আপনার কোর্স রিকোয়েস্টটি সফলভাবে জমা হয়েছে! ধন্যবাদ।';
-      status.classList.remove('hidden');
+      const st = document.getElementById('req-status');
+      st.textContent = '✓ আপনার কোর্স রিকোয়েস্টটি সফলভাবে জমা হয়েছে! ধন্যবাদ।';
+      st.classList.remove('hidden');
       reqForm.reset();
     });
   }
 
-  // Checkout Modal
+  // Checkout Modal (event delegation works for dynamic cards too!)
   const cm = document.getElementById('hvb-checkout-modal');
   let activeCourseId = 'bundle';
   let appliedCoupon = '';
   function openCheckout(id) {
-    const c = COURSE_META[id] || COURSE_META['bundle'];
-    activeCourseId = id;
+    const c = liveCourses.find(x => x.id === id) || liveCourses[0];
+    if (!c) return;
+    activeCourseId = c.id;
     appliedCoupon = '';
-    document.getElementById('cm-title').textContent = c.title;
+    document.getElementById('cm-title').textContent = c.bnTitle;
     document.getElementById('cm-price').textContent = '৳' + c.price;
-    document.getElementById('cm-reg-price').textContent = '৳' + c.reg;
+    document.getElementById('cm-reg-price').textContent = c.regularPrice > c.price ? '৳' + c.regularPrice : '';
     document.getElementById('cm-coupon').value = '';
     document.getElementById('cm-coupon-msg').textContent = '';
     document.getElementById('cm-error').classList.add('hidden');
     cm.classList.remove('hidden'); cm.classList.add('flex');
   }
 
-  document.querySelectorAll('.enroll-trigger').forEach(btn => {
-    btn.addEventListener('click', () => openCheckout(btn.getAttribute('data-enroll')));
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.enroll-trigger');
+    if (btn) openCheckout(btn.getAttribute('data-enroll'));
   });
   document.getElementById('cm-close').addEventListener('click', () => { cm.classList.add('hidden'); cm.classList.remove('flex'); });
 
   document.getElementById('cm-apply-coupon').addEventListener('click', () => {
     const code = document.getElementById('cm-coupon').value.trim().toUpperCase();
-    const c = COURSE_META[activeCourseId];
+    const c = liveCourses.find(x => x.id === activeCourseId) || liveCourses[0];
     const msg = document.getElementById('cm-coupon-msg');
     if (code === 'HVB50') {
       appliedCoupon = code;
@@ -667,7 +543,6 @@ input[type="range"].hvb-slider::-webkit-slider-thumb {
     }
   });
 
-  // Submit Checkout -> Full-Screen Spinner -> Redirect to ShohojPay
   document.getElementById('hvb-checkout-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const loader = document.getElementById('hvb-pay-loader');
@@ -675,27 +550,22 @@ input[type="range"].hvb-slider::-webkit-slider-thumb {
     const errText = document.getElementById('cm-error-text');
     errBox.classList.add('hidden');
     loader.classList.add('show');
-
     try {
       const name = document.getElementById('cm-name').value.trim();
       const phone = document.getElementById('cm-phone').value.trim();
       const email = document.getElementById('cm-email').value.trim();
       const ref = (localStorage.getItem('hvb_ref') || '').trim();
-
       const res = await fetch('/api/create-invoice', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          course: activeCourseId,
-          name, phone, email, contact: email || phone,
+          course: activeCourseId, name, phone, email, contact: email || phone,
           promoCode: appliedCoupon || document.getElementById('cm-coupon').value.trim().toUpperCase(),
           ref: ref || null
         })
       });
       const data = await res.json();
-      if (!res.ok || !data.payment_url) {
-        throw new Error(data.error || 'পেমেন্ট পেজ ওপেন করা যায়নি।');
-      }
+      if (!res.ok || !data.payment_url) throw new Error(data.error || 'পেমেন্ট পেজ ওপেন করা যায়নি।');
       window.location.href = data.payment_url;
     } catch (err) {
       loader.classList.remove('show');
@@ -704,7 +574,6 @@ input[type="range"].hvb-slider::-webkit-slider-thumb {
     }
   });
 
-  // Affiliate ref tracking
   try {
     const r = (new URLSearchParams(window.location.search).get('ref') || '').trim().toLowerCase();
     if (r && /^[a-z0-9]{3,30}$/.test(r)) {
