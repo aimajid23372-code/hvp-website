@@ -263,7 +263,7 @@ input[type="range"].hvb-slider::-webkit-slider-thumb {
       </div>
       <a href="/reviews" class="text-xs font-semibold text-cyan-300 hover:underline">সব রিভিউ দেখুন →</a>
     </div>
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div id="home-reviews-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
       <div class="lux-card rounded-2xl p-5 space-y-2"><div class="text-amber-400 text-xs">★★★★★</div><p class="text-xs text-slate-300">"সত্যি অসাধারণ কোর্স! আগে কখনো AI দিয়ে অ্যানিমেশন বানাইনি, এখন নিজেই বাংলা 3D গল্প বানিয়ে ফেসবুকে আপলোড করছি।"</p><div class="text-xs font-bold text-white pt-1">— Md Arif · Bundle</div></div>
       <div class="lux-card rounded-2xl p-5 space-y-2"><div class="text-amber-400 text-xs">★★★★★</div><p class="text-xs text-slate-300">"bKash দিয়ে পেমেন্ট করার সাথে সাথেই অ্যাকসেস পেয়েছি। প্রতিটি মডিউল স্টেপ-বাই-স্টেপ সাজানো, মোবাইল দিয়েই কাজ করতে পারছি।"</p><div class="text-xs font-bold text-white pt-1">— Rakibul Islam · Bundle</div></div>
       <div class="lux-card rounded-2xl p-5 space-y-2"><div class="text-amber-400 text-xs">★★★★★</div><p class="text-xs text-slate-300">"AI Kids Comedy কোর্সটা এক কথায় সেরা! আমার প্রথম টকিং বিড়ালের ভিডিওতেই ৪০ হাজারের বেশি ভিউ এসেছে।"</p><div class="text-xs font-bold text-white pt-1">— Jisan Ahmed · Kids Comedy</div></div>
@@ -581,6 +581,27 @@ input[type="range"].hvb-slider::-webkit-slider-thumb {
       localStorage.setItem('hvb_ref_at', String(Date.now()));
     }
   } catch (e) {}
+
+  
+  // Load REAL student reviews (with screenshots & video links) on homepage
+  fetch('/api/my-access?reviews=all', { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      const grid = document.getElementById('home-reviews-grid');
+      if (!grid || !data || !Array.isArray(data.items) || !data.items.length) return;
+      grid.innerHTML = data.items.slice(0, 6).map(r => {
+        const stars = '★'.repeat(Math.min(5, Math.max(1, Number(r.rating) || 5)));
+        return '<div class="lux-card rounded-2xl p-5 flex flex-col justify-between gap-3">' +
+          '<div class="space-y-2.5">' +
+            '<div class="flex items-center justify-between"><span class="text-amber-400 text-xs">' + stars + '</span><span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300">' + esc(r.course || 'HVB') + '</span></div>' +
+            '<p class="text-xs text-slate-300 leading-relaxed">' + esc(r.body) + '</p>' +
+            (r.image_url ? '<a href="' + esc(r.image_url) + '" target="_blank" rel="noopener" class="block rounded-xl overflow-hidden border border-white/10"><img src="' + esc(r.image_url) + '" alt="Review" class="w-full h-36 object-cover" loading="lazy" /></a>' : '') +
+            (r.link ? '<a href="' + esc(r.link) + '" target="_blank" rel="noopener" class="inline-block text-[11px] text-cyan-300 font-semibold hover:underline">▶ ভিডিও দেখুন ↗</a>' : '') +
+          '</div>' +
+          '<div class="text-xs font-bold text-white pt-2 border-t border-white/10">— ' + esc(r.name || 'HVB শিক্ষার্থী') + '</div>' +
+        '</div>';
+      }).join('');
+    }).catch(() => {});
 
   if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
 })();

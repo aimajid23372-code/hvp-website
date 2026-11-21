@@ -470,6 +470,20 @@ input[type="range"].hvb-slider::-webkit-slider-thumb {
     }
   } catch (e) {}
 
+  
+  fetch('/api/admin?public=cms', { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if (data && data.cms && Array.isArray(data.cms.courses)) {
+        data.cms.courses.forEach(c => {
+          if (c.customBannerDataUrl) {
+            document.querySelectorAll('img[data-course-img="' + c.id + '"]').forEach(img => { img.src = c.customBannerDataUrl; });
+          }
+          if (COURSE_META[c.id] && Number(c.price) > 0) COURSE_META[c.id].price = Number(c.price);
+        });
+      }
+    }).catch(() => {});
+
   if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
 })();
 </script>
