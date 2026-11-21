@@ -14,7 +14,7 @@
     return;
   }
 
-  var CFG_URL = '/api/auth-config';
+  var CFG_URL = '/api/my-access?config=1';
   var SB_CDN = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
 
   var HVB = (window.HVBAuth = {
