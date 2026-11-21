@@ -119,7 +119,7 @@
   </div>
 </main>
 
-<script src="/hvb-account.js"></script>
+<script src="/hvb-account.js?v=20261121"></script>
 <script>
 (function(){
   if (window.lucide) lucide.createIcons();
@@ -200,7 +200,7 @@
     gLabel.textContent = 'Google পেজে নেওয়া হচ্ছে...';
     say('');
     var res = await window.HVBAuth.signInWithGoogle(next);
-    if (!res || !res.ok) {
+    if (res !== true && (!res || !res.ok)) {
       gBtn.classList.remove('hvb-busy');
       gLabel.textContent = prev;
       say((res && res.error) || 'Google লগইন চালু করা যায়নি। Supabase Auth সেটিংস চেক করুন।');

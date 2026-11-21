@@ -47,16 +47,16 @@
       ]
     },
     {
-      "source": "/hvb-track.js",
+      "source": "/(.*)\\.(css|js)",
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "no-store, max-age=0"
+          "value": "public, max-age=0, must-revalidate"
         }
       ]
     },
     {
-      "source": "/(.*)\\.(css|js|png|jpg|jpeg|webp|svg|ico|woff2)",
+      "source": "/(.*)\\.(png|jpg|jpeg|webp|svg|ico|woff2)",
       "headers": [
         {
           "key": "Cache-Control",
