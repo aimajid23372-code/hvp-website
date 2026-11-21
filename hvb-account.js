@@ -288,12 +288,26 @@
 
     var isModern = header.classList.contains('glass-nav');
 
+    // On modern pages, intercept existing "শুরু করুন" button so clicking it opens login if logged out
+    if (isModern) {
+      header.querySelectorAll('button, a').forEach(function (el) {
+        var t = (el.textContent || '').trim();
+        if (t === 'শুরু করুন') {
+          el.addEventListener('click', function (ev) {
+            if (!HVB.user) {
+              ev.preventDefault();
+              ev.stopImmediatePropagation();
+              go('/login?mode=signup');
+            }
+          }, true);
+        }
+      });
+    }
+
     actions = document.createElement('div');
     actions.className = 'hvb-acc-actions';
     actions.innerHTML =
-      '<button class="hvb-acc-login" type="button" id="hvbTopLogin" title="Gmail / ইমেইল দিয়ে লগইন করুন" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:10px;font-size:.84rem;font-weight:700;background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.35);color:#e0f2fe;cursor:pointer;white-space:nowrap;">' +
-      '<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-2.9l-3.9-3c-1.1.7-2.5 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5H1.3v3.1C3.3 21.3 7.3 24 12 24z"/><path fill="#FBBC05" d="M5.3 14.3c-.2-.7-.4-1.5-.4-2.3s.1-1.6.4-2.3V6.6H1.3C.5 8.2 0 10 0 12s.5 3.8 1.3 5.4l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4C18 1.2 15.2 0 12 0 7.3 0 3.3 2.7 1.3 6.6l4 3.1c.9-2.9 3.6-4.9 6.7-4.9z"/></svg>' +
-      '<span>লগইন</span></button>' +
+      '<button class="hvb-acc-login" type="button" id="hvbTopLogin" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:10px;font-size:.82rem;font-weight:700;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);color:#F1F5F9;cursor:pointer;white-space:nowrap;">Sign In</button>' +
       (isModern ? '' :
         '<button class="hvb-btn-accent hvb-cta" type="button" id="hvbTopCta">শুরু করুন</button>' +
         '<button class="hvb-menu-btn" type="button" id="hvbMenuBtn" aria-label="মেনু">' +
@@ -333,7 +347,7 @@
     if (ctaBtn) {
       ctaBtn.addEventListener('click', function () {
         if (HVB.user) location.href = '/my-courses';
-        else location.href = '/courses';
+        else go('/login?mode=signup');
       });
     }
   }
@@ -411,10 +425,24 @@
   }
 
   HVB.init = async function () {
+    HVB._initError = '';
     try {
-      var cfg = await (await fetch(CFG_URL)).json();
-      if (!cfg || !cfg.enabled) throw new Error('auth off');
-      await loadScript(SB_CDN);
+      var resp = await fetch(CFG_URL, { cache: 'no-store' });
+      if (!resp.ok) throw new Error('API Error (' + resp.status + ')');
+      var cfg = await resp.json();
+      if (!cfg || !cfg.enabled || !cfg.url || !cfg.anonKey) {
+        throw new Error('Supabase Auth কনফিগার করা নেই (SUPABASE_URL / SUPABASE_ANON_KEY চেক করুন)');
+      }
+      if (!window.supabase || !window.supabase.createClient) {
+        try {
+          await loadScript(SB_CDN);
+        } catch (e1) {
+          await loadScript('https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js');
+        }
+      }
+      if (!window.supabase || !window.supabase.createClient) {
+        throw new Error('Supabase SDK লোড হয়নি (ইন্টারনেট বা AdBlocker চেক করুন)');
+      }
       HVB.sb = window.supabase.createClient(cfg.url, cfg.anonKey);
       var got = await HVB.sb.auth.getSession();
       HVB.session = (got.data && got.data.session) || null;
@@ -426,6 +454,7 @@
       });
     } catch (e) {
       HVB.sb = null;
+      HVB._initError = (e && e.message) ? e.message : 'অজানা এরর';
     }
     HVB.ready = true;
     render();
@@ -440,7 +469,7 @@
     try {
       if (!HVB.sb) await HVB.init();
       if (!HVB.sb) {
-        return { ok: false, error: 'লগইন সার্ভিস এখন চালু করা যায়নি। একটু পরে আবার চেষ্টা করুন।' };
+        return { ok: false, error: HVB._initError ? ('সমস্যা: ' + HVB._initError) : 'লগইন সার্ভিস এখন চালু করা যায়নি। একটু পরে আবার চেষ্টা করুন।' };
       }
       var cleanNext = String(nextUrl || 'my-courses').replace(/^\/+/, '').replace(/\.html$/i, '');
       var redirectUrl = location.origin + '/' + cleanNext;
