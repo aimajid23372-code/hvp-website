@@ -1,160 +1,130 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="bn" class="scroll-smooth">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>লগইন ও সাইন আপ | Hyper Vision Bangla (HVB)</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="icon" href="/hvb-logo.png" type="image/png">
-<style>
-  :root{
-    --bg:#05070D; --bg-2:#080B14; --surface:#0F1421; --surface-2:#161D2E;
-    --line:#212A42; --text:#F2F6FF; --muted:#9AA5BF; --cyan:#4FE3C1; --violet:#9B8CFF;
-  }
-  *{box-sizing:border-box; margin:0; padding:0;}
-  body{
-    background:
-      radial-gradient(900px 420px at 15% -6%, rgba(255,158,114,.10), transparent 60%),
-      radial-gradient(800px 420px at 85% 4%, rgba(155,140,255,.10), transparent 60%),
-      var(--bg);
-    color:var(--text); font-family:'Hind Siliguri',sans-serif; line-height:1.65; min-height:100vh;
-  }
-  a{color:inherit; text-decoration:none;}
-  header{
-    position:sticky; top:0; z-index:20; background:rgba(5,7,13,.86); backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--line); padding:13px 22px;
-    display:flex; align-items:center; justify-content:space-between;
-  }
-  .brand{ display:flex; align-items:center; gap:10px; }
-  .brand img{ width:36px; height:36px; border-radius:9px; object-fit:cover; }
-  .brand b{ font-family:'Sora',sans-serif; font-size:1.02em; display:block; line-height:1.1; }
-  .brand span{ font-size:.68em; color:var(--muted); letter-spacing:.09em; text-transform:uppercase; }
-
-  .wrap{ max-width:470px; margin:0 auto; padding:44px 20px 90px; }
-  .card{ background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:26px 22px; }
-  .logo-top{ display:flex; flex-direction:column; align-items:center; gap:8px; margin-bottom:18px; }
-  .logo-top img{ width:56px; height:56px; border-radius:14px; }
-  .logo-top h1{ font-family:'Sora',sans-serif; font-size:1.3em; text-align:center; }
-  .logo-top p{ color:var(--muted); font-size:.86em; text-align:center; }
-
-  .tabs{ display:flex; background:var(--bg-2); border:1px solid var(--line); border-radius:12px; padding:5px; gap:5px; margin-bottom:18px; }
-  .tabs button{
-    flex:1; background:transparent; border:none; color:var(--muted); font-family:inherit;
-    font-weight:700; font-size:.94em; padding:10px; border-radius:9px; cursor:pointer; transition:.2s;
-  }
-  .tabs button.on{ background:var(--grad-accent); color:var(--accent-ink); }
-
-  label{ display:block; font-size:.85em; color:var(--muted); margin:14px 0 6px; }
-  input{
-    width:100%; background:var(--bg-2); border:1px solid var(--line); border-radius:11px;
-    padding:13px 14px; color:var(--text); font-family:inherit; font-size:.96em;
-  }
-  input:focus{ outline:none; border-color:var(--accent-line,#FFB28C59); box-shadow:0 0 0 3px rgba(255,140,99,.12); }
-  .hint{ font-size:.78em; color:var(--muted); margin-top:6px; }
-  .full{ width:100%; margin-top:18px; padding:13px; font-size:1em; }
-  .gbtn{
-    width:100%; display:inline-flex; align-items:center; justify-content:center; gap:10px;
-    background:#fff; color:#1f2328; border:none; border-radius:11px; padding:13px 18px;
-    font-weight:700; font-size:.98em; font-family:inherit; cursor:pointer; transition:.2s;
-  }
-  .gbtn:hover{ transform:translateY(-2px); }
-  .gbtn img{ width:19px; height:19px; }
-  .or{ display:flex; align-items:center; gap:12px; color:var(--muted); font-size:.8em; margin:20px 0 14px; }
-  .or::before, .or::after{ content:''; flex:1; height:1px; background:var(--line); }
-  .msg{ font-size:.88em; margin-top:12px; min-height:20px; }
-  .msg.ok{ color:#7FE3C4; } .msg.err{ color:#FF9B9B; }
-  .mini{ text-align:center; font-size:.85em; color:var(--muted); margin-top:16px; }
-  .mini a{ color:var(--accent-2,#9EF3F0); font-weight:600; }
-  .alt{ margin-top:20px; background:var(--surface-2); border:1px solid var(--line); border-radius:14px; padding:16px; }
-  .alt b{ display:block; font-family:'Sora',sans-serif; font-size:.98em; margin-bottom:6px; }
-  .alt p{ font-size:.85em; color:var(--muted); }
-  .perks{ margin-top:20px; padding-top:18px; border-top:1px solid var(--line); display:grid; gap:9px; }
-  .perks div{ font-size:.86em; color:var(--muted); display:flex; gap:9px; }
-  .perks i{ font-style:normal; color:var(--cyan); }
-</style>
-<link rel="stylesheet" href="hvb-theme.css">
-<link rel="stylesheet" href="hvb-ui.css">
-<link rel="icon" href="/hvb-logo.png" type="image/png">
-<meta name="robots" content="noindex,nofollow">
-<link rel="icon" href="/hvb-logo.png" type="image/png">
-<script src="/hvb-site-settings.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>লগইন ও সাইন আপ | Hyper Vision Bangla</title>
+  <link rel="icon" type="image/png" href="/hvb-logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <style>
+    body { font-family: 'Hind Siliguri', sans-serif; background: #05070E; color: #F1F5F9; }
+    .font-display { font-family: 'Sora', 'Hind Siliguri', sans-serif; }
+    .glass-nav { background: rgba(5, 7, 14, 0.85); backdrop-filter: blur(18px); border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .lux-card { background: linear-gradient(180deg, rgba(17,24,39,0.9), rgba(9,13,24,0.96)); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 24px 60px -20px rgba(0,0,0,0.75); }
+    .btn-primary { background: linear-gradient(135deg, #06B6D4, #3B82F6); color: #fff; font-weight: 700; transition: filter .2s, transform .2s; }
+    .btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    .tab-btn.on { background: linear-gradient(135deg, #06B6D4, #3B82F6); color: #fff; }
+    .msg.ok { color: #34D399; }
+    .msg.err { color: #FB7185; }
+    .hvb-busy { opacity: .65; pointer-events: none; }
+  </style>
 </head>
-<body>
-<script src="hvb-ref.js"></script>
-<script src="/hvb-track.js?v=20260916-2"></script>
+<body class="min-h-screen flex flex-col">
 
-<header>
-  <a href="/" class="brand">
-    <img src="hvb-logo.png" alt="Hyper Vision Bangla লোগো">
-    <span><b>Hyper Vision Bangla</b><span>HVB — AI Video Academy</span></span>
-  </a>
-  <nav></nav>
-</header>
-
-<div class="wrap">
-  <div class="card">
-    <div class="logo-top">
-      <img src="hvb-logo.png" alt="Hyper Vision Bangla">
-      <h1>Hyper Vision Bangla</h1>
-      <p>AI দিয়ে প্রফেশনাল ভিডিও বানানো শেখার বাংলা প্ল্যাটফর্ম</p>
-    </div>
-
-    <div class="tabs">
-      <button type="button" id="tabLogin" class="on">লগইন</button>
-      <button type="button" id="tabSignup">সাইন আপ</button>
-    </div>
-
-    <form id="authForm" autocomplete="on">
-      <div id="nameRow" style="display:none">
-        <label for="fname">পূর্ণ নাম</label>
-        <input id="fname" name="name" type="text" placeholder="আপনার নাম লিখুন" autocomplete="name">
+<header class="glass-nav sticky top-0 z-40">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
+    <a href="/" class="flex items-center gap-3 shrink-0">
+      <div class="w-10 h-10 rounded-full overflow-hidden ring-2 ring-cyan-400/40 bg-[#05070E]">
+        <img src="/hvb-logo.png" alt="Hyper Vision Bangla" class="w-full h-full object-cover" />
       </div>
-
-      <label for="femail">ইমেইল</label>
-      <input id="femail" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
-
-      <label for="fpass">পাসওয়ার্ড</label>
-      <input id="fpass" name="password" type="password" placeholder="পাসওয়ার্ড" autocomplete="current-password" required minlength="6">
-      <div class="hint" id="passHint">অন্তত ৬ অক্ষর</div>
-
-      <button class="hvb-btn-accent full" type="submit" id="submitBtn">লগইন করুন</button>
-      <div class="msg" id="msg"></div>
-    </form>
-
-    <div class="mini" id="forgotRow"><a href="#" id="forgotLink">পাসওয়ার্ড ভুলে গেছেন?</a></div>
-
-    <div class="or">অথবা</div>
-
-    <button type="button" class="gbtn" id="gBtn">
-      <img src="https://www.google.com/favicon.ico" alt="Google">
-      <span id="gLabel">Google দিয়ে লগইন</span>
-    </button>
-
-    <div class="perks">
-      <div><i>—</i> কেনা কোর্স যেকোনো ডিভাইসে নিজেই খুলবে</div>
-      <div><i>—</i> ৬ মাসের নিরাপদ এক্সেস</div>
-      <div><i>—</i> রিভিউ দেওয়ার সুযোগ শুধু যাচাইকৃত শিক্ষার্থীর</div>
-    </div>
-
-    <div class="alt">
-      <b>আগে ফোন নাম্বার দিয়ে কোর্স কিনেছেন?</b>
-      <p>লগইন করার পর নিচের ঘরে সেই ফোন নাম্বার বা Invoice ID দিন — পুরোনো কেনাটি এই অ্যাকাউন্টে যুক্ত হয়ে যাবে।</p>
-      <label for="oldContact">ফোন নাম্বার / ইমেইল / Invoice ID</label>
-      <input id="oldContact" placeholder="01XXXXXXXXX">
-      <button class="hvb-btn-quiet full" type="button" id="linkBtn">পুরোনো কেনা যুক্ত করুন</button>
-      <div class="msg" id="linkMsg"></div>
+      <div>
+        <div class="font-display font-bold text-white text-base sm:text-lg leading-tight">Hyper Vision Bangla</div>
+        <div class="text-[11px] text-cyan-300/80 font-medium">AI Video &amp; Animation Academy</div>
+      </div>
+    </a>
+    <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300">
+      <a href="/" class="hover:text-cyan-300 transition">হোম</a>
+      <a href="/courses" class="hover:text-cyan-300 transition">সব কোর্স</a>
+      <a href="/free-lesson" class="hover:text-cyan-300 transition">ফ্রি লেসন</a>
+      <a href="/my-courses" class="hover:text-cyan-300 transition">আমার কোর্স</a>
+    </nav>
+    <div class="flex items-center gap-2">
+      <a href="/courses" class="px-4 py-2 rounded-xl text-xs font-bold btn-primary">সব কোর্স দেখুন</a>
     </div>
   </div>
+</header>
 
-  <p class="mini"><a href="/">← হোমপেজে ফিরে যান</a> &nbsp;·&nbsp; <a href="/contact">সহায়তা</a></p>
-</div>
+<main class="flex-1 flex items-center justify-center px-4 py-10">
+  <div class="w-full max-w-md lux-card rounded-3xl p-6 sm:p-8">
+    <div class="text-center mb-6">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-cyan-500/10 text-cyan-300 border border-cyan-400/25 mb-3">
+        <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> নিরাপদ স্টুডেন্ট অ্যাকাউন্ট
+      </span>
+      <h1 class="font-display text-2xl font-extrabold text-white">আপনার অ্যাকাউন্টে প্রবেশ করুন</h1>
+      <p class="text-slate-400 text-xs mt-1">১ ক্লিকে Gmail দিয়ে লগইন করে সব কোর্স ও ফ্রি লেসন অ্যাক্সেস করুন।</p>
+    </div>
 
-<script src="hvb-account.js"></script>
+    <!-- Google OAuth Primary CTA -->
+    <button id="gBtn" type="button" class="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-bold text-sm transition shadow-lg mb-5">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-2.9l-3.9-3c-1.1.7-2.5 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5H1.3v3.1C3.3 21.3 7.3 24 12 24z"/><path fill="#FBBC05" d="M5.3 14.3c-.2-.7-.4-1.5-.4-2.3s.1-1.6.4-2.3V6.6H1.3C.5 8.2 0 10 0 12s.5 3.8 1.3 5.4l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4C18 1.2 15.2 0 12 0 7.3 0 3.3 2.7 1.3 6.6l4 3.1c.9-2.9 3.6-4.9 6.7-4.9z"/></svg>
+      <span id="gLabel">Google (Gmail) দিয়ে লগইন করুন</span>
+    </button>
+
+    <div class="flex items-center gap-3 mb-5">
+      <div class="h-px flex-1 bg-white/10"></div>
+      <span class="text-xs text-slate-500">অথবা ইমেইল দিয়ে</span>
+      <div class="h-px flex-1 bg-white/10"></div>
+    </div>
+
+    <!-- Mode Tabs -->
+    <div class="grid grid-cols-2 gap-1.5 p-1 rounded-xl bg-white/5 border border-white/10 mb-5">
+      <button id="tabLogin" type="button" class="tab-btn on py-2 rounded-lg text-xs font-bold text-slate-300 transition">লগইন</button>
+      <button id="tabSignup" type="button" class="tab-btn py-2 rounded-lg text-xs font-bold text-slate-300 transition">নতুন অ্যাকাউন্ট</button>
+    </div>
+
+    <form id="authForm" class="space-y-4">
+      <div id="nameRow" style="display:none">
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5">আপনার নাম</label>
+        <input id="fname" type="text" placeholder="যেমন: রায়হান মিয়া" class="w-full px-3.5 py-2.5 rounded-xl bg-[#070B14] border border-white/15 text-sm text-white focus:border-cyan-400 focus:outline-none" />
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5">ইমেইল / Gmail</label>
+        <input id="femail" type="email" required placeholder="you@gmail.com" class="w-full px-3.5 py-2.5 rounded-xl bg-[#070B14] border border-white/15 text-sm text-white focus:border-cyan-400 focus:outline-none" />
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5">পাসওয়ার্ড</label>
+        <input id="fpass" type="password" required minlength="6" placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl bg-[#070B14] border border-white/15 text-sm text-white focus:border-cyan-400 focus:outline-none" />
+        <p id="passHint" class="text-[11px] text-slate-500 mt-1">অন্তত ৬ অক্ষরের পাসওয়ার্ড দিন</p>
+      </div>
+
+      <div id="forgotRow" class="text-right">
+        <button id="forgotBtn" type="button" class="text-xs text-cyan-400 hover:underline">পাসওয়ার্ড ভুলে গেছেন?</button>
+      </div>
+
+      <button id="submitBtn" type="submit" class="w-full py-3 rounded-xl text-sm btn-primary">লগইন করুন</button>
+      <div id="msg" class="msg text-xs font-semibold text-center min-h-[18px]"></div>
+    </form>
+
+    <!-- Benefits -->
+    <ul class="mt-6 pt-5 border-t border-white/10 space-y-2 text-xs text-slate-400">
+      <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-cyan-400 shrink-0"></i> কেনা কোর্স যেকোনো ডিভাইস থেকে লাইফটাইম দেখুন</li>
+      <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-cyan-400 shrink-0"></i> পেমেন্টের সাথে সাথে অটোমেটিক ড্যাশবোর্ড আনলক</li>
+      <li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-cyan-400 shrink-0"></i> যাচাইকৃত শিক্ষার্থীদের জন্য প্রাইভেট সাপোর্ট ও রিভিউ</li>
+    </ul>
+
+    <!-- Link Old Order -->
+    <div class="mt-6 p-4 rounded-2xl bg-white/[0.03] border border-white/10">
+      <div class="text-xs font-bold text-white mb-1">আগে ফোন নাম্বার দিয়ে কোর্স কিনেছেন?</div>
+      <p class="text-[11px] text-slate-400 mb-3">লগইন করার পর সেই ফোন নাম্বার বা Invoice ID দিলে পুরোনো কোর্স যুক্ত হয়ে যাবে।</p>
+      <div class="flex gap-2">
+        <input id="oldContact" type="text" placeholder="01XXXXXXXXX বা Invoice ID" class="flex-1 px-3 py-2 rounded-xl bg-[#070B14] border border-white/15 text-xs text-white focus:border-cyan-400 focus:outline-none" />
+        <button id="linkBtn" type="button" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-bold text-white transition">যুক্ত করুন</button>
+      </div>
+      <div id="linkMsg" class="msg text-[11px] mt-2"></div>
+    </div>
+  </div>
+</main>
+
+<script src="/hvb-account.js"></script>
 <script>
 (function(){
+  if (window.lucide) lucide.createIcons();
   var qs = new URLSearchParams(location.search);
-  var next = qs.get('next') || 'my-courses';
+  var next = (qs.get('next') || 'my-courses').replace(/^\/+/, '');
   var mode = qs.get('mode') === 'signup' ? 'signup' : 'login';
 
   var tabL = document.getElementById('tabLogin');
@@ -163,6 +133,7 @@
   var pass = document.getElementById('fpass');
   var hint = document.getElementById('passHint');
   var btn = document.getElementById('submitBtn');
+  var gBtn = document.getElementById('gBtn');
   var gLabel = document.getElementById('gLabel');
   var msg = document.getElementById('msg');
   var forgotRow = document.getElementById('forgotRow');
@@ -173,9 +144,9 @@
     tabS.classList.toggle('on', m === 'signup');
     nameRow.style.display = m === 'signup' ? '' : 'none';
     btn.textContent = m === 'signup' ? 'অ্যাকাউন্ট তৈরি করুন' : 'লগইন করুন';
-    gLabel.textContent = m === 'signup' ? 'Google দিয়ে সাইন আপ' : 'Google দিয়ে লগইন';
+    gLabel.textContent = m === 'signup' ? 'Google (Gmail) দিয়ে সাইন আপ করুন' : 'Google (Gmail) দিয়ে লগইন করুন';
     pass.setAttribute('autocomplete', m === 'signup' ? 'new-password' : 'current-password');
-    hint.textContent = m === 'signup' ? 'অন্তত ৬ অক্ষরের একটি পাসওয়ার্ড দিন' : 'অন্তত ৬ অক্ষর';
+    hint.textContent = m === 'signup' ? 'অন্তত ৬ অক্ষরের একটি পাসওয়ার্ড দিন' : 'অন্তত ৬ অক্ষর';
     forgotRow.style.display = m === 'signup' ? 'none' : '';
     msg.textContent = '';
   }
@@ -183,7 +154,7 @@
   tabS.onclick = function(){ setMode('signup'); };
   setMode(mode);
 
-  function say(t, ok){ msg.className = 'msg ' + (ok ? 'ok' : 'err'); msg.textContent = t; }
+  function say(t, ok){ msg.className = 'msg text-xs font-semibold text-center min-h-[18px] ' + (ok ? 'ok' : 'err'); msg.textContent = t; }
 
   document.getElementById('authForm').addEventListener('submit', function(e){
     e.preventDefault();
@@ -193,59 +164,56 @@
     var name = document.getElementById('fname').value.trim();
     msg.textContent = '';
     btn.classList.add('hvb-busy');
-
     A.whenReady(async function(){
       if(!A.sb){ btn.classList.remove('hvb-busy'); return say('লগইন সার্ভিস এখন বন্ধ আছে, একটু পরে চেষ্টা করুন।'); }
       try{
         if(mode === 'signup'){
-          var r = await A.sb.auth.signUp({
-            email: email, password: pwd,
-            options: { data: { full_name: name }, emailRedirectTo: location.origin + '/' + next }
-          });
+          var r = await A.sb.auth.signUp({ email: email, password: pwd, options: { data: { full_name: name }, emailRedirectTo: location.origin + '/' + next } });
           if(r.error) throw r.error;
           if(r.data && r.data.session){ location.href = '/' + next; return; }
-          say('অ্যাকাউন্ট তৈরি হয়েছে। ইমেইলে পাঠানো কনফার্মেশন লিংকে ক্লিক করে লগইন করুন।', true);
+          say('অ্যাকাউন্ট তৈরি হয়েছে। ইমেইলে পাঠানো কনফার্মেশন লিংকে ক্লিক করে লগইন করুন।', true);
         } else {
           var s = await A.sb.auth.signInWithPassword({ email: email, password: pwd });
           if(s.error) throw s.error;
           location.href = '/' + next;
-          return;
         }
-      }catch(err){
-        var m = String((err && err.message) || 'সমস্যা হয়েছে');
-        if(/Invalid login/i.test(m)) m = 'ইমেইল বা পাসওয়ার্ড মিলছে না।';
-        if(/already registered|User already/i.test(m)) m = 'এই ইমেইলে অ্যাকাউন্ট আছে — লগইন ট্যাব ব্যবহার করুন।';
-        if(/Email not confirmed/i.test(m)) m = 'ইমেইল কনফার্ম করা হয়নি — ইনবক্সের লিংকে ক্লিক করুন।';
-        say(m);
-      }
+      }catch(err){ say((err && err.message) || 'লগইন করা যায়নি।'); }
       btn.classList.remove('hvb-busy');
     });
   });
 
-  document.getElementById('forgotLink').addEventListener('click', function(e){
-    e.preventDefault();
-    var email = document.getElementById('femail').value.trim();
-    if(!email) return say('আগে ইমেইল ঘরে ইমেইলটি লিখুন।');
+  document.getElementById('forgotBtn').addEventListener('click', function(){
     var A = window.HVBAuth;
+    var email = document.getElementById('femail').value.trim();
+    if(!email) return say('আগে আপনার ইমেইল লিখুন।');
     A.whenReady(async function(){
       if(!A.sb) return say('সার্ভিস বন্ধ আছে।');
       var r = await A.sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + '/login' });
       if(r.error) return say(r.error.message);
-      say('পাসওয়ার্ড রিসেট লিংক ইমেইলে পাঠানো হয়েছে।', true);
+      say('পাসওয়ার্ড রিসেট লিংক ইমেইলে পাঠানো হয়েছে।', true);
     });
   });
 
-  document.getElementById('gBtn').addEventListener('click', function(){
-    window.HVBAuth.signInWithGoogle(next);
+  gBtn.addEventListener('click', async function(){
+    gBtn.classList.add('hvb-busy');
+    var prev = gLabel.textContent;
+    gLabel.textContent = 'Google পেজে নেওয়া হচ্ছে...';
+    say('');
+    var res = await window.HVBAuth.signInWithGoogle(next);
+    if (!res || !res.ok) {
+      gBtn.classList.remove('hvb-busy');
+      gLabel.textContent = prev;
+      say((res && res.error) || 'Google লগইন চালু করা যায়নি। Supabase Auth সেটিংস চেক করুন।');
+    }
   });
 
   document.getElementById('linkBtn').addEventListener('click', function(){
     var A = window.HVBAuth;
     var lm = document.getElementById('linkMsg');
     var contact = document.getElementById('oldContact').value.trim();
-    if(!contact){ lm.className='msg err'; lm.textContent='ফোন নাম্বার বা Invoice ID দিন।'; return; }
+    if(!contact){ lm.className='msg err text-[11px] mt-2'; lm.textContent='ফোন নাম্বার বা Invoice ID দিন।'; return; }
     A.whenReady(async function(){
-      if(!A.user){ lm.className='msg err'; lm.textContent='আগে লগইন করুন।'; return; }
+      if(!A.user){ lm.className='msg err text-[11px] mt-2'; lm.textContent='আগে লগইন করুন।'; return; }
       var b = document.getElementById('linkBtn'); b.classList.add('hvb-busy');
       try{
         var r = await fetch('/api/my-access', {
@@ -253,11 +221,10 @@
           body: JSON.stringify({ access_token: A.session.access_token, action:'link', contact: contact })
         });
         var d = await r.json();
-        b.classList.remove('hvb-busy');
-        if(d.linked || (d.courses && d.courses.length)){ lm.className='msg ok'; lm.textContent='সফল! ' + (d.linked||d.courses.length) + 'টি কেনা যুক্ত হয়েছে।';
-          setTimeout(function(){ location.href='/my-courses'; }, 900); }
-        else { lm.className='msg err'; lm.textContent='এই তথ্যে পেইড কোনো অর্ডার পাওয়া যায়নি।'; }
-      }catch(err){ b.classList.remove('hvb-busy'); lm.className='msg err'; lm.textContent='সমস্যা হয়েছে।'; }
+        if(!r.ok) throw Error(d.error || 'যুক্ত করা যায়নি।');
+        lm.className='msg ok text-[11px] mt-2'; lm.textContent=d.message || 'পুরোনো কোর্স যুক্ত হয়েছে!';
+      }catch(e){ lm.className='msg err text-[11px] mt-2'; lm.textContent=e.message; }
+      b.classList.remove('hvb-busy');
     });
   });
 })();

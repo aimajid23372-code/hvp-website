@@ -498,3 +498,32 @@ input:focus, select:focus, textarea:focus{
 
 /* ছবি লোড না হলেও লেআউট ভাঙবে না */
 img{ max-width:100%; height:auto; }
+
+/* === HVB ULTRA-PRO UNIFIED DARK-LUXURY OVERRIDE === */
+:root{
+  --bg:#05070E !important;
+  --surface:#0B1120 !important;
+  --card:#0F172A !important;
+  --line:rgba(255,255,255,0.10) !important;
+  --cyan:#22D3EE !important;
+  --accent:#06B6D4 !important;
+}
+body{ background:#05070E !important; color:#F1F5F9 !important; }
+header{
+  background:rgba(5,7,14,0.86) !important;
+  backdrop-filter:blur(18px) !important;
+  border-bottom:1px solid rgba(255,255,255,0.08) !important;
+}
+.card,.box,.ccard,.panel{
+  background:linear-gradient(180deg,rgba(17,24,39,0.88),rgba(9,13,24,0.96)) !important;
+  border:1px solid rgba(255,255,255,0.10) !important;
+  border-radius:18px !important;
+  box-shadow:0 20px 45px -24px rgba(0,0,0,0.75) !important;
+}
+.btn,.btn-primary,.hvb-btn-accent{
+  background:linear-gradient(135deg,#06B6D4,#3B82F6) !important;
+  color:#fff !important;
+  border:none !important;
+  border-radius:12px !important;
+  font-weight:700 !important;
+}

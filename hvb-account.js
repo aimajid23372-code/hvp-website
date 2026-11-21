@@ -437,13 +437,31 @@
   };
 
   HVB.signInWithGoogle = async function (nextUrl) {
-    if (!HVB.sb) await HVB.init();
-    if (!HVB.sb) return false;
-    await HVB.sb.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: HVB_HOME + '/' + String(nextUrl || 'my-courses').replace(/^\//, '').replace(/\.html$/i, '') },
-    });
-    return true;
+    try {
+      if (!HVB.sb) await HVB.init();
+      if (!HVB.sb) {
+        return { ok: false, error: 'লগইন সার্ভিস এখন চালু করা যায়নি। একটু পরে আবার চেষ্টা করুন।' };
+      }
+      var cleanNext = String(nextUrl || 'my-courses').replace(/^\/+/, '').replace(/\.html$/i, '');
+      var redirectUrl = location.origin + '/' + cleanNext;
+      var res = await HVB.sb.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: redirectUrl,
+          queryParams: { prompt: 'select_account' }
+        }
+      });
+      if (res && res.error) {
+        return { ok: false, error: res.error.message || 'Google লগইন শুরু করা যায়নি।' };
+      }
+      if (res && res.data && res.data.url) {
+        location.href = res.data.url;
+        return { ok: true };
+      }
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: (err && err.message) || 'Google লগইন করতে সমস্যা হয়েছে।' };
+    }
   };
 
   function signOut() {
