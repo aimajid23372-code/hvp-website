@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="bn" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <link rel="icon" href="/hvb-logo.png" type="image/png" />
+  <title>2D অ্যানিমেশন কমপ্লিট AI কোর্স — Hyper Vision Bangla</title>
+  <meta name="description" content="মাত্র ১০-১৫ মিনিটে AI দিয়ে ২-৩+ মিনিটের ফুল 2D অ্যানিমেশন ভিডিও তৈরি শিখুন ফ্রি সাবস্ক্রিপশনসহ।" />
+  <style>
+:root {
+  --bg-obsidian: #05070E;
+  --bg-surface: #0B0F1A;
+  --accent-cyan: #00E5FF;
+  --accent-violet: #7C3AED;
+  --text-primary: #F8FAFC;
+  --border-hairline: rgba(255, 255, 255, 0.08);
+  --font-display: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Noto Sans Bengali', 'Plus Jakarta Sans', sans-serif;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background-color: var(--bg-obsidian);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  line-height: 1.7;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4, .font-display { font-family: var(--font-display); letter-spacing: -0.015em; }
+.font-num { font-family: 'Plus Jakarta Sans', sans-serif; }
+.font-mono-num { font-family: 'JetBrains Mono', monospace; }
+.ambient-canvas {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(65% 45% at 15% 8%, rgba(0,229,255,0.11) 0%, transparent 70%),
+    radial-gradient(55% 45% at 88% 18%, rgba(124,58,237,0.14) 0%, transparent 72%),
+    radial-gradient(50% 45% at 50% 92%, rgba(124,58,237,0.08) 0%, transparent 70%),
+    var(--bg-obsidian);
+}
+.glass-nav {
+  background: rgba(5, 7, 14, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-hairline);
+}
+.lux-card {
+  background: linear-gradient(180deg, rgba(17, 24, 39, 0.74) 0%, rgba(11, 15, 26, 0.94) 100%);
+  border: 1px solid var(--border-hairline);
+  backdrop-filter: blur(16px);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.lux-card:hover {
+  border-color: rgba(0, 229, 255, 0.34);
+  box-shadow: 0 20px 50px -20px rgba(0, 229, 255, 0.22);
+}
+.gradient-text {
+  background: linear-gradient(110deg, #FFFFFF 10%, var(--accent-cyan) 55%, #C084FC 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-violet) 100%);
+  color: #040711; font-weight: 700;
+  transition: transform 0.2s ease, filter 0.2s ease;
+  box-shadow: 0 10px 30px -8px rgba(0, 229, 255, 0.45);
+}
+.btn-primary:hover { transform: translateY(-1px); filter: brightness(1.08); }
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #F8FAFC; transition: background 0.2s ease, border-color 0.2s ease;
+}
+.btn-secondary:hover { background: rgba(255, 255, 255, 0.09); border-color: rgba(255, 255, 255, 0.24); }
+.pill-badge {
+  background: rgba(0, 229, 255, 0.08);
+  border: 1px solid rgba(0, 229, 255, 0.24);
+  color: #7DD3FC;
+}
+input[type="range"].hvb-slider {
+  -webkit-appearance: none; appearance: none; width: 100%; height: 8px; border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-violet)); outline: none;
+}
+input[type="range"].hvb-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%;
+  background: #FFFFFF; border: 3px solid var(--accent-cyan); cursor: pointer;
+}
+#hvb-pay-loader {
+  position: fixed; inset: 0; z-index: 99999;
+  display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+  background: rgba(5, 7, 14, 0.90); backdrop-filter: blur(12px);
+}
+#hvb-pay-loader.show { display: flex; }
+.hvb-spinner {
+  width: 56px; height: 56px; border-radius: 50%;
+  border: 4px solid rgba(0, 229, 255, 0.18);
+  border-top-color: #00E5FF; border-right-color: #7C3AED;
+  animation: hvbSpin 0.75s linear infinite;
+}
+@keyframes hvbSpin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body class="min-h-screen selection:bg-cyan-400/30 selection:text-white">
+  <div class="ambient-canvas" aria-hidden="true"></div>
+
+  <!-- Full-screen ShohojPay Loading Spinner -->
+  <div id="hvb-pay-loader" role="status" aria-live="polite">
+    <div class="hvb-spinner"></div>
+    <div class="text-center px-4">
+      <div class="text-base sm:text-lg font-bold text-white">পেমেন্ট পেজ লোড হচ্ছে...</div>
+      <div class="text-xs sm:text-sm text-cyan-300 mt-1">অনুগ্রহ করে ২–৩ সেকেন্ড অপেক্ষা করুন, ShohojPay-তে নিয়ে যাওয়া হচ্ছে</div>
+    </div>
+  </div>
+
+<header class="glass-nav sticky top-0 z-40">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
+    <a href="/" class="flex items-center gap-3 group shrink-0">
+      <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden shrink-0 ring-2 ring-cyan-400/40 shadow-lg shadow-cyan-500/20 bg-[#05070E] relative">
+        <img src="/hvb-logo.png" alt="Hyper Vision Bangla Logo" class="w-full h-full object-cover hvb-custom-logo-img" onerror="this.style.display='none';" />
+      </div>
+      <div>
+        <div class="font-display font-bold text-white text-base sm:text-lg leading-none tracking-tight group-hover:text-cyan-300 transition">Hyper Vision Bangla</div>
+        <div class="text-[10px] text-pink-300/80 font-num mt-0.5 tracking-wide">&#8212; &#9829; sayora &#9829; &#8212;</div>
+      </div>
+    </a>
+
+    <nav class="hidden lg:flex items-center gap-7 text-sm font-medium text-slate-300" aria-label="Main Navigation">
+      <a href="/#courses" class="hover:text-cyan-300 transition">কোর্সসমূহ (৬টি)</a>
+      <a href="/#home-monetization" class="hover:text-cyan-300 transition">Facebook আয়</a>
+      <a href="/#reviews" class="hover:text-cyan-300 transition">রিভিউ (5.0★)</a>
+      <a href="/#demo" class="hover:text-cyan-300 transition">ফ্রি লেসন</a>
+      <a href="/#request-course" class="hover:text-cyan-300 transition">কোর্স রিকোয়েস্ট</a>
+      <a href="/affiliate" class="hover:text-cyan-300 transition">অ্যাফিলিয়েট</a>
+    </nav>
+
+    <div class="flex items-center gap-2.5">
+      <a href="/my-courses" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl btn-secondary text-xs font-semibold">
+        <i data-lucide="play-circle" class="w-3.5 h-3.5 text-cyan-300"></i>
+        <span>আমার কোর্স</span>
+      </a>
+      <button type="button" data-enroll="bundle" class="enroll-trigger btn-primary px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm flex items-center gap-1.5">
+        <span>শুরু করুন</span>
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </button>
+      <button type="button" id="mobile-nav-toggle" class="lg:hidden p-2 rounded-xl bg-white/5 border border-white/10 text-slate-200" aria-label="Toggle menu">
+        <i data-lucide="menu" class="w-5 h-5"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Dropdown (All 7 Options Restored!) -->
+  <div id="mobile-nav-drawer" class="hidden lg:hidden border-t border-white/10 bg-[#070B14]/95 backdrop-blur-xl px-4 py-4 space-y-2">
+    <a href="/#courses" class="mobile-nav-link block px-3.5 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-white/5">কোর্সসমূহ (৬টি কোর্স)</a>
+    <a href="/#home-monetization" class="mobile-nav-link block px-3.5 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-white/5">Facebook আয় ক্যালকুলেটর</a>
+    <a href="/#reviews" class="mobile-nav-link block px-3.5 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-white/5">শিক্ষার্থীদের ১২টি রিভিউ</a>
+    <a href="/#demo" class="mobile-nav-link block px-3.5 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-white/5">ফ্রি লেসন ও প্রম্পট ডেমো</a>
+    <a href="/#request-course" class="mobile-nav-link block px-3.5 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-white/5">নতুন কোর্স রিকোয়েস্ট করুন</a>
+    <a href="/affiliate" class="mobile-nav-link block px-3.5 py-2.5 rounded-xl text-sm text-slate-200 hover:bg-white/5">অ্যাফিলিয়েট প্রোগ্রাম</a>
+    <a href="/my-courses" class="mobile-nav-link block px-3.5 py-2.5 rounded-xl text-sm text-cyan-300 bg-cyan-500/10 border border-cyan-400/20">আমার কোর্স ড্যাশবোর্ড</a>
+    <a href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" class="mobile-nav-link block px-3.5 py-2.5 rounded-xl text-sm text-sky-300 bg-sky-500/10 border border-sky-400/20">Messenger-এ সাহায্য নিন</a>
+  </div>
+</header>
+
+<main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+  <a href="/#courses" class="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-cyan-300">← সব কোর্সে ফিরে যান</a>
+
+  <div class="grid lg:grid-cols-12 gap-8 items-start">
+    <div class="lg:col-span-7 space-y-5">
+      <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-400/35 text-emerald-300 text-xs font-bold">নতুন কোর্স · ফ্রি সাবস্ক্রিপশনসহ 🎁</span>
+      <h1 class="text-3xl sm:text-4xl font-bold text-white leading-tight">2D অ্যানিমেশন কমপ্লিট AI কোর্স</h1>
+      <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+        মাত্র ১০–১৫ মিনিটের নিজের কাজে AI দিয়ে ২–৩ মিনিট বা তারও বেশি সময়ের সম্পূর্ণ 2D অ্যানিমেশন ভিডিও তৈরি শিখুন। স্ক্রিপ্ট, হাই-কোয়ালিটি AI ভয়েস, টাইটেল, হ্যাশট্যাগ ও সম্পূর্ণ ভিডিও এডিটিং—সব AI করে দেবে!
+      </p>
+
+      <div class="rounded-2xl overflow-hidden border border-white/10 bg-[#070B14] aspect-video">
+        <img data-course-img="2d-animation" src="/banner-long-short.webp" alt="2D Animation AI Course Preview" class="w-full h-full object-cover" />
+      </div>
+
+      <div class="lux-card rounded-2xl p-6 space-y-4">
+        <h2 class="text-xl font-bold text-white">এই কোর্সে যা যা শিখবেন ও পাবেন</h2>
+        <ul class="space-y-3 text-sm text-slate-300">
+          <li class="flex items-start gap-2.5"><span class="text-emerald-400 font-bold">✓</span><span>প্রথমে সম্পূর্ণ কোর্স ভিডিও দেখবেন, এরপর <strong>Master Chatting Prompt</strong> (Google Drive) কীভাবে ব্যবহার করবেন সব ধাপে ধাপে দেখানো আছে।</span></li>
+          <li class="flex items-start gap-2.5"><span class="text-emerald-400 font-bold">✓</span><span>মাত্র <strong>১০–১৫ মিনিট</strong> নিজে কাজ করলেই AI দিয়ে ২–৩ মিনিট বা তারও বেশি সময়ের ফুল 2D অ্যানিমেশন ভিডিও তৈরি হয়ে যাবে।</span></li>
+          <li class="flex items-start gap-2.5"><span class="text-emerald-400 font-bold">✓</span><span>স্ক্রিপ্ট বানানো, স্ক্রিপ্ট থেকে হাই-কোয়ালিটি AI ভয়েস জেনারেট, টাইটেল, হ্যাশট্যাগ এবং সম্পূর্ণ ভিডিও এডিটিং—সব AI দিয়ে।</span></li>
+          <li class="flex items-start gap-2.5"><span class="text-emerald-400 font-bold">✓</span><span>ভালোভাবে চেষ্টা করলে <strong>১ দিনও লাগবে না</strong> পুরো কাজটা শিখতে।</span></li>
+          <li class="flex items-start gap-2.5"><span class="text-emerald-400 font-bold">✓</span><span><strong>🎁 ফ্রি সাবস্ক্রিপশন:</strong> শুধু এই 2D অ্যানিমেশন কোর্সটি কিনলেই ফ্রি সাবস্ক্রিপশন পাবেন (কেনার পর আপনার ড্যাশবোর্ডে দেওয়া WhatsApp-এ মেসেজ দিয়ে নিতে পারবেন)।</span></li>
+          <li class="flex items-start gap-2.5"><span class="text-emerald-400 font-bold">✓</span><span>কোর্স কেনার পর যেকোনো সমস্যায় প্রাইভেট WhatsApp-এ ফুল সাপোর্ট পাবেন।</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="lg:col-span-5 lg:sticky lg:top-24">
+      <div class="lux-card rounded-3xl p-6 border border-emerald-400/35 space-y-5">
+        <div>
+          <div class="text-xs text-slate-400">বিশেষ অফার মূল্য</div>
+          <div class="flex items-baseline gap-2.5 mt-1">
+            <span class="text-4xl font-extrabold font-num text-white">৳399</span>
+            <span class="text-base font-num text-slate-500 line-through">৳800</span>
+            <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold">50% ছাড়</span>
+          </div>
+        </div>
+        <button type="button" data-enroll="2d-animation" class="enroll-trigger w-full btn-primary py-3.5 rounded-xl text-sm flex items-center justify-center gap-2">
+          <span>এখনই এনরোল করুন — ৳399</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+        <div class="text-xs text-slate-400 space-y-2 pt-3 border-t border-white/10">
+          <div>⚡ bKash / Nagad / Rocket অটো পেমেন্টের সাথে সাথেই অ্যাকসেস</div>
+          <div>🎁 2D কোর্সের সাথে ফ্রি সাবস্ক্রিপশন অন্তর্ভুক্ত</div>
+          <div>💬 কেনার আগে কোনো প্রশ্ন থাকলে <a href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" class="text-sky-300 font-semibold hover:underline">Hyper Vision Bangla পেজে মেসেজ দিন</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="border-t border-white/10 mt-16 py-10 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+    <div>
+      <div class="font-display font-bold text-white text-base">Hyper Vision Bangla — ♥ sayora ♥</div>
+      <div class="mt-1">বাংলাদেশের প্রিমিয়াম AI 2D ও 3D অ্যানিমেশন লার্নিং প্ল্যাটফর্ম।</div>
+    </div>
+    <div class="flex flex-wrap items-center gap-4">
+      <a href="/#courses" class="hover:text-cyan-300">কোর্সসমূহ</a>
+      <a href="/my-courses" class="hover:text-cyan-300">আমার কোর্স</a>
+      <a href="/affiliate" class="hover:text-cyan-300">অ্যাফিলিয়েট</a>
+      <a href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" class="text-sky-300 font-semibold hover:underline">Facebook Page Messenger</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Floating Facebook Messenger Support Button (NO WhatsApp before purchase!) -->
+<a href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" class="fixed bottom-5 right-5 z-40 inline-flex items-center gap-2 px-4 py-3 rounded-full bg-[#0084FF] hover:bg-[#0073E6] text-white text-xs sm:text-sm font-bold shadow-2xl shadow-sky-500/30 transition">
+  <i data-lucide="message-circle" class="w-4 h-4"></i>
+  <span>Messenger সাপোর্ট</span>
+</a>
+
+<!-- CHECKOUT MODAL (ShohojPay + Full-Screen Spinner + Messenger fallback only) -->
+<div id="hvb-checkout-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+  <div class="lux-card rounded-3xl max-w-md w-full p-6 border border-cyan-400/30 max-h-[92vh] overflow-y-auto">
+    <div class="flex items-start justify-between gap-3 mb-3">
+      <div>
+        <span class="px-2.5 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 text-[11px] font-semibold">১০০% ইনস্ট্যান্ট কোর্স অ্যাকসেস</span>
+        <h3 id="cm-title" class="text-lg font-bold text-white mt-1.5"></h3>
+      </div>
+      <button type="button" id="cm-close" class="p-1.5 rounded-lg bg-white/5 text-slate-300 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+
+    <div class="flex items-baseline gap-2 mb-4 pb-3 border-b border-white/10">
+      <span id="cm-price" class="text-3xl font-extrabold font-num text-cyan-300"></span>
+      <span id="cm-reg-price" class="text-sm font-num text-slate-500 line-through"></span>
+    </div>
+
+    <form id="hvb-checkout-form" class="space-y-3.5">
+      <div>
+        <label class="block text-xs text-slate-300 mb-1">আপনার পূর্ণ নাম *</label>
+        <input id="cm-name" required placeholder="যেমন: শাকিল আহমেদ" class="w-full px-3.5 py-2.5 rounded-xl bg-[#070B14] border border-white/10 text-sm text-white focus:border-cyan-400 focus:outline-none" />
+      </div>
+      <div class="grid grid-cols-2 gap-2.5">
+        <div>
+          <label class="block text-xs text-slate-300 mb-1">মোবাইল নাম্বার *</label>
+          <input id="cm-phone" required placeholder="01XXXXXXXXX" class="w-full px-3.5 py-2.5 rounded-xl bg-[#070B14] border border-white/10 text-sm text-white font-num focus:border-cyan-400 focus:outline-none" />
+        </div>
+        <div>
+          <label class="block text-xs text-slate-300 mb-1">ইমেইল অ্যাড্রেস *</label>
+          <input id="cm-email" type="email" required placeholder="you@gmail.com" class="w-full px-3.5 py-2.5 rounded-xl bg-[#070B14] border border-white/10 text-sm text-white focus:border-cyan-400 focus:outline-none" />
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs text-slate-300 mb-1">কুপন কোড (ঐচ্ছিক — HVB50 / SHORT445)</label>
+        <div class="flex gap-2">
+          <input id="cm-coupon" placeholder="কুপন লিখুন" class="flex-1 px-3.5 py-2 rounded-xl bg-[#070B14] border border-white/10 text-sm text-white font-mono-num uppercase focus:border-cyan-400 focus:outline-none" />
+          <button type="button" id="cm-apply-coupon" class="px-4 py-2 rounded-xl btn-secondary text-xs font-semibold">Apply</button>
+        </div>
+        <div id="cm-coupon-msg" class="text-[11px] mt-1"></div>
+      </div>
+
+      <div id="cm-error" class="hidden p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-200 space-y-2">
+        <div id="cm-error-text"></div>
+        <a href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" class="inline-block px-3 py-1.5 rounded-lg bg-[#0084FF] text-white font-semibold">Hyper Vision Bangla পেজে মেসেজ দিন →</a>
+      </div>
+
+      <button type="submit" id="cm-submit-btn" class="w-full btn-primary py-3.5 rounded-xl text-sm flex items-center justify-center gap-2">
+        <i data-lucide="shield-check" class="w-4 h-4"></i>
+        <span>bKash / Nagad / Rocket-এ পেমেন্ট করুন (অটো ভেরিফাই)</span>
+      </button>
+      <p class="text-[11px] text-center text-slate-400">পেমেন্টের সাথে সাথেই /my-courses ড্যাশবোর্ডে কোর্স ও প্রাইভেট WhatsApp সাপোর্ট আনলক হবে।</p>
+    </form>
+  </div>
+</div>
+
+<script>
+(function () {
+  const COURSE_META = {
+    '2d-animation': { title: '2D অ্যানিমেশন কমপ্লিট AI কোর্স', price: 399, reg: 800 },
+    'snake-comedy': { title: 'স্নেক কমেডি শর্টস (Snake Comedy) কোর্স', price: 299, reg: 600 },
+    bundle: { title: 'লং + শর্ট 3D AI অ্যানিমেশন কমপ্লিট বান্ডেল', price: 999, reg: 1500 },
+    short: { title: 'শর্ট ভিডিও (Reels / Shorts / TikTok) 3D কোর্স', price: 499, reg: 800 },
+    long: { title: 'লং ভিডিও (১৬:৯ সিনেমাটিক 3D স্টোরি) কোর্স', price: 799, reg: 1200 },
+    kids: { title: 'AI কিডস কমেডি ও টকিং কার্টুন অ্যানিমেশন', price: 399, reg: 700 }
+  };
+
+  // Mobile hamburger menu toggle
+  const navToggle = document.getElementById('mobile-nav-toggle');
+  const navDrawer = document.getElementById('mobile-nav-drawer');
+  if (navToggle && navDrawer) {
+    navToggle.addEventListener('click', () => navDrawer.classList.toggle('hidden'));
+    navDrawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navDrawer.classList.add('hidden')));
+  }
+
+  // Apply Admin-uploaded course preview thumbnails & custom prices from CMS state
+  try {
+    const saved = localStorage.getItem('hvb_v5_cms_state');
+    if (saved) {
+      const cms = JSON.parse(saved);
+      if (cms.customLogoDataUrl) {
+        document.querySelectorAll('.hvb-custom-logo-img').forEach(img => { img.src = cms.customLogoDataUrl; img.style.display = 'block'; });
+      }
+      if (Array.isArray(cms.courses)) {
+        cms.courses.forEach(c => {
+          document.querySelectorAll('img[data-course-img="' + c.id + '"]').forEach(img => {
+            if (c.customBannerDataUrl) img.src = c.customBannerDataUrl;
+          });
+          if (COURSE_META[c.id] && Number(c.price) > 0) COURSE_META[c.id].price = Number(c.price);
+        });
+      }
+    }
+  } catch (e) {}
+
+  // Category filter (on homepage)
+  document.querySelectorAll('.cat-filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const cat = btn.getAttribute('data-cat-filter');
+      document.querySelectorAll('.cat-filter-btn').forEach(b => {
+        const active = b === btn;
+        b.className = 'cat-filter-btn px-4 py-2 rounded-xl text-xs font-semibold border ' +
+          (active ? 'bg-cyan-500/20 text-cyan-200 border-cyan-400/40' : 'bg-white/5 text-slate-300 border-white/10 hover:text-white');
+      });
+      document.querySelectorAll('.course-card').forEach(card => {
+        card.style.display = (cat === 'all' || card.getAttribute('data-course-cat') === cat) ? '' : 'none';
+      });
+    });
+  });
+
+  // Facebook Income Calculator
+  const slider = document.getElementById('fb-views-slider');
+  if (slider) {
+    const updateCalc = () => {
+      const lakhs = Number(slider.value);
+      const usdLow = Math.round(lakhs * 2);
+      const usdHigh = Math.round(lakhs * 3);
+      const bdtLow = (usdLow * 120).toLocaleString('en-US');
+      const bdtHigh = (usdHigh * 120).toLocaleString('en-US');
+      const label = lakhs >= 10 ? (lakhs / 10).toFixed(1) + ' মিলিয়ন ভিউ' : lakhs + ' লাখ ভিউ';
+      document.getElementById('fb-views-label').textContent = label;
+      document.getElementById('fb-usd-out').textContent = '$' + usdLow + ' – $' + usdHigh;
+      document.getElementById('fb-bdt-out').textContent = '৳' + bdtLow + ' – ৳' + bdtHigh;
+    };
+    slider.addEventListener('input', updateCalc);
+    updateCalc();
+  }
+
+  // Course Request Form
+  const reqForm = document.getElementById('hvb-request-form');
+  if (reqForm) {
+    reqForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const status = document.getElementById('req-status');
+      const topic = document.getElementById('req-topic').value.trim();
+      const details = document.getElementById('req-details').value.trim();
+      if (!topic) return;
+      try {
+        await fetch('/api/track', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ event: 'course_request', page: window.location.pathname, meta: { topic, details, status: 'new' } })
+        });
+      } catch (err) {}
+      status.textContent = '✓ আপনার কোর্স রিকোয়েস্টটি সফলভাবে জমা হয়েছে! ধন্যবাদ।';
+      status.classList.remove('hidden');
+      reqForm.reset();
+    });
+  }
+
+  // Checkout Modal
+  const cm = document.getElementById('hvb-checkout-modal');
+  let activeCourseId = 'bundle';
+  let appliedCoupon = '';
+  function openCheckout(id) {
+    const c = COURSE_META[id] || COURSE_META['bundle'];
+    activeCourseId = id;
+    appliedCoupon = '';
+    document.getElementById('cm-title').textContent = c.title;
+    document.getElementById('cm-price').textContent = '৳' + c.price;
+    document.getElementById('cm-reg-price').textContent = '৳' + c.reg;
+    document.getElementById('cm-coupon').value = '';
+    document.getElementById('cm-coupon-msg').textContent = '';
+    document.getElementById('cm-error').classList.add('hidden');
+    cm.classList.remove('hidden'); cm.classList.add('flex');
+  }
+
+  document.querySelectorAll('.enroll-trigger').forEach(btn => {
+    btn.addEventListener('click', () => openCheckout(btn.getAttribute('data-enroll')));
+  });
+  document.getElementById('cm-close').addEventListener('click', () => { cm.classList.add('hidden'); cm.classList.remove('flex'); });
+
+  document.getElementById('cm-apply-coupon').addEventListener('click', () => {
+    const code = document.getElementById('cm-coupon').value.trim().toUpperCase();
+    const c = COURSE_META[activeCourseId];
+    const msg = document.getElementById('cm-coupon-msg');
+    if (code === 'HVB50') {
+      appliedCoupon = code;
+      document.getElementById('cm-price').textContent = '৳' + Math.max(99, c.price - 50);
+      msg.textContent = '✓ ৳50 ডিসকাউন্ট যুক্ত হয়েছে!'; msg.className = 'text-[11px] mt-1 text-emerald-400';
+    } else if (code === 'SHORT445' && activeCourseId === 'short') {
+      appliedCoupon = code;
+      document.getElementById('cm-price').textContent = '৳445';
+      msg.textContent = '✓ ৳54 ডিসকাউন্ট যুক্ত হয়েছে!'; msg.className = 'text-[11px] mt-1 text-emerald-400';
+    } else {
+      appliedCoupon = '';
+      document.getElementById('cm-price').textContent = '৳' + c.price;
+      msg.textContent = 'সঠিক কুপন কোড নয়'; msg.className = 'text-[11px] mt-1 text-rose-400';
+    }
+  });
+
+  // Submit Checkout -> Full-Screen Spinner -> Redirect to ShohojPay
+  document.getElementById('hvb-checkout-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const loader = document.getElementById('hvb-pay-loader');
+    const errBox = document.getElementById('cm-error');
+    const errText = document.getElementById('cm-error-text');
+    errBox.classList.add('hidden');
+    loader.classList.add('show');
+
+    try {
+      const name = document.getElementById('cm-name').value.trim();
+      const phone = document.getElementById('cm-phone').value.trim();
+      const email = document.getElementById('cm-email').value.trim();
+      const ref = (localStorage.getItem('hvb_ref') || '').trim();
+
+      const res = await fetch('/api/create-invoice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          course: activeCourseId,
+          name, phone, email, contact: email || phone,
+          promoCode: appliedCoupon || document.getElementById('cm-coupon').value.trim().toUpperCase(),
+          ref: ref || null
+        })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.payment_url) {
+        throw new Error(data.error || 'পেমেন্ট পেজ ওপেন করা যায়নি।');
+      }
+      window.location.href = data.payment_url;
+    } catch (err) {
+      loader.classList.remove('show');
+      errText.textContent = err.message || 'সমস্যা হয়েছে, আবার চেষ্টা করুন।';
+      errBox.classList.remove('hidden');
+    }
+  });
+
+  // Affiliate ref tracking
+  try {
+    const r = (new URLSearchParams(window.location.search).get('ref') || '').trim().toLowerCase();
+    if (r && /^[a-z0-9]{3,30}$/.test(r)) {
+      localStorage.setItem('hvb_ref', r);
+      localStorage.setItem('hvb_ref_at', String(Date.now()));
+    }
+  } catch (e) {}
+
+  if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
+})();
+</script>
+</body>
+</html>
