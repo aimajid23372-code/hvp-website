@@ -5,10 +5,14 @@
 
 const { createClient } = require('@supabase/supabase-js');
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY
-);
+let supabase = null;
+try {
+  if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
+    supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+  }
+} catch (e) {
+  console.error('Supabase init error:', e);
+}
 
 // SECURE CONTENT STORAGE & HELPERS
 const { COURSE_CONTENT, normalizeCourse, buildContentResponse, loadOverrides } = require('../lib/course_content');
@@ -65,6 +69,15 @@ async function ordersForEmail(email) {
 }
 
 module.exports = async (req, res) => {
+  if (req.method === 'GET' && req.query && req.query.config) {
+    const url = (process.env.SUPABASE_URL || '').trim();
+    const anonKey = (process.env.SUPABASE_ANON_KEY || '').trim();
+    if (!url || !anonKey) {
+      return res.status(200).json({ enabled: false, reason: 'missing_env' });
+    }
+    res.setHeader('Cache-Control', 'no-store');
+    return res.status(200).json({ enabled: true, url, anonKey });
+  }
   if (req.method === 'GET') {
     if (req.query && req.query.reviews) {
       const course = String(req.query.reviews);
