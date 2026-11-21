@@ -59,7 +59,7 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   try {
     const body = req.body || {};
-    const adminPassword = body.adminPassword || req.headers['x-admin-password'] || '';
+    const adminPassword = body.adminPassword || body.password || req.headers['x-admin-password'] || '';
     const action = body.action;
 
     const validPass = process.env.ADMIN_PASSWORD || 'sayba123?';

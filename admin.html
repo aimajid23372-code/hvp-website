@@ -275,8 +275,8 @@ function toast(msg) {
 async function api(action, payload = {}) {
   const r = await fetch('/api/admin', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action, password: ADMIN_PASS, ...payload })
+    headers: { 'Content-Type': 'application/json', 'x-admin-password': ADMIN_PASS },
+    body: JSON.stringify({ action, adminPassword: ADMIN_PASS, password: ADMIN_PASS, ...payload })
   });
   return r.json();
 }
