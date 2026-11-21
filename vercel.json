@@ -8,6 +8,21 @@
       "permanent": true
     },
     {
+      "source": "/course/ai-kids-comedy",
+      "destination": "/ai-kids-comedy",
+      "permanent": false
+    },
+    {
+      "source": "/course-ai-kids-comedy",
+      "destination": "/ai-kids-comedy",
+      "permanent": false
+    },
+    {
+      "source": "/course/kids",
+      "destination": "/ai-kids-comedy",
+      "permanent": false
+    },
+    {
       "source": "/course/:slug",
       "destination": "/course-:slug",
       "permanent": false

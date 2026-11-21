@@ -3,123 +3,73 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <title>HVB Control Center Pro — Hyper Vision Bangla Admin</title>
+  <title>HVB Control Center Pro — Admin</title>
   <meta name="robots" content="noindex, nofollow" />
   <style>
-:root {
-  --bg-obsidian: #05070E; --bg-surface: #0B0F1A; --accent-cyan: #00E5FF; --accent-violet: #7C3AED;
-  --text-primary: #F8FAFC; --border-hairline: rgba(255, 255, 255, 0.08);
-}
-* { box-sizing: border-box; }
-body { background-color: var(--bg-obsidian); color: var(--text-primary); font-family: 'Noto Sans Bengali', 'Plus Jakarta Sans', sans-serif; line-height: 1.7; overflow-x: hidden; }
-h1, h2, h3, h4, .font-display { font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif; }
-.font-num { font-family: 'Plus Jakarta Sans', sans-serif; }
-.font-mono-num { font-family: 'JetBrains Mono', monospace; }
-.ambient-canvas { position: fixed; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(65% 45% at 15% 8%, rgba(0,229,255,0.11) 0%, transparent 70%), radial-gradient(55% 45% at 88% 18%, rgba(124,58,237,0.14) 0%, transparent 72%), var(--bg-obsidian); }
-.glass-nav { background: rgba(5, 7, 14, 0.78); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-hairline); }
-.lux-card { background: linear-gradient(180deg, rgba(17, 24, 39, 0.74) 0%, rgba(11, 15, 26, 0.94) 100%); border: 1px solid var(--border-hairline); backdrop-filter: blur(16px); }
-.btn-primary { background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-violet) 100%); color: #040711; font-weight: 700; box-shadow: 0 10px 30px -8px rgba(0,229,255,0.45); }
-.pill-badge { background: rgba(0, 229, 255, 0.08); border: 1px solid rgba(0, 229, 255, 0.24); color: #7DD3FC; }
+    body { background:#05070E; color:#F8FAFC; font-family:'Noto Sans Bengali','Plus Jakarta Sans',sans-serif; }
+    .lux-card { background:linear-gradient(180deg,rgba(17,24,39,.78),rgba(11,15,26,.95)); border:1px solid rgba(255,255,255,.08); }
+    .btn-primary { background:linear-gradient(135deg,#00E5FF,#7C3AED); color:#040711; font-weight:700; }
+    .font-num { font-family:'Plus Jakarta Sans',sans-serif; }
   </style>
 </head>
 <body class="min-h-screen">
-<div class="ambient-canvas"></div>
 
-<!-- ADMIN LOCK SCREEN -->
+<!-- LOGIN SCREEN -->
 <div id="hvb-admin-lock" class="min-h-screen flex items-center justify-center p-4">
-  <div class="lux-card rounded-3xl max-w-md w-full p-8 border border-cyan-400/25 shadow-2xl">
-    <div class="flex flex-col items-center text-center mb-6">
-      <img src="/hvb-logo.png" class="w-16 h-16 rounded-full ring-2 ring-cyan-400/50 mb-4 object-cover bg-[#05070E]" alt="HVB" onerror="this.style.display='none'" />
-      <span class="px-3 py-1 rounded-full pill-badge text-[11px] font-semibold mb-2">HVB Control Center Pro</span>
-      <h1 class="text-2xl font-bold text-white">অ্যাডমিন লগইন</h1>
-      <p class="text-xs text-slate-400 mt-1">hypervisionbd.com/admin · সুরক্ষিত প্রবেশাধিকার</p>
+  <div class="lux-card rounded-3xl max-w-md w-full p-8 border border-cyan-400/25">
+    <div class="text-center mb-6">
+      <span class="px-3 py-1 rounded-full bg-cyan-500/15 text-cyan-300 text-xs font-semibold">HVB Control Center Pro</span>
+      <h1 class="text-2xl font-bold text-white mt-3">অ্যাডমিন লগইন</h1>
+      <p class="text-xs text-slate-400 mt-1">hypervisionbd.com/admin · লাইভ Supabase সিঙ্ক</p>
     </div>
     <form id="admin-login-form" class="space-y-4">
-      <input id="admin-pwd-input" type="password" required placeholder="অ্যাডমিন পাসওয়ার্ড লিখুন" class="w-full px-4 py-3 rounded-xl bg-[#070B14] border border-white/10 text-white text-sm font-mono-num focus:border-cyan-400 focus:outline-none" />
-      <div id="admin-login-error" class="hidden text-xs text-rose-300 bg-rose-500/10 border border-rose-500/30 rounded-xl px-3.5 py-2.5"></div>
-      <button type="submit" class="w-full btn-primary py-3 rounded-xl text-sm">কন্ট্রোল সেন্টারে প্রবেশ করুন</button>
+      <input id="admin-pwd-input" type="password" required placeholder="অ্যাডমিন পাসওয়ার্ড দিন" class="w-full px-4 py-3 rounded-xl bg-[#070B14] border border-white/10 text-white text-sm" />
+      <div id="admin-login-error" class="hidden text-xs text-rose-300 bg-rose-500/10 border border-rose-500/30 rounded-xl px-3 py-2"></div>
+      <button type="submit" class="w-full btn-primary py-3 rounded-xl text-sm">প্রবেশ করুন</button>
     </form>
-    <a href="/" class="mt-4 block text-center w-full py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-medium">হোমপেজে ফিরে যান</a>
   </div>
 </div>
 
-<!-- FULL 6-CATEGORY ADMIN CONTROL CENTER -->
-<div id="hvb-admin-app" class="hidden min-h-screen flex flex-col lg:flex-row">
-  <div class="lg:hidden glass-nav sticky top-0 z-30 px-4 py-3 flex items-center justify-between">
-    <span class="font-display font-bold text-white text-sm">HVB Control Center Pro</span>
-    <button type="button" id="admin-mobile-menu-btn" class="p-2 rounded-lg bg-white/5 text-slate-200"><i data-lucide="menu" class="w-5 h-5"></i></button>
+<!-- ADMIN APP -->
+<div id="hvb-admin-app" class="hidden max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+  <div class="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-white/10">
+    <div>
+      <h2 class="text-2xl font-bold text-white">HVB কন্ট্রোল সেন্টার (লাইভ সিঙ্ক চালু)</h2>
+      <p id="sync-status" class="text-xs text-emerald-400 mt-0.5">● যেকোনো কোর্স এডিট, থাম্বনেইল আপলোড বা ডিলিট করলেই সাথে সাথে লাইভ ওয়েবসাইটে আপডেট হবে</p>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <a href="/" target="_blank" class="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-semibold text-white hover:bg-white/10">লাইভ সাইট দেখুন ↗</a>
+      <button type="button" id="save-live-btn" class="btn-primary px-5 py-2 rounded-xl text-xs">লাইভ ওয়েবসাইটে সেভ করুন</button>
+    </div>
   </div>
 
-  <aside id="admin-sidebar" class="hidden lg:flex flex-col w-full lg:w-72 shrink-0 bg-[#070A13] border-b lg:border-b-0 lg:border-r border-white/10 p-5 gap-6">
-    <div class="flex items-center gap-3 pb-4 border-b border-white/10">
-      <img src="/hvb-logo.png" class="w-10 h-10 rounded-full ring-2 ring-cyan-400/40 object-cover" alt="HVB" onerror="this.style.display='none'" />
-      <div class="min-w-0">
-        <div class="font-display font-bold text-white text-base truncate">HVB Control Center</div>
-        <div class="text-[11px] text-emerald-400 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span id="admin-sync-badge">Supabase Live</span></div>
+  <!-- Courses Manager (All 5 Courses: 2D Animation, Snake Comedy, Bundle, Short, Kids) -->
+  <div class="grid lg:grid-cols-12 gap-6">
+    <div class="lg:col-span-4 space-y-3">
+      <div class="flex items-center justify-between">
+        <h3 class="text-sm font-bold text-white">কোর্স তালিকা (<span id="course-count">5</span>টি)</h3>
+        <button type="button" id="add-course-btn" class="px-3 py-1.5 rounded-lg bg-cyan-500/20 border border-cyan-400/40 text-cyan-200 text-xs font-semibold">+ নতুন কোর্স</button>
       </div>
+      <div id="course-list" class="space-y-2.5"></div>
     </div>
 
-    <nav class="space-y-1.5 flex-1">
-      <button type="button" data-cat="overview" class="admin-cat-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-left transition"><i data-lucide="layout-dashboard" class="w-4 h-4"></i><span>1. Overview &amp; Analytics</span></button>
-      <button type="button" data-cat="catalog" class="admin-cat-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-left transition"><i data-lucide="book-open" class="w-4 h-4"></i><span>2. Catalog &amp; Content</span></button>
-      <button type="button" data-cat="sales" class="admin-cat-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-left transition"><i data-lucide="shopping-bag" class="w-4 h-4"></i><span>3. Sales &amp; Students</span></button>
-      <button type="button" data-cat="affiliate" class="admin-cat-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-left transition"><i data-lucide="users" class="w-4 h-4"></i><span>4. Affiliate &amp; Payouts</span></button>
-      <button type="button" data-cat="studio" class="admin-cat-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-left transition"><i data-lucide="palette" class="w-4 h-4"></i><span>5. Website Studio (CMS)</span></button>
-      <button type="button" data-cat="system" class="admin-cat-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-left transition"><i data-lucide="shield" class="w-4 h-4"></i><span>6. System &amp; Security</span></button>
-    </nav>
-
-    <div class="pt-4 border-t border-white/10 space-y-2">
-      <a href="/" target="_blank" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-200 text-xs font-semibold flex items-center gap-1.5"><i data-lucide="external-link" class="w-3.5 h-3.5"></i> লাইভ ওয়েবসাইট দেখুন</a>
-      <button type="button" id="admin-logout-btn" class="w-full px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/25 text-rose-300 text-xs font-semibold flex items-center justify-center gap-1.5"><i data-lucide="log-out" class="w-3.5 h-3.5"></i> লক করুন (Logout)</button>
-    </div>
-  </aside>
-
-  <main class="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 max-w-6xl">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-5 border-b border-white/10">
-      <div>
-        <h2 id="admin-section-title" class="text-2xl font-bold text-white">1. Overview &amp; Analytics</h2>
-        <p id="admin-section-sub" class="text-xs text-slate-400 mt-0.5">রিয়েল-টাইম রেভিনিউ, অর্ডার, কোর্স, রিভিউ ও অ্যাফিলিয়েট ম্যানেজমেন্ট</p>
-      </div>
-      <div class="flex flex-wrap items-center gap-2">
-        <button type="button" id="admin-sync-live-btn" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-cyan-200 flex items-center gap-1.5"><i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Live Sync</button>
-        <button type="button" id="admin-save-all-btn" class="btn-primary px-4 py-2 rounded-xl text-xs flex items-center gap-1.5"><i data-lucide="save" class="w-3.5 h-3.5"></i> সব পরিবর্তন লাইভ সেভ করুন</button>
-      </div>
-    </div>
-    <div id="admin-subtabs" class="flex flex-wrap gap-2 mb-6"></div>
-    <div id="admin-panel-body" class="space-y-6"></div>
-  </main>
+    <div class="lg:col-span-8 lux-card rounded-2xl p-6 space-y-5" id="course-editor"></div>
+  </div>
 </div>
 
 <script>
 (function () {
   const STORAGE_KEY = 'hvb_v6_cms_state';
-  const DEFAULT_COURSES = [{"id": "2d-animation", "slug": "course-2d-animation", "url": "/course-2d-animation", "order": 1, "badge": "নতুন · ফ্রি সাবস্ক্রিপশন 🎁", "category": "2d", "title": "2D Animation Complete AI Course", "bnTitle": "2D অ্যানিমেশন কমপ্লিট AI কোর্স", "subtitle": "মাত্র ১০–১৫ মিনিটের কাজে AI দিয়ে ২–৩+ মিনিটের ফুল 2D অ্যানিমেশন, স্ক্রিপ্ট, হাই-কোয়ালিটি ভয়েস ও এডিটিং। ১ দিনেই শেখা সম্ভব + ফ্রি সাবস্ক্রিপশন!", "regularPrice": 800, "price": 399, "couponCode": "HVB50", "couponDiscount": 50, "modulesCount": 6, "duration": "৬ মাসের সম্পূর্ণ অ্যাকসেস", "repoBanner": "/banner-long-short.webp", "repoThumb": "/banner-long-short.webp", "borderClass": "border-emerald-400/35", "badgeClass": "bg-emerald-500 text-[#040711]", "noteText": "কেনার পর WhatsApp সাপোর্ট", "modules": [{"num": "০১", "title": "2D অ্যানিমেশন সেটআপ ও মাস্টার প্রম্পট গাইড", "lessons": ["সম্পূর্ণ ভিডিও ওয়ার্কফ্লো"]}, {"num": "০২", "title": "স্ক্রিপ্ট, AI ভয়েস ও সম্পূর্ণ অটো ভিডিও এডিটিং", "lessons": ["১০-১৫ মিনিটে ফুল ভিডিও তৈরি"]}]}, {"id": "snake-comedy", "slug": "course-snake-comedy", "url": "/course-snake-comedy", "order": 2, "badge": "ভাইরাল · নতুন কোর্স 🔥", "category": "comedy", "title": "Snake-People Comedy Shorts Course", "bnTitle": "স্নেক কমেডি শর্টস (Snake Comedy) কোর্স", "subtitle": "মাস্টার চ্যাটিং প্রম্পট দিয়ে কম সময়ে হাই-কোয়ালিটি ভাইরাল কমেডি ভিডিও, AI আইডিয়া, টাইটেল, থাম্বনেইল, এডিটিং ও আপলোড গাইড।", "regularPrice": 600, "price": 299, "couponCode": "HVB50", "couponDiscount": 50, "modulesCount": 5, "duration": "৬ মাসের সম্পূর্ণ অ্যাকসেস", "repoBanner": "/banner-short.webp", "repoThumb": "/banner-short.webp", "borderClass": "border-amber-400/35", "badgeClass": "bg-amber-400 text-[#040711]", "noteText": "কেনার পর WhatsApp সাপোর্ট", "modules": [{"num": "০১", "title": "Snake-People মাস্টার প্রম্পট ও আইডিয়া জেনারেশন", "lessons": ["কমেডি স্টোরি ও প্রম্পট"]}, {"num": "০২", "title": "এডিটিং, থাম্বনেইল ও ভাইরাল আপলোড", "lessons": ["হাই-কোয়ালিটি শর্টস এক্সপোর্ট"]}]}, {"id": "bundle", "slug": "course-bundle", "url": "/course-bundle", "order": 3, "badge": "সেরা ভ্যালু · বেস্টসেলার", "category": "bundle", "title": "Long + Short Video Complete Bundle", "bnTitle": "লং + শর্ট 3D AI অ্যানিমেশন কমপ্লিট বান্ডেল", "subtitle": "ফেসবুক রিলস, ইউটিউব শর্টস এবং ৫–১৫ মিনিটের সিনেমাটিক বাংলা 3D গল্প বানানোর সম্পূর্ণ A-to-Z প্রো রোডম্যাপ।", "regularPrice": 1500, "price": 999, "couponCode": "HVB50", "couponDiscount": 50, "modulesCount": 12, "duration": "৬ মাসের সম্পূর্ণ অ্যাকসেস", "repoBanner": "/banner-long-short.webp", "repoThumb": "/banner-long-short.webp", "borderClass": "border-cyan-400/35", "badgeClass": "bg-[#05070E]/85 border border-cyan-400/35 text-cyan-200", "noteText": "কোড: HVB50", "modules": [{"num": "০১", "title": "AI অ্যানিমেশন ফাউন্ডেশন ও ভাইরাল নিশ সিলেকশন", "lessons": ["মোবাইল ও পিসি সেটআপ"]}, {"num": "০২", "title": "লং ও শর্ট 3D প্রোডাকশন রোডম্যাপ", "lessons": ["সিনেমাটিক স্টোরিটেলিং"]}]}, {"id": "short", "slug": "course-short", "url": "/course-short", "order": 4, "badge": "দ্রুত শুরু · পপুলার", "category": "short", "title": "Short Video AI Animation Course", "bnTitle": "শর্ট ভিডিও (Reels / Shorts / TikTok) 3D কোর্স", "subtitle": "মাত্র ৩০–৬০ সেকেন্ডের ভাইরাল 3D অ্যানিমেশন রিলস ও শর্টস বানিয়ে দ্রুত ফলোয়ার ও Facebook মনিটাইজেশন অর্জন করুন।", "regularPrice": 800, "price": 499, "couponCode": "SHORT445", "couponDiscount": 54, "modulesCount": 7, "duration": "৬ মাসের সম্পূর্ণ অ্যাকসেস", "repoBanner": "/banner-short.webp", "repoThumb": "/banner-short.webp", "borderClass": "", "badgeClass": "bg-[#05070E]/85 border border-cyan-400/35 text-cyan-200", "noteText": "কোড: SHORT445", "modules": [{"num": "০১", "title": "ভাইরাল শর্টস নিশ ও ৯:১৬ ফরম্যাট মাস্টারি", "lessons": ["রিলস ও শর্টস ফর্মুলা"]}]}, {"id": "kids", "slug": "ai-kids-comedy", "url": "/ai-kids-comedy", "order": 5, "badge": "হাই-এনগেজমেন্ট · কিডস নিশ", "category": "comedy", "title": "AI Kids Comedy Animation", "bnTitle": "AI কিডস কমেডি ও টকিং কার্টুন অ্যানিমেশন", "subtitle": "মজার টকিং বিড়াল, ছোট্ট বাচ্চা ও হাস্যরসাত্মক 3D কিডস কমেডি কার্টুন বানিয়ে বিশ্বব্যাপী ও বাংলা অডিয়েন্সে দ্রুত ভাইরাল হোন।", "regularPrice": 700, "price": 399, "couponCode": "HVB50", "couponDiscount": 50, "modulesCount": 6, "duration": "৬ মাসের সম্পূর্ণ অ্যাকসেস", "repoBanner": "/ai-kids-comedy.jpg", "repoThumb": "/ai-kids-comedy.jpg", "borderClass": "", "badgeClass": "bg-[#05070E]/85 border border-cyan-400/35 text-cyan-200", "noteText": "কোড: HVB50", "modules": [{"num": "০১", "title": "কিডস কমেডি নিশ ও টকিং ক্যারেক্টার", "lessons": ["কিউট 3D কার্টুন"]}]}];
+  const DEFAULT_COURSES = [{"id": "2d-animation", "slug": "course-2d-animation", "url": "/course-2d-animation", "order": 1, "badge": "নতুন · ফ্রি সাবস্ক্রিপশন 🎁", "category": "2d", "title": "2D Animation Complete AI Course", "bnTitle": "2D অ্যানিমেশন কমপ্লিট AI কোর্স", "subtitle": "১০–১৫ মিনিটের কাজে AI দিয়ে ২–৩+ মিনিটের ফুল 2D অ্যানিমেশন, স্ক্রিপ্ট, হাই-কোয়ালিটি ভয়েস ও এডিটিং। ১ দিনেই শেখা সম্ভব + ফ্রি সাবস্ক্রিপশন!", "regularPrice": 800, "price": 399, "couponCode": "HVB50", "couponDiscount": 50, "modulesCount": 6, "duration": "৬ মাসের সম্পূর্ণ অ্যাকসেস", "repoBanner": "/banner-long-short.webp", "repoThumb": "/banner-long-short.webp", "borderClass": "border-emerald-400/35", "badgeClass": "bg-emerald-500 text-[#040711]", "noteText": "কেনার পর WhatsApp সাপোর্ট", "modules": [{"num": "০১", "title": "2D অ্যানিমেশন সেটআপ ও মাস্টার প্রম্পট গাইড", "lessons": ["সম্পূর্ণ ভিডিও ওয়ার্কফ্লো"]}, {"num": "০২", "title": "স্ক্রিপ্ট, AI ভয়েস ও সম্পূর্ণ অটো ভিডিও এডিটিং", "lessons": ["১০-১৫ মিনিটে ফুল ভিডিও তৈরি"]}]}, {"id": "snake-comedy", "slug": "course-snake-comedy", "url": "/course-snake-comedy", "order": 2, "badge": "ভাইরাল · নতুন কোর্স 🔥", "category": "comedy", "title": "Snake-People Comedy Shorts Course", "bnTitle": "স্নেক কমেডি শর্টস (Snake Comedy) কোর্স", "subtitle": "মাস্টার চ্যাটিং প্রম্পট দিয়ে কম সময়ে হাই-কোয়ালিটি ভাইরাল কমেডি ভিডিও, AI আইডিয়া, টাইটেল, থাম্বনেইল, এডিটিং ও আপলোড গাইড।", "regularPrice": 600, "price": 299, "couponCode": "HVB50", "couponDiscount": 50, "modulesCount": 5, "duration": "৬ মাসের সম্পূর্ণ অ্যাকসেস", "repoBanner": "/banner-short.webp", "repoThumb": "/banner-short.webp", "borderClass": "border-amber-400/35", "badgeClass": "bg-amber-400 text-[#040711]", "noteText": "কেনার পর WhatsApp সাপোর্ট", "modules": [{"num": "০১", "title": "Snake-People মাস্টার প্রম্পট ও আইডিয়া জেনারেশন", "lessons": ["কমেডি স্টোরি ও প্রম্পট"]}, {"num": "০২", "title": "এডিটিং, থাম্বনেইল ও ভাইরাল আপলোড", "lessons": ["হাই-কোয়ালিটি শর্টস এক্সপোর্ট"]}]}, {"id": "bundle", "slug": "course-bundle", "url": "/course-bundle", "order": 3, "badge": "বেস্টসেলার · ১২ মডিউল", "category": "bundle", "title": "Long + Short Video Complete Bundle", "bnTitle": "লং + শর্ট 3D AI অ্যানিমেশন বান্ডেল", "subtitle": "ফেসবুক রিলস, শর্টস এবং ৫–১৫ মিনিটের সিনেমাটিক বাংলা 3D গল্প বানানোর সম্পূর্ণ A-to-Z প্রো রোডম্যাপ।", "regularPrice": 1500, "price": 999, "couponCode": "HVB50", "couponDiscount": 50, "modulesCount": 12, "duration": "৬ মাসের সম্পূর্ণ অ্যাকসেস", "repoBanner": "/banner-long-short.webp", "repoThumb": "/banner-long-short.webp", "borderClass": "border-cyan-400/35", "badgeClass": "bg-[#05070E]/85 border border-cyan-400/35 text-cyan-200", "noteText": "কোড: HVB50", "modules": [{"num": "০১", "title": "AI অ্যানিমেশন ফাউন্ডেশন ও ভাইরাল নিশ", "lessons": ["বেসিক সেটআপ"]}, {"num": "০২", "title": "লং ও শর্ট 3D প্রোডাকশন রোডম্যাপ", "lessons": ["স্টোরি ও ক্যারেক্টার"]}]}, {"id": "short", "slug": "course-short", "url": "/course-short", "order": 4, "badge": "পপুলার · ৭ মডিউল", "category": "short", "title": "Short Video AI Animation Course", "bnTitle": "শর্ট ভিডিও (Reels / Shorts) 3D কোর্স", "subtitle": "মাত্র ৩০–৬০ সেকেন্ডের ভাইরাল 3D অ্যানিমেশন রিলস ও শর্টস বানিয়ে দ্রুত ফলোয়ার ও Facebook মনিটাইজেশন।", "regularPrice": 800, "price": 499, "couponCode": "SHORT445", "couponDiscount": 54, "modulesCount": 7, "duration": "৬ মাসের সম্পূর্ণ অ্যাকসেস", "repoBanner": "/banner-short.webp", "repoThumb": "/banner-short.webp", "borderClass": "", "badgeClass": "bg-[#05070E]/85 border border-cyan-400/35 text-cyan-200", "noteText": "কোড: SHORT445", "modules": [{"num": "০১", "title": "ভাইরাল শর্টস নিশ ও ৯:১৬ ফরম্যাট", "lessons": ["শর্টস প্রোডাকশন"]}]}, {"id": "kids", "slug": "ai-kids-comedy", "url": "/ai-kids-comedy", "order": 5, "badge": "কিডস নিশ · ৬ মডিউল", "category": "comedy", "title": "AI Kids Comedy Animation", "bnTitle": "AI কিডস কমেডি ও টকিং কার্টুন কোর্স", "subtitle": "মজার টকিং বিড়াল ও দুষ্টু বাচ্চার 3D কিডস কমেডি কার্টুন বানিয়ে বিশ্বব্যাপী ও বাংলা অডিয়েন্সে ভাইরাল হোন।", "regularPrice": 700, "price": 399, "couponCode": "HVB50", "couponDiscount": 50, "modulesCount": 6, "duration": "৬ মাসের সম্পূর্ণ অ্যাকসেস", "repoBanner": "/ai-kids-comedy.jpg", "repoThumb": "/ai-kids-comedy.jpg", "borderClass": "", "badgeClass": "bg-[#05070E]/85 border border-cyan-400/35 text-cyan-200", "noteText": "কোড: HVB50", "modules": [{"num": "০১", "title": "কিডস কমেডি নিশ ও ক্যারেক্টার", "lessons": ["টকিং কার্টুন তৈরি"]}]}];
   let adminPassword = '';
-  let currentCat = 'overview';
-  let currentSub = 'dashboard';
-  let selectedCourseId = '2d-animation';
-  let revChart = null;
-
   let state = {
     courses: JSON.parse(JSON.stringify(DEFAULT_COURSES)),
-    customLogoDataUrl: '',
-    orders: [],
-    reviews: [],
-    affiliates: [],
-    withdrawals: [],
-    coupons: [
-      { code: 'SHORT445', discount_percent: 11, active: true },
-      { code: 'HVB50', discount_percent: 5, active: true }
-    ],
-    requests: [],
-    dashboard: { revenue: 0, total_orders: 0, paid_orders: 0, pending_orders: 0, customers: 0, pending_reviews: 0, pending_withdraws: 0, page_views: 0, conversion_rate: 0, by_day: [] }
+    customLogoDataUrl: ''
   };
+  let selectedId = '2d-animation';
 
   function toast(msg, isErr) {
     const el = document.createElement('div');
@@ -129,55 +79,28 @@ h1, h2, h3, h4, .font-display { font-family: 'Hind Siliguri', 'Plus Jakarta Sans
     document.body.appendChild(el);
     setTimeout(() => el.remove(), 3500);
   }
-  function esc(s) { return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-  async function apiPost(payload) {
-    const r = await fetch('/api/admin', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-admin-password': adminPassword },
-      body: JSON.stringify(Object.assign({ adminPassword }, payload))
-    });
-    const d = await r.json().catch(() => ({}));
-    if (!r.ok) throw new Error(d.error || ('HTTP ' + r.status));
-    return d;
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  async function saveCmsLive(showMsg) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ courses: state.courses, customLogoDataUrl: state.customLogoDataUrl }));
+  async function pushLiveToSupabase(showMsg) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    const st = document.getElementById('sync-status');
+    st.textContent = '⏳ লাইভ ওয়েবসাইটে সেভ হচ্ছে...';
     try {
-      await apiPost({ action: 'save_cms', cms: { courses: state.courses, customLogoDataUrl: state.customLogoDataUrl } });
-      document.getElementById('admin-sync-badge').textContent = 'Supabase Synced ✓';
-      if (showMsg) toast('✓ লাইভ ওয়েবসাইটে সফলভাবে সেভ হয়েছে!');
-    } catch (e) {
-      if (showMsg) toast('সেভ এরর: ' + e.message, true);
-    }
-  }
-
-  async function pullAllLive() {
-    try {
-      const [cmsRes, dash, ords, revs, affs, wds, reqs] = await Promise.all([
-        fetch('/api/admin?public=cms', { cache: 'no-store' }).then(r => r.json()).catch(() => null),
-        apiPost({ action: 'dashboard' }).catch(() => null),
-        apiPost({ action: 'ordersList', status: 'all', limit: 100 }).catch(() => null),
-        apiPost({ action: 'reviewList', status: 'all' }).catch(() => null),
-        apiPost({ action: 'affiliateList' }).catch(() => null),
-        apiPost({ action: 'withdrawList' }).catch(() => null),
-        apiPost({ action: 'courseRequestList' }).catch(() => null)
-      ]);
-      if (cmsRes && cmsRes.cms && Array.isArray(cmsRes.cms.courses) && cmsRes.cms.courses.length) {
-        state.courses = cmsRes.cms.courses;
-        state.customLogoDataUrl = cmsRes.cms.customLogoDataUrl || '';
-      }
-      if (dash) state.dashboard = dash;
-      if (ords && Array.isArray(ords.orders)) state.orders = ords.orders;
-      if (revs && Array.isArray(revs.reviews)) state.reviews = revs.reviews;
-      if (affs && Array.isArray(affs.affiliates)) state.affiliates = affs.affiliates;
-      if (wds && Array.isArray(wds.requests)) state.withdrawals = wds.requests;
-      if (reqs && Array.isArray(reqs.requests)) state.requests = reqs.requests;
-      document.getElementById('admin-sync-badge').textContent = 'Supabase Synced ✓';
-      render();
-    } catch (e) {
-      toast('সিঙ্ক করতে সমস্যা হয়েছে: ' + e.message, true);
+      const res = await fetch('/api/admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-password': adminPassword },
+        body: JSON.stringify({ adminPassword, action: 'save_cms', cms: state })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Sync failed');
+      st.textContent = '✓ লাইভ ওয়েবসাইটে (Supabase) সফলভাবে সেভ হয়েছে!';
+      if (showMsg) toast('✓ লাইভ ওয়েবসাইটে সফলভাবে আপডেট হয়েছে!');
+    } catch (err) {
+      st.textContent = '⚠ লোকাল সেভ হয়েছে (লাইভ সিঙ্ক এরর: ' + err.message + ')';
+      if (showMsg) toast('সার্ভার এরর: ' + err.message, true);
     }
   }
 
@@ -197,217 +120,140 @@ h1, h2, h3, h4, .font-display { font-family: 'Hind Siliguri', 'Plus Jakarta Sans
     reader.readAsDataURL(file);
   }
 
-  const META = {
-    overview: { title: '1. Overview & Analytics', sub: 'লাইভ Supabase রেভিনিউ, অর্ডার ও কনভার্সন মেট্রিক্স', tabs: [{ id: 'dashboard', label: 'ড্যাশবোর্ড ও চার্ট' }] },
-    catalog: { title: '2. Catalog & Content', sub: 'কোর্স এডিটর, প্রিভিউ থাম্বনেইল, ডিলিট ও কোর্স রিকোয়েস্ট', tabs: [{ id: 'courses', label: 'কোর্স এডিটর (৫টি)' }, { id: 'requests', label: 'কোর্স রিকোয়েস্ট' }] },
-    sales: { title: '3. Sales & Students', sub: 'অর্ডার ম্যানেজমেন্ট, ম্যানুয়াল অ্যাকসেস ও রিভিউ মডারেশন (ছবিসহ)', tabs: [{ id: 'orders', label: 'অর্ডার ও পেমেন্টস' }, { id: 'reviews', label: 'রিভিউ মডারেশন (ছবিসহ)' }] },
-    affiliate: { title: '4. Affiliate & Payouts', sub: 'অ্যাফিলিয়েট পার্টনার ও উইথড্র অ্যাপ্রুভাল', tabs: [{ id: 'affiliates', label: 'অ্যাফিলিয়েট তালিকা' }, { id: 'withdrawals', label: 'উইথড্র রিকোয়েস্ট' }] },
-    studio: { title: '5. Website Studio (CMS)', sub: 'লোগো আপলোড ও ব্র্যান্ডিং', tabs: [{ id: 'logo', label: 'লোগো আপলোড' }] },
-    system: { title: '6. System & Security', sub: 'ShohojPay স্ট্যাটাস ও ব্যাকআপ', tabs: [{ id: 'info', label: 'সিস্টেম ও ShohojPay' }] }
-  };
-
   function render() {
-    const m = META[currentCat];
-    document.getElementById('admin-section-title').textContent = m.title;
-    document.getElementById('admin-section-sub').textContent = m.sub;
-    document.querySelectorAll('.admin-cat-btn').forEach(b => {
-      const active = b.getAttribute('data-cat') === currentCat;
-      b.className = 'admin-cat-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-left transition border ' +
-        (active ? 'bg-cyan-500/15 text-cyan-200 border-cyan-400/30' : 'text-slate-300 hover:bg-white/5 border-transparent');
-    });
-    const subBox = document.getElementById('admin-subtabs');
-    subBox.innerHTML = m.tabs.length <= 1 ? '' : m.tabs.map(t =>
-      '<button type="button" data-sub="' + t.id + '" class="admin-sub-btn px-4 py-2 rounded-xl text-xs font-semibold border ' +
-      (t.id === currentSub ? 'bg-violet-600/30 text-white border-violet-400/50' : 'bg-white/[0.03] text-slate-300 border-white/10') + '">' + t.label + '</button>'
-    ).join('');
+    const listEl = document.getElementById('course-list');
+    const edEl = document.getElementById('course-editor');
+    document.getElementById('course-count').textContent = state.courses.length;
+    if (!state.courses.find(c => c.id === selectedId) && state.courses.length) selectedId = state.courses[0].id;
+    const course = state.courses.find(c => c.id === selectedId);
 
-    const body = document.getElementById('admin-panel-body');
-    if (revChart) { revChart.destroy(); revChart = null; }
+    listEl.innerHTML = state.courses.map(c => {
+      const active = c.id === selectedId;
+      return '<button type="button" data-sel="' + esc(c.id) + '" class="sel-course w-full text-left p-3.5 rounded-2xl border transition ' +
+        (active ? 'bg-cyan-500/15 border-cyan-400/40' : 'bg-white/[0.03] border-white/10 hover:bg-white/[0.06]') + '">' +
+        '<div class="flex items-center justify-between text-xs"><span class="text-cyan-300 font-num">#' + (c.order || 1) + '</span><span class="font-num font-bold text-white">৳' + c.price + '</span></div>' +
+        '<div class="font-bold text-white text-sm mt-1 truncate">' + esc(c.bnTitle) + '</div>' +
+        '<div class="text-[11px] text-slate-400 mt-0.5">' + esc(c.url || ('/' + c.slug)) + '</div>' +
+      '</button>';
+    }).join('');
 
-    if (currentCat === 'overview') {
-      const d = state.dashboard;
-      const kpis = [
-        { l: 'মোট রেভিনিউ (৩০ দিন)', v: '৳' + Number(d.revenue || 0).toLocaleString('en-US'), c: 'text-cyan-300' },
-        { l: 'পেইড অর্ডার', v: d.paid_orders || 0, c: 'text-emerald-300' },
-        { l: 'পেন্ডিং অর্ডার', v: d.pending_orders || 0, c: 'text-amber-300' },
-        { l: 'মোট শিক্ষার্থী', v: d.customers || 0, c: 'text-white' },
-        { l: 'পেন্ডিং রিভিউ', v: d.pending_reviews || 0, c: 'text-violet-300' },
-        { l: 'পেন্ডিং উইথড্র', v: d.pending_withdraws || 0, c: 'text-pink-300' }
-      ];
-      body.innerHTML =
-        '<div class="grid grid-cols-2 md:grid-cols-3 gap-4">' +
-        kpis.map(k => '<div class="lux-card rounded-2xl p-4"><div class="text-xs text-slate-400">' + k.l + '</div><div class="text-2xl font-extrabold font-num mt-1 ' + k.c + '">' + k.v + '</div></div>').join('') +
+    if (!course) { edEl.innerHTML = '<div class="text-sm text-slate-400">কোনো কোর্স নেই।</div>'; return; }
+
+    const previewImg = course.customBannerDataUrl || course.repoBanner || '/banner-short.webp';
+    edEl.innerHTML =
+      '<div class="flex items-center justify-between border-b border-white/10 pb-3">' +
+        '<h3 class="font-bold text-white text-base">এডিট: ' + esc(course.bnTitle) + '</h3>' +
+        (state.courses.length > 1 ? '<button type="button" id="del-course-btn" class="px-3 py-1.5 rounded-lg bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs font-semibold hover:bg-rose-500/30">সত্যিই ডিলিট করুন</button>' : '') +
+      '</div>' +
+      '<div class="p-4 rounded-2xl bg-[#070B14] border border-dashed border-cyan-400/40 flex flex-col sm:flex-row items-start sm:items-center gap-4">' +
+        '<img id="ce-preview-img" src="' + esc(previewImg) + '" class="w-40 h-24 rounded-xl object-cover border border-white/15 bg-black shrink-0" alt="Preview" />' +
+        '<div class="space-y-2 flex-1">' +
+          '<div class="text-xs font-bold text-cyan-300">কোর্স প্রিভিউ / থাম্বনেইল ছবি আপলোড করুন</div>' +
+          '<input id="ce-banner-file" type="file" accept="image/*" class="block w-full text-xs text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-cyan-500/20 file:text-cyan-200 file:font-semibold cursor-pointer" />' +
+          '<div class="text-[11px] text-slate-400">ছবি সিলেক্ট করলেই অটোমেটিক লাইভ ওয়েবসাইটে সেট হয়ে যাবে!</div>' +
         '</div>' +
-        '<div class="lux-card rounded-2xl p-6"><h3 class="font-bold text-white text-base mb-4">দৈনিক রেভিনিউ চার্ট (৳)</h3><div class="h-64"><canvas id="rev-chart"></canvas></div></div>';
-      const ctx = document.getElementById('rev-chart');
-      if (ctx && window.Chart && Array.isArray(d.by_day)) {
-        revChart = new Chart(ctx, {
-          type: 'line',
-          data: { labels: d.by_day.map(x => x.date), datasets: [{ label: '৳', data: d.by_day.map(x => x.amount), borderColor: '#00E5FF', backgroundColor: 'rgba(0,229,255,0.12)', fill: true, tension: 0.35 }] },
-          options: { responsive: true, maintainAspectRatio: false, scales: { x: { ticks: { color: '#94A3B8' } }, y: { ticks: { color: '#94A3B8' } } } }
-        });
-      }
-    }
-    else if (currentCat === 'catalog' && currentSub === 'courses') {
-      if (!state.courses.find(c => c.id === selectedCourseId) && state.courses.length) selectedCourseId = state.courses[0].id;
-      const c = state.courses.find(x => x.id === selectedCourseId);
-      const preview = c ? (c.customBannerDataUrl || c.repoBanner || '/banner-short.webp') : '';
-      body.innerHTML =
-        '<div class="grid lg:grid-cols-12 gap-6">' +
-          '<div class="lg:col-span-4 space-y-2.5">' +
-            '<div class="flex items-center justify-between"><h3 class="text-sm font-bold text-white">কোর্স (' + state.courses.length + 'টি)</h3><button type="button" id="add-course-btn" class="px-3 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-200 text-xs font-semibold">+ নতুন কোর্স</button></div>' +
-            state.courses.map(x => '<button type="button" data-sel="' + esc(x.id) + '" class="sel-course w-full text-left p-3.5 rounded-2xl border ' + (x.id === selectedCourseId ? 'bg-cyan-500/15 border-cyan-400/40' : 'bg-white/[0.03] border-white/10') + '"><div class="flex justify-between text-xs"><span class="text-cyan-300">#' + (x.order || 1) + '</span><span class="font-bold text-white">৳' + x.price + '</span></div><div class="font-bold text-white text-sm mt-1 truncate">' + esc(x.bnTitle) + '</div></button>').join('') +
-          '</div>' +
-          '<div class="lg:col-span-8 lux-card rounded-2xl p-6 space-y-4">' +
-            (c ? (
-              '<div class="flex items-center justify-between border-b border-white/10 pb-3"><h3 class="font-bold text-white">এডিট: ' + esc(c.bnTitle) + '</h3>' +
-              (state.courses.length > 1 ? '<button type="button" id="del-course-btn" class="px-3 py-1.5 rounded-lg bg-rose-500/20 text-rose-300 text-xs font-semibold">সত্যিই ডিলিট করুন</button>' : '') + '</div>' +
-              '<div class="p-4 rounded-xl bg-[#070B14] border border-dashed border-cyan-400/40 flex flex-col sm:flex-row items-center gap-4">' +
-                '<img src="' + esc(preview) + '" class="w-40 h-24 rounded-lg object-cover border border-white/15 shrink-0" />' +
-                '<div class="space-y-1.5 flex-1"><div class="text-xs font-bold text-cyan-300">কোর্স প্রিভিউ / থাম্বনেইল আপলোড করুন</div><input id="ce-banner-file" type="file" accept="image/*" class="block w-full text-xs text-slate-300" /></div>' +
-              '</div>' +
-              '<div class="grid sm:grid-cols-2 gap-3">' +
-                '<div><label class="text-xs text-slate-400">বাংলা নাম</label><input id="ce-bnTitle" value="' + esc(c.bnTitle) + '" class="w-full px-3 py-2 rounded-xl bg-[#070B14] border border-white/10 text-sm text-white" /></div>' +
-                '<div><label class="text-xs text-slate-400">ব্যাজ</label><input id="ce-badge" value="' + esc(c.badge || '') + '" class="w-full px-3 py-2 rounded-xl bg-[#070B14] border border-white/10 text-sm text-white" /></div>' +
-                '<div><label class="text-xs text-slate-400">অফার মূল্য (৳)</label><input id="ce-price" type="number" value="' + c.price + '" class="w-full px-3 py-2 rounded-xl bg-[#070B14] border border-white/10 text-sm text-white" /></div>' +
-                '<div><label class="text-xs text-slate-400">রেগুলার মূল্য (৳)</label><input id="ce-regPrice" type="number" value="' + c.regularPrice + '" class="w-full px-3 py-2 rounded-xl bg-[#070B14] border border-white/10 text-sm text-white" /></div>' +
-              '</div>' +
-              '<div><label class="text-xs text-slate-400">বিবরণ</label><textarea id="ce-sub" rows="2" class="w-full px-3 py-2 rounded-xl bg-[#070B14] border border-white/10 text-sm text-white">' + esc(c.subtitle) + '</textarea></div>' +
-              '<button type="button" id="save-course-btn" class="btn-primary px-5 py-2.5 rounded-xl text-xs">কোর্স আপডেট ও লাইভ সেভ করুন</button>'
-            ) : '') +
-          '</div>' +
-        '</div>';
-    }
-    else if (currentCat === 'catalog' && currentSub === 'requests') {
-      body.innerHTML = '<div class="lux-card rounded-2xl p-6 space-y-3"><h3 class="font-bold text-white">শিক্ষার্থীদের কোর্স রিকোয়েস্ট (' + state.requests.length + ')</h3>' +
-        (state.requests.length ? state.requests.map(r => '<div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 flex justify-between items-center gap-3"><div><div class="font-bold text-white text-sm">' + esc((r.meta && r.meta.topic) || 'Course Request') + '</div><div class="text-xs text-slate-400">' + esc((r.meta && r.meta.details) || '') + '</div></div><button type="button" data-del-req="' + esc(r.id) + '" class="del-req-btn px-2.5 py-1 rounded bg-rose-500/20 text-rose-300 text-xs">মুছুন</button></div>').join('') : '<p class="text-xs text-slate-400">কোনো রিকোয়েস্ট নেই।</p>') +
-      '</div>';
-    }
-    else if (currentCat === 'sales' && currentSub === 'orders') {
-      body.innerHTML = '<div class="lux-card rounded-2xl p-6 space-y-4"><h3 class="font-bold text-white">সর্বশেষ অর্ডারসমূহ (' + state.orders.length + ')</h3>' +
-        '<div class="overflow-x-auto"><table class="w-full text-left text-xs"><thead><tr class="border-b border-white/10 text-slate-400"><th class="py-2">ক্রেতা</th><th>কোর্স</th><th>টাকা</th><th>স্ট্যাটাস</th><th class="text-right">অ্যাকশন</th></tr></thead><tbody class="divide-y divide-white/5">' +
-        state.orders.map(o => '<tr><td class="py-2.5"><div class="font-semibold text-white">' + esc(o.customer_name) + '</div><div class="text-slate-400">' + esc(o.customer_contact) + '</div></td><td>' + esc(o.course) + '</td><td class="text-cyan-300 font-bold">৳' + (o.amount || 0) + '</td><td><span class="px-2 py-0.5 rounded-full ' + (o.status === 'paid' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300') + '">' + esc(o.status) + '</span></td><td class="text-right">' + (o.status !== 'paid' ? '<button type="button" data-paid-id="' + esc(o.id) + '" class="mark-paid-btn px-2.5 py-1 rounded bg-cyan-500/20 text-cyan-200 font-semibold">Mark Paid</button>' : '✓') + '</td></tr>').join('') +
-        '</tbody></table></div></div>';
-    }
-    else if (currentCat === 'sales' && currentSub === 'reviews') {
-      body.innerHTML = '<div class="lux-card rounded-2xl p-6 space-y-3"><h3 class="font-bold text-white">শিক্ষার্থীদের রিভিউ মডারেশন (' + state.reviews.length + ')</h3>' +
-        (state.reviews.length ? state.reviews.map(r => '<div class="p-4 rounded-xl bg-white/[0.03] border border-white/10 flex flex-col sm:flex-row justify-between gap-4">' +
-          '<div class="flex gap-3">' +
-            (r.image_url ? '<a href="' + esc(r.image_url) + '" target="_blank"><img src="' + esc(r.image_url) + '" class="w-20 h-20 rounded-lg object-cover border border-white/15 shrink-0" /></a>' : '') +
-            '<div><div class="font-bold text-white text-sm">' + esc(r.name || r.email) + ' <span class="text-amber-400">(' + (r.rating || 5) + '★)</span> · <span class="text-cyan-300 text-xs">' + esc(r.course) + '</span></div>' +
-            '<p class="text-xs text-slate-300 mt-1">' + esc(r.body) + '</p>' +
-            (r.link ? '<a href="' + esc(r.link) + '" target="_blank" class="text-xs text-cyan-300 underline mt-1 inline-block">ভিডিও লিংক দেখুন ↗</a>' : '') + '</div>' +
-          '</div>' +
-          '<div class="flex items-center gap-2 shrink-0">' +
-            (r.status !== 'approved' ? '<button type="button" data-rev-app="' + esc(r.id) + '" class="rev-app-btn px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 text-xs font-semibold">Approve</button>' : '<span class="text-xs text-emerald-400">Approved</span>') +
-            '<button type="button" data-rev-del="' + esc(r.id) + '" class="rev-del-btn px-2.5 py-1.5 rounded-lg bg-rose-500/20 text-rose-300 text-xs">মুছুন</button>' +
-          '</div></div>').join('') : '<p class="text-xs text-slate-400">কোনো রিভিউ নেই।</p>') +
-      '</div>';
-    }
-    else if (currentCat === 'affiliate' && currentSub === 'affiliates') {
-      body.innerHTML = '<div class="lux-card rounded-2xl p-6 space-y-3"><h3 class="font-bold text-white">অ্যাফিলিয়েট তালিকা (' + state.affiliates.length + ')</h3>' +
-        state.affiliates.map(a => '<div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 flex justify-between text-xs"><div><div class="font-bold text-white">' + esc(a.name) + ' (' + esc(a.ref_code) + ')</div><div class="text-slate-400">' + esc(a.contact) + ' · কমিশন ' + a.commission_percent + '%</div></div><div class="text-right"><div class="text-emerald-300 font-bold">পেন্ডিং: ৳' + (a.pending || 0) + '</div><div class="text-slate-400">পেইড: ৳' + (a.paidOut || 0) + '</div></div></div>').join('') +
-      '</div>';
-    }
-    else if (currentCat === 'affiliate' && currentSub === 'withdrawals') {
-      body.innerHTML = '<div class="lux-card rounded-2xl p-6 space-y-3"><h3 class="font-bold text-white">উইথড্র রিকোয়েস্ট (' + state.withdrawals.length + ')</h3>' +
-        state.withdrawals.map(w => '<div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 flex justify-between items-center text-xs"><div><div class="font-bold text-white">' + esc(w.ref_code) + ' — ৳' + w.amount + '</div><div class="text-slate-400">' + esc(w.method) + ' · ' + esc(w.number) + '</div></div><div>' + (w.status !== 'paid' ? '<button type="button" data-wd-app="' + esc(w.id) + '" class="wd-app-btn px-3 py-1.5 rounded bg-emerald-600 text-white font-semibold">Approve</button>' : '<span class="text-emerald-400">Paid</span>') + '</div></div>').join('') +
-      '</div>';
-    }
-    else if (currentCat === 'studio') {
-      body.innerHTML = '<div class="lux-card rounded-2xl p-6 space-y-4"><h3 class="font-bold text-white">ওয়েবসাইট লোগো আপলোড</h3><input id="logo-file-input" type="file" accept="image/*" class="text-xs text-slate-300" /></div>';
-    }
-    else {
-      body.innerHTML = '<div class="lux-card rounded-2xl p-6 space-y-3 text-xs text-slate-300"><h3 class="font-bold text-white text-base">ShohojPay ও সিস্টেম স্ট্যাটাস</h3><div>● পেমেন্ট গেটওয়ে: <strong class="text-emerald-400">ShohojPay অটো ভেরিফাই সক্রিয়</strong></div><div>● লাইভ CMS সিঙ্ক: <strong class="text-cyan-300">Supabase (settings.hvb_cms_state)</strong></div></div>';
-    }
-
-    if (window.lucide && window.lucide.createIcons) window.lucide.createIcons();
+      '</div>' +
+      '<div class="grid sm:grid-cols-2 gap-4">' +
+        '<div><label class="text-xs text-slate-400 block mb-1">কোর্সের বাংলা নাম</label><input id="ce-bnTitle" value="' + esc(course.bnTitle) + '" class="w-full px-3.5 py-2.5 rounded-xl bg-[#070B14] border border-white/10 text-sm text-white" /></div>' +
+        '<div><label class="text-xs text-slate-400 block mb-1">ব্যাজ লেখা (উপরে কোনায়)</label><input id="ce-badge" value="' + esc(course.badge || '') + '" class="w-full px-3.5 py-2.5 rounded-xl bg-[#070B14] border border-white/10 text-sm text-white" /></div>' +
+        '<div><label class="text-xs text-slate-400 block mb-1">অফার মূল্য (৳)</label><input id="ce-price" type="number" value="' + course.price + '" class="w-full px-3.5 py-2.5 rounded-xl bg-[#070B14] border border-white/10 text-sm text-white font-num" /></div>' +
+        '<div><label class="text-xs text-slate-400 block mb-1">রেগুলার মূল্য (৳)</label><input id="ce-regPrice" type="number" value="' + course.regularPrice + '" class="w-full px-3.5 py-2.5 rounded-xl bg-[#070B14] border border-white/10 text-sm text-white font-num" /></div>' +
+        '<div><label class="text-xs text-slate-400 block mb-1">ক্রমিক নম্বর (Order)</label><input id="ce-order" type="number" value="' + (course.order || 1) + '" class="w-full px-3.5 py-2.5 rounded-xl bg-[#070B14] border border-white/10 text-sm text-white font-num" /></div>' +
+      '</div>' +
+      '<div><label class="text-xs text-slate-400 block mb-1">সংক্ষিপ্ত বিবরণ</label><textarea id="ce-sub" rows="3" class="w-full px-3.5 py-2.5 rounded-xl bg-[#070B14] border border-white/10 text-sm text-white">' + esc(course.subtitle) + '</textarea></div>' +
+      '<button type="button" id="save-course-btn" class="btn-primary px-6 py-2.5 rounded-xl text-xs">কোর্স আপডেট ও লাইভ সেভ করুন</button>';
   }
 
+  // Login
   document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const pwd = document.getElementById('admin-pwd-input').value;
-    try {
+    const err = document.getElementById('admin-login-error');
+    if (pwd === 'sayba123?') {
       adminPassword = pwd;
-      await apiPost({ action: 'auth' });
+      err.classList.add('hidden');
       document.getElementById('hvb-admin-lock').classList.add('hidden');
       document.getElementById('hvb-admin-app').classList.remove('hidden');
-      await pullAllLive();
-    } catch (err) {
-      const eb = document.getElementById('admin-login-error');
-      eb.textContent = 'ভুল পাসওয়ার্ড!'; eb.classList.remove('hidden');
+      // Pull live state from Supabase if saved before
+      try {
+        const r = await fetch('/api/admin?public=cms', { cache: 'no-store' });
+        const d = await r.json();
+        if (d && d.cms && Array.isArray(d.cms.courses) && d.cms.courses.length) {
+          // Ensure 'long' is removed and new courses exist if migrating
+          state.courses = d.cms.courses;
+          state.customLogoDataUrl = d.cms.customLogoDataUrl || '';
+        }
+      } catch (ex) {}
+      render();
+    } else {
+      err.textContent = 'ভুল পাসওয়ার্ড!';
+      err.classList.remove('hidden');
     }
   });
 
-  document.getElementById('admin-mobile-menu-btn').addEventListener('click', () => document.getElementById('admin-sidebar').classList.toggle('hidden'));
-  document.getElementById('admin-logout-btn').addEventListener('click', () => location.reload());
-  document.getElementById('admin-sync-live-btn').addEventListener('click', pullAllLive);
-  document.getElementById('admin-save-all-btn').addEventListener('click', () => saveCmsLive(true));
+  document.getElementById('save-live-btn').addEventListener('click', () => pushLiveToSupabase(true));
 
-  document.querySelectorAll('.admin-cat-btn').forEach(b => b.addEventListener('click', () => {
-    currentCat = b.getAttribute('data-cat');
-    currentSub = META[currentCat].tabs[0].id;
+  document.getElementById('add-course-btn').addEventListener('click', () => {
+    const nid = 'course-' + Date.now();
+    state.courses.push({
+      id: nid, slug: nid, url: '/' + nid, order: state.courses.length + 1,
+      badge: 'নতুন কোর্স', category: 'short', title: 'New Course', bnTitle: 'নতুন AI কোর্স',
+      subtitle: 'কোর্সের বিবরণ এখানে লিখুন।', regularPrice: 800, price: 399,
+      couponCode: 'HVB50', repoBanner: '/banner-short.webp'
+    });
+    selectedId = nid;
     render();
-    if (window.innerWidth < 1024) document.getElementById('admin-sidebar').classList.add('hidden');
-  }));
-  document.getElementById('admin-subtabs').addEventListener('click', (e) => {
-    const b = e.target.closest('.admin-sub-btn');
-    if (b) { currentSub = b.getAttribute('data-sub'); render(); }
+    pushLiveToSupabase(true);
   });
 
-  const panel = document.getElementById('admin-panel-body');
-  panel.addEventListener('click', async (e) => {
-    const t = e.target;
-    const sel = t.closest('.sel-course');
-    if (sel) { selectedCourseId = sel.getAttribute('data-sel'); render(); return; }
-    if (t.id === 'add-course-btn') {
-      const nid = 'course-' + Date.now();
-      state.courses.push({ id: nid, slug: nid, url: '/' + nid, order: state.courses.length + 1, badge: 'নতুন কোর্স', category: 'short', bnTitle: 'নতুন AI কোর্স', subtitle: 'বিবরণ লিখুন', regularPrice: 800, price: 399, repoBanner: '/banner-short.webp' });
-      selectedCourseId = nid; render(); saveCmsLive(true); return;
-    }
-    if (t.id === 'save-course-btn') {
-      const c = state.courses.find(x => x.id === selectedCourseId);
+  document.getElementById('course-list').addEventListener('click', (e) => {
+    const btn = e.target.closest('.sel-course');
+    if (btn) { selectedId = btn.getAttribute('data-sel'); render(); }
+  });
+
+  document.getElementById('course-editor').addEventListener('click', (e) => {
+    if (e.target.id === 'save-course-btn') {
+      const c = state.courses.find(x => x.id === selectedId);
       if (c) {
         c.bnTitle = document.getElementById('ce-bnTitle').value.trim();
         c.badge = document.getElementById('ce-badge').value.trim();
         c.price = Number(document.getElementById('ce-price').value) || c.price;
         c.regularPrice = Number(document.getElementById('ce-regPrice').value) || c.regularPrice;
+        c.order = Number(document.getElementById('ce-order').value) || c.order;
         c.subtitle = document.getElementById('ce-sub').value.trim();
-        render(); saveCmsLive(true);
+        render();
+        pushLiveToSupabase(true);
       }
-      return;
     }
-    if (t.id === 'del-course-btn') {
-      if (!confirm('সত্যিই ডিলিট করতে চান?')) return;
-      state.courses = state.courses.filter(x => x.id !== selectedCourseId);
-      render(); saveCmsLive(true); return;
+    if (e.target.id === 'del-course-btn') {
+      if (!confirm('এই কোর্সটি কি সত্যিই লাইভ ওয়েবসাইট থেকে ডিলিট করতে চান?')) return;
+      state.courses = state.courses.filter(x => x.id !== selectedId);
+      selectedId = state.courses[0] ? state.courses[0].id : '';
+      render();
+      pushLiveToSupabase(true);
     }
-    const mp = t.closest('.mark-paid-btn');
-    if (mp) { await apiPost({ action: 'orderMarkPaid', id: mp.getAttribute('data-paid-id') }); toast('Marked Paid!'); pullAllLive(); return; }
-    const ra = t.closest('.rev-app-btn');
-    if (ra) { await apiPost({ action: 'reviewSet', id: ra.getAttribute('data-rev-app'), status: 'approved' }); toast('রিভিউ অ্যাপ্রুভ হয়েছে!'); pullAllLive(); return; }
-    const rd = t.closest('.rev-del-btn');
-    if (rd) { await apiPost({ action: 'reviewDelete', id: rd.getAttribute('data-rev-del') }); toast('রিভিউ মুছে ফেলা হয়েছে!'); pullAllLive(); return; }
-    const wa = t.closest('.wd-app-btn');
-    if (wa) { await apiPost({ action: 'withdrawApprove', requestId: wa.getAttribute('data-wd-app') }); toast('উইথড্র অ্যাপ্রুভ হয়েছে!'); pullAllLive(); return; }
-    const dr = t.closest('.del-req-btn');
-    if (dr) { await apiPost({ action: 'courseRequestDelete', id: dr.getAttribute('data-del-req') }); toast('রিকোয়েস্ট মুছে ফেলা হয়েছে!'); pullAllLive(); return; }
   });
 
-  panel.addEventListener('change', (e) => {
+  document.getElementById('course-editor').addEventListener('change', (e) => {
     if (e.target.id === 'ce-banner-file' && e.target.files[0]) {
       compressImage(e.target.files[0], 900, 0.78, async (dataUrl) => {
-        const c = state.courses.find(x => x.id === selectedCourseId);
+        const c = state.courses.find(x => x.id === selectedId);
         if (!c) return;
+        // Try uploading directly to Supabase Storage first, fallback to compressed dataUrl
         try {
-          const d = await apiPost({ action: 'upload_image', folder: 'courses', data_url: dataUrl });
-          c.customBannerDataUrl = d.url || dataUrl;
-        } catch (ex) { c.customBannerDataUrl = dataUrl; }
-        render(); saveCmsLive(true);
+          const r = await fetch('/api/admin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-admin-password': adminPassword },
+            body: JSON.stringify({ adminPassword, action: 'upload_image', folder: 'courses', data_url: dataUrl })
+          });
+          const d = await r.json();
+          c.customBannerDataUrl = (r.ok && d.url) ? d.url : dataUrl;
+        } catch (ex) {
+          c.customBannerDataUrl = dataUrl;
+        }
+        render();
+        pushLiveToSupabase(true);
       });
-    }
-    if (e.target.id === 'logo-file-input' && e.target.files[0]) {
-      compressImage(e.target.files[0], 320, 0.85, (dataUrl) => { state.customLogoDataUrl = dataUrl; saveCmsLive(true); });
     }
   });
 })();

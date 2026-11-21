@@ -36,19 +36,21 @@ async function affiliateBalance(aff) {
 }
 
 module.exports = async (req, res) => {
-  // Public storefront CMS fetch (catalog, thumbnails, logo — zero sensitive data)
+  // Public storefront CMS fetch (returns ONLY public catalog/branding/thumbnails, NEVER passwords or orders!)
   if (req.method === 'GET' && req.query && req.query.public === 'cms') {
     try {
       const raw = await getSetting('hvb_cms_state', null);
       if (!raw) return res.status(200).json({ cms: null });
       const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+      const publicCms = {
+        courses: Array.isArray(parsed.courses) ? parsed.courses : null,
+        customLogoDataUrl: parsed.customLogoDataUrl || '',
+        hero: parsed.hero || null,
+        colors: parsed.colors || null,
+        coupons: Array.isArray(parsed.coupons) ? parsed.coupons : null,
+      };
       res.setHeader('Cache-Control', 'no-store');
-      return res.status(200).json({
-        cms: {
-          courses: Array.isArray(parsed.courses) ? parsed.courses : null,
-          customLogoDataUrl: parsed.customLogoDataUrl || '',
-        }
-      });
+      return res.status(200).json({ cms: publicCms });
     } catch (e) {
       return res.status(200).json({ cms: null });
     }
@@ -67,52 +69,20 @@ module.exports = async (req, res) => {
 
     if (action === 'auth') return res.status(200).json({ ok: true });
 
-    // Live CMS Save
+    // Save full CMS state (courses, deletions, thumbnails, prices) to Supabase so live site updates for EVERYONE!
     if (action === 'save_cms' || action === 'save_settings') {
       const cms = body.cms || body.settings || {};
       const safeCms = {
         courses: Array.isArray(cms.courses) ? cms.courses : [],
         customLogoDataUrl: cms.customLogoDataUrl || '',
+        hero: cms.hero || null,
+        colors: cms.colors || null,
+        coupons: Array.isArray(cms.coupons) ? cms.coupons : [],
         updatedAt: new Date().toISOString(),
       };
       const { error } = await saveSetting('hvb_cms_state', safeCms);
       if (error) return res.status(500).json({ error: error.message });
       return res.status(200).json({ ok: true, saved: true });
-    }
-
-    // Live Dashboard Analytics (30 days)
-    if (action === 'dashboard') {
-      const since = daysAgoISO(30);
-      const [{ data: orders }, { data: revs }, { data: wds }] = await Promise.all([
-        supabase.from('orders').select('amount, status, customer_contact, created_at').gte('created_at', since),
-        supabase.from('reviews').select('status'),
-        supabase.from('withdraw_requests').select('status'),
-      ]);
-      const allOrders = orders || [];
-      const paid = allOrders.filter(o => o.status === 'paid');
-      const pending = allOrders.filter(o => o.status !== 'paid');
-      const revenue = paid.reduce((s, o) => s + Number(o.amount || 0), 0);
-      const customers = new Set(paid.map(o => String(o.customer_contact || '').toLowerCase())).size;
-      const pending_reviews = (revs || []).filter(r => r.status !== 'approved').length;
-      const pending_withdraws = (wds || []).filter(w => w.status !== 'paid').length;
-
-      const byDayMap = {};
-      paid.forEach(o => {
-        const day = String(o.created_at || '').slice(0, 10);
-        if (day) byDayMap[day] = (byDayMap[day] || 0) + Number(o.amount || 0);
-      });
-      const by_day = Object.keys(byDayMap).sort().map(date => ({ date, amount: byDayMap[date] }));
-
-      return res.status(200).json({
-        revenue,
-        total_orders: allOrders.length,
-        paid_orders: paid.length,
-        pending_orders: pending.length,
-        customers,
-        pending_reviews,
-        pending_withdraws,
-        by_day,
-      });
     }
 
     if (action === 'upload_image') {
@@ -121,44 +91,35 @@ module.exports = async (req, res) => {
       return res.status(200).json({ ok: true, url: r.url });
     }
 
-    // Reviews Moderation
-    if (action === 'reviewList') {
-      let q = supabase.from('reviews').select('*').order('created_at', { ascending: false }).limit(100);
-      if (body.status && body.status !== 'all') q = q.eq('status', body.status);
-      const { data, error } = await q;
+    if (action === 'search') {
+      const q = String(body.query || '').trim();
+      let sel = supabase.from('orders').select('*');
+      if (q) {
+        if (q.includes('@')) sel = sel.ilike('customer_contact', '%' + q.toLowerCase() + '%');
+        else if (/^[0-9\s+\-]+$/.test(q)) sel = sel.ilike('customer_contact', '%' + q.replace(/[^0-9]/g, '').slice(-10) + '%');
+        else sel = sel.or(`our_ref.eq.${q},invoice_id.eq.${q}`);
+      }
+      const { data, error } = await sel.order('created_at', { ascending: false }).limit(30);
       if (error) return res.status(500).json({ error: error.message });
-      return res.status(200).json({ reviews: data || [] });
-    }
-    if (action === 'reviewSet') {
-      const { error } = await supabase.from('reviews').update({ status: body.status || 'approved' }).eq('id', body.id);
-      if (error) return res.status(500).json({ error: error.message });
-      return res.status(200).json({ success: true });
-    }
-    if (action === 'reviewDelete') {
-      const { error } = await supabase.from('reviews').delete().eq('id', body.id);
-      if (error) return res.status(500).json({ error: error.message });
-      return res.status(200).json({ success: true });
+      return res.status(200).json({ orders: data || [] });
     }
 
-    // Course Requests (stored in events table with event='course_request')
-    if (action === 'courseRequestList') {
-      const { data, error } = await supabase.from('events').select('*').eq('event', 'course_request').order('created_at', { ascending: false }).limit(60);
-      if (error) return res.status(200).json({ requests: [] });
-      return res.status(200).json({ requests: data || [] });
+    if (action === 'settingsGet') {
+      const { data } = await supabase.from('settings').select('*');
+      return res.status(200).json({ settings: data || [] });
     }
-    if (action === 'courseRequestDelete') {
-      await supabase.from('events').delete().eq('id', body.id);
-      return res.status(200).json({ success: true });
+    if (action === 'settingsSave') {
+      await saveSetting(body.key, body.value);
+      return res.status(200).json({ result: 'Saved' });
     }
 
-    // Orders
     if (action === 'ordersList') {
       let q = supabase.from('orders').select('*');
       if (body.status && body.status !== 'all') {
         if (body.status === 'paid') q = q.eq('status', 'paid');
         else q = q.neq('status', 'paid');
       }
-      const { data, error } = await q.order('created_at', { ascending: false }).limit(Number(body.limit) || 100);
+      const { data, error } = await q.order('created_at', { ascending: false }).limit(Number(body.limit) || 200);
       if (error) return res.status(500).json({ error: error.message });
       return res.status(200).json({ orders: data || [] });
     }
@@ -191,7 +152,6 @@ module.exports = async (req, res) => {
       return res.status(200).json({ success: true });
     }
 
-    // Affiliates & Withdrawals
     if (action === 'withdrawList') {
       const { data } = await supabase.from('withdraw_requests').select('*').order('created_at', { ascending: false });
       const minWithdraw = Number(await getSetting('min_withdraw', 500)) || 500;
@@ -216,14 +176,13 @@ module.exports = async (req, res) => {
       }
       return res.status(200).json({ affiliates: out });
     }
-
-    if (action === 'settingsGet') {
-      const { data } = await supabase.from('settings').select('*');
-      return res.status(200).json({ settings: data || [] });
+    if (action === 'promoList') {
+      const { data } = await supabase.from('promo_codes').select('*');
+      return res.status(200).json({ promos: data || [] });
     }
-    if (action === 'settingsSave') {
-      await saveSetting(body.key, body.value);
-      return res.status(200).json({ result: 'Saved' });
+    if (action === 'productList') {
+      const { data } = await supabase.from('products').select('*').order('sort_order', { ascending: true });
+      return res.status(200).json({ products: data || [] });
     }
 
     return res.status(400).json({ error: 'Invalid action' });
