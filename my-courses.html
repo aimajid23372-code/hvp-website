@@ -20,7 +20,6 @@
     color:var(--text); font-family:'Hind Siliguri', sans-serif; line-height:1.65;
   }
   a{ color:inherit; text-decoration:none; }
-  .mono{ font-family:'JetBrains Mono', monospace; letter-spacing:0.03em; }
   header{
     position:sticky; top:0; z-index:20; background:rgba(9,12,19,0.85); backdrop-filter:blur(10px);
     border-bottom:1px solid var(--line); padding:14px 24px;
@@ -34,107 +33,48 @@
   .back-link{ color:var(--muted); font-size:0.9em; }
   .wrap{ max-width:700px; margin:0 auto; padding:44px 24px 90px; }
   h1{ font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(1.5em,5vw,2em); margin-bottom:12px; }
-  p.lead{ color:var(--muted); margin-bottom:28px; }
+  p.lead{ color:var(--muted); margin-bottom:24px; }
   .lookup-box{ display:flex; gap:8px; margin-bottom:10px; }
-  .lookup-input{
-    flex:1; padding:13px 14px; background:var(--surface); border:1px solid var(--line);
-    border-radius:8px; color:var(--text); font-size:1em; font-family:'Hind Siliguri';
-  }
+  .lookup-input{ flex:1; padding:13px 14px; background:var(--surface); border:1px solid var(--line); border-radius:8px; color:var(--text); font-size:1em; font-family:'Hind Siliguri'; }
   .lookup-input:focus{ outline:none; border-color:var(--cyan); }
-  .lookup-btn{
-    background:var(--grad); color:#0A0D14; border:none; padding:0 22px;
-    border-radius:8px; font-weight:700; cursor:pointer; font-size:0.95em;
-  }
+  .lookup-btn{ background:var(--grad); color:#0A0D14; border:none; padding:0 22px; border-radius:8px; font-weight:700; cursor:pointer; font-size:0.95em; }
   .lookup-msg{ font-size:0.88em; margin-bottom:20px; min-height:1.2em; }
   .lookup-msg.error{ color:#F87171; }
   .lookup-msg.info{ color:var(--muted); }
-  .step-note{ color:var(--muted); font-size:0.85em; margin-bottom:10px; }
-  .deliver-block{ text-align:left; margin-bottom:18px; }
-  .deliver-label{ display:block; font-weight:600; font-size:0.9em; margin-bottom:8px; color:var(--text); }
-  .deliver-link{
-    display:inline-block; background:var(--grad); color:#0A0D14; font-weight:700;
-    padding:9px 18px; border-radius:6px; font-size:0.88em; margin-right:8px;
-  }
-  .prompt-box{
-    background:var(--surface); border:1px solid var(--line); border-radius:8px;
-    padding:12px; position:relative;
-  }
-  .prompt-box pre{
-    max-height:160px; overflow-y:auto; font-family:'JetBrains Mono', monospace;
-    font-size:0.72em; color:var(--muted); white-space:pre-wrap; word-break:break-word;
-    margin-bottom:10px; line-height:1.5;
-  }
-  .copy-btn{
-    background:var(--surface-2); border:1px solid var(--cyan); color:var(--cyan);
-    padding:7px 14px; border-radius:6px; font-size:0.8em; cursor:pointer; font-weight:600;
-  }
-  .course-section{
-    background:var(--surface); border:1px solid var(--line); border-radius:12px;
-    padding:20px; margin-bottom:20px;
-  }
-  .course-section h3{ font-family:'Sora',sans-serif; font-size:1.1em; margin-bottom:16px; }
-  .hidden-source{ display:none; }
-  @media (max-width:600px){
-    .wrap{ padding:30px 18px 70px; }
-    .lookup-box{ flex-direction:column; }
-  }
-  .hvb-auth-box{
-    background:var(--surface); border:1px solid var(--line); border-radius:14px;
-    padding:18px; margin-bottom:18px;
-  }
+  .deliver-link{ display:inline-block; background:var(--grad); color:#0A0D14; font-weight:700; padding:9px 18px; border-radius:6px; font-size:0.88em; margin-right:8px; }
+  .course-section{ background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:20px; margin-bottom:20px; }
+  .hvb-auth-box{ background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:18px; margin-bottom:18px; }
   .hvb-auth-head b{ display:block; font-family:'Sora',sans-serif; font-size:1.05em; margin-bottom:4px; }
   .hvb-auth-head span{ display:block; color:var(--muted); font-size:0.85em; margin-bottom:14px; }
-  .hvb-google-btn{
-    display:inline-flex; align-items:center; gap:10px; cursor:pointer;
-    background:#fff; color:#1f2328; border:none; border-radius:10px;
-    padding:11px 18px; font-weight:700; font-size:0.95em; font-family:inherit;
-  }
-  .hvb-google-btn:hover{ opacity:.9; }
+  .hvb-google-btn{ display:inline-flex; align-items:center; gap:10px; cursor:pointer; background:#fff; color:#1f2328; border:none; border-radius:10px; padding:11px 18px; font-weight:700; font-size:0.95em; font-family:inherit; }
   .hvb-auth-state{ margin-top:12px; font-size:0.87em; color:var(--muted); }
   .hvb-auth-state b{ color:var(--cyan); }
-  .hvb-auth-state button{
-    background:transparent; border:1px solid var(--line); color:var(--muted);
-    border-radius:8px; padding:5px 10px; font-size:0.85em; cursor:pointer; margin-left:8px;
-  }
-  .hvb-or{ text-align:center; margin:0 0 14px; position:relative; color:var(--muted); font-size:0.8em; }
-  .hvb-or span{ background:var(--bg,transparent); padding:0 10px; }
-  .hvb-course{padding:0;overflow:hidden;border-radius:18px;background:linear-gradient(180deg,rgba(63,199,242,.06),rgba(124,107,245,.03));border:1px solid rgba(63,199,242,.22)}
-  .hvb-course-head{padding:20px 22px 14px;border-bottom:1px solid var(--line)}
-  .hvb-course-head h3{margin:8px 0 0!important;font-size:1.25em!important}
-  .hvb-badge{display:inline-block;font-size:.75em;font-weight:700;padding:4px 10px;border-radius:99px;background:rgba(180,240,240,.12);color:#B4F0F0;border:1px solid rgba(180,240,240,.3)}
-  .hvb-how{padding:16px 22px}
-  .hvb-how>b{font-size:.9em;color:var(--text)}
-  .hvb-steps{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px}
-  .hvb-steps li{display:flex;gap:10px;align-items:flex-start;font-size:.9em;color:var(--muted);line-height:1.5}
-  .hvb-steps li b{color:var(--text)}
-  .hvb-steps i{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:700;font-size:.8em;background:linear-gradient(135deg,#B4F0F0,#3FC7F2,#7C6BF5);color:#0A0D14}
-  .hvb-prompt,.hvb-watch,.hvb-note{margin:0 22px 16px;border-radius:14px;border:1px solid var(--line);background:rgba(10,13,20,.45)}
-  .hvb-prompt{padding:14px}
-  .hvb-prompt-head,.hvb-watch{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-  .hvb-prompt-head b,.hvb-watch b{display:block;font-family:'Sora',sans-serif;font-size:1em;color:var(--text)}
-  .hvb-prompt-head small,.hvb-watch small{display:block;color:var(--muted);font-size:.78em;margin-top:2px}
-  .hvb-tag{display:inline-block;font-size:.7em;font-weight:700;color:#3FC7F2;letter-spacing:.04em;margin-bottom:3px}
-  .hvb-copy,.hvb-watch-btn{background:linear-gradient(135deg,#B4F0F0,#3FC7F2,#7C6BF5);color:#0A0D14;border:none;font-weight:800;padding:11px 20px;border-radius:12px;cursor:pointer;font-size:.92em;box-shadow:0 8px 22px -10px rgba(63,199,242,.7);text-decoration:none;white-space:nowrap}
-  .hvb-copy.done{background:#B4F0F0}
-  .hvb-pre{margin:12px 0 0;max-height:120px;overflow:hidden;position:relative;font-family:'JetBrains Mono',monospace;font-size:.74em;color:var(--muted);white-space:pre-wrap;word-break:break-word;line-height:1.55;padding:12px;border-radius:10px;background:rgba(0,0,0,.25);-webkit-mask-image:linear-gradient(180deg,#000 60%,transparent)}
-  .hvb-pre.open{max-height:420px;overflow-y:auto;-webkit-mask-image:none}
-  .hvb-more{margin-top:8px;background:none;border:none;color:#3FC7F2;font-weight:600;cursor:pointer;font-size:.85em;padding:4px 0}
-  .hvb-watch{padding:14px}
-  .hvb-note{padding:12px 14px;font-size:.87em;color:var(--muted)}
-  @media(max-width:600px){.hvb-copy,.hvb-watch-btn{width:100%;text-align:center}.hvb-course-head,.hvb-how{padding-left:16px;padding-right:16px}.hvb-prompt,.hvb-watch,.hvb-note{margin-left:16px;margin-right:16px}}
+  .hvb-auth-state button{ background:transparent; border:1px solid var(--line); color:var(--muted); border-radius:8px; padding:5px 10px; font-size:0.85em; cursor:pointer; margin-left:8px; }
+  .hvb-or{ text-align:center; margin:0 0 14px; color:var(--muted); font-size:0.8em; }
+  .hvb-course{ padding:0; overflow:hidden; border-radius:18px; background:linear-gradient(180deg,rgba(63,199,242,.06),rgba(124,107,245,.03)); border:1px solid rgba(63,199,242,.22); }
+  .hvb-course-head{ padding:20px 22px 14px; border-bottom:1px solid var(--line); }
+  .hvb-course-head h3{ margin:8px 0 0; font-size:1.25em; }
+  .hvb-badge{ display:inline-block; font-size:.75em; font-weight:700; padding:4px 10px; border-radius:99px; background:rgba(180,240,240,.12); color:#B4F0F0; border:1px solid rgba(180,240,240,.3); }
+  .hvb-how{ padding:16px 22px; }
+  .hvb-steps{ list-style:none; margin:10px 0 0; padding:0; display:grid; gap:8px; }
+  .hvb-steps li{ display:flex; gap:10px; align-items:flex-start; font-size:.9em; color:var(--muted); }
+  .hvb-steps li b{ color:var(--text); }
+  .hvb-steps i{ flex:none; width:24px; height:24px; border-radius:50%; display:grid; place-items:center; font-style:normal; font-weight:700; font-size:.8em; background:linear-gradient(135deg,#B4F0F0,#3FC7F2,#7C6BF5); color:#0A0D14; }
+  .hvb-prompt,.hvb-watch,.hvb-note{ margin:0 22px 16px; border-radius:14px; border:1px solid var(--line); background:rgba(10,13,20,.45); }
+  .hvb-prompt{ padding:14px; }
+  .hvb-prompt-head,.hvb-watch{ display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+  .hvb-tag{ display:inline-block; font-size:.7em; font-weight:700; color:#3FC7F2; margin-bottom:3px; }
+  .hvb-copy,.hvb-watch-btn{ background:linear-gradient(135deg,#B4F0F0,#3FC7F2,#7C6BF5); color:#0A0D14; border:none; font-weight:800; padding:11px 20px; border-radius:12px; cursor:pointer; font-size:.92em; text-decoration:none; white-space:nowrap; }
+  .hvb-pre{ margin:12px 0 0; max-height:120px; overflow:hidden; font-family:'JetBrains Mono',monospace; font-size:.74em; color:var(--muted); white-space:pre-wrap; word-break:break-word; padding:12px; border-radius:10px; background:rgba(0,0,0,.25); }
+  .hvb-pre.open{ max-height:420px; overflow-y:auto; }
+  .hvb-more{ margin-top:8px; background:none; border:none; color:#3FC7F2; font-weight:600; cursor:pointer; font-size:.85em; }
+  .hvb-watch{ padding:14px; }
+  .hvb-note{ padding:12px 14px; font-size:.87em; color:var(--muted); }
+  @media (max-width:600px){ .wrap{ padding:30px 16px 70px; } .lookup-box{ flex-direction:column; } .hvb-copy,.hvb-watch-btn{ width:100%; text-align:center; } }
 </style>
-<link rel="stylesheet" href="hvb-theme.css">
-<link rel="stylesheet" href="hvb-ui.css">
-<meta name="robots" content="noindex,nofollow">
 <link rel="icon" href="/hvb-logo.png" type="image/png">
-<script src="/hvb-site-settings.js" defer></script>
-<style id="hvb-page-transition-style">.hvb-page-transition{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;background:rgba(7,17,30,.88);backdrop-filter:blur(10px);opacity:0;visibility:hidden;transition:opacity .18s}.hvb-page-transition.show{opacity:1;visibility:visible}.hvb-page-transition i{width:44px;height:44px;border:3px solid rgba(180,240,240,.22);border-top-color:#3FC7F2;border-right-color:#7C6BF5;border-radius:50%;animation:hvb-page-spin .72s linear infinite}@keyframes hvb-page-spin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.hvb-page-transition i{animation-duration:1.5s}}</style>
-<script src="/hvb-page-loader.js" defer></script>
 </head>
 <body>
-<script src="hvb-ref.js"></script>
-<script src="/hvb-track.js?v=20260916-2"></script>
-
 <header>
   <a href="/" class="brand">
     <img src="hvb-logo.png" alt="HVB Logo">
@@ -145,44 +85,38 @@
 
 <div class="wrap">
   <h1>আমার কোর্স দেখুন</h1>
-  <p class="lead">আগে কোর্স কিনে থাকলে, পেমেন্টের সময় যে ফোন নাম্বার/ইমেইল দিয়েছিলেন সেটা দিন — আপনার কোর্স লিংক ও Prompt আবার দেখতে পাবেন।</p>
+  <p class="lead">পেমেন্টের সময় যে ফোন নাম্বার বা ইমেইল দিয়েছিলেন সেটা দিন — আপনার কোর্স ভিডিও ও মাস্টার প্রম্পট সাথে সাথেই খুলে যাবে।</p>
 
   <div class="hvb-auth-box">
     <div class="hvb-auth-head">
       <b>এক ক্লিকে লগইন</b>
-      <span>Google দিয়ে লগইন করলে পরে আর কিছু লেখা লাগবে না — কোর্স নিজেই খুলে যাবে।</span>
+      <span>Google দিয়ে লগইন করলে পরে আর কিছু লেখা লাগবে না — কোর্স নিজেই খুলে যাবে।</span>
     </div>
     <button type="button" id="gBtn" class="hvb-google-btn" onclick="hvbGoogleLogin()">
-      <img src="https://www.google.com/favicon.ico" alt="" width="18" height="18"> Google দিয়ে লগইন
+      <img src="https://www.google.com/favicon.ico" alt="" width="18" height="18"> Google দিয়ে লগইন
     </button>
     <div id="hvbAuthState" class="hvb-auth-state"></div>
   </div>
 
   <div class="hvb-or"><span>অথবা</span></div>
 
-  <p class="lead" style="margin-bottom:12px">আগে নাম্বার/ইমেইল দিয়ে কোর্স কিনেছেন? নিচে সেটাই দিন — আগের মতোই কাজ করবে।</p>
-
   <div class="lookup-box">
-    <input type="text" id="contactInput" class="lookup-input" placeholder="নাম্বার / ইমেইল / Invoice ID">
+    <input type="text" id="contactInput" class="lookup-input" placeholder="নাম্বার / ইমেইল / Order ID">
     <button type="button" class="lookup-btn" onclick="lookupOrder()">খুঁজুন</button>
   </div>
   <div id="lookupMsg" class="lookup-msg"></div>
-
   <div id="resultsArea"></div>
 </div>
-
-<!-- Prompts are now securely fetched from the backend API -->
 
 <script>
   function copyPrompt(elId, btn){
     const text = document.getElementById(elId).innerText;
     navigator.clipboard.writeText(text).then(function(){
       const old = btn.textContent;
-      btn.textContent = 'Copied ✓'; btn.classList.add('done');
-      setTimeout(function(){ btn.textContent = old; btn.classList.remove('done'); }, 2000);
+      btn.textContent = 'Copied ✓';
+      setTimeout(function(){ btn.textContent = old; }, 2000);
     });
   }
-
   function togglePrompt(id, btn){
     var el=document.getElementById(id); if(!el) return;
     var open=el.classList.toggle('open');
@@ -191,60 +125,60 @@
   function renderCourseBlock(idx, type, title, contentObj) {
     if(!contentObj) return '';
     var pr = String(contentObj.prompt || '').trim();
+    var prLink = String(contentObj.prompt_link || '').trim();
     var esc = function(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
     var pid = 'promptText' + idx;
-    var steps = pr
-      ? ['নিচের <b>Copy Prompt</b> চাপুন', 'ChatGPT / Gemini খুলে পেস্ট করে পাঠান', 'এরপর শুধু আপনার টপিক লিখুন — AI স্ক্রিপ্ট ও প্রম্পট বানিয়ে দেবে', '<b>ভিডিও দেখুন</b> চেপে পুরো ধাপগুলো শিখুন']
-      : ['<b>ভিডিও দেখুন</b> চেপে কোর্স খুলুন', 'ধাপে ধাপে ভিডিও দেখে সাথে সাথে করুন', 'কোথাও আটকালে Messenger বা WhatsApp-এ জানান'];
-    var stepsHtml = '<ol class="hvb-steps">' + steps.map(function(t,i){ return '<li><i>'+(i+1)+'</i><span>'+t+'</span></li>'; }).join('') + '</ol>';
+
+    var linkHtml = contentObj.link
+      ? '<div class="hvb-watch"><div><span class="hvb-tag">ধাপ ১</span><b>কোর্স ভিডিও দেখুন</b><small>প্রথমে পুরো ভিডিওটি মনোযোগ দিয়ে দেখুন</small></div>' +
+        '<a href="' + contentObj.link + '" target="_blank" rel="noopener" class="hvb-watch-btn">ভিডিও দেখুন →</a></div>'
+      : '';
+
+    var promptLinkHtml = prLink
+      ? '<div class="hvb-watch" style="border-color:rgba(0,229,255,0.35);"><div><span class="hvb-tag">ধাপ ২</span><b>Master Chatting Prompt (Google Drive)</b><small>ভিডিও দেখে এই ফোল্ডার থেকে মাস্টার প্রম্পট ব্যবহার করুন</small></div>' +
+        '<a href="' + prLink + '" target="_blank" rel="noopener" class="hvb-watch-btn">মাস্টার প্রম্পট খুলুন →</a></div>'
+      : '';
+
     var promptHtml = pr
       ? '<div class="hvb-prompt">' +
-          '<div class="hvb-prompt-head"><div><span class="hvb-tag">ধাপ ১</span><b>Master Chatting Prompt</b><small>' + pr.length.toLocaleString('bn-BD') + ' অক্ষর · পুরোটা একবারে কপি হবে</small></div>' +
+          '<div class="hvb-prompt-head"><div><span class="hvb-tag">ধাপ ২</span><b>Master Chatting Prompt</b><small>' + pr.length.toLocaleString('bn-BD') + ' অক্ষর · পুরোটা একবারে কপি হবে</small></div>' +
           '<button type="button" class="hvb-copy" onclick="copyPrompt(\'' + pid + '\', this)">Copy Prompt</button></div>' +
           '<pre id="' + pid + '" class="hvb-pre">' + esc(pr) + '</pre>' +
           '<button type="button" class="hvb-more" onclick="togglePrompt(\'' + pid + '\', this)">পুরোটা দেখুন ↓</button>' +
         '</div>'
-      : '<div class="hvb-note">ℹ️ এই কোর্সের প্রম্পট ও নির্দেশনা ভিডিওর ভেতরেই দেখানো হয়েছে।</div>';
-    var linkHtml = contentObj.link
-      ? '<div class="hvb-watch"><div><span class="hvb-tag">' + (pr ? 'ধাপ ২' : 'কোর্স') + '</span><b>কোর্স ভিডিও</b><small>নতুন ট্যাবে খুলবে · ৬ মাস অ্যাকসেস</small></div>' +
-        '<a href="' + contentObj.link + '" target="_blank" rel="noopener" class="hvb-watch-btn">ভিডিও দেখুন →</a></div>'
       : '';
+
+    var freeSubHtml = contentObj.free_subscription
+      ? '<div class="hvb-watch" style="background:rgba(37,211,102,0.1); border-color:#25D366;">' +
+          '<div><span class="hvb-tag" style="color:#4ADE80;">🎁 ফ্রি সাবস্ক্রিপশন (শুধু 2D Animation কোর্সের জন্য)</span>' +
+          '<b>ফ্রি সাবস্ক্রিপশন সংগ্রহ করুন</b><small>WhatsApp (01948520271)-এ মেসেজ দিয়ে আপনার ফ্রি সাবস্ক্রিপশন বুঝে নিন</small></div>' +
+          '<a href="https://wa.me/8801948520271?text=' + encodeURIComponent('আসসালামু আলাইকুম, আমি 2D Animation কোর্সটি কিনেছি। আমার ফ্রি সাবস্ক্রিপশনটি নিতে চাই।') + '" target="_blank" rel="noopener" class="hvb-watch-btn" style="background:#25D366; color:#042410;">ফ্রি সাবস্ক্রিপশন নিন →</a>' +
+        '</div>'
+      : '';
+
     return '<div class="course-section hvb-course">' +
-      '<div class="hvb-course-head"><span class="hvb-badge">✓ কেনা হয়েছে</span><h3>' + esc(String(title)) + '</h3></div>' +
-      '<div class="hvb-how"><b>কীভাবে শুরু করবেন</b>' + stepsHtml + '</div>' +
-      promptHtml + linkHtml + '</div>';
+      '<div class="hvb-course-head"><span class="hvb-badge">✓ কেনা হয়েছে</span><h3>' + esc(String(title)) + '</h3></div>' +
+      '<div style="padding-top:16px;">' + linkHtml + promptLinkHtml + promptHtml + freeSubHtml + '</div>' +
+    '</div>';
   }
 
-  // ---------- কোর্সগুলো স্ক্রিনে দেখানোর ফাংশন ----------
   function renderCourses(courses, contentData){
     const results = document.getElementById('resultsArea');
-    let html = '';
-    let idx = 0;
-    
+    let html = '', idx = 0;
     contentData = contentData || {};
-
     const rawList = Array.isArray(courses) ? courses : [courses];
-    let renderShort = false;
-    let renderLong = false;
+    let renderShort = false, renderLong = false;
 
     rawList.forEach(function(c) {
       const s = String(c || '').toLowerCase().trim();
       if ((s.includes('short') && s.includes('long')) || s.includes('bundle') || s.includes('combo') || s.includes('both')) {
-        renderShort = true;
-        renderLong = true;
-      } else if (s.includes('short')) {
-        renderShort = true;
-      } else if (s.includes('long')) {
-        renderLong = true;
-      }
+        renderShort = true; renderLong = true;
+      } else if (s.includes('short')) renderShort = true;
+      else if (s.includes('long')) renderLong = true;
     });
 
-    if (renderShort && contentData['short']) {
-      html += renderCourseBlock(idx++, 'short', 'Short Video Course', contentData['short']);
-    }
-    if (renderLong && contentData['long']) {
-      html += renderCourseBlock(idx++, 'long', 'Long Video Course', contentData['long']);
-    }
+    if (renderShort && contentData['short']) html += renderCourseBlock(idx++, 'short', 'Short Video Course', contentData['short']);
+    if (renderLong && contentData['long']) html += renderCourseBlock(idx++, 'long', 'Long Video Course', contentData['long']);
     rawList.forEach(function(c) {
       const slug = String(c || '').toLowerCase().trim();
       if (!['short','long','bundle'].includes(slug) && contentData[slug]) {
@@ -252,98 +186,39 @@
       }
     });
 
-    // Fallback: If course detected but content wasn't attached
-    if ((renderShort || renderLong) && !contentData['short'] && !contentData['long']) {
-      html += '<div class="course-section" style="border-color: #f59e0b; background: rgba(245, 158, 11, 0.08);">' +
-        '<h3 style="color:#f59e0b;"> ⚠️ কোর্স কনটেন্ট লোড হতে সমস্যা হয়েছে</h3>' +
-        '<p style="color:var(--text); font-size:0.92em; margin: 8px 0;">আপনার পেমেন্ট ভেরিফাইড হয়েছে, কিন্তু কনটেন্ট সাময়িকভাবে লোড করা যায়নি। অনুগ্রহ করে পেজটি একবার রিফ্রেশ করুন অথবা নিচে সরাসরি মেসেঞ্জারে আমাদের জানান।</p>' +
-      '</div>';
-    }
-
-    html += '<div class="course-section" style="background: rgba(94,234,212,0.05); border-color: var(--cyan);">' +
-      '<h3> 💬 অফিসিয়াল সাপোর্ট (Messenger)</h3>' +
-      '<p style="color:var(--text); font-size:0.9em; margin: 8px 0;">কোর্স নিয়ে যেকোনো প্রশ্ন বা সমস্যা থাকলে সরাসরি আমাদের অফিসিয়াল ফেসবুক পেজে মেসেজ দিন।</p>' +
-      '<a href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" class="deliver-link" style="background: #0084FF; color:#fff;">Messenger-এ মেসেজ দিন →</a>' +
-    '</div>';
-
     html += '<div class="course-section" style="background: rgba(37,211,102,0.07); border-color:#25D366;">' +
-      '<h3> 📱 WhatsApp সাপোর্ট (শুধু ক্রেতাদের জন্য)</h3>' +
-      '<p style="color:var(--text); font-size:0.9em; margin: 8px 0;">কোর্স কিনে ফেলেছেন, তাই এখন সরাসরি WhatsApp-এ আমাদের পাবেন। নম্বর: <b>01948520271</b></p>' +
+      '<h3>📱 WhatsApp ফুল সাপোর্ট (শুধু ক্রেতাদের জন্য)</h3>' +
+      '<p style="color:var(--text); font-size:0.9em; margin: 8px 0;">যেকোনো সমস্যায় সরাসরি WhatsApp-এ মেসেজ দিন। নম্বর: <b>01948520271</b></p>' +
       '<a href="https://wa.me/8801948520271" target="_blank" rel="noopener" class="deliver-link" style="background:#25D366; color:#062b13;">WhatsApp-এ মেসেজ দিন →</a>' +
     '</div>';
 
-    html += '<div class="course-section" style="background: rgba(37,211,102,0.07); border-color:#25D366;">' +
-      '<h3> 👥 HVB Subscription Group (সবার জন্য ফ্রি)</h3>' +
-      '<p style="color:var(--text); font-size:0.9em; margin: 8px 0;">এই গ্রুপে খুব কম দামে বিভিন্ন সাবস্ক্রিপশন পাবেন। এখনো জয়েন না করে থাকলে এখনই জয়েন করুন — কোর্স কিনলেও, না কিনলেও সবার জন্য উন্মুক্ত।</p>' +
-      '<a href="https://chat.whatsapp.com/J3OFu9XaZWPFQktnSFzjV0" target="_blank" rel="noopener" class="deliver-link" style="background:#25D366; color:#062b13;">Join WhatsApp Group →</a>' +
-    '</div>';
-
     results.innerHTML = html;
-    try { results.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch(e){}
   }
 
-  // ---------- নাম্বার/ইমেইল দিয়ে নিজের কোর্স খোঁজা ----------
   async function lookupOrder(){
     const contact = document.getElementById('contactInput').value.trim();
     const msg = document.getElementById('lookupMsg');
     const results = document.getElementById('resultsArea');
     results.innerHTML = '';
-    if(!contact){
-      msg.textContent = 'ফোন নাম্বার, ইমেইল বা Invoice ID দিন';
-      msg.className = 'lookup-msg error';
-      return;
-    }
-
+    if(!contact){ msg.textContent = 'ফোন নাম্বার, ইমেইল বা Order ID দিন'; msg.className = 'lookup-msg error'; return; }
     try { localStorage.setItem('hvb_contact', contact); } catch(e){}
-    msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
-    msg.className = 'lookup-msg info';
+    msg.textContent = 'খোঁজা হচ্ছে...'; msg.className = 'lookup-msg info';
 
     try {
-      // If user is currently logged in with Google, also link it securely!
-      if (hvbSb) {
-        try {
-          const { data } = await hvbSb.auth.getSession();
-          if (data && data.session) {
-            const linkRes = await fetch('/api/my-access', {
-              method: 'POST',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify({ access_token: data.session.access_token, action: 'link', contact: contact })
-            });
-            const linkOut = await linkRes.json();
-            if (linkOut.courses && linkOut.courses.length) {
-              msg.textContent = ' ✅ আপনার কোর্স পাওয়া গেছে এবং Google অ্যাকাউন্টে যুক্ত হয়েছে!';
-              msg.className = 'lookup-msg';
-              renderCourses(linkOut.courses, linkOut.content);
-              return;
-            }
-          }
-        } catch(e) {}
-      }
-
       const res = await fetch('/api/lookup-order', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ contact: contact })
+        method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ contact })
       });
       const data = await res.json();
       const courses = data.courses || [];
-
       if(courses.length === 0){
-        msg.innerHTML = 'এটি দিয়ে কোনো সফল পেমেন্ট পাওয়া যায়নি। পেমেন্টের সময় দেওয়া নাম্বার/ইমেইল দিন, অথবা পেমেন্টের Invoice ID (লম্বা কোড) দিন। সমস্যা হলে <a href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" style="color:var(--cyan)">Messenger-এ</a> যোগাযোগ করুন।';
-        msg.className = 'lookup-msg error';
-        return;
+        msg.innerHTML = 'কোনো সফল পেমেন্ট পাওয়া যায়নি। সমস্যা হলে <a href="https://wa.me/8801948520271" target="_blank" style="color:#25D366">WhatsApp (01948520271)</a>-এ জানান।';
+        msg.className = 'lookup-msg error'; return;
       }
-
-      msg.textContent = ' ✅ আপনার কোর্স পাওয়া গেছে!';
-      msg.className = 'lookup-msg';
+      msg.textContent = '✅ আপনার কোর্স পাওয়া গেছে!'; msg.className = 'lookup-msg';
       renderCourses(courses, data.content);
-    } catch(err){
-      msg.textContent = 'সমস্যা হয়েছে, আবার চেষ্টা করুন।';
-      msg.className = 'lookup-msg error';
-    }
+    } catch(err){ msg.textContent = 'সমস্যা হয়েছে, আবার চেষ্টা করুন।'; msg.className = 'lookup-msg error'; }
   }
 
-  // ---------- পেমেন্ট শেষে এখানে ফিরে আসার পর স্বয়ংক্রিয় অ্যাক্সেস ----------
   async function checkPaidOrder(orderRef, attempt){
     attempt = attempt || 0;
     const msg = document.getElementById('lookupMsg');
@@ -351,56 +226,31 @@
       const res = await fetch('/api/order-status?ref=' + encodeURIComponent(orderRef));
       const data = await res.json();
       if(data.status === 'paid'){
-        msg.innerHTML = ' ✅ <b>পেমেন্ট সফল হয়েছে!</b> আপনার কোর্স খুলে দেওয়া হয়েছে — নিচে দেখুন।';
+        msg.innerHTML = '✅ <b>পেমেন্ট সফল হয়েছে!</b> আপনার কোর্স নিচে খুলে দেওয়া হয়েছে।';
         msg.className = 'lookup-msg';
-        if(data.contact){
-          try { localStorage.setItem('hvb_contact', data.contact); } catch(e){}
-          const input = document.getElementById('contactInput');
-          if(input) input.value = data.contact;
-        }
+        if(data.contact){ try { localStorage.setItem('hvb_contact', data.contact); } catch(e){} }
         renderCourses(data.courses && data.courses.length ? data.courses : [data.course], data.content);
         return;
       }
-      if(data.status === 'failed' || data.status === 'cancelled'){
-        msg.textContent = ' ❌ পেমেন্টটি সম্পন্ন হয়নি। আবার চেষ্টা করুন অথবা Messenger-এ যোগাযোগ করুন।';
-        msg.className = 'lookup-msg error';
-        return;
-      }
-    } catch(err){ /* চুপচাপ আবার চেষ্টা করবে */ }
-
-    if(attempt < 32){
-      setTimeout(function(){ checkPaidOrder(orderRef, attempt + 1); }, 2500);
-    } else {
-      msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
-      msg.className = 'lookup-msg error';
-    }
+    } catch(err){}
+    if(attempt < 24) setTimeout(function(){ checkPaidOrder(orderRef, attempt + 1); }, 2500);
   }
 
   window.addEventListener('DOMContentLoaded', function(){
     const params = new URLSearchParams(window.location.search);
     const orderRef = params.get('order');
-    const msg = document.getElementById('lookupMsg');
     const saved = localStorage.getItem('hvb_contact');
-    if(saved){
-      const input = document.getElementById('contactInput');
-      if(input) input.value = saved;
-    }
+    if(saved){ const input = document.getElementById('contactInput'); if(input) input.value = saved; }
     if(orderRef){
-      msg.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
-      msg.className = 'lookup-msg info';
+      document.getElementById('lookupMsg').textContent = 'পেমেন্ট ভেরিফাই হচ্ছে...';
       history.replaceState({}, '', window.location.pathname);
       checkPaidOrder(orderRef, 0);
-    } else if(saved){
-      lookupOrder();
-    }
+    } else if(saved){ lookupOrder(); }
   });
 </script>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  /* ---------- Google লগইন (Supabase Auth) ---------- */
   var hvbSb = null;
-
   async function hvbInitAuth(){
     try {
       const cfg = await (await fetch('/api/my-access?config=1')).json();
@@ -408,120 +258,27 @@
       hvbSb = window.supabase.createClient(cfg.url, cfg.anonKey);
       const { data } = await hvbSb.auth.getSession();
       if(data && data.session) hvbAfterLogin(data.session);
-      hvbSb.auth.onAuthStateChange(function(_e, session){ if(session) hvbAfterLogin(session); });
     } catch(e){}
   }
-
   async function hvbGoogleLogin(){
-    if(!hvbSb){ await hvbInitAuth(); }
-    if(!hvbSb){
-      document.getElementById('hvbAuthState').textContent = 'Google লগইন এখনো চালু হয়নি। নিচে নাম্বার/ইমেইল দিয়ে খুঁজুন।';
-      return;
-    }
-    await hvbSb.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: 'https://www.hypervisionbd.com/my-courses' }
-    });
+    if(!hvbSb) await hvbInitAuth();
+    if(!hvbSb) return;
+    await hvbSb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + '/my-courses' } });
   }
-
-  async function hvbLogout(){
-    if(hvbSb) await hvbSb.auth.signOut();
-    document.getElementById('hvbAuthState').textContent = '';
-    document.getElementById('gBtn').style.display = '';
-  }
-
+  async function hvbLogout(){ if(hvbSb) await hvbSb.auth.signOut(); location.reload(); }
   async function hvbAfterLogin(session){
     const state = document.getElementById('hvbAuthState');
-    const btn = document.getElementById('gBtn');
-    if(btn) btn.style.display = 'none';
-    state.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
-    try {
-      const res = await fetch('/api/my-access', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ access_token: session.access_token })
-      });
-      const data = await res.json();
-      const email = data.email || '';
-      const courses = data.courses || [];
-      if(courses.length){
-        state.innerHTML = '<b>' + email + '</b> — আপনার কোর্স নিচে খুলে দেওয়া হয়েছে। <button type="button" onclick="hvbLogout()">লগআউট</button>';
-        renderCourses(courses, data.content);
-      } else {
-        state.innerHTML = '<b>' + email + '</b> — এই ইমেইলে কোনো কেনা কোর্স পাওয়া যায়নি। ' +
-          'আগে <u>অন্য নাম্বার/ইমেইল</u> দিয়ে কিনলে সেটা এখানে দিন, একবার যুক্ত করলেই পরে শুধু Google লগইনেই চলবে:' +
-          '<div class="lookup-box" style="margin-top:10px">' +
-            '<input type="text" id="linkInput" class="lookup-input" placeholder="আগের নাম্বার / ইমেইল / Invoice ID">' +
-            '<button type="button" class="lookup-btn" onclick="hvbLinkOld()">যুক্ত করুন</button>' +
-          '</div>' +
-          '<button type="button" onclick="hvbLogout()">লগআউট</button>';
-      }
-    } catch(e){
-      state.textContent = 'সমস্যা হয়েছে, একটু পরে আবার চেষ্টা করুন।';
+    const btn = document.getElementById('gBtn'); if(btn) btn.style.display = 'none';
+    const res = await fetch('/api/my-access', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ access_token: session.access_token }) });
+    const data = await res.json();
+    if((data.courses || []).length){
+      state.innerHTML = '<b>' + data.email + '</b> — আপনার কোর্স নিচে খুলে দেওয়া হয়েছে। <button type="button" onclick="hvbLogout()">লগআউট</button>';
+      renderCourses(data.courses, data.content);
+    } else {
+      state.innerHTML = '<b>' + (data.email||'') + '</b> — এই ইমেইলে কোনো কোর্স পাওয়া যায়নি। <button type="button" onclick="hvbLogout()">লগআউট</button>';
     }
   }
-
-  async function hvbLinkOld(){
-    const el = document.getElementById('linkInput');
-    const state = document.getElementById('hvbAuthState');
-    const contact = el ? el.value.trim() : '';
-    if(!contact) return;
-    const { data } = await hvbSb.auth.getSession();
-    if(!data || !data.session) return;
-    state.innerHTML = '<span class="hvb-loadrow"><span class="hvb-inline-spin"></span></span>';
-    try {
-      const res = await fetch('/api/my-access', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ access_token: data.session.access_token, action: 'link', contact: contact })
-      });
-      const out = await res.json();
-      if((out.courses || []).length){
-        state.innerHTML = ' যুক্ত হয়েছে (<b>' + (out.email||'') + '</b>) — এখন থেকে শুধু Google লগইনেই কোর্স পাবেন। <button type="button" onclick="hvbLogout()">লগআউট</button>';
-        renderCourses(out.courses, out.content);
-      } else {
-        state.innerHTML = 'এটি দিয়ে কোনো সফল পেমেন্ট পাওয়া যায়নি। সমস্যা হলে <a href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" style="color:var(--cyan)">Messenger-এ</a> জানান।';
-      }
-    } catch(e){
-      state.textContent = 'সমস্যা হয়েছে, আবার চেষ্টা করুন।';
-    }
-  }
-
   window.addEventListener('DOMContentLoaded', hvbInitAuth);
 </script>
-
-<script>
-  // ---------- Affiliate ref ট্র্যাকিং (যেকোনো পেজে ?ref=code থাকলে ধরে রাখে) ----------
-  (function(){
-    try {
-      var r = (new URLSearchParams(window.location.search).get('ref') || '').trim().toLowerCase();
-      if(r && /^[a-z0-9]{3,30}$/.test(r)){
-        localStorage.setItem('hvb_ref', r);
-        localStorage.setItem('hvb_ref_at', String(Date.now()));
-      }
-    } catch(e){}
-  })();
-</script>
-
-<a class="hvb-msgr-float" href="https://m.me/hypervisionbangla" target="_blank" rel="noopener" aria-label="Messenger-এ প্রশ্ন করুন"><i>💬 </i> Messenger-এ প্রশ্ন করুন</a>
-
-<script>
-/* HVB scroll reveal */
-(function(){
-  var sel = 'section, .hvb-stats, .hvb-policy-box, .course-card, .why-item, .hvb-idcard, .hvb-contact-card, .payment-strip, .hvb-tut-cta';
-  var els = [];
-  document.querySelectorAll(sel).forEach(function(el){ el.classList.add('hvb-reveal'); els.push(el); });
-  if(!('IntersectionObserver' in window)){ els.forEach(function(e){ e.classList.add('is-in'); }); return; }
-  var io = new IntersectionObserver(function(entries){
-    entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('is-in'); io.unobserve(en.target); } });
-  }, { threshold:0.08, rootMargin:'0px 0px -40px 0px' });
-  els.forEach(function(el){ io.observe(el); });
-})();
-</script>
-<script src="hvb-account.js"></script>
 </body>
 </html>
-
-
-
-
