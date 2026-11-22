@@ -215,7 +215,7 @@
         <form id="addRevForm" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <input id="arName" required placeholder="শিক্ষার্থীর নাম" class="inp" />
           <input id="arCourse" placeholder="কোর্স (যেমন: bundle, short, 2d-animation)" value="bundle" class="inp" />
-          <input id="arImg" placeholder="স্ক্রিনশট/ছবির লিংক (ঐচ্ছিক)" class="inp" />
+          <div class="flex gap-2 items-center"><input id="arImg" placeholder="স্ক্রিনশট লিংক বা ডানপাশে আপলোড" class="inp flex-1" /><input id="arImgFile" type="file" accept="image/*" onchange="uploadRevImg(this)" class="text-[11px] text-slate-300 w-36" /></div>
           <input id="arLink" placeholder="ভিডিও লিংক (ঐচ্ছিক)" class="inp" />
           <textarea id="arBody" required rows="2" placeholder="রিভিউ লেখা..." class="inp sm:col-span-2"></textarea>
           <button type="submit" class="btn-primary py-2 rounded-xl text-xs sm:w-44">রিভিউ পাবলিশ করুন</button>
@@ -225,6 +225,18 @@
 
     <!-- 5. AFFILIATES & PAYOUTS -->
     <section id="tab-affiliates" class="tab-pane space-y-5">
+
+      <div class="card p-5 space-y-3">
+        <h3 class="font-bold text-sm text-white">+ নতুন অ্যাফিলিয়েট যোগ করুন (Manual)</h3>
+        <form id="addAffForm" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
+          <input id="aaName" required placeholder="নাম" class="inp" />
+          <input id="aaRef" required placeholder="Ref Code (যেমন: rahim20)" class="inp" />
+          <input id="aaContact" placeholder="ফোন বা ইমেইল" class="inp" />
+          <input id="aaPct" type="number" value="20" placeholder="কমিশন %" class="inp" />
+          <button type="submit" class="btn-primary rounded-xl py-2 text-xs">+ অ্যাফিলিয়েট যোগ করুন</button>
+        </form>
+      </div>
+
       <div class="card p-5 space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3">
           <div>
@@ -333,6 +345,24 @@
         </div>
       </div>
 
+
+      <div class="card p-6 space-y-4 border border-emerald-400/20">
+        <h3 class="font-bold text-base text-emerald-300">💰 হোমপেজ ইনকাম সেকশন কন্ট্রোল (Affiliate + Facebook)</h3>
+        <div class="flex flex-wrap gap-4 text-xs">
+          <label class="flex items-center gap-2"><input id="incShowAff" type="checkbox" checked class="w-4 h-4 accent-emerald-400" /> অ্যাফিলিয়েট ইনকাম ট্যাব দেখাবে</label>
+          <label class="flex items-center gap-2"><input id="incShowFb" type="checkbox" checked class="w-4 h-4 accent-cyan-400" /> Facebook ইনকাম ট্যাব দেখাবে</label>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-3">
+          <div><label class="text-xs text-slate-400 block mb-1">গড় প্রতি সেল কমিশন (৳)</label><input id="incPerSale" type="number" value="160" class="inp" /></div>
+          <div><label class="text-xs text-slate-400 block mb-1">FB সর্বনিম্ন রেট ($ / লাখ ভিউ)</label><input id="incFbLow" type="number" step="0.5" value="2" class="inp" /></div>
+          <div><label class="text-xs text-slate-400 block mb-1">FB সর্বোচ্চ রেট ($ / লাখ ভিউ)</label><input id="incFbHigh" type="number" step="0.5" value="3" class="inp" /></div>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-3">
+          <div><label class="text-xs text-slate-400 block mb-1">অ্যাফিলিয়েট হেডলাইন (ঐচ্ছিক)</label><input id="incAffTitle" placeholder="প্রতি রেফারে ২০% কমিশন — সরাসরি bKash / Nagad-এ!" class="inp" /></div>
+          <div><label class="text-xs text-slate-400 block mb-1">অ্যাফিলিয়েট বিবরণ (ঐচ্ছিক)</label><input id="incAffDesc" placeholder="কোর্স কেনার সাথে সাথেই আয় শুরু..." class="inp" /></div>
+        </div>
+      </div>
+
       <div class="card p-6 space-y-4">
         <h3 class="font-bold text-base text-white">ওয়েবসাইট ব্র্যান্ডিং, লোগো ও ফুটার</h3>
         <div class="grid sm:grid-cols-2 gap-3">
@@ -373,7 +403,8 @@ let CMS = {
   announcement: { active: false, text: '', link: '/courses' },
   popup: { active: false, title: '', body: '', coupon: 'HVB50', link: '/courses' },
   homepage: { showCourses: true, showIncome: true, showReviews: true, showSteps: true },
-  site: { heroTitle: '', messenger: 'https://m.me/hypervisionbangla', footerText: '' }
+  site: { heroTitle: '', messenger: 'https://m.me/hypervisionbangla', footerText: '' },
+  income: { showAffiliateTab: true, showFbTab: true, avgPerSale: 160, fbRateLow: 2, fbRateHigh: 3, affTitle: '', affDesc: '' }
 };
 let ALL_ORDERS = [], ALL_REVIEWS = [], ALL_AFFS = [], ALL_WDS = [], ALL_PROMOS = [], ALL_REQS = [];
 let selectedCourseId = '2d-animation';
@@ -480,7 +511,7 @@ async function loadDashboard(days, btnEl) {
 
 async function refreshAll() {
   const [cmsRes, ord, rev, aff, wd, prom, reqs] = await Promise.all([
-    fetch('/api/admin?public=cms', { cache: 'no-store' }).then(r => r.json()).catch(() => null),
+    fetch('/api/admin?public=cms&_t=' + Date.now(), { cache: 'no-store' }).then(r => r.json()).catch(() => null),
     api('ordersList', { status: 'all', limit: 200 }).catch(() => ({})),
     api('reviewList', { status: 'all' }).catch(() => ({})),
     api('affiliateList').catch(() => ({})),
@@ -496,6 +527,7 @@ async function refreshAll() {
     if (cmsRes.cms.popup) CMS.popup = cmsRes.cms.popup;
     if (cmsRes.cms.homepage) CMS.homepage = Object.assign(CMS.homepage, cmsRes.cms.homepage);
     if (cmsRes.cms.site) CMS.site = Object.assign(CMS.site, cmsRes.cms.site);
+    if (cmsRes.cms.income) CMS.income = Object.assign(CMS.income, cmsRes.cms.income);
   }
   ALL_ORDERS = ord.orders || [];
   ALL_REVIEWS = rev.reviews || [];
@@ -647,7 +679,7 @@ function renderOrders() {
       <td class="py-2.5 pr-3 font-num font-bold text-cyan-300">৳${Number(o.amount || 0)}</td>
       <td class="py-2.5 pr-3"><span class="px-2 py-0.5 rounded-full ${o.status === 'paid' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300'} font-bold">${esc(o.status)}</span></td>
       <td class="py-2.5 text-right space-x-1">
-        ${o.status !== 'paid' ? `<button onclick="markPaid('${esc(o.id)}')" class="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 font-bold">Approve</button>` : ''}
+        ${o.status !== 'paid' ? `<button onclick="markPaid('${esc(o.id)}')" class="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 font-bold">Approve</button>` : `<button onclick="markPending('${esc(o.id)}')" class="px-2 py-1 rounded bg-amber-500/20 text-amber-300 font-bold">Pending</button>`}
         <button onclick="delOrder('${esc(o.id)}')" class="px-2.5 py-1 rounded bg-rose-500/20 text-rose-300 font-bold">Delete</button>
       </td>
     </tr>`).join('') || '<tr><td colspan="5" class="py-4 text-slate-500">কোনো অর্ডার নেই।</td></tr>';
@@ -660,6 +692,7 @@ document.getElementById('grantForm').addEventListener('submit', async (e) => {
   } catch (err) { toast(err.message, true); }
 });
 async function markPaid(id) { await api('orderMarkPaid', { id }); toast('Approved ✓'); refreshAll(); }
+async function markPending(id) { await api('orderSetStatus', { id, status: 'pending' }); toast('Marked Pending ✓'); refreshAll(); }
 async function delOrder(id) { if (!confirm('ডিলিট করবেন?')) return; await api('orderDelete', { id }); toast('Deleted ✓'); refreshAll(); }
 function exportOrdersCsv() {
   const rows = [['Name','Contact','Course','Amount','Status','Date']].concat(ALL_ORDERS.map(o => [o.customer_name, o.customer_contact, o.course, o.amount, o.status, o.created_at]));
@@ -691,6 +724,21 @@ function renderReviews() {
 }
 async function setRev(id, status) { await api('reviewSet', { id, status }); toast('Updated ✓'); refreshAll(); }
 async function delRev(id) { if (!confirm('রিভিউ মুছবেন?')) return; await api('reviewDelete', { id }); toast('Deleted ✓'); refreshAll(); }
+
+function uploadRevImg(input) {
+  const f = input.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = async () => {
+    toast('ছবি আপলোড হচ্ছে...');
+    try {
+      const d = await api('upload_image', { folder: 'reviews', data_url: r.result });
+      document.getElementById('arImg').value = d.url || '';
+      toast('রিভিউ ছবি আপলোড হয়েছে ✓');
+    } catch (e) { toast(e.message, true); }
+  };
+  r.readAsDataURL(f);
+}
+
 async function approveAllReviews() { await api('reviewApproveAll'); toast('সব রিভিউ Approve হয়েছে ✓'); refreshAll(); }
 document.getElementById('addRevForm').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -710,7 +758,11 @@ function renderAffiliates() {
       <td class="py-2.5 pr-3 font-num">৳${a.totalSales || 0} (${a.orderCount || 0})</td>
       <td class="py-2.5 pr-3"><input type="number" value="${a.commission_percent || 20}" onchange="updateAffComm('${esc(a.ref_code)}', this.value)" class="w-16 px-2 py-1 rounded bg-[#05070E] border border-white/15 text-white text-xs" />%</td>
       <td class="py-2.5 pr-3"><div class="text-emerald-300 font-bold">পেন্ডিং: ৳${a.pending || 0}</div><div class="text-slate-400">পেইড: ৳${a.paidOut || 0}</div></td>
-      <td class="py-2.5 text-right"><button onclick="adjustAff('${esc(a.ref_code)}')" class="px-2.5 py-1 rounded bg-cyan-500/20 text-cyan-200 font-bold">+/- ব্যালেন্স</button></td>
+      <td class="py-2.5 text-right space-x-1 whitespace-nowrap">
+        <button onclick="payAffManual('${esc(a.ref_code)}', ${a.pending || 0}, '${esc(a.pay_method || 'bKash')}', '${esc(a.pay_account || a.contact || '')}')" class="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 font-bold">💸 টাকা দিন</button>
+        <button onclick="adjustAff('${esc(a.ref_code)}')" class="px-2 py-1 rounded bg-cyan-500/20 text-cyan-200 font-bold">+/-</button>
+        <button onclick="delAff('${esc(a.ref_code)}')" class="px-2 py-1 rounded bg-rose-500/20 text-rose-300 font-bold">✕</button>
+      </td>
     </tr>`).join('') || '<tr><td colspan="6" class="py-4 text-slate-500">কোনো অ্যাফিলিয়েট নেই।</td></tr>';
 
   document.getElementById('wdBody').innerHTML = ALL_WDS.map(w => `
@@ -725,6 +777,31 @@ function renderAffiliates() {
     </tr>`).join('') || '<tr><td colspan="5" class="py-4 text-slate-500">কোনো উইথড্র রিকোয়েস্ট নেই।</td></tr>';
 }
 async function updateAffComm(ref, pct) { await api('affiliateUpdate', { ref_code: ref, commission_percent: Number(pct) }); toast('কমিশন আপডেট হয়েছে ✓'); }
+
+async function payAffManual(ref, pendingAmt, defMethod, defAcc) {
+  const amt = prompt('@' + ref + '-কে ম্যানুয়ালি কত টাকা পেইড করবেন? (পেন্ডিং: ৳' + pendingAmt + ')', pendingAmt > 0 ? pendingAmt : 500);
+  if (!amt || Number(amt) <= 0) return;
+  const method = prompt('পেমেন্ট মাধ্যম (bKash / Nagad / Rocket):', defMethod || 'bKash') || 'bKash';
+  const account = prompt('রিসিভার নাম্বার:', defAcc || '') || '';
+  try {
+    await api('affiliatePayManual', { ref_code: ref, amount: Number(amt), method, account });
+    toast('✓ @' + ref + '-কে ৳' + amt + ' পেইড রেকর্ড করা হয়েছে!');
+    refreshAll();
+  } catch (e) { toast(e.message, true); }
+}
+async function delAff(ref) {
+  if (!confirm('@' + ref + ' অ্যাফিলিয়েট অ্যাকাউন্টটি ডিলিট করবেন?')) return;
+  await api('affiliateDelete', { ref_code: ref });
+  toast('Affiliate ডিলিট হয়েছে ✓'); refreshAll();
+}
+document.getElementById('addAffForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  try {
+    await api('affiliateAdd', { name: document.getElementById('aaName').value, ref_code: document.getElementById('aaRef').value, contact: document.getElementById('aaContact').value, commission_percent: document.getElementById('aaPct').value });
+    toast('নতুন অ্যাফিলিয়েট যোগ হয়েছে ✓'); e.target.reset(); refreshAll();
+  } catch (err) { toast(err.message, true); }
+});
+
 async function adjustAff(ref) {
   const amt = prompt('@' + ref + '-এর ব্যালেন্সে কত টাকা যোগ বা বিয়োগ করবেন? (যেমন: 200 বা -100)');
   if (!amt || isNaN(Number(amt))) return;
@@ -816,6 +893,13 @@ function populateSettingsUI() {
   document.getElementById('siteHeroTitle').value = (CMS.site && CMS.site.heroTitle) || '';
   document.getElementById('siteMsgr').value = (CMS.site && CMS.site.messenger) || 'https://m.me/hypervisionbangla';
   document.getElementById('siteFooterText').value = (CMS.site && CMS.site.footerText) || '';
+  document.getElementById('incShowAff').checked = CMS.income.showAffiliateTab !== false;
+  document.getElementById('incShowFb').checked = CMS.income.showFbTab !== false;
+  document.getElementById('incPerSale').value = CMS.income.avgPerSale || 160;
+  document.getElementById('incFbLow').value = CMS.income.fbRateLow || 2;
+  document.getElementById('incFbHigh').value = CMS.income.fbRateHigh || 3;
+  document.getElementById('incAffTitle').value = CMS.income.affTitle || '';
+  document.getElementById('incAffDesc').value = CMS.income.affDesc || '';
 }
 function saveMarketing() {
   CMS.announcement = { active: document.getElementById('annActive').checked, text: document.getElementById('annText').value.trim(), link: document.getElementById('annLink').value.trim() };
@@ -825,6 +909,7 @@ function saveMarketing() {
 function saveSiteSettings() {
   CMS.homepage = { showCourses: document.getElementById('hpCourses').checked, showIncome: document.getElementById('hpIncome').checked, showReviews: document.getElementById('hpReviews').checked, showSteps: document.getElementById('hpSteps').checked };
   CMS.site = { heroTitle: document.getElementById('siteHeroTitle').value.trim(), messenger: document.getElementById('siteMsgr').value.trim(), footerText: document.getElementById('siteFooterText').value.trim() };
+  CMS.income = { showAffiliateTab: document.getElementById('incShowAff').checked, showFbTab: document.getElementById('incShowFb').checked, avgPerSale: Number(document.getElementById('incPerSale').value)||160, fbRateLow: Number(document.getElementById('incFbLow').value)||2, fbRateHigh: Number(document.getElementById('incFbHigh').value)||3, affTitle: document.getElementById('incAffTitle').value.trim(), affDesc: document.getElementById('incAffDesc').value.trim() };
   publishCms(true);
 }
 document.getElementById('siteLogoFile').addEventListener('change', (e) => {

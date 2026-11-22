@@ -63,6 +63,13 @@
     };
   }
 
+  function driveImg(u) {
+    u = String(u || '').trim();
+    if (!u) return '';
+    var m = u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=|thumbnail\?id=)([-\w]{20,})/);
+    return m ? ('https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w1000') : u;
+  }
+
   function normalizeList(items) {
     return (items || []).map(function (r, idx) {
       var cleaned = cleanReviewerName(r.rawName || r.name || r.student_name, r.course || r.course_slug || r.product_id);
@@ -73,8 +80,10 @@
         course: cleaned.course,
         courseLabel: cleaned.courseLabel,
         rating: Number(r.rating || 5),
-        date: r.date || r.created_at || '2026-10-15',
-        text: r.text || r.comment || r.review_text || ''
+        date: r.date || r.created_at || '',
+        text: r.body || r.text || r.comment || r.review_text || '',
+        image_url: driveImg(r.image_url || r.image || r.screenshot || ''),
+        link: String(r.link || r.video_url || '').trim()
       };
     }).filter(function (r) { return r.text && r.text.length > 0; });
   }
@@ -83,9 +92,7 @@
     try {
       var h = (global.location && global.location.hostname) || '';
       return h.indexOf('hypervisionbd.com') !== -1 || h.indexOf('vercel.app') !== -1;
-    } catch (e) {
-      return false;
-    }
+    } catch (e) { return false; }
   }
 
   function fetchReviews(callback) {
@@ -94,13 +101,13 @@
       if (typeof callback === 'function') callback(fallback, false);
       return Promise.resolve(fallback);
     }
-    return fetch('/api/my-access?reviews=all')
+    return fetch('/api/my-access?reviews=all&_t=' + Date.now(), { cache: 'no-store' })
       .then(function (res) {
         if (!res.ok) throw new Error('HTTP ' + res.status);
         return res.json();
       })
       .then(function (data) {
-        var raw = Array.isArray(data) ? data : (data.reviews || data.data || []);
+        var raw = Array.isArray(data) ? data : (data.items || data.reviews || data.data || []);
         var list = raw.length ? normalizeList(raw) : fallback;
         if (typeof callback === 'function') callback(list, raw.length > 0);
         return list;
@@ -131,8 +138,8 @@
       var stars = '★★★★★'.slice(0, Math.max(1, Math.min(5, Math.round(r.rating || 5))));
       return (
         '<article class="lux-card rounded-2xl p-6 flex flex-col justify-between gap-4">' +
-          '<div>' +
-            '<div class="flex items-center justify-between gap-3 mb-4">' +
+          '<div class="space-y-3">' +
+            '<div class="flex items-center justify-between gap-3">' +
               '<div class="flex items-center gap-3">' +
                 '<div class="w-10 h-10 rounded-full flex items-center justify-center font-num font-bold text-sm text-cyan-200 border border-cyan-400/30 bg-gradient-to-br from-cyan-500/20 to-violet-600/30">' + escapeHtml(initials) + '</div>' +
                 '<div>' +
@@ -140,9 +147,11 @@
                   '<span class="inline-block mt-1 text-[11px] font-num px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-cyan-300">' + escapeHtml(r.courseLabel) + '</span>' +
                 '</div>' +
               '</div>' +
-              '<div class="text-amber-400 text-sm tracking-wider" aria-label="5 stars">' + stars + '</div>' +
+              '<div class="text-amber-400 text-sm tracking-wider">' + stars + '</div>' +
             '</div>' +
-            '<p class="text-slate-300 text-sm leading-relaxed">' + escapeHtml(r.text) + '</p>' +
+            '<p class="text-slate-200 text-sm leading-relaxed whitespace-pre-line">' + escapeHtml(r.text) + '</p>' +
+            (r.image_url ? '<a href="' + escapeHtml(r.image_url) + '" target="_blank" rel="noopener" class="block rounded-xl overflow-hidden border border-white/10 bg-black/30"><img src="' + escapeHtml(r.image_url) + '" alt="Student Work" class="w-full max-h-56 object-cover" loading="lazy" /></a>' : '') +
+            (r.link ? '<a href="' + escapeHtml(r.link) + '" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-xs font-semibold hover:bg-cyan-500/25">▶ শিক্ষার্থীর কাজ / ভিডিও লিংক ↗</a>' : '') +
           '</div>' +
           '<div class="flex items-center justify-between pt-3 border-t border-white/5 text-xs text-slate-400">' +
             '<span class="inline-flex items-center gap-1.5 text-emerald-400 font-medium"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>যাচাইকৃত শিক্ষার্থী</span>' +

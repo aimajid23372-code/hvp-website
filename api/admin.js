@@ -59,7 +59,10 @@ module.exports = async (req, res) => {
   if (req.method === 'GET' && req.query && req.query.public === 'cms') {
     try {
       const raw = await getSetting('hvb_cms_state', null);
-      res.setHeader('Cache-Control', 'no-store');
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+      res.setHeader('CDN-Cache-Control', 'no-store');
+      res.setHeader('Vercel-CDN-Cache-Control', 'no-store');
+      res.setHeader('Pragma', 'no-cache');
       if (!raw) return res.status(200).json({ cms: null });
       const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
       return res.status(200).json({
@@ -71,6 +74,7 @@ module.exports = async (req, res) => {
           popup: parsed.popup || null,
           homepage: parsed.homepage || null,
           site: parsed.site || null,
+          income: parsed.income || null,
         },
       });
     } catch (e) {
@@ -107,6 +111,7 @@ module.exports = async (req, res) => {
         popup: incoming.popup !== undefined ? incoming.popup : (prev.popup || null),
         homepage: incoming.homepage !== undefined ? incoming.homepage : (prev.homepage || null),
         site: incoming.site !== undefined ? incoming.site : (prev.site || null),
+        income: incoming.income !== undefined ? incoming.income : (prev.income || null),
         updatedAt: new Date().toISOString(),
       };
       const { error } = await saveSetting('hvb_cms_state', merged);
@@ -325,6 +330,54 @@ module.exports = async (req, res) => {
       if (error) return res.status(500).json({ error: error.message });
       return res.status(200).json({ success: true });
     }
+
+    if (action === 'orderSetStatus') {
+      const { error } = await supabase.from('orders').update({ status: String(body.status || 'pending') }).eq('id', body.id);
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json({ success: true });
+    }
+    if (action === 'affiliatePayManual') {
+      const ref = String(body.ref_code || '').trim().toLowerCase();
+      const amt = Math.round(Number(body.amount || 0));
+      const method = String(body.method || 'bKash').trim();
+      const account = String(body.account || '').trim();
+      if (!ref || amt <= 0) return res.status(400).json({ error: 'সঠিক ref_code ও টাকার পরিমাণ দিন' });
+      const { data: aff } = await supabase.from('affiliates').select('*').eq('ref_code', ref).single();
+      if (!aff) return res.status(404).json({ error: 'Affiliate পাওয়া যায়নি' });
+      const newPaid = Number(aff.paid_out || 0) + amt;
+      const { error: upErr } = await supabase.from('affiliates').update({ paid_out: newPaid }).eq('ref_code', ref);
+      if (upErr) return res.status(500).json({ error: upErr.message });
+      try {
+        await supabase.from('withdraw_requests').insert({
+          ref_code: ref,
+          name: aff.name || ref,
+          contact: method + (account ? (' - ' + account) : ''),
+          amount: amt,
+          status: 'paid',
+        });
+      } catch (e) {}
+      return res.status(200).json({ success: true, paid_out: newPaid });
+    }
+    if (action === 'affiliateAdd') {
+      const ref = String(body.ref_code || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+      const name = String(body.name || '').trim();
+      const contact = String(body.contact || '').trim();
+      const pct = Number(body.commission_percent || 20);
+      if (!ref || ref.length < 3 || !name) return res.status(400).json({ error: 'নাম ও কমপক্ষে ৩ অক্ষরের Ref Code দিন' });
+      const row = { ref_code: ref, name, contact, commission_percent: pct, active: true, paid_out: 0 };
+      if (body.email) row.email = String(body.email).trim().toLowerCase();
+      const { error } = await supabase.from('affiliates').insert(row);
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json({ success: true });
+    }
+    if (action === 'affiliateDelete') {
+      const ref = String(body.ref_code || '').trim().toLowerCase();
+      if (!ref) return res.status(400).json({ error: 'ref_code required' });
+      const { error } = await supabase.from('affiliates').delete().eq('ref_code', ref);
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json({ success: true });
+    }
+
     if (action === 'affiliateAdjust') {
       const amt = Math.round(Number(body.amount || 0));
       if (!body.ref_code || !amt) return res.status(400).json({ error: 'ref_code এবং টাকার পরিমাণ দিন' });

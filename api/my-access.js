@@ -73,29 +73,40 @@ module.exports = async (req, res) => {
   const { uploadDataUrl } = require('../lib/hvb_upload');
   if (req.method === 'GET') {
     if (req.query && req.query.reviews) {
-      const course = String(req.query.reviews);
-      let q = getSupabase()
+      const course = String(req.query.reviews || 'all').toLowerCase().trim();
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+      res.setHeader('CDN-Cache-Control', 'no-store');
+      res.setHeader('Vercel-CDN-Cache-Control', 'no-store');
+      const { data, error } = await getSupabase()
         .from('reviews')
-        .select('id,name,email,course,rating,body,image_url,link,status,created_at')
-        .neq('status', 'rejected')
-        .neq('status', 'hidden')
+        .select('*')
         .order('created_at', { ascending: false })
-        .limit(120);
-      if (course && course !== 'all') q = q.eq('course', course);
-      const { data, error } = await q;
-      if (error) return res.status(200).json({ items: [], count: 0, avg: 0 });
-      const items = (data || []).map((r) => ({
+        .limit(150);
+      if (error) {
+        return res.status(200).json({ items: [], reviews: [], count: 0, avg: 0, err: error.message });
+      }
+      const filtered = (data || []).filter((r) => {
+        const st = String(r.status || 'approved').toLowerCase().trim();
+        if (st === 'rejected' || st === 'hidden') return false;
+        if (course && course !== 'all') {
+          const rc = String(r.course || '').toLowerCase();
+          if (rc !== course && !rc.includes(course)) return false;
+        }
+        return true;
+      });
+      const items = filtered.map((r) => ({
+        id: r.id,
         name: r.name || (r.email ? r.email.split('@')[0] : 'HVB শিক্ষার্থী'),
-        course: r.course,
-        rating: r.rating,
-        body: r.body,
-        image_url: r.image_url,
-        link: r.link,
+        course: r.course || 'HVB',
+        rating: Number(r.rating) || 5,
+        body: r.body || r.text || r.comment || '',
+        image_url: r.image_url || r.image || r.screenshot || null,
+        link: r.link || r.video_url || r.work_link || null,
+        status: r.status || 'approved',
         created_at: r.created_at,
       }));
-      const avg = items.length ? items.reduce((a, b) => a + (Number(b.rating) || 0), 0) / items.length : 0;
-      res.setHeader('Cache-Control', 'no-store');
-      return res.status(200).json({ items, count: items.length, avg });
+      const avg = items.length ? items.reduce((a, b) => a + (Number(b.rating) || 5), 0) / items.length : 5;
+      return res.status(200).json({ items, reviews: items, count: items.length, avg });
     }
 
     const url = process.env.SUPABASE_URL || '';

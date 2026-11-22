@@ -445,7 +445,7 @@ function switchIncTab(t) {
   renderCoursesGrid();
 
   // Pull Live CMS (Courses + Homepage Section Visibility + Site Texts)
-  fetch('/api/admin?public=cms', { cache: 'no-store' })
+  fetch('/api/admin?public=cms&_t=' + Date.now(), { cache: 'no-store' })
     .then(r => r.ok ? r.json() : null)
     .then(data => {
       if (!data || !data.cms) return;
@@ -457,6 +457,26 @@ function switchIncTab(t) {
         if (cms.homepage.showReviews === false) document.getElementById('sec-reviews').style.display = 'none';
         if (cms.homepage.showSteps === false) document.getElementById('sec-steps').style.display = 'none';
       }
+      if (cms.income) {
+        var inc = cms.income;
+        window.__hvbIncomeCfg = inc;
+        if (inc.showAffiliateTab === false) {
+          var tA = document.getElementById('incTabAff'); if (tA) tA.style.display = 'none';
+          switchIncTab('fb');
+        }
+        if (inc.showFbTab === false) {
+          var tF = document.getElementById('incTabFb'); if (tF) tF.style.display = 'none';
+          switchIncTab('aff');
+        }
+        if (inc.affTitle) {
+          var h3a = document.querySelector('#incPaneAff h3'); if (h3a) h3a.textContent = inc.affTitle;
+        }
+        if (inc.affDesc) {
+          var pa = document.querySelector('#incPaneAff p'); if (pa) pa.textContent = inc.affDesc;
+        }
+        var as = document.getElementById('aff-sales-slider'); if (as) as.dispatchEvent(new Event('input'));
+        var fs = document.getElementById('fb-views-slider'); if (fs) fs.dispatchEvent(new Event('input'));
+      }
       if (cms.site) {
         if (cms.site.heroTitle) document.getElementById('heroTitleEl').textContent = cms.site.heroTitle;
         if (cms.site.footerText) document.getElementById('footerTaglineEl').textContent = cms.site.footerText;
@@ -464,7 +484,7 @@ function switchIncTab(t) {
     }).catch(() => {});
 
   // Load REAL Student Reviews with Images & Video Links
-  fetch('/api/my-access?reviews=all', { cache: 'no-store' })
+  fetch('/api/my-access?reviews=all&_t=' + Date.now(), { cache: 'no-store' })
     .then(r => r.ok ? r.json() : null)
     .then(data => {
       const grid = document.getElementById('home-reviews-grid');
@@ -516,7 +536,7 @@ function switchIncTab(t) {
     const updAff = () => {
       const n = Number(affSl.value);
       document.getElementById('aff-sales-label').textContent = n + ' টি কোর্স';
-      document.getElementById('aff-bdt-out').textContent = '৳' + (n * 160).toLocaleString('en-US');
+      var perSale = (window.__hvbIncomeCfg && Number(window.__hvbIncomeCfg.avgPerSale)) || 160; document.getElementById('aff-bdt-out').textContent = '৳' + (n * perSale).toLocaleString('en-US');
     };
     affSl.addEventListener('input', updAff); updAff();
   }
@@ -526,7 +546,7 @@ function switchIncTab(t) {
   if (fbSl) {
     const updFb = () => {
       const lakhs = Number(fbSl.value);
-      const low = Math.round(lakhs * 2), high = Math.round(lakhs * 3);
+      const rL = (window.__hvbIncomeCfg && Number(window.__hvbIncomeCfg.fbRateLow)) || 2, rH = (window.__hvbIncomeCfg && Number(window.__hvbIncomeCfg.fbRateHigh)) || 3; const low = Math.round(lakhs * rL), high = Math.round(lakhs * rH);
       document.getElementById('fb-views-label').textContent = lakhs >= 10 ? (lakhs / 10).toFixed(1) + ' মিলিয়ন ভিউ' : lakhs + ' লাখ ভিউ';
       document.getElementById('fb-usd-out').textContent = '$' + low + ' – $' + high;
       document.getElementById('fb-bdt-out').textContent = '৳' + (low * 120).toLocaleString('en-US') + ' – ৳' + (high * 120).toLocaleString('en-US');
@@ -602,7 +622,7 @@ function switchIncTab(t) {
 })();
 </script>
 <script src="/hvb-ref.js"></script>
-<script src="/hvb-account.js?v=20261122"></script>
+<script src="/hvb-account.js?v=20261122-2"></script>
 <script src="/hvb-site-settings.js"></script>
 </body>
 </html>

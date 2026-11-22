@@ -90,8 +90,8 @@
   © ২০২৬ Hyper Vision Bangla (HVB) · <a href="/" class="text-cyan-300 hover:underline">হোমপেজ</a> · <a href="/courses" class="text-cyan-300 hover:underline">সব কোর্স</a> · <a href="/contact" class="text-cyan-300 hover:underline">যোগাযোগ</a>
 </footer>
 
-<script src="/hvb-account.js?v=20261122"></script>
-<script src="/hvb-reviews.js"></script>
+<script src="/hvb-account.js?v=20261122-2"></script>
+<script src="/hvb-reviews.js?v=20261122-2"></script>
 <script>
 (async function () {
   var grid = document.getElementById('reviewsGrid');
@@ -135,7 +135,7 @@
   }
 
   try {
-    var res = await fetch('/api/my-access?reviews=all', { cache: 'no-store' });
+    var res = await fetch('/api/my-access?reviews=all&_t=' + Date.now(), { cache: 'no-store' });
     var data = await res.json();
     if (data && Array.isArray(data.items) && data.items.length) allItems = data.items;
   } catch (e) {}

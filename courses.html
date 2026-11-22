@@ -106,111 +106,75 @@
     'snake-comedy': '/course-snake-comedy', 'course-snake-comedy': '/course-snake-comedy'
   };
 
-  var CORE_COURSES = [
-    {
-      slug: 'bundle',
-      title: 'লং + শর্ট 3D AI অ্যানিমেশন কমপ্লিট বান্ডেল',
-      desc: 'ইউটিউব লং ভিডিও (১৬:৯) ও ফেসবুক রিলস/শর্টস (৯:১৬)—দুই কোর্স একসাথে সবচেয়ে সাশ্রয়ী বান্ডেলে।',
-      price: 999, regular_price: 1500, badge: 'সবচেয়ে জনপ্রিয়',
-      thumb: '/bundle-thumb.jpg', url: '/course-bundle'
-    },
-    {
-      slug: 'short',
-      title: 'শর্ট ভিডিও (Reels / Shorts / TikTok) 3D কোর্স',
-      desc: 'AI দিয়ে ভাইরাল 3D শর্টস ও রিলস ভিডিও তৈরি, ভয়েসওভার ও এডিটিংয়ের সম্পূর্ণ কোর্স।',
-      price: 499, regular_price: 800, badge: 'বেস্ট সেলার',
-      thumb: '/short-thumb.jpg', url: '/course-short'
-    },
-    {
-      slug: 'ai-kids-comedy',
-      title: 'AI কিডস কমেডি ও টকিং কার্টুন অ্যানিমেশন',
-      desc: 'AI Kids Comedy ভিডিও আইডিয়া, ক্যারেক্টার কনসিস্টেন্সি, ভয়েস ও আপলোড—সম্পূর্ণ কোর্স।',
-      price: 399, regular_price: 700, badge: 'ট্রেন্ডিং',
-      thumb: '/ai-kids-comedy.jpg', url: '/ai-kids-comedy'
-    },
-    {
-      slug: '2d-animation',
-      title: '2D অ্যানিমেশন কমপ্লিট AI কোর্স',
-      desc: 'স্টোরিবোর্ড, 2D কার্টুন ক্যারেক্টার, লিপ-সিঙ্ক ও প্রফেশনাল অ্যানিমেশন তৈরির পূর্ণাঙ্গ গাইড।',
-      price: 399, regular_price: 800, badge: 'নতুন কোর্স',
-      thumb: '/banner-long-short.webp', url: '/course-2d-animation'
-    },
-    {
-      slug: 'snake-comedy',
-      title: 'স্নেক কমেডি শর্টস (Snake Comedy) কোর্স',
-      desc: 'ভাইরাল স্নেক-পিপল কমেডি শর্টস বানানোর সিক্রেট প্রম্পট, সিন ও এডিটিং ফর্মুলা।',
-      price: 299, regular_price: 600, badge: 'ভাইরাল নিশ',
-      thumb: '/banner-short.webp', url: '/course-snake-comedy'
-    },
-    {
-      slug: 'long',
-      title: 'লং ভিডিও (১৬:৯ সিনেমাটিক 3D স্টোরি) কোর্স',
-      desc: 'ইউটিউব ও ফেসবুকের জন্য লম্বা সিনেমাটিক 3D AI অ্যানিমেশন গল্প বানানোর সম্পূর্ণ কোর্স।',
-      price: 799, regular_price: 1200, badge: 'প্রো কোর্স',
-      thumb: '/banner-long-short.webp', url: '/course-long'
-    },
-    {
-      slug: 'free-lesson',
-      title: 'ফ্রি লেসন — কেনার আগে দেখে নিন',
-      desc: 'কোর্স কেনার আগে আমাদের শেখানোর মান ও ডেমো ক্লাস একদম ফ্রিতে দেখে নিন।',
-      price: 0, regular_price: 0, badge: 'ফ্রি',
-      thumb: '/hvb-og.png', url: '/free-lesson'
-    }
+  var DEFAULT_COURSES = [
+    { id: '2d-animation', slug: 'course-2d-animation', url: '/course-2d-animation', order: 1, badge: 'নতুন · ফ্রি সাবস্ক্রিপশন 🎁', bnTitle: '2D অ্যানিমেশন কমপ্লিট AI কোর্স', subtitle: '১০–১৫ মিনিটের কাজে AI দিয়ে ২–৩+ মিনিটের ফুল 2D অ্যানিমেশন, স্ক্রিপ্ট, হাই-কোয়ালিটি ভয়েস ও এডিটিং।', regularPrice: 800, price: 399, repoBanner: '/banner-long-short.webp', avgIncome: '৳১৫,০০০ – ৳৪৫,০০০/মাস', showFbIncome: true, showAffiliateIncome: true },
+    { id: 'snake-comedy', slug: 'course-snake-comedy', url: '/course-snake-comedy', order: 2, badge: 'ভাইরাল · নতুন কোর্স 🔥', bnTitle: 'স্নেক কমেডি শর্টস (Snake Comedy) কোর্স', subtitle: 'মাস্টার চ্যাটিং প্রম্পট দিয়ে কম সময়ে হাই-কোয়ালিটি ভাইরাল কমেডি ভিডিও তৈরি ও আপলোড।', regularPrice: 600, price: 299, repoBanner: '/banner-short.webp', avgIncome: '৳১২,০০০ – ৳৩৫,০০০/মাস', showFbIncome: true, showAffiliateIncome: true },
+    { id: 'bundle', slug: 'course-bundle', url: '/course-bundle', order: 3, badge: 'সবচেয়ে জনপ্রিয়', bnTitle: 'লং + শর্ট 3D AI অ্যানিমেশন কমপ্লিট বান্ডেল', subtitle: 'ফেসবুক রিলস, শর্টস এবং ৫–১৫ মিনিটের সিনেমাটিক বাংলা 3D গল্প বানানোর সম্পূর্ণ রোডম্যাপ।', regularPrice: 1500, price: 999, repoBanner: '/banner-long-short.webp', avgIncome: '৳২৫,০০০ – ৳৭০,০০০/মাস', showFbIncome: true, showAffiliateIncome: true },
+    { id: 'short', slug: 'course-short', url: '/course-short', order: 4, badge: 'বেস্ট সেলার', bnTitle: 'শর্ট ভিডিও (Reels / Shorts / TikTok) 3D কোর্স', subtitle: 'AI দিয়ে ভাইরাল 3D শর্টস ও রিলস ভিডিও তৈরি, ভয়েসওভার ও এডিটিংয়ের সম্পূর্ণ কোর্স।', regularPrice: 800, price: 499, repoBanner: '/banner-short.webp', avgIncome: '৳১০,০০০ – ৳৩০,০০০/মাস', showFbIncome: true, showAffiliateIncome: true },
+    { id: 'kids', slug: 'ai-kids-comedy', url: '/ai-kids-comedy', order: 5, badge: 'ট্রেন্ডিং', bnTitle: 'AI কিডস কমেডি ও টকিং কার্টুন অ্যানিমেশন', subtitle: 'AI Kids Comedy ভিডিও আইডিয়া, ক্যারেক্টার কনসিস্টেন্সি, ভয়েস ও আপলোড—সম্পূর্ণ কোর্স।', regularPrice: 700, price: 399, repoBanner: '/ai-kids-comedy.jpg', avgIncome: '৳১৫,০০০ – ৳৪০,০০০/মাস', showFbIncome: true, showAffiliateIncome: true }
   ];
 
   function esc(v){ var d=document.createElement('div'); d.textContent=String(v||''); return d.innerHTML; }
-  function hvbImg(u){ u=String(u||''); var m=u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=|thumbnail\?id=)([-\w]{20,})/); return m?'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w1200':u; }
+  function hvbImg(u){ u=String(u||'').trim(); var m=u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=|thumbnail\?id=)([-\w]{20,})/); return m?'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w1200':u; }
   function money(v){ return Number(v||0) === 0 ? 'ফ্রি' : '৳' + Number(v||0).toLocaleString('bn-BD'); }
 
   var grid = document.getElementById('courseGrid');
-  function renderCard(c) {
-    var href = ROUTE_MAP[c.slug] || c.url || ('/course?course=' + encodeURIComponent(c.slug));
-    var old = (c.regular_price && c.regular_price > c.price) ? '<span class="text-xs line-through text-slate-500">৳' + Number(c.regular_price).toLocaleString('bn-BD') + '</span>' : '';
-    var el = document.createElement('article');
-    el.className = 'lux-card rounded-2xl overflow-hidden flex flex-col';
-    el.innerHTML =
-      '<a href="' + esc(href) + '" class="relative aspect-video bg-[#070B14] block overflow-hidden">' +
-        (c.thumb ? '<img src="' + esc(hvbImg(c.thumb)) + '" alt="' + esc(c.title) + '" class="w-full h-full object-cover" loading="lazy">' : '') +
-        '<span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-bold bg-cyan-500/90 text-slate-950">' + esc(c.badge || 'কোর্স') + '</span>' +
-      '</a>' +
-      '<div class="p-5 flex-1 flex flex-col">' +
-        '<h2 class="font-display font-bold text-lg text-white leading-snug mb-2"><a href="' + esc(href) + '" class="hover:text-cyan-300 transition">' + esc(c.title) + '</a></h2>' +
-        '<p class="text-slate-400 text-sm leading-relaxed mb-5 flex-1">' + esc(c.desc) + '</p>' +
-        '<div class="pt-4 border-t border-white/10 flex items-center justify-between gap-3">' +
-          '<div class="flex items-baseline gap-2">' + old + '<span class="font-display font-extrabold text-xl text-cyan-300">' + money(c.price) + '</span></div>' +
-          '<a href="' + esc(href) + '" class="btn-primary px-4 py-2 rounded-xl text-xs">' + (c.price === 0 ? 'ফ্রি দেখুন' : 'বিস্তারিত দেখুন') + '</a>' +
-        '</div>' +
-      '</div>';
-    grid.appendChild(el);
+  function renderAll(list) {
+    grid.innerHTML = '';
+    var sorted = (list || []).slice().sort(function(a, b){ return (Number(a.order) || 99) - (Number(b.order) || 99); });
+    sorted.forEach(function(c){
+      var slug = c.id || c.slug || '';
+      var href = c.url || ROUTE_MAP[slug] || ('/course?course=' + encodeURIComponent(slug));
+      var title = c.bnTitle || c.title || slug;
+      var desc = c.subtitle || c.desc || c.short_description || '';
+      var thumb = c.customBannerDataUrl || c.repoBanner || c.thumb || '/banner-short.webp';
+      var price = Number(c.price || 0);
+      var reg = Number(c.regularPrice || c.regular_price || 0);
+      var old = (reg > price) ? '<span class="text-xs line-through text-slate-500">৳' + reg.toLocaleString('bn-BD') + '</span>' : '';
+      var incTags = [];
+      if (c.showFbIncome !== false) incTags.push('FB আয়');
+      if (c.showAffiliateIncome !== false) incTags.push('Affiliate ' + (c.affiliatePct || 20) + '%');
+      var el = document.createElement('article');
+      el.className = 'lux-card rounded-2xl overflow-hidden flex flex-col';
+      el.innerHTML =
+        '<a href="' + esc(href) + '" class="relative aspect-video bg-[#070B14] block overflow-hidden">' +
+          '<img src="' + esc(hvbImg(thumb)) + '" alt="' + esc(title) + '" class="w-full h-full object-cover" loading="lazy">' +
+          '<span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-bold bg-cyan-500/90 text-slate-950">' + esc(c.badge || 'কোর্স') + '</span>' +
+        '</a>' +
+        '<div class="p-5 flex-1 flex flex-col">' +
+          '<h2 class="font-display font-bold text-lg text-white leading-snug mb-2"><a href="' + esc(href) + '" class="hover:text-cyan-300 transition">' + esc(title) + '</a></h2>' +
+          '<p class="text-slate-400 text-sm leading-relaxed mb-3 flex-1">' + esc(desc) + '</p>' +
+          (c.avgIncome ? '<div class="mb-4 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-400/25 text-emerald-300 text-[11px] font-semibold self-start">💰 গড় আয়: ' + esc(c.avgIncome) + (incTags.length ? ' · ' + incTags.join(' + ') : '') + '</div>' : '') +
+          '<div class="pt-4 border-t border-white/10 flex items-center justify-between gap-3">' +
+            '<div class="flex items-baseline gap-2">' + old + '<span class="font-display font-extrabold text-xl text-cyan-300">' + money(price) + '</span></div>' +
+            '<a href="' + esc(href) + '" class="btn-primary px-4 py-2 rounded-xl text-xs">' + (price === 0 ? 'ফ্রি দেখুন' : 'বিস্তারিত দেখুন') + '</a>' +
+          '</div>' +
+        '</div>';
+      grid.appendChild(el);
+    });
+    // Always append Free Lesson card at the end
+    var freeEl = document.createElement('article');
+    freeEl.className = 'lux-card rounded-2xl overflow-hidden flex flex-col';
+    freeEl.innerHTML =
+      '<a href="/free-lesson" class="relative aspect-video bg-[#070B14] block overflow-hidden"><img src="/hvb-og.png" alt="ফ্রি লেসন" class="w-full h-full object-cover" loading="lazy"><span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-400 text-slate-950">ফ্রি</span></a>' +
+      '<div class="p-5 flex-1 flex flex-col"><h2 class="font-display font-bold text-lg text-white leading-snug mb-2"><a href="/free-lesson">ফ্রি লেসন — কেনার আগে দেখে নিন</a></h2><p class="text-slate-400 text-sm leading-relaxed mb-5 flex-1">কোর্স কেনার আগে আমাদের শেখানোর মান ও ডেমো ক্লাস একদম ফ্রিতে দেখে নিন।</p><div class="pt-4 border-t border-white/10 flex items-center justify-between"><span class="font-display font-extrabold text-xl text-emerald-400">ফ্রি</span><a href="/free-lesson" class="btn-primary px-4 py-2 rounded-xl text-xs">ফ্রি দেখুন</a></div></div>';
+    grid.appendChild(freeEl);
   }
 
-  CORE_COURSES.forEach(renderCard);
-
-  // Also append any brand-new dynamic courses added from Admin Panel
-  fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ event: 'products_get' }) })
-    .then(function(r){ return r.json(); })
+  renderAll(DEFAULT_COURSES);
+  fetch('/api/admin?public=cms&_t=' + Date.now(), { cache: 'no-store' })
+    .then(function(r){ return r.ok ? r.json() : null; })
     .then(function(data){
-      var known = Object.keys(ROUTE_MAP);
-      (data.products || []).forEach(function(p){
-        if (!p || !p.slug || known.indexOf(p.slug.toLowerCase()) !== -1) return;
-        renderCard({
-          slug: p.slug,
-          title: p.title,
-          desc: p.short_description || 'সম্পূর্ণ বাংলায় ধাপে ধাপে শেখানো হবে।',
-          price: p.price,
-          regular_price: p.regular_price,
-          badge: p.featured ? 'জনপ্রিয়' : 'নতুন কোর্স',
-          thumb: p.thumbnail || '/hvb-og.png',
-          url: '/course?course=' + encodeURIComponent(p.slug)
-        });
-      });
+      if (data && data.cms && Array.isArray(data.cms.courses) && data.cms.courses.length) {
+        renderAll(data.cms.courses);
+      }
     }).catch(function(){});
 
   if (window.lucide) lucide.createIcons();
 })();
 </script>
 <script src="/hvb-ref.js"></script>
-<script src="/hvb-account.js?v=20261122"></script>
+<script src="/hvb-account.js?v=20261122-2"></script>
 <script src="/hvb-site-settings.js"></script>
 <script src="/hvb-track.js?v=20260916-2"></script>
 </body>
