@@ -84,10 +84,26 @@ module.exports = async (req, res) => {
 
     let baseAmount = COURSES[course] ? COURSES[course].amount : 0;
     try {
-      const { data: prod } = await supabase.from("products").select("price, active").eq("slug", course).maybeSingle();
-      if (prod && prod.active === false) return res.status(400).json({ error: "এই কোর্সটি এখন Enroll করা যাচ্ছে না" });
-      if (prod && Number(prod.price) > 0) baseAmount = Number(prod.price);
+      const { data: cmsRow } = await supabase.from("settings").select("value").eq("key", "hvb_cms_state").maybeSingle();
+      if (cmsRow && cmsRow.value) {
+        const parsed = typeof cmsRow.value === "string" ? JSON.parse(cmsRow.value) : cmsRow.value;
+        if (parsed && Array.isArray(parsed.courses)) {
+          const hit = parsed.courses.find((c) => {
+            const cid = String(c.id || "").toLowerCase();
+            const cslug = String(c.slug || "").toLowerCase();
+            return cid === course || cslug === course || (course === "ai-kids-comedy" && cid === "kids");
+          });
+          if (hit && Number(hit.price) > 0) baseAmount = Number(hit.price);
+        }
+      }
     } catch (e) {}
+    if (!baseAmount || baseAmount < 1) {
+      try {
+        const { data: prod } = await supabase.from("products").select("price, active").eq("slug", course).maybeSingle();
+        if (prod && prod.active === false) return res.status(400).json({ error: "এই কোর্সটি এখন Enroll করা যাচ্ছে না" });
+        if (prod && Number(prod.price) > 0) baseAmount = Number(prod.price);
+      } catch (e) {}
+    }
     if (!baseAmount || baseAmount < 1) return res.status(400).json({ error: "Course unavailable" });
 
     let amount = baseAmount;

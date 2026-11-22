@@ -681,124 +681,139 @@
     : boot();
 })();
 
-/* === HVB GLOBAL LIVE THEME, ANNOUNCEMENT, POPUP & PER-COURSE INCOME SYNC === */
+/* === HVB GLOBAL LIVE THEME, ANNOUNCEMENT, POPUP & PER-COURSE INCOME SYNC (ZERO FLICKER) === */
 (function () {
   if (/^\/admin/i.test(location.pathname)) return;
+  var CACHE_KEY = 'hvb_live_cms_cache';
   function driveImg(u) {
     u = String(u || '').trim();
     var m = u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=|thumbnail\?id=)([-\w]{20,})/);
     return m ? ('https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w1000') : u;
   }
+
+  function applyGlobalCms(cms, isLive) {
+    if (!cms) return;
+    // 1) Custom Logo
+    if (cms.customLogoDataUrl) {
+      document.querySelectorAll('header img[src*="hvb-logo"], .hvb-custom-logo-img').forEach(function (img) {
+        if (img.src !== cms.customLogoDataUrl) img.src = cms.customLogoDataUrl;
+        img.style.display = 'block';
+      });
+    }
+    // 2) Live Theme Preset (Dark or Light)
+    if (cms.theme && cms.theme.primary) {
+      var t = cms.theme;
+      var root = document.documentElement;
+      root.style.setProperty('--accent-cyan', t.primary);
+      root.style.setProperty('--cyan', t.primary);
+      if (t.secondary) { root.style.setProperty('--accent-violet', t.secondary); root.style.setProperty('--violet', t.secondary); }
+      if (t.bg) { root.style.setProperty('--bg-obsidian', t.bg); root.style.setProperty('--bg', t.bg); document.body.style.backgroundColor = t.bg; }
+      var st = document.getElementById('hvb-live-theme-css') || document.createElement('style');
+      st.id = 'hvb-live-theme-css';
+      if (t.mode === 'light') {
+        st.textContent =
+          'body{background:' + (t.bg || '#F8FAFC') + ' !important;color:#0F172A !important;}' +
+          '.ambient-canvas{opacity:0.18 !important;}' +
+          'header,header.glass-nav{background:rgba(255,255,255,0.92) !important;border-bottom:1px solid rgba(15,23,42,0.10) !important;}' +
+          'header a,header .font-display,header nav a{color:#0F172A !important;}' +
+          '.lux-card,.card{background:#FFFFFF !important;border:1px solid rgba(15,23,42,0.10) !important;color:#0F172A !important;box-shadow:0 12px 30px -15px rgba(15,23,42,0.15) !important;}' +
+          'h1,h2,h3,h4,.text-white{color:#0F172A !important;}' +
+          '.text-slate-300,.text-slate-400,.text-slate-200{color:#475569 !important;}' +
+          '.btn-primary{background:linear-gradient(135deg,' + t.primary + ',' + (t.secondary || t.primary) + ') !important;color:#FFFFFF !important;}' +
+          '.btn-secondary{background:#F1F5F9 !important;color:#0F172A !important;border-color:#CBD5E1 !important;}' +
+          'footer{background:#F1F5F9 !important;border-top:1px solid #E2E8F0 !important;color:#334155 !important;}';
+      } else {
+        st.textContent = '.btn-primary{background:linear-gradient(135deg,' + t.primary + ',' + (t.secondary || '#7C3AED') + ') !important;}';
+      }
+      if (!st.parentNode) document.head.appendChild(st);
+    }
+    // 3) Announcement Bar
+    if (cms.announcement && cms.announcement.active && cms.announcement.text && !document.getElementById('hvb-live-ann')) {
+      var bar = document.createElement('div');
+      bar.id = 'hvb-live-ann';
+      bar.style.cssText = 'background:linear-gradient(90deg,' + ((cms.theme && cms.theme.primary) || '#06B6D4') + ',' + ((cms.theme && cms.theme.secondary) || '#7C3AED') + ');color:#040711;font-weight:700;font-size:12.5px;text-align:center;padding:8px 14px;position:relative;z-index:45;';
+      if (cms.announcement.link) {
+        bar.innerHTML = '<a href="' + cms.announcement.link.replace(/"/g, '') + '" style="color:inherit;text-decoration:none;">' + cms.announcement.text.replace(/</g, '&lt;') + ' →</a>';
+      } else { bar.textContent = cms.announcement.text; }
+      document.body.insertBefore(bar, document.body.firstChild);
+    }
+    // 4) Promo Popup (only trigger on live fetch)
+    if (isLive && cms.popup && cms.popup.active && cms.popup.title && !sessionStorage.getItem('hvb_popup_seen')) {
+      setTimeout(function () {
+        if (sessionStorage.getItem('hvb_popup_seen')) return;
+        sessionStorage.setItem('hvb_popup_seen', '1');
+        var ov = document.createElement('div');
+        ov.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(4,7,17,0.82);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:16px;';
+        ov.innerHTML =
+          '<div style="max-width:420px;width:100%;background:#0F172A;border:1px solid rgba(34,211,238,0.35);border-radius:22px;padding:24px;text-align:center;color:#F8FAFC;position:relative;">' +
+            '<button type="button" id="hvbPopClose" style="position:absolute;top:12px;right:14px;background:rgba(255,255,255,0.08);border:0;color:#cbd5e1;width:30px;height:30px;border-radius:99px;cursor:pointer;">✕</button>' +
+            '<div style="display:inline-block;padding:4px 12px;border-radius:99px;background:rgba(34,211,238,0.15);color:#22D3EE;font-size:11px;font-weight:700;margin-bottom:10px;">বিশেষ অফার 🎁</div>' +
+            '<h3 style="font-size:20px;font-weight:800;margin:0 0 8px;">' + String(cms.popup.title).replace(/</g, '&lt;') + '</h3>' +
+            '<p style="font-size:13px;color:#94A3B8;margin:0 0 16px;">' + String(cms.popup.body || '').replace(/</g, '&lt;') + '</p>' +
+            (cms.popup.coupon ? '<div style="padding:10px;border-radius:12px;background:#05070E;border:1px dashed #22D3EE;font-family:monospace;font-size:15px;font-weight:800;color:#22D3EE;margin-bottom:16px;">কুপন কোড: ' + String(cms.popup.coupon).replace(/</g, '&lt;') + '</div>' : '') +
+            '<a href="' + String(cms.popup.link || '/courses').replace(/"/g, '') + '" style="display:block;padding:12px;border-radius:12px;background:linear-gradient(135deg,#06B6D4,#3B82F6);color:#fff;font-weight:700;text-decoration:none;font-size:14px;">অফারটি নিন →</a>' +
+          '</div>';
+        document.body.appendChild(ov);
+        ov.addEventListener('click', function (e) { if (e.target === ov || e.target.id === 'hvbPopClose') ov.remove(); });
+      }, 3500);
+    }
+    // 5) Per-Course Page Live Sync (Title, Thumbnail, Price, FB Income toggle, Affiliate Income)
+    var pathMap = {
+      '/course-bundle': 'bundle', '/course-short': 'short', '/course-long': 'long',
+      '/ai-kids-comedy': 'kids', '/course-2d-animation': '2d-animation', '/course-snake-comedy': 'snake-comedy'
+    };
+    var cleanPath = location.pathname.replace(/\.html$/i, '');
+    var cid = pathMap[cleanPath];
+    if (cid && Array.isArray(cms.courses)) {
+      var course = cms.courses.find(function (x) { return x.id === cid || x.slug === cid || ('/' + x.slug) === cleanPath; });
+      if (course) {
+        var h1 = document.querySelector('main h1');
+        if (h1 && (course.bnTitle || course.title)) h1.textContent = course.bnTitle || course.title;
+        if (course.customBannerDataUrl || course.repoBanner) {
+          var newImg = driveImg(course.customBannerDataUrl || course.repoBanner);
+          document.querySelectorAll('img[data-course-img]').forEach(function (im) {
+            if (im.src !== newImg) im.src = newImg;
+            im.style.opacity = '1';
+          });
+        }
+        document.querySelectorAll('section[id*="monetization"]').forEach(function (sec) {
+          sec.style.display = (course.showFbIncome === false) ? 'none' : '';
+        });
+        var box = document.getElementById('hvb-live-course-income');
+        if (!box && (course.avgIncome || course.showAffiliateIncome !== false || course.showFbIncome !== false)) {
+          box = document.createElement('div');
+          box.id = 'hvb-live-course-income';
+          box.style.cssText = 'margin:18px 0;padding:16px 18px;border-radius:16px;background:linear-gradient(135deg,rgba(16,185,129,0.10),rgba(6,182,212,0.08));border:1px solid rgba(52,211,153,0.3);';
+          var target = document.querySelector('main h1');
+          if (target && target.parentNode) target.parentNode.insertBefore(box, target.nextSibling);
+        }
+        if (box) {
+          var parts = [];
+          if (course.avgIncome) parts.push('<div style="font-size:15px;font-weight:800;color:#34D399;margin-bottom:6px;">💰 গড় সম্ভাব্য আয়: ' + String(course.avgIncome).replace(/</g, '&lt;') + '</div>');
+          var badges = [];
+          if (course.showFbIncome !== false) badges.push('<span style="display:inline-block;padding:4px 10px;border-radius:8px;background:rgba(6,182,212,0.15);color:#67E8F9;font-size:11px;font-weight:700;">📱 Facebook মনিটাইজেশন প্রযোজ্য</span>');
+          else badges.push('<span style="display:inline-block;padding:4px 10px;border-radius:8px;background:rgba(148,163,184,0.15);color:#CBD5E1;font-size:11px;font-weight:700;">📱 এই কোর্সে Facebook আয় নয় — সরাসরি স্কিল/অ্যাফিলিয়েট আয়</span>');
+          if (course.showAffiliateIncome !== false) badges.push('<span style="display:inline-block;padding:4px 10px;border-radius:8px;background:rgba(16,185,129,0.18);color:#6EE7B7;font-size:11px;font-weight:700;">⚡ Affiliate কমিশন ' + (course.affiliatePct || 20) + '% (প্রথম দিন থেকেই আয়)</span>');
+          parts.push('<div style="display:flex;flex-wrap:wrap;gap:8px;">' + badges.join('') + '</div>');
+          box.innerHTML = parts.join('');
+        }
+      }
+    }
+  }
+
+  // Step A: Apply cached CMS IMMEDIATELY (0ms delay -> ZERO flicker on refresh!)
+  try {
+    var cached = localStorage.getItem(CACHE_KEY);
+    if (cached) applyGlobalCms(JSON.parse(cached), false);
+  } catch (e) {}
+
+  // Step B: Fetch fresh live CMS in background and update cache
   fetch('/api/admin?public=cms&_t=' + Date.now(), { cache: 'no-store' })
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (d) {
-      if (!d || !d.cms) return;
-      var cms = d.cms;
-      // 1) Custom Logo
-      if (cms.customLogoDataUrl) {
-        document.querySelectorAll('header img[src*="hvb-logo"], .hvb-custom-logo-img').forEach(function (img) {
-          img.src = cms.customLogoDataUrl;
-          img.style.display = 'block';
-        });
-      }
-      // 2) Live Theme Preset (Dark or Light)
-      if (cms.theme && cms.theme.primary) {
-        var t = cms.theme;
-        var root = document.documentElement;
-        root.style.setProperty('--accent-cyan', t.primary);
-        root.style.setProperty('--cyan', t.primary);
-        if (t.secondary) { root.style.setProperty('--accent-violet', t.secondary); root.style.setProperty('--violet', t.secondary); }
-        if (t.bg) { root.style.setProperty('--bg-obsidian', t.bg); root.style.setProperty('--bg', t.bg); document.body.style.backgroundColor = t.bg; }
-        var st = document.getElementById('hvb-live-theme-css') || document.createElement('style');
-        st.id = 'hvb-live-theme-css';
-        if (t.mode === 'light') {
-          st.textContent =
-            'body{background:' + (t.bg || '#F8FAFC') + ' !important;color:#0F172A !important;}' +
-            '.ambient-canvas{opacity:0.18 !important;}' +
-            'header,header.glass-nav{background:rgba(255,255,255,0.92) !important;border-bottom:1px solid rgba(15,23,42,0.10) !important;}' +
-            'header a,header .font-display,header nav a{color:#0F172A !important;}' +
-            '.lux-card,.card{background:#FFFFFF !important;border:1px solid rgba(15,23,42,0.10) !important;color:#0F172A !important;box-shadow:0 12px 30px -15px rgba(15,23,42,0.15) !important;}' +
-            'h1,h2,h3,h4,.text-white{color:#0F172A !important;}' +
-            '.text-slate-300,.text-slate-400,.text-slate-200{color:#475569 !important;}' +
-            '.btn-primary{background:linear-gradient(135deg,' + t.primary + ',' + (t.secondary || t.primary) + ') !important;color:#FFFFFF !important;}' +
-            '.btn-secondary{background:#F1F5F9 !important;color:#0F172A !important;border-color:#CBD5E1 !important;}' +
-            'footer{background:#F1F5F9 !important;border-top:1px solid #E2E8F0 !important;color:#334155 !important;}';
-        } else {
-          st.textContent = '.btn-primary{background:linear-gradient(135deg,' + t.primary + ',' + (t.secondary || '#7C3AED') + ') !important;}';
-        }
-        document.head.appendChild(st);
-      }
-      // 3) Announcement Bar
-      if (cms.announcement && cms.announcement.active && cms.announcement.text && !document.getElementById('hvb-live-ann')) {
-        var bar = document.createElement('div');
-        bar.id = 'hvb-live-ann';
-        bar.style.cssText = 'background:linear-gradient(90deg,' + ((cms.theme && cms.theme.primary) || '#06B6D4') + ',' + ((cms.theme && cms.theme.secondary) || '#7C3AED') + ');color:#040711;font-weight:700;font-size:12.5px;text-align:center;padding:8px 14px;position:relative;z-index:45;';
-        if (cms.announcement.link) {
-          bar.innerHTML = '<a href="' + cms.announcement.link.replace(/"/g, '') + '" style="color:inherit;text-decoration:none;">' + cms.announcement.text.replace(/</g, '&lt;') + ' →</a>';
-        } else { bar.textContent = cms.announcement.text; }
-        document.body.insertBefore(bar, document.body.firstChild);
-      }
-      // 4) Promo Popup
-      if (cms.popup && cms.popup.active && cms.popup.title && !sessionStorage.getItem('hvb_popup_seen')) {
-        setTimeout(function () {
-          if (sessionStorage.getItem('hvb_popup_seen')) return;
-          sessionStorage.setItem('hvb_popup_seen', '1');
-          var ov = document.createElement('div');
-          ov.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(4,7,17,0.82);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:16px;';
-          ov.innerHTML =
-            '<div style="max-width:420px;width:100%;background:#0F172A;border:1px solid rgba(34,211,238,0.35);border-radius:22px;padding:24px;text-align:center;color:#F8FAFC;position:relative;">' +
-              '<button type="button" id="hvbPopClose" style="position:absolute;top:12px;right:14px;background:rgba(255,255,255,0.08);border:0;color:#cbd5e1;width:30px;height:30px;border-radius:99px;cursor:pointer;">✕</button>' +
-              '<div style="display:inline-block;padding:4px 12px;border-radius:99px;background:rgba(34,211,238,0.15);color:#22D3EE;font-size:11px;font-weight:700;margin-bottom:10px;">বিশেষ অফার 🎁</div>' +
-              '<h3 style="font-size:20px;font-weight:800;margin:0 0 8px;">' + String(cms.popup.title).replace(/</g, '&lt;') + '</h3>' +
-              '<p style="font-size:13px;color:#94A3B8;margin:0 0 16px;">' + String(cms.popup.body || '').replace(/</g, '&lt;') + '</p>' +
-              (cms.popup.coupon ? '<div style="padding:10px;border-radius:12px;background:#05070E;border:1px dashed #22D3EE;font-family:monospace;font-size:15px;font-weight:800;color:#22D3EE;margin-bottom:16px;">কুপন কোড: ' + String(cms.popup.coupon).replace(/</g, '&lt;') + '</div>' : '') +
-              '<a href="' + String(cms.popup.link || '/courses').replace(/"/g, '') + '" style="display:block;padding:12px;border-radius:12px;background:linear-gradient(135deg,#06B6D4,#3B82F6);color:#fff;font-weight:700;text-decoration:none;font-size:14px;">অফারটি নিন →</a>' +
-            '</div>';
-          document.body.appendChild(ov);
-          ov.addEventListener('click', function (e) { if (e.target === ov || e.target.id === 'hvbPopClose') ov.remove(); });
-        }, 3500);
-      }
-      // 5) Per-Course Page Live Sync (Title, Thumbnail, Price, FB Income toggle, Affiliate Income & Average Income Card!)
-      var pathMap = {
-        '/course-bundle': 'bundle',
-        '/course-short': 'short',
-        '/course-long': 'long',
-        '/ai-kids-comedy': 'kids',
-        '/course-2d-animation': '2d-animation',
-        '/course-snake-comedy': 'snake-comedy'
-      };
-      var cleanPath = location.pathname.replace(/\.html$/i, '');
-      var cid = pathMap[cleanPath];
-      if (cid && Array.isArray(cms.courses)) {
-        var course = cms.courses.find(function (x) { return x.id === cid || x.slug === cid || ('/' + x.slug) === cleanPath; });
-        if (course) {
-          var h1 = document.querySelector('main h1');
-          if (h1 && (course.bnTitle || course.title)) h1.textContent = course.bnTitle || course.title;
-          if (course.customBannerDataUrl || course.repoBanner) {
-            var newImg = driveImg(course.customBannerDataUrl || course.repoBanner);
-            document.querySelectorAll('img[data-course-img]').forEach(function (im) { im.src = newImg; });
-          }
-          // Toggle Facebook Monetization section on this course page
-          document.querySelectorAll('section[id*="monetization"]').forEach(function (sec) {
-            sec.style.display = (course.showFbIncome === false) ? 'none' : '';
-          });
-          // Inject / Update Live Per-Course Income Summary Box right under the hero card or main section
-          if (!document.getElementById('hvb-live-course-income') && (course.avgIncome || course.showAffiliateIncome !== false || course.showFbIncome !== false)) {
-            var box = document.createElement('div');
-            box.id = 'hvb-live-course-income';
-            box.style.cssText = 'margin:20px 0;padding:18px 20px;border-radius:18px;background:linear-gradient(135deg,rgba(16,185,129,0.10),rgba(6,182,212,0.08));border:1px solid rgba(52,211,153,0.3);';
-            var parts = [];
-            if (course.avgIncome) parts.push('<div style="font-size:15px;font-weight:800;color:#34D399;margin-bottom:6px;">💰 গড় সম্ভাব্য আয়: ' + String(course.avgIncome).replace(/</g, '&lt;') + '</div>');
-            var badges = [];
-            if (course.showFbIncome !== false) badges.push('<span style="display:inline-block;padding:4px 10px;border-radius:8px;background:rgba(6,182,212,0.15);color:#67E8F9;font-size:11px;font-weight:700;">📱 Facebook মনিটাইজেশন প্রযোজ্য</span>');
-            else badges.push('<span style="display:inline-block;padding:4px 10px;border-radius:8px;background:rgba(148,163,184,0.15);color:#CBD5E1;font-size:11px;font-weight:700;">📱 এই কোর্সে Facebook আয় নয় — সরাসরি স্কিল/অ্যাফিলিয়েট আয়</span>');
-            if (course.showAffiliateIncome !== false) badges.push('<span style="display:inline-block;padding:4px 10px;border-radius:8px;background:rgba(16,185,129,0.18);color:#6EE7B7;font-size:11px;font-weight:700;">⚡ Affiliate কমিশন ' + (course.affiliatePct || 20) + '% (প্রথম দিন থেকেই আয়)</span>');
-            parts.push('<div style="display:flex;flex-wrap:wrap;gap:8px;">' + badges.join('') + '</div>');
-            box.innerHTML = parts.join('');
-            var target = document.querySelector('main h1');
-            if (target && target.parentNode) target.parentNode.insertBefore(box, target.nextSibling);
-          }
-        }
+      if (d && d.cms) {
+        try { localStorage.setItem(CACHE_KEY, JSON.stringify(d.cms)); } catch (e) {}
+        applyGlobalCms(d.cms, true);
       }
     }).catch(function () {});
 })();

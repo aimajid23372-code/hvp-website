@@ -552,6 +552,7 @@ async function refreshAll() {
 async function publishCms(showMsg) {
   try {
     await api('save_cms', { cms: CMS });
+    try { localStorage.setItem('hvb_live_cms_cache', JSON.stringify(CMS)); } catch (e) {}
     if (showMsg) toast('✓ লাইভ ওয়েবসাইটে সফলভাবে পাবলিশ হয়েছে!');
   } catch (e) {
     toast('পাবলিশ এরর: ' + e.message, true);

@@ -442,15 +442,33 @@ function switchIncTab(t) {
     }).join('');
   }
 
-  renderCoursesGrid();
+  // Zero-Flicker Boot: Use cached live CMS immediately on refresh, or sleek skeletons on first visit!
+  let renderedFromCache = false;
+  try {
+    const cRaw = localStorage.getItem('hvb_live_cms_cache');
+    if (cRaw) {
+      const cObj = JSON.parse(cRaw);
+      if (cObj && Array.isArray(cObj.courses) && cObj.courses.length) {
+        liveCourses = cObj.courses;
+        renderCoursesGrid();
+        renderedFromCache = true;
+      }
+    }
+  } catch (e) {}
+  if (!renderedFromCache) {
+    const g = document.getElementById('hvb-courses-grid');
+    if (g) g.innerHTML = [1,2,3].map(() => '<div class="lux-card rounded-2xl overflow-hidden animate-pulse"><div class="aspect-video bg-white/5"></div><div class="p-4 space-y-3"><div class="h-5 bg-white/10 rounded w-3/4"></div><div class="h-3 bg-white/5 rounded w-full"></div><div class="h-9 bg-white/10 rounded-xl mt-4"></div></div></div>').join('');
+  }
 
   // Pull Live CMS (Courses + Homepage Section Visibility + Site Texts)
   fetch('/api/admin?public=cms&_t=' + Date.now(), { cache: 'no-store' })
     .then(r => r.ok ? r.json() : null)
     .then(data => {
-      if (!data || !data.cms) return;
+      if (!data || !data.cms) { if (!renderedFromCache) renderCoursesGrid(); return; }
       const cms = data.cms;
+      try { localStorage.setItem('hvb_live_cms_cache', JSON.stringify(cms)); } catch (e) {}
       if (Array.isArray(cms.courses) && cms.courses.length) { liveCourses = cms.courses; renderCoursesGrid(); }
+      else if (!renderedFromCache) { renderCoursesGrid(); }
       if (cms.homepage) {
         if (cms.homepage.showCourses === false) document.getElementById('sec-courses').style.display = 'none';
         if (cms.homepage.showIncome === false) document.getElementById('sec-income').style.display = 'none';
@@ -622,7 +640,7 @@ function switchIncTab(t) {
 })();
 </script>
 <script src="/hvb-ref.js"></script>
-<script src="/hvb-account.js?v=20261122-2"></script>
+<script src="/hvb-account.js?v=20261122-3"></script>
 <script src="/hvb-site-settings.js"></script>
 </body>
 </html>

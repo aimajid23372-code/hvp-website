@@ -161,20 +161,35 @@
     grid.appendChild(freeEl);
   }
 
-  renderAll(DEFAULT_COURSES);
+  var renderedFromCache = false;
+  try {
+    var cRaw = localStorage.getItem('hvb_live_cms_cache');
+    if (cRaw) {
+      var cObj = JSON.parse(cRaw);
+      if (cObj && Array.isArray(cObj.courses) && cObj.courses.length) {
+        renderAll(cObj.courses);
+        renderedFromCache = true;
+      }
+    }
+  } catch (e) {}
+  if (!renderedFromCache) {
+    grid.innerHTML = [1,2,3].map(function(){ return '<div class="lux-card rounded-2xl overflow-hidden animate-pulse"><div class="aspect-video bg-white/5"></div><div class="p-5 space-y-3"><div class="h-5 bg-white/10 rounded w-3/4"></div><div class="h-3 bg-white/5 rounded w-full"></div><div class="h-9 bg-white/10 rounded-xl mt-4"></div></div></div>'; }).join('');
+  }
   fetch('/api/admin?public=cms&_t=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.ok ? r.json() : null; })
     .then(function(data){
-      if (data && data.cms && Array.isArray(data.cms.courses) && data.cms.courses.length) {
-        renderAll(data.cms.courses);
+      if (data && data.cms) {
+        try { localStorage.setItem('hvb_live_cms_cache', JSON.stringify(data.cms)); } catch (e) {}
+        if (Array.isArray(data.cms.courses) && data.cms.courses.length) { renderAll(data.cms.courses); return; }
       }
-    }).catch(function(){});
+      if (!renderedFromCache) renderAll(DEFAULT_COURSES);
+    }).catch(function(){ if (!renderedFromCache) renderAll(DEFAULT_COURSES); });
 
   if (window.lucide) lucide.createIcons();
 })();
 </script>
 <script src="/hvb-ref.js"></script>
-<script src="/hvb-account.js?v=20261122-2"></script>
+<script src="/hvb-account.js?v=20261122-3"></script>
 <script src="/hvb-site-settings.js"></script>
 <script src="/hvb-track.js?v=20260916-2"></script>
 </body>
