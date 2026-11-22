@@ -4,10 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>শিক্ষার্থীদের রিভিউ | Hyper Vision Bangla</title>
-  <meta name="description" content="HVB-র AI ভিডিও কোর্স করা শিক্ষার্থীদের যাচাইকৃত রিভিউ, স্ক্রিনশট ও কাজের নমুনা।" />
   <link rel="icon" type="image/png" href="/hvb-logo.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
@@ -25,7 +22,7 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
     <a href="/" class="flex items-center gap-2.5 shrink-0">
       <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden ring-2 ring-cyan-400/40 bg-[#05070E]">
-        <img src="/hvb-logo.png" alt="Hyper Vision Bangla" class="w-full h-full object-cover" />
+        <img src="/hvb-logo.png" alt="Hyper Vision Bangla" class="w-full h-full object-cover hvb-custom-logo-img" />
       </div>
       <div>
         <div class="font-display font-bold text-white text-sm sm:text-lg leading-tight">Hyper Vision Bangla</div>
@@ -35,23 +32,22 @@
     <nav class="hidden lg:flex items-center gap-6 text-sm font-medium text-slate-300">
       <a href="/" class="hover:text-cyan-300 transition">হোম</a>
       <a href="/courses" class="hover:text-cyan-300 transition">সব কোর্স</a>
-      <a href="/free-lesson" class="hover:text-cyan-300 transition">ফ্রি লেসন</a>
+      <a href="/affiliate" class="hover:text-cyan-300 transition">অ্যাফিলিয়েট</a>
       <a href="/reviews" class="text-cyan-300 font-semibold">রিভিউ (5.0★)</a>
+      <a href="/free-lesson" class="hover:text-cyan-300 transition">ফ্রি লেসন</a>
       <a href="/my-courses" class="hover:text-cyan-300 transition">আমার কোর্স</a>
     </nav>
     <div class="flex items-center gap-2">
-      <a href="/courses" class="px-3.5 py-2 rounded-xl text-xs font-bold btn-primary">শুরু করুন</a>
+      <a href="/courses" class="px-3.5 py-2 rounded-xl text-xs font-bold btn-primary">সব কোর্স</a>
     </div>
   </div>
 </header>
 
 <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-10 space-y-8">
   <div class="lux-card rounded-3xl p-6 sm:p-8 text-center border border-cyan-400/20">
-    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-amber-400/15 text-amber-300 border border-amber-400/30 mb-3">
-      ★ 5.0 VERIFIED REVIEWS
-    </span>
-    <h1 class="font-display text-2xl sm:text-4xl font-extrabold text-white">শিক্ষার্থীদের বাস্তব অভিজ্ঞতা</h1>
-    <p class="text-slate-400 text-sm mt-2 max-w-2xl mx-auto">প্রতিটি রিভিউ পেমেন্ট-যাচাই করা অ্যাকাউন্ট থেকে দেওয়া। শিক্ষার্থীরা চাইলে স্ক্রিনশট ও নিজের বানানো ভিডিওর লিংকও যোগ করতে পারেন।</p>
+    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-amber-400/15 text-amber-300 border border-amber-400/30 mb-3">★ VERIFIED STUDENT REVIEWS</span>
+    <h1 class="font-display text-2xl sm:text-4xl font-extrabold text-white">শিক্ষার্থীদের বাস্তব অভিজ্ঞতা ও কাজের প্রমাণ</h1>
+    <p class="text-slate-400 text-sm mt-2 max-w-2xl mx-auto">প্রতিটি রিভিউ পেমেন্ট-যাচাই করা অ্যাকাউন্ট থেকে দেওয়া। শিক্ষার্থীরা স্ক্রিনশট ও নিজের বানানো ভিডিওর লিংকও যুক্ত করেছেন।</p>
     <div id="revSummary" class="mt-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/25 text-cyan-300 text-xs font-bold">রিভিউ লোড হচ্ছে...</div>
   </div>
 
@@ -65,19 +61,47 @@
 
   <!-- Reviews Grid -->
   <div id="reviewsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+
+  <!-- Write a Review Box (for logged-in buyers) -->
+  <div class="lux-card rounded-3xl p-6 border border-white/10 max-w-2xl mx-auto">
+    <h2 class="font-display text-lg font-bold text-white mb-1">আপনিও আপনার অভিজ্ঞতা শেয়ার করুন</h2>
+    <p class="text-xs text-slate-400 mb-4">কোর্স কেনা শিক্ষার্থীরা লগইন করে স্ক্রিনশট ও নিজের বানানো ভিডিওর লিংকসহ রিভিউ দিতে পারবেন।</p>
+    <form id="submitRevForm" class="space-y-3">
+      <div class="grid sm:grid-cols-2 gap-3">
+        <input id="rvName" required placeholder="আপনার নাম" class="w-full px-3.5 py-2.5 rounded-xl bg-[#05070E] border border-white/15 text-xs text-white" />
+        <select id="rvRating" class="w-full px-3.5 py-2.5 rounded-xl bg-[#05070E] border border-white/15 text-xs text-white">
+          <option value="5">★★★★★ (৫ স্টার)</option>
+          <option value="4">★★★★ (৪ স্টার)</option>
+          <option value="3">★★★ (৩ স্টার)</option>
+        </select>
+      </div>
+      <textarea id="rvBody" required rows="3" placeholder="কোর্সটি আপনার কেমন লেগেছে লিখুন (কমপক্ষে ১০ অক্ষর)..." class="w-full px-3.5 py-2.5 rounded-xl bg-[#05070E] border border-white/15 text-xs text-white"></textarea>
+      <div class="grid sm:grid-cols-2 gap-3">
+        <input id="rvLink" placeholder="আপনার বানানো ভিডিওর লিংক (ঐচ্ছিক)" class="w-full px-3.5 py-2.5 rounded-xl bg-[#05070E] border border-white/15 text-xs text-white" />
+        <input id="rvFile" type="file" accept="image/*" class="text-xs text-slate-300" />
+      </div>
+      <button type="submit" id="rvBtn" class="btn-primary px-5 py-2.5 rounded-xl text-xs">রিভিউ জমা দিন</button>
+      <div id="rvMsg" class="text-xs font-semibold"></div>
+    </form>
+  </div>
 </main>
 
 <footer class="border-t border-white/10 mt-12 py-8 text-center text-xs text-slate-400">
   © ২০২৬ Hyper Vision Bangla (HVB) · <a href="/" class="text-cyan-300 hover:underline">হোমপেজ</a> · <a href="/courses" class="text-cyan-300 hover:underline">সব কোর্স</a> · <a href="/contact" class="text-cyan-300 hover:underline">যোগাযোগ</a>
 </footer>
 
-<script src="/hvb-account.js?v=20261121-6"></script>
+<script src="/hvb-account.js?v=20261122"></script>
 <script src="/hvb-reviews.js"></script>
 <script>
 (async function () {
   var grid = document.getElementById('reviewsGrid');
   var sum = document.getElementById('revSummary');
   var esc = function(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); };
+  var driveImg = function(u){
+    u = String(u || '').trim();
+    var m = u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=|thumbnail\?id=)([-\w]{20,})/);
+    return m ? ('https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w1000') : u;
+  };
   var allItems = [];
 
   function render(filter) {
@@ -90,6 +114,7 @@
       var stars = '★'.repeat(Math.min(5, Math.max(1, Math.round(Number(r.rating) || 5))));
       var name = r.name || 'HVB শিক্ষার্থী';
       var text = r.body || r.text || '';
+      var img = driveImg(r.image_url);
       var dateStr = r.created_at ? new Date(r.created_at).toLocaleDateString('bn-BD') : (r.date || '');
       return '<article class="lux-card rounded-2xl p-5 flex flex-col justify-between gap-4">' +
         '<div class="space-y-3">' +
@@ -98,8 +123,8 @@
             '<span class="px-2.5 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 text-[11px] font-semibold">' + esc(r.courseLabel || r.course || 'HVB') + '</span>' +
           '</div>' +
           '<p class="text-sm text-slate-200 leading-relaxed whitespace-pre-line">' + esc(text) + '</p>' +
-          (r.image_url ? '<a href="' + esc(r.image_url) + '" target="_blank" rel="noopener" class="block rounded-xl overflow-hidden border border-white/10"><img src="' + esc(r.image_url) + '" alt="Review Screenshot" class="w-full max-h-56 object-cover" loading="lazy" /></a>' : '') +
-          (r.link ? '<a href="' + esc(r.link) + '" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-xs font-semibold">▶ শিক্ষার্থীর ভিডিও দেখুন ↗</a>' : '') +
+          (img ? '<a href="' + esc(img) + '" target="_blank" rel="noopener" class="block rounded-xl overflow-hidden border border-white/10 bg-black/30"><img src="' + esc(img) + '" alt="Student Review Screenshot" class="w-full max-h-60 object-cover hover:scale-105 transition" loading="lazy" /></a>' : '') +
+          (r.link ? '<a href="' + esc(r.link) + '" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-500/15 border border-cyan-400/30 text-cyan-300 text-xs font-semibold hover:bg-cyan-500/25">▶ শিক্ষার্থীর বানানো ভিডিও দেখুন ↗</a>' : '') +
         '</div>' +
         '<div class="pt-3 border-t border-white/10 flex items-center justify-between text-xs">' +
           '<span class="font-bold text-white">' + esc(name) + '</span>' +
@@ -112,11 +137,8 @@
   try {
     var res = await fetch('/api/my-access?reviews=all', { cache: 'no-store' });
     var data = await res.json();
-    if (data && Array.isArray(data.items) && data.items.length) {
-      allItems = data.items;
-    }
+    if (data && Array.isArray(data.items) && data.items.length) allItems = data.items;
   } catch (e) {}
-
   if (!allItems.length && window.HVBReviews && Array.isArray(window.HVBReviews.FALLBACK_REVIEWS)) {
     allItems = window.HVBReviews.FALLBACK_REVIEWS;
   }
@@ -127,12 +149,41 @@
 
   document.querySelectorAll('.rev-filter').forEach(function(btn){
     btn.addEventListener('click', function(){
-      document.querySelectorAll('.rev-filter').forEach(function(b){
-        b.className = 'rev-filter px-4 py-2 rounded-xl text-xs font-bold bg-white/5 text-slate-300 border border-white/10';
-      });
+      document.querySelectorAll('.rev-filter').forEach(function(b){ b.className = 'rev-filter px-4 py-2 rounded-xl text-xs font-bold bg-white/5 text-slate-300 border border-white/10'; });
       btn.className = 'rev-filter px-4 py-2 rounded-xl text-xs font-bold bg-cyan-500/20 text-cyan-200 border border-cyan-400/40';
       render(btn.getAttribute('data-filter'));
     });
+  });
+
+  // Review submit
+  document.getElementById('submitRevForm').addEventListener('submit', async function(e){
+    e.preventDefault();
+    var m = document.getElementById('rvMsg');
+    var A = window.HVBAuth;
+    if (!A || !A.session) { m.className = 'text-xs text-rose-400'; m.textContent = 'রিভিউ দিতে আগে লগইন করুন।'; return; }
+    m.className = 'text-xs text-cyan-300'; m.textContent = 'জমা হচ্ছে...';
+    var imageUrl = null;
+    var f = document.getElementById('rvFile').files[0];
+    if (f) {
+      var dataUrl = await new Promise(function(res){ var r = new FileReader(); r.onload = function(){ res(r.result); }; r.readAsDataURL(f); });
+      var up = await fetch('/api/my-access', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ access_token: A.session.access_token, action:'upload_image', data_url: dataUrl }) }).then(function(r){ return r.json(); });
+      if (up && up.url) imageUrl = up.url;
+    }
+    var r = await fetch('/api/my-access', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        access_token: A.session.access_token, action: 'review_add',
+        name: document.getElementById('rvName').value.trim(),
+        rating: Number(document.getElementById('rvRating').value) || 5,
+        body: document.getElementById('rvBody').value.trim(),
+        link: document.getElementById('rvLink').value.trim(),
+        image_url: imageUrl
+      })
+    });
+    var d = await r.json();
+    if (!r.ok) { m.className = 'text-xs text-rose-400'; m.textContent = d.error || 'সমস্যা হয়েছে।'; return; }
+    m.className = 'text-xs text-emerald-400'; m.textContent = d.msg || 'রিভিউ জমা হয়েছে ✓';
+    e.target.reset();
   });
 
   if (window.lucide) lucide.createIcons();

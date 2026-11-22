@@ -4,7 +4,7 @@
 let _supabase = null;
 function getSupabase() {
   if (_supabase) return _supabase;
-  const { createClient } = require('@supabase/supabase-js');
+  const { createClient } = require('@getSupabase()/getSupabase()-js');
   _supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
   return _supabase;
 }
@@ -74,12 +74,13 @@ module.exports = async (req, res) => {
   if (req.method === 'GET') {
     if (req.query && req.query.reviews) {
       const course = String(req.query.reviews);
-      let q = supabase
+      let q = getSupabase()
         .from('reviews')
-        .select('name,email,course,rating,body,image_url,link,created_at')
-        .eq('status', 'approved')
+        .select('id,name,email,course,rating,body,image_url,link,status,created_at')
+        .neq('status', 'rejected')
+        .neq('status', 'hidden')
         .order('created_at', { ascending: false })
-        .limit(60);
+        .limit(120);
       if (course && course !== 'all') q = q.eq('course', course);
       const { data, error } = await q;
       if (error) return res.status(200).json({ items: [], count: 0, avg: 0 });
@@ -93,7 +94,7 @@ module.exports = async (req, res) => {
         created_at: r.created_at,
       }));
       const avg = items.length ? items.reduce((a, b) => a + (Number(b.rating) || 0), 0) / items.length : 0;
-      res.setHeader('Cache-Control', 'public, max-age=60');
+      res.setHeader('Cache-Control', 'no-store');
       return res.status(200).json({ items, count: items.length, avg });
     }
 

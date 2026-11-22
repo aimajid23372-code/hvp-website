@@ -1,40 +1,45 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="bn" class="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HVB Control Center Pro | Admin Panel</title>
+  <meta name="robots" content="noindex, nofollow" />
   <link rel="icon" type="image/png" href="/hvb-logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
-    body { font-family: 'Hind Siliguri', sans-serif; background: #05070E; color: #E2E8F0; }
-    .font-display { font-family: 'Sora', 'Hind Siliguri', sans-serif; }
+    body { font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif; background: #05070E; color: #E2E8F0; }
+    .font-num { font-family: 'Plus Jakarta Sans', sans-serif; }
     .sidebar { background: #080C17; border-right: 1px solid rgba(255,255,255,0.08); }
-    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; font-size: 13.5px; font-weight: 600; color: #94A3B8; transition: all .18s; cursor: pointer; width: 100%; text-align: left; }
-    .nav-item:hover { background: rgba(255,255,255,0.05); color: #F8FAFC; }
-    .nav-item.active { background: linear-gradient(135deg, rgba(6,182,212,0.2), rgba(59,130,246,0.18)); color: #22D3EE; border: 1px solid rgba(34,211,238,0.28); }
-    .card { background: linear-gradient(180deg, rgba(15,23,42,0.85), rgba(9,13,24,0.96)); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; }
-    .btn-primary { background: linear-gradient(135deg, #06B6D4, #3B82F6); color: #fff; font-weight: 700; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 13px; border-radius: 11px; font-size: 13px; font-weight: 600; color: #94A3B8; transition: all .18s; cursor: pointer; width: 100%; text-align: left; }
+    .nav-item:hover { background: rgba(255,255,255,0.06); color: #F8FAFC; }
+    .nav-item.active { background: linear-gradient(135deg, rgba(6,182,212,0.22), rgba(59,130,246,0.18)); color: #22D3EE; border: 1px solid rgba(34,211,238,0.3); }
+    .card { background: linear-gradient(180deg, rgba(15,23,42,0.86), rgba(9,13,24,0.96)); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; }
+    .btn-primary { background: linear-gradient(135deg, #06B6D4, #3B82F6); color: #fff; font-weight: 700; transition: filter .15s; }
     .btn-primary:hover { filter: brightness(1.08); }
     .tab-pane { display: none; }
     .tab-pane.active { display: block; }
+    .inp { width: 100%; padding: 9px 13px; border-radius: 11px; background: #05070E; border: 1px solid rgba(255,255,255,0.14); color: #fff; font-size: 13px; }
+    .inp:focus { outline: none; border-color: #22D3EE; }
   </style>
 </head>
 <body class="min-h-screen">
 
 <!-- LOGIN GATE -->
 <div id="loginGate" class="min-h-screen flex items-center justify-center px-4">
-  <div class="w-full max-w-sm card p-7 text-center">
-    <img src="/hvb-logo.png" alt="HVB" class="w-14 h-14 rounded-2xl mx-auto mb-3 ring-2 ring-cyan-400/40" />
-    <h1 class="font-display text-xl font-extrabold text-white mb-1">HVB Control Center Pro</h1>
-    <p class="text-xs text-slate-400 mb-5">অ্যাডমিন পাসওয়ার্ড দিয়ে ড্যাশবোর্ডে প্রবেশ করুন</p>
+  <div class="w-full max-w-sm card p-7 text-center border border-cyan-400/25">
+    <img src="/hvb-logo.png" alt="HVB" class="w-14 h-14 rounded-2xl mx-auto mb-3 ring-2 ring-cyan-400/40 object-cover" onerror="this.style.display='none'" />
+    <span class="inline-block px-3 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 text-[11px] font-bold mb-2">HVB Control Center Pro</span>
+    <h1 class="text-xl font-extrabold text-white mb-1">অ্যাডমিন প্যানেল লগইন</h1>
+    <p class="text-xs text-slate-400 mb-5">hypervisionbd.com · ফুল কন্ট্রোল স্টুডিও</p>
     <form id="adminLoginForm" class="space-y-3 text-left">
-      <input id="adminPass" type="password" required placeholder="Admin Password" class="w-full px-4 py-2.5 rounded-xl bg-[#05070E] border border-white/15 text-sm text-white focus:border-cyan-400 focus:outline-none" />
-      <button type="submit" class="w-full py-2.5 rounded-xl text-sm btn-primary">লগইন করুন</button>
+      <input id="adminPass" type="password" required placeholder="Admin Password দিন" class="inp" />
+      <button type="submit" class="w-full py-2.5 rounded-xl text-sm btn-primary">প্রবেশ করুন</button>
       <div id="loginErr" class="text-xs text-rose-400 text-center min-h-[16px]"></div>
     </form>
   </div>
@@ -43,157 +48,141 @@
 <!-- MAIN ADMIN SHELL -->
 <div id="adminShell" class="hidden min-h-screen flex flex-col lg:flex-row">
   <!-- SIDEBAR -->
-  <aside class="sidebar w-full lg:w-64 shrink-0 p-4 flex flex-col justify-between">
-    <div>
-      <div class="flex items-center justify-between lg:justify-start gap-3 px-2 pb-5 mb-4 border-b border-white/10">
-        <div class="flex items-center gap-2.5">
-          <img src="/hvb-logo.png" class="w-9 h-9 rounded-xl ring-2 ring-cyan-400/40" alt="HVB" />
-          <div>
-            <div class="font-display font-bold text-sm text-white leading-tight">HVB Admin Pro</div>
-            <div class="text-[10px] text-cyan-400 font-semibold">Hyper Vision Bangla</div>
-          </div>
+  <aside class="sidebar w-full lg:w-64 shrink-0 p-4 flex flex-col">
+    <div class="flex items-center justify-between lg:justify-start gap-3 px-2 pb-4 mb-3 border-b border-white/10">
+      <div class="flex items-center gap-2.5">
+        <img src="/hvb-logo.png" class="w-9 h-9 rounded-xl ring-2 ring-cyan-400/40 object-cover" alt="HVB" onerror="this.style.display='none'" />
+        <div>
+          <div class="font-bold text-sm text-white leading-tight">HVB Admin Pro</div>
+          <div class="text-[10px] text-emerald-400 font-semibold">● Live Supabase</div>
         </div>
-        <button id="mobNavBtn" class="lg:hidden p-2 rounded-lg bg-white/5 text-slate-300"><i data-lucide="menu" class="w-5 h-5"></i></button>
       </div>
+      <button id="mobNavBtn" class="lg:hidden p-2 rounded-lg bg-white/5 text-slate-300"><i data-lucide="menu" class="w-5 h-5"></i></button>
+    </div>
 
-      <div id="sidebarLinks" class="hidden lg:block space-y-1">
-        <div class="text-[10px] uppercase tracking-wider text-slate-500 font-bold px-3 pt-1 pb-1.5">Management</div>
-        <button class="nav-item active" data-tab="dashboard"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard</button>
-        <button class="nav-item" data-tab="theme"><i data-lucide="palette" class="w-4 h-4"></i> Theme &amp; Branding</button>
-        <button class="nav-item" data-tab="products"><i data-lucide="book-open" class="w-4 h-4"></i> Courses &amp; Products</button>
-        <button class="nav-item" data-tab="orders"><i data-lucide="shopping-bag" class="w-4 h-4"></i> Orders &amp; Payments</button>
-        <button class="nav-item" data-tab="coupons"><i data-lucide="ticket" class="w-4 h-4"></i> Coupons</button>
-        <button class="nav-item" data-tab="affiliates"><i data-lucide="users" class="w-4 h-4"></i> Affiliates &amp; Payouts</button>
-        <button class="nav-item" data-tab="settings"><i data-lucide="settings" class="w-4 h-4"></i> Site Settings</button>
-        <div class="pt-4 mt-4 border-t border-white/10 space-y-1">
-          <a href="/" target="_blank" class="nav-item"><i data-lucide="external-link" class="w-4 h-4"></i> View Live Website</a>
-          <button id="logoutBtn" class="nav-item text-rose-400 hover:text-rose-300"><i data-lucide="log-out" class="w-4 h-4"></i> Logout</button>
-        </div>
+    <div id="sidebarLinks" class="hidden lg:block space-y-1 flex-1 overflow-y-auto">
+      <div class="text-[10px] uppercase tracking-wider text-slate-500 font-bold px-3 pt-1 pb-1">Analytics &amp; Store</div>
+      <button class="nav-item active" data-tab="dashboard"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard</button>
+      <button class="nav-item" data-tab="courses"><i data-lucide="book-open" class="w-4 h-4"></i> Courses &amp; Income</button>
+      <button class="nav-item" data-tab="orders"><i data-lucide="shopping-bag" class="w-4 h-4"></i> Orders &amp; Access</button>
+      <button class="nav-item" data-tab="reviews"><i data-lucide="star" class="w-4 h-4"></i> Reviews (ছবিসহ) <span id="navRevBadge" class="ml-auto px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] hidden">0</span></button>
+      <button class="nav-item" data-tab="affiliates"><i data-lucide="users" class="w-4 h-4"></i> Affiliates &amp; Payouts</button>
+      <button class="nav-item" data-tab="coupons"><i data-lucide="ticket" class="w-4 h-4"></i> Coupons</button>
+      <button class="nav-item" data-tab="requests"><i data-lucide="inbox" class="w-4 h-4"></i> Course Requests</button>
+
+      <div class="text-[10px] uppercase tracking-wider text-slate-500 font-bold px-3 pt-4 pb-1">Design &amp; Marketing</div>
+      <button class="nav-item" data-tab="theme"><i data-lucide="palette" class="w-4 h-4"></i> Theme Studio (৬টি)</button>
+      <button class="nav-item" data-tab="marketing"><i data-lucide="megaphone" class="w-4 h-4"></i> Announcements &amp; Popups</button>
+      <button class="nav-item" data-tab="settings"><i data-lucide="settings" class="w-4 h-4"></i> Homepage &amp; Site</button>
+
+      <div class="pt-4 mt-4 border-t border-white/10 space-y-1">
+        <a href="/" target="_blank" class="nav-item"><i data-lucide="external-link" class="w-4 h-4"></i> View Live Website</a>
+        <button id="logoutBtn" class="nav-item text-rose-400 hover:text-rose-300"><i data-lucide="log-out" class="w-4 h-4"></i> Logout</button>
       </div>
     </div>
   </aside>
 
   <!-- CONTENT AREA -->
-  <main class="flex-1 p-4 sm:p-6 lg:p-8 overflow-x-hidden">
-    <!-- TOP BAR -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
+  <main class="flex-1 p-4 sm:p-6 lg:p-8 overflow-x-hidden max-w-6xl">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-white/10">
       <div>
-        <h2 id="pageTitle" class="font-display text-2xl font-extrabold text-white">Dashboard Overview</h2>
-        <p class="text-xs text-slate-400">লাইভ সেলস, অর্ডার, কোর্স, অ্যাফিলিয়েট ও থিম কন্ট্রোল করুন এক জায়গা থেকে।</p>
+        <h2 id="pageTitle" class="text-2xl font-extrabold text-white">Dashboard Overview</h2>
+        <p class="text-xs text-slate-400">সব কিছু এখান থেকেই সহজে এডিট, ডিলিট ও লাইভ পাবলিশ করুন।</p>
       </div>
-      <div class="flex items-center gap-2">
+      <div class="flex flex-wrap items-center gap-2">
         <button onclick="refreshAll()" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-bold flex items-center gap-1.5">
-          <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Refresh
+          <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Sync Live
         </button>
-        <span id="statusToast" class="text-xs font-semibold text-emerald-400"></span>
+        <button onclick="publishCms(true)" class="px-4 py-2 rounded-xl text-xs btn-primary flex items-center gap-1.5">
+          <i data-lucide="save" class="w-3.5 h-3.5"></i> Save &amp; Publish
+        </button>
       </div>
     </div>
 
-    <!-- TAB: DASHBOARD -->
+    <!-- 1. DASHBOARD -->
     <section id="tab-dashboard" class="tab-pane active space-y-6">
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="card p-5">
-          <div class="text-xs text-slate-400 mb-1">Total Revenue</div>
-          <div id="kpiRevenue" class="font-display text-2xl font-extrabold text-cyan-300">৳0</div>
-        </div>
-        <div class="card p-5">
-          <div class="text-xs text-slate-400 mb-1">Paid Orders</div>
-          <div id="kpiPaid" class="font-display text-2xl font-extrabold text-emerald-400">0</div>
-        </div>
-        <div class="card p-5">
-          <div class="text-xs text-slate-400 mb-1">Pending Orders</div>
-          <div id="kpiPending" class="font-display text-2xl font-extrabold text-amber-400">0</div>
-        </div>
-        <div class="card p-5">
-          <div class="text-xs text-slate-400 mb-1">Total Courses</div>
-          <div id="kpiCourses" class="font-display text-2xl font-extrabold text-white">0</div>
-        </div>
+      <div class="flex flex-wrap gap-2">
+        <button onclick="loadDashboard(1,this)" class="dash-range px-3.5 py-1.5 rounded-lg text-xs font-bold bg-white/5 border border-white/10">আজ (Today)</button>
+        <button onclick="loadDashboard(7,this)" class="dash-range px-3.5 py-1.5 rounded-lg text-xs font-bold bg-white/5 border border-white/10">৭ দিন</button>
+        <button onclick="loadDashboard(30,this)" class="dash-range px-3.5 py-1.5 rounded-lg text-xs font-bold bg-cyan-500/20 text-cyan-200 border border-cyan-400/40">৩০ দিন</button>
+        <button onclick="loadDashboard(3650,this)" class="dash-range px-3.5 py-1.5 rounded-lg text-xs font-bold bg-white/5 border border-white/10">সব সময় (All)</button>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5">
+        <div class="card p-4"><div class="text-[11px] text-slate-400">Total Revenue</div><div id="kpiRev" class="font-num text-xl font-extrabold text-cyan-300 mt-1">৳0</div></div>
+        <div class="card p-4"><div class="text-[11px] text-slate-400">Paid Orders</div><div id="kpiPaid" class="font-num text-xl font-extrabold text-emerald-400 mt-1">0</div></div>
+        <div class="card p-4"><div class="text-[11px] text-slate-400">Pending Orders</div><div id="kpiPend" class="font-num text-xl font-extrabold text-amber-400 mt-1">0</div></div>
+        <div class="card p-4"><div class="text-[11px] text-slate-400">Students</div><div id="kpiCust" class="font-num text-xl font-extrabold text-white mt-1">0</div></div>
+        <div class="card p-4"><div class="text-[11px] text-slate-400">Affiliates</div><div id="kpiAff" class="font-num text-xl font-extrabold text-violet-300 mt-1">0</div></div>
+        <div class="card p-4"><div class="text-[11px] text-slate-400">Pending Reviews</div><div id="kpiRevPend" class="font-num text-xl font-extrabold text-pink-300 mt-1">0</div></div>
       </div>
 
-      <div class="card p-5">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="font-display font-bold text-base text-white">Recent Orders</h3>
-          <button onclick="switchTab('orders')" class="text-xs text-cyan-400 hover:underline">সব অর্ডার দেখুন →</button>
+      <div class="grid lg:grid-cols-12 gap-5">
+        <div class="lg:col-span-8 card p-5">
+          <h3 class="font-bold text-sm text-white mb-3">Revenue Trend (৳)</h3>
+          <div class="h-60"><canvas id="revChartCanvas"></canvas></div>
         </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead class="text-slate-400 border-b border-white/10">
-              <tr><th class="py-2.5 pr-3">Customer</th><th class="py-2.5 pr-3">Course</th><th class="py-2.5 pr-3">Amount</th><th class="py-2.5 pr-3">Status</th><th class="py-2.5">Action</th></tr>
-            </thead>
-            <tbody id="recentOrdersBody" class="divide-y divide-white/5"></tbody>
-          </table>
+        <div class="lg:col-span-4 card p-5">
+          <h3 class="font-bold text-sm text-white mb-3">Top Selling Courses</h3>
+          <div id="topCoursesBox" class="space-y-2.5 text-xs"></div>
         </div>
       </div>
     </section>
 
-    <!-- TAB: THEME & BRANDING STUDIO (Inspired by NextGen / ToolsTr Video) -->
-    <section id="tab-theme" class="tab-pane space-y-6">
-      <div class="card p-6">
-        <h3 class="font-display font-bold text-lg text-white mb-1">Website Theme Studio</h3>
-        <p class="text-xs text-slate-400 mb-5">প্রিমিয়াম কালার কম্বিনেশন বেছে নিন এবং সাথে সাথে লাইভ ওয়েবসাইটে পাবলিশ করুন।</p>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-          <button type="button" onclick="selectPreset('#06B6D4','#3B82F6','HVB Cyber Cyan')" class="p-4 rounded-2xl bg-[#070B14] border border-cyan-400/40 text-left hover:scale-[1.01] transition">
-            <div class="flex gap-2 mb-3"><span class="w-8 h-8 rounded-lg bg-cyan-500"></span><span class="w-8 h-8 rounded-lg bg-blue-500"></span><span class="w-8 h-8 rounded-lg bg-slate-900 border border-white/10"></span></div>
-            <div class="font-bold text-sm text-white">HVB Cyber Cyan (Default)</div>
-            <div class="text-[11px] text-slate-400">High-contrast dark luxury + cyan glow</div>
-          </button>
-          <button type="button" onclick="selectPreset('#10B981','#059669','Emerald Pro')" class="p-4 rounded-2xl bg-[#070B14] border border-white/10 text-left hover:border-emerald-400/50 transition">
-            <div class="flex gap-2 mb-3"><span class="w-8 h-8 rounded-lg bg-emerald-500"></span><span class="w-8 h-8 rounded-lg bg-teal-600"></span><span class="w-8 h-8 rounded-lg bg-slate-900 border border-white/10"></span></div>
-            <div class="font-bold text-sm text-white">Emerald Pro</div>
-            <div class="text-[11px] text-slate-400">Clean trust-focused green accents</div>
-          </button>
-          <button type="button" onclick="selectPreset('#8B5CF6','#EC4899','Neon Violet')" class="p-4 rounded-2xl bg-[#070B14] border border-white/10 text-left hover:border-purple-400/50 transition">
-            <div class="flex gap-2 mb-3"><span class="w-8 h-8 rounded-lg bg-violet-500"></span><span class="w-8 h-8 rounded-lg bg-pink-500"></span><span class="w-8 h-8 rounded-lg bg-slate-900 border border-white/10"></span></div>
-            <div class="font-bold text-sm text-white">Neon Violet</div>
-            <div class="text-[11px] text-slate-400">Creator &amp; AI studio vibrant gradient</div>
-          </button>
+    <!-- 2. COURSES & PER-COURSE INCOME STUDIO -->
+    <section id="tab-courses" class="tab-pane space-y-5">
+      <div class="grid lg:grid-cols-12 gap-5">
+        <div class="lg:col-span-4 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold text-sm text-white">কোর্স তালিকা (<span id="courseCount">0</span>)</h3>
+            <button onclick="addNewCourse()" class="px-3 py-1.5 rounded-lg bg-cyan-500/20 border border-cyan-400/40 text-cyan-200 text-xs font-bold">+ নতুন কোর্স</button>
+          </div>
+          <div id="courseListBox" class="space-y-2"></div>
         </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Brand Name</label>
-            <input id="setBrandName" type="text" placeholder="Hyper Vision Bangla" class="w-full px-3.5 py-2.5 rounded-xl bg-[#05070E] border border-white/15 text-sm text-white" />
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Primary Accent Color</label>
-            <input id="setPrimaryColor" type="text" placeholder="#06B6D4" class="w-full px-3.5 py-2.5 rounded-xl bg-[#05070E] border border-white/15 text-sm text-white" />
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Upload New Logo / Banner (Local File)</label>
-            <input id="logoFileInput" type="file" accept="image/*" class="w-full text-xs text-slate-300 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-cyan-500/20 file:text-cyan-300" />
-            <div id="uploadMsg" class="text-[11px] text-emerald-400 mt-1"></div>
-          </div>
-        </div>
-        <button onclick="saveThemeSettings()" class="mt-5 px-5 py-2.5 rounded-xl text-xs btn-primary">Save &amp; Publish Theme</button>
+        <div id="courseEditorBox" class="lg:col-span-8 card p-6 space-y-4"></div>
       </div>
     </section>
 
-    <!-- TAB: PRODUCTS / COURSES -->
-    <section id="tab-products" class="tab-pane space-y-5">
-      <div class="card p-5">
-        <h3 class="font-display font-bold text-base text-white mb-4">All Courses &amp; Products</h3>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead class="text-slate-400 border-b border-white/10">
-              <tr><th class="py-2.5 pr-3">Title</th><th class="py-2.5 pr-3">Slug</th><th class="py-2.5 pr-3">Price</th><th class="py-2.5">Regular</th></tr>
-            </thead>
-            <tbody id="productsBody" class="divide-y divide-white/5"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB: ORDERS & PAYMENTS -->
+    <!-- 3. ORDERS & MANUAL GRANT -->
     <section id="tab-orders" class="tab-pane space-y-5">
-      <div class="card p-5">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-          <h3 class="font-display font-bold text-base text-white">Orders &amp; Payment Verification</h3>
-          <input id="orderSearch" type="text" placeholder="ফোন, ইমেইল বা Invoice দিয়ে খুঁজুন..." oninput="renderOrders()" class="px-3.5 py-2 rounded-xl bg-[#05070E] border border-white/15 text-xs text-white w-full sm:w-72" />
+      <div class="card p-5 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h3 class="font-bold text-base text-white">ম্যানুয়াল কোর্স অ্যাকসেস দিন (Manual Grant)</h3>
+        </div>
+        <form id="grantForm" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
+          <input id="grName" placeholder="শিক্ষার্থীর নাম" required class="inp" />
+          <input id="grContact" placeholder="ইমেইল বা ফোন নাম্বার" required class="inp" />
+          <select id="grCourse" class="inp">
+            <option value="bundle">Long + Short Bundle</option>
+            <option value="short">Short Video</option>
+            <option value="2d-animation">2D Animation</option>
+            <option value="snake-comedy">Snake Comedy</option>
+            <option value="ai-kids-comedy">AI Kids Comedy</option>
+            <option value="long">Long Video</option>
+          </select>
+          <input id="grAmount" type="number" placeholder="টাকা (যেমন 399)" value="0" class="inp" />
+          <button type="submit" class="btn-primary rounded-xl py-2 text-xs">অ্যাকসেস চালু করুন</button>
+        </form>
+      </div>
+
+      <div class="card p-5 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <h3 class="font-bold text-base text-white">অর্ডার তালিকা</h3>
+            <select id="ordStatusFilter" onchange="renderOrders()" class="px-2.5 py-1.5 rounded-lg bg-[#05070E] border border-white/15 text-xs text-white">
+              <option value="all">সব অর্ডার</option>
+              <option value="paid">Paid</option>
+              <option value="pending">Pending</option>
+            </select>
+          </div>
+          <div class="flex items-center gap-2">
+            <input id="ordSearch" oninput="renderOrders()" placeholder="নাম, ফোন, ইমেইল খুঁজুন..." class="inp sm:w-64" />
+            <button onclick="exportOrdersCsv()" class="px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-bold shrink-0">Export CSV</button>
+          </div>
         </div>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs">
             <thead class="text-slate-400 border-b border-white/10">
-              <tr><th class="py-2.5 pr-3">Customer</th><th class="py-2.5 pr-3">Course</th><th class="py-2.5 pr-3">Amount</th><th class="py-2.5 pr-3">Status</th><th class="py-2.5">Actions</th></tr>
+              <tr><th class="py-2 pr-3">Customer</th><th class="py-2 pr-3">Course</th><th class="py-2 pr-3">Amount</th><th class="py-2 pr-3">Status</th><th class="py-2 text-right">Actions</th></tr>
             </thead>
             <tbody id="ordersBody" class="divide-y divide-white/5"></tbody>
           </table>
@@ -201,75 +190,208 @@
       </div>
     </section>
 
-    <!-- TAB: COUPONS -->
-    <section id="tab-coupons" class="tab-pane space-y-5">
-      <div class="card p-5">
-        <h3 class="font-display font-bold text-base text-white mb-4">Active Promo Codes</h3>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead class="text-slate-400 border-b border-white/10">
-              <tr><th class="py-2.5 pr-3">Code</th><th class="py-2.5 pr-3">Discount</th><th class="py-2.5">Status</th></tr>
-            </thead>
-            <tbody id="couponsBody" class="divide-y divide-white/5"></tbody>
-          </table>
+    <!-- 4. REVIEWS MODERATION (WITH IMAGES & LINKS!) -->
+    <section id="tab-reviews" class="tab-pane space-y-5">
+      <div class="card p-5 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 class="font-bold text-base text-white">শিক্ষার্থীদের রিভিউ (ছবি ও ভিডিও লিংকসহ)</h3>
+            <p class="text-xs text-slate-400">সব পেন্ডিং ও অ্যাপ্রুভড রিভিউ এখানে দেখুন—১ ক্লিকে Approve বা Delete করুন।</p>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <select id="revFilter" onchange="renderReviews()" class="px-3 py-1.5 rounded-lg bg-[#05070E] border border-white/15 text-xs">
+              <option value="all">সব রিভিউ</option>
+              <option value="pending">Pending</option>
+              <option value="approved">Approved</option>
+            </select>
+            <button onclick="approveAllReviews()" class="px-3.5 py-1.5 rounded-lg bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-xs font-bold">✓ সব Approve করুন</button>
+          </div>
         </div>
+        <div id="reviewsListBox" class="space-y-3"></div>
+      </div>
+
+      <div class="card p-5 space-y-3">
+        <h3 class="font-bold text-sm text-white">+ নতুন রিভিউ যোগ করুন (ম্যানুয়াল)</h3>
+        <form id="addRevForm" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <input id="arName" required placeholder="শিক্ষার্থীর নাম" class="inp" />
+          <input id="arCourse" placeholder="কোর্স (যেমন: bundle, short, 2d-animation)" value="bundle" class="inp" />
+          <input id="arImg" placeholder="স্ক্রিনশট/ছবির লিংক (ঐচ্ছিক)" class="inp" />
+          <input id="arLink" placeholder="ভিডিও লিংক (ঐচ্ছিক)" class="inp" />
+          <textarea id="arBody" required rows="2" placeholder="রিভিউ লেখা..." class="inp sm:col-span-2"></textarea>
+          <button type="submit" class="btn-primary py-2 rounded-xl text-xs sm:w-44">রিভিউ পাবলিশ করুন</button>
+        </form>
       </div>
     </section>
 
-    <!-- TAB: AFFILIATES & PAYOUTS -->
+    <!-- 5. AFFILIATES & PAYOUTS -->
     <section id="tab-affiliates" class="tab-pane space-y-5">
-      <div class="card p-5">
-        <h3 class="font-display font-bold text-base text-white mb-4">Affiliates</h3>
+      <div class="card p-5 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 class="font-bold text-base text-white">অ্যাফিলিয়েট স্টুডেন্টস (<span id="affCount">0</span>)</h3>
+            <p class="text-xs text-slate-400">যারা অ্যাফিলিয়েট করছে তাদের সবার বিক্রি, কমিশন %, পেইড ও পেন্ডিং ব্যালেন্স দেখুন ও এডিট করুন।</p>
+          </div>
+          <div class="flex items-center gap-2 text-xs">
+            <span class="text-slate-400">Min Withdraw (৳):</span>
+            <input id="minWdInp" type="number" class="w-24 px-2.5 py-1.5 rounded-lg bg-[#05070E] border border-white/15 text-white" value="500" />
+            <button onclick="saveMinWithdraw()" class="px-3 py-1.5 rounded-lg btn-primary text-xs">Save</button>
+          </div>
+        </div>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs">
             <thead class="text-slate-400 border-b border-white/10">
-              <tr><th class="py-2.5 pr-3">Name / Code</th><th class="py-2.5 pr-3">Contact</th><th class="py-2.5">Earned</th></tr>
+              <tr><th class="py-2 pr-3">Student / Ref</th><th class="py-2 pr-3">Contact &amp; Payout</th><th class="py-2 pr-3">Sales / Orders</th><th class="py-2 pr-3">Comm %</th><th class="py-2 pr-3">Balance</th><th class="py-2 text-right">Action</th></tr>
             </thead>
-            <tbody id="affiliatesBody" class="divide-y divide-white/5"></tbody>
+            <tbody id="affBody" class="divide-y divide-white/5"></tbody>
           </table>
         </div>
       </div>
-      <div class="card p-5">
-        <h3 class="font-display font-bold text-base text-white mb-4">Withdrawal Requests</h3>
+
+      <div class="card p-5 space-y-3">
+        <h3 class="font-bold text-base text-white">উইথড্র রিকোয়েস্টসমূহ</h3>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs">
             <thead class="text-slate-400 border-b border-white/10">
-              <tr><th class="py-2.5 pr-3">Affiliate</th><th class="py-2.5 pr-3">Amount</th><th class="py-2.5 pr-3">Method</th><th class="py-2.5">Action</th></tr>
+              <tr><th class="py-2 pr-3">Affiliate</th><th class="py-2 pr-3">Amount</th><th class="py-2 pr-3">Payment Info</th><th class="py-2 pr-3">Status</th><th class="py-2 text-right">Action</th></tr>
             </thead>
-            <tbody id="withdrawBody" class="divide-y divide-white/5"></tbody>
+            <tbody id="wdBody" class="divide-y divide-white/5"></tbody>
           </table>
         </div>
       </div>
     </section>
 
-    <!-- TAB: SETTINGS -->
-    <section id="tab-settings" class="tab-pane space-y-5">
-      <div class="card p-6">
-        <h3 class="font-display font-bold text-base text-white mb-4">General Site Settings</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- 6. COUPONS -->
+    <section id="tab-coupons" class="tab-pane space-y-5">
+      <div class="card p-5 space-y-4">
+        <h3 class="font-bold text-base text-white">নতুন কুপন তৈরি করুন</h3>
+        <form id="couponForm" class="flex flex-wrap gap-2.5">
+          <input id="cpCode" required placeholder="কুপন কোড (যেমন: EID20)" class="inp sm:w-56 uppercase" />
+          <input id="cpDisc" type="number" required placeholder="ডিসকাউন্ট % (যেমন: 15)" class="inp sm:w-44" />
+          <button type="submit" class="btn-primary px-5 py-2 rounded-xl text-xs">+ কুপন যোগ করুন</button>
+        </form>
+      </div>
+      <div class="card p-5">
+        <h3 class="font-bold text-base text-white mb-3">সব কুপন কোড</h3>
+        <div id="couponsBody" class="space-y-2 text-xs"></div>
+      </div>
+    </section>
+
+    <!-- 7. COURSE REQUESTS -->
+    <section id="tab-requests" class="tab-pane space-y-4">
+      <div class="card p-5">
+        <h3 class="font-bold text-base text-white mb-3">শিক্ষার্থীদের কোর্স রিকোয়েস্ট</h3>
+        <div id="requestsBody" class="space-y-2.5"></div>
+      </div>
+    </section>
+
+    <!-- 8. WEBSITE THEME STUDIO (Visual Template Cards with Live Wireframe Previews like NextGen!) -->
+    <section id="tab-theme" class="tab-pane space-y-5">
+      <div class="card p-6 space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1.5">WhatsApp Support Link</label>
-            <input id="setWhatsapp" type="text" placeholder="https://wa.me/8801..." class="w-full px-3.5 py-2.5 rounded-xl bg-[#05070E] border border-white/15 text-sm text-white" />
+            <h3 class="font-bold text-lg text-white">Website Theme Studio (লাইভ প্রিভিউ টেমপ্লেট)</h3>
+            <p class="text-xs text-slate-400">প্রতিটি টেমপ্লেট অ্যাপ্লাই করলে ওয়েবসাইট কেমন দেখাবে তা নিচে প্রিভিউ দেখুন এবং ১ ক্লিকে লাইভ পাবলিশ করুন।</p>
           </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Announcement Banner Text</label>
-            <input id="setAnnouncement" type="text" placeholder="নতুন কোর্সে বিশেষ ছাড় চলছে!" class="w-full px-3.5 py-2.5 rounded-xl bg-[#05070E] border border-white/15 text-sm text-white" />
-          </div>
+          <button onclick="publishCms(true)" class="btn-primary px-5 py-2.5 rounded-xl text-xs">Save &amp; Publish Theme</button>
         </div>
-        <button onclick="saveGeneralSettings()" class="mt-5 px-5 py-2.5 rounded-xl text-xs btn-primary">Save Settings</button>
+        <div id="themeGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      </div>
+    </section>
+
+    <!-- 9. ANNOUNCEMENTS & POPUPS -->
+    <section id="tab-marketing" class="tab-pane space-y-5">
+      <div class="card p-6 space-y-4">
+        <h3 class="font-bold text-base text-white">Top Announcement Bar (সব পেজের একদম উপরে)</h3>
+        <label class="flex items-center gap-2 text-xs font-bold text-cyan-300"><input id="annActive" type="checkbox" class="w-4 h-4 accent-cyan-400" /> Announcement Bar চালু রাখুন</label>
+        <div class="grid sm:grid-cols-2 gap-3">
+          <input id="annText" placeholder="যেমন: 🔥 আজকের জন্য সব কোর্সে স্পেশাল ছাড় চলছে! কোড: HVB50" class="inp" />
+          <input id="annLink" placeholder="লিংক (যেমন: /courses)" class="inp" />
+        </div>
+      </div>
+      <div class="card p-6 space-y-4">
+        <h3 class="font-bold text-base text-white">Promotional Popup (ভিজিটর ঢুকলে ৩.৫ সেকেন্ড পর দেখাবে)</h3>
+        <label class="flex items-center gap-2 text-xs font-bold text-cyan-300"><input id="popActive" type="checkbox" class="w-4 h-4 accent-cyan-400" /> Promo Popup চালু রাখুন</label>
+        <div class="grid sm:grid-cols-2 gap-3">
+          <input id="popTitle" placeholder="পপআপ টাইটেল (যেমন: ৫০৳ ফ্ল্যাট ডিসকাউন্ট!)" class="inp" />
+          <input id="popCoupon" placeholder="কুপন কোড (যেমন: HVB50)" class="inp" />
+          <input id="popBody" placeholder="সংক্ষিপ্ত মেসেজ" class="inp" />
+          <input id="popLink" placeholder="বাটন লিংক (যেমন: /courses)" class="inp" />
+        </div>
+        <button onclick="saveMarketing()" class="btn-primary px-5 py-2.5 rounded-xl text-xs">Save &amp; Publish Marketing</button>
+      </div>
+    </section>
+
+    <!-- 10. HOMEPAGE SECTIONS & SITE BRANDING -->
+    <section id="tab-settings" class="tab-pane space-y-5">
+      <div class="card p-6 space-y-4">
+        <h3 class="font-bold text-base text-white">হোমপেজে কী কী থাকবে / থাকবে না (Show / Hide Control)</h3>
+        <div class="grid sm:grid-cols-2 gap-3 text-xs">
+          <label class="flex items-center gap-2.5 p-3 rounded-xl bg-white/[0.03] border border-white/10"><input id="hpCourses" type="checkbox" checked class="w-4 h-4 accent-cyan-400" /> কোর্সসমূহ সেকশন (Courses Grid)</label>
+          <label class="flex items-center gap-2.5 p-3 rounded-xl bg-white/[0.03] border border-white/10"><input id="hpIncome" type="checkbox" checked class="w-4 h-4 accent-cyan-400" /> ইনকাম সেকশন (Facebook + Affiliate Income)</label>
+          <label class="flex items-center gap-2.5 p-3 rounded-xl bg-white/[0.03] border border-white/10"><input id="hpReviews" type="checkbox" checked class="w-4 h-4 accent-cyan-400" /> শিক্ষার্থীদের রিভিউ সেকশন</label>
+          <label class="flex items-center gap-2.5 p-3 rounded-xl bg-white/[0.03] border border-white/10"><input id="hpSteps" type="checkbox" checked class="w-4 h-4 accent-cyan-400" /> ৩ ধাপে এনরোলমেন্ট গাইড</label>
+        </div>
+      </div>
+
+      <div class="card p-6 space-y-4">
+        <h3 class="font-bold text-base text-white">ওয়েবসাইট ব্র্যান্ডিং, লোগো ও ফুটার</h3>
+        <div class="grid sm:grid-cols-2 gap-3">
+          <div><label class="text-xs text-slate-400 block mb-1">Hero Headline</label><input id="siteHeroTitle" class="inp" placeholder="AI দিয়ে প্রফেশনাল 2D ও 3D অ্যানিমেশন শিখুন" /></div>
+          <div><label class="text-xs text-slate-400 block mb-1">Messenger Support Link</label><input id="siteMsgr" class="inp" placeholder="https://m.me/hypervisionbangla" /></div>
+          <div><label class="text-xs text-slate-400 block mb-1">লোগো আপলোড করুন (সরাসরি ফোন/পিসি থেকে)</label><input id="siteLogoFile" type="file" accept="image/*" class="text-xs text-slate-300" /></div>
+          <div><label class="text-xs text-slate-400 block mb-1">Footer Tagline</label><input id="siteFooterText" class="inp" placeholder="বাংলাদেশের প্রিমিয়াম AI 2D ও 3D অ্যানিমেশন প্ল্যাটফর্ম।" /></div>
+        </div>
+        <button onclick="saveSiteSettings()" class="btn-primary px-5 py-2.5 rounded-xl text-xs">Save &amp; Publish Settings</button>
       </div>
     </section>
   </main>
 </div>
 
 <script>
-let ADMIN_PASS = sessionStorage.getItem('hvb_admin_pass') || '';
-let ALL_ORDERS = [];
+const DEFAULT_COURSES = [
+  { id: '2d-animation', slug: 'course-2d-animation', url: '/course-2d-animation', order: 1, badge: 'নতুন · ফ্রি সাবস্ক্রিপশন 🎁', category: '2d', title: '2D Animation Complete AI Course', bnTitle: '2D অ্যানিমেশন কমপ্লিট AI কোর্স', subtitle: '১০–১৫ মিনিটের কাজে AI দিয়ে ২–৩+ মিনিটের ফুল 2D অ্যানিমেশন, স্ক্রিপ্ট, হাই-কোয়ালিটি ভয়েস ও এডিটিং।', regularPrice: 800, price: 399, repoBanner: '/banner-long-short.webp', showFbIncome: true, showAffiliateIncome: true, avgIncome: '৳১৫,০০০ – ৳৪৫,০০০/মাস', fbRatePerLakh: 2.5, affiliatePct: 20 },
+  { id: 'snake-comedy', slug: 'course-snake-comedy', url: '/course-snake-comedy', order: 2, badge: 'ভাইরাল · নতুন কোর্স 🔥', category: 'comedy', title: 'Snake-People Comedy Shorts Course', bnTitle: 'স্নেক কমেডি শর্টস (Snake Comedy) কোর্স', subtitle: 'মাস্টার চ্যাটিং প্রম্পট দিয়ে কম সময়ে হাই-কোয়ালিটি ভাইরাল কমেডি ভিডিও তৈরি, এডিটিং ও আপলোড।', regularPrice: 600, price: 299, repoBanner: '/banner-short.webp', showFbIncome: true, showAffiliateIncome: true, avgIncome: '৳১২,০০০ – ৳৩৫,০০০/মাস', fbRatePerLakh: 2.2, affiliatePct: 20 },
+  { id: 'bundle', slug: 'course-bundle', url: '/course-bundle', order: 3, badge: 'বেস্টসেলার · ১২ মডিউল', category: 'bundle', title: 'Long + Short Video Complete Bundle', bnTitle: 'লং + শর্ট 3D AI অ্যানিমেশন বান্ডেল', subtitle: 'ফেসবুক রিলস, শর্টস এবং ৫–১৫ মিনিটের সিনেমাটিক বাংলা 3D গল্প বানানোর সম্পূর্ণ A-to-Z রোডম্যাপ।', regularPrice: 1500, price: 999, repoBanner: '/banner-long-short.webp', showFbIncome: true, showAffiliateIncome: true, avgIncome: '৳২৫,০০০ – ৳৭০,০০০/মাস', fbRatePerLakh: 3.0, affiliatePct: 20 },
+  { id: 'short', slug: 'course-short', url: '/course-short', order: 4, badge: 'পপুলার · ৭ মডিউল', category: 'short', title: 'Short Video AI Animation Course', bnTitle: 'শর্ট ভিডিও (Reels / Shorts) 3D কোর্স', subtitle: 'মাত্র ৩০–৬০ সেকেন্ডের ভাইরাল 3D অ্যানিমেশন রিলস ও শর্টস বানিয়ে দ্রুত ফলোয়ার ও আয়।', regularPrice: 800, price: 499, repoBanner: '/banner-short.webp', showFbIncome: true, showAffiliateIncome: true, avgIncome: '৳১০,০০০ – ৳৩০,০০০/মাস', fbRatePerLakh: 2.0, affiliatePct: 20 },
+  { id: 'kids', slug: 'ai-kids-comedy', url: '/ai-kids-comedy', order: 5, badge: 'কিডস নিশ · ৬ মডিউল', category: 'comedy', title: 'AI Kids Comedy Animation', bnTitle: 'AI কিডস কমেডি ও টকিং কার্টুন কোর্স', subtitle: 'মজার টকিং বিড়াল ও দুষ্টু বাচ্চার 3D কিডস কমেডি কার্টুন বানিয়ে দ্রুত ভাইরাল হোন।', regularPrice: 700, price: 399, repoBanner: '/ai-kids-comedy.jpg', showFbIncome: true, showAffiliateIncome: true, avgIncome: '৳১৫,০০০ – ৳৪০,০০০/মাস', fbRatePerLakh: 2.5, affiliatePct: 20 }
+];
 
-function toast(msg) {
-  const el = document.getElementById('statusToast');
+const THEME_PRESETS = [
+  { id: 'cyber-cyan', name: 'HVB Cyber Cyan', mode: 'dark', bg: '#05070E', card: '#0F172A', primary: '#00E5FF', secondary: '#7C3AED', desc: 'ডিফল্ট হাই-কন্ট্রাস্ট ডার্ক লাক্সারি + সাইয়ান গ্লো' },
+  { id: 'neon-night', name: 'Neon Night', mode: 'dark', bg: '#040914', card: '#0D1528', primary: '#22D3EE', secondary: '#2563EB', desc: 'ডিপ সিনেম্যাটিক ক্যানভাস ও ক্রিস্প ইলেকট্রিক ব্লু' },
+  { id: 'emerald-pro', name: 'Emerald Obsidian', mode: 'dark', bg: '#040D0A', card: '#0B1F18', primary: '#10B981', secondary: '#06B6D4', desc: 'ট্রাস্ট-ফোকাসড প্রিমিয়াম এমারেল্ড গ্রিন ডার্ক' },
+  { id: 'royal-violet', name: 'Royal Creator', mode: 'dark', bg: '#090514', card: '#170E2E', primary: '#A855F7', secondary: '#EC4899', desc: 'ভাইব্রেন্ট এআই ক্রিয়েটর ভায়োলেট-পিংক থিম' },
+  { id: 'sunset-gold', name: 'Luxury Gold', mode: 'dark', bg: '#0C0905', card: '#1B140B', primary: '#F59E0B', secondary: '#EF4444', desc: 'প্রিমিয়াম গোল্ড-অ্যাম্বার সেলস ফোকাসড ডার্ক' },
+  { id: 'clean-ivory', name: 'Aqua Ivory (Light)', mode: 'light', bg: '#F8FAFC', card: '#FFFFFF', primary: '#0891B2', secondary: '#4F46E5', desc: 'ক্লিন ব্রাইট লাইট থিম + অ্যাকুয়া ও ইন্ডিগো অ্যাকসেন্ট' }
+];
+
+let ADMIN_PASS = sessionStorage.getItem('hvb_admin_pass') || '';
+let CMS = {
+  courses: JSON.parse(JSON.stringify(DEFAULT_COURSES)),
+  customLogoDataUrl: '',
+  theme: THEME_PRESETS[0],
+  announcement: { active: false, text: '', link: '/courses' },
+  popup: { active: false, title: '', body: '', coupon: 'HVB50', link: '/courses' },
+  homepage: { showCourses: true, showIncome: true, showReviews: true, showSteps: true },
+  site: { heroTitle: '', messenger: 'https://m.me/hypervisionbangla', footerText: '' }
+};
+let ALL_ORDERS = [], ALL_REVIEWS = [], ALL_AFFS = [], ALL_WDS = [], ALL_PROMOS = [], ALL_REQS = [];
+let selectedCourseId = '2d-animation';
+let revChart = null;
+
+function esc(s) { return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function driveImg(u) {
+  u = String(u || '').trim();
+  const m = u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?id=|thumbnail\?id=)([-\w]{20,})/);
+  return m ? ('https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w1000') : u;
+}
+function toast(msg, isErr) {
+  const el = document.createElement('div');
+  el.className = 'fixed bottom-5 right-5 z-50 px-4 py-3 rounded-xl text-xs font-bold shadow-2xl border ' +
+    (isErr ? 'bg-rose-950 border-rose-500/40 text-rose-100' : 'bg-[#0B1222] border-cyan-400/40 text-cyan-200');
   el.textContent = msg;
-  setTimeout(() => { if (el.textContent === msg) el.textContent = ''; }, 3500);
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 3500);
 }
 
 async function api(action, payload = {}) {
@@ -278,7 +400,9 @@ async function api(action, payload = {}) {
     headers: { 'Content-Type': 'application/json', 'x-admin-password': ADMIN_PASS },
     body: JSON.stringify({ action, adminPassword: ADMIN_PASS, password: ADMIN_PASS, ...payload })
   });
-  return r.json();
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(d.error || ('HTTP ' + r.status));
+  return d;
 }
 
 function switchTab(name) {
@@ -289,33 +413,29 @@ function switchTab(name) {
   if (pane) pane.classList.add('active');
   if (btn) btn.classList.add('active');
   const titles = {
-    dashboard: 'Dashboard Overview', theme: 'Theme & Branding Studio',
-    products: 'Courses & Products', orders: 'Orders & Payments',
-    coupons: 'Coupons & Discounts', affiliates: 'Affiliates & Payouts', settings: 'Site Settings'
+    dashboard: 'Dashboard Overview', courses: 'Courses & Per-Course Income Studio',
+    orders: 'Orders & Manual Course Access', reviews: 'Reviews Moderation (ছবি ও লিংকসহ)',
+    affiliates: 'Affiliates & Payouts', coupons: 'Coupons & Discounts',
+    requests: 'Student Course Requests', theme: 'Website Theme Studio',
+    marketing: 'Announcements & Promotional Popups', settings: 'Homepage & Site Branding'
   };
   document.getElementById('pageTitle').textContent = titles[name] || 'Admin';
+  if (window.innerWidth < 1024) document.getElementById('sidebarLinks').classList.add('hidden');
 }
 
-document.querySelectorAll('.nav-item[data-tab]').forEach(btn => {
-  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
-});
-document.getElementById('mobNavBtn').addEventListener('click', () => {
-  document.getElementById('sidebarLinks').classList.toggle('hidden');
-});
-document.getElementById('logoutBtn').addEventListener('click', () => {
-  sessionStorage.removeItem('hvb_admin_pass');
-  location.reload();
-});
+document.querySelectorAll('.nav-item[data-tab]').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+document.getElementById('mobNavBtn').addEventListener('click', () => document.getElementById('sidebarLinks').classList.toggle('hidden'));
+document.getElementById('logoutBtn').addEventListener('click', () => { sessionStorage.removeItem('hvb_admin_pass'); location.reload(); });
 
 document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   ADMIN_PASS = document.getElementById('adminPass').value.trim();
-  const res = await api('auth');
-  if (res && (res.ok || res.authenticated)) {
+  try {
+    await api('auth');
     sessionStorage.setItem('hvb_admin_pass', ADMIN_PASS);
     openShell();
-  } else {
-    document.getElementById('loginErr').textContent = (res && res.error) || 'ভুল পাসওয়ার্ড!';
+  } catch (err) {
+    document.getElementById('loginErr').textContent = 'ভুল পাসওয়ার্ড!';
   }
 });
 
@@ -326,139 +446,395 @@ async function openShell() {
   await refreshAll();
 }
 
+async function loadDashboard(days, btnEl) {
+  if (btnEl) {
+    document.querySelectorAll('.dash-range').forEach(b => b.className = 'dash-range px-3.5 py-1.5 rounded-lg text-xs font-bold bg-white/5 border border-white/10');
+    btnEl.className = 'dash-range px-3.5 py-1.5 rounded-lg text-xs font-bold bg-cyan-500/20 text-cyan-200 border border-cyan-400/40';
+  }
+  try {
+    const d = await api('dashboard', { days });
+    document.getElementById('kpiRev').textContent = '৳' + Number(d.revenue || 0).toLocaleString('en-US');
+    document.getElementById('kpiPaid').textContent = d.paid_orders || 0;
+    document.getElementById('kpiPend').textContent = d.pending_orders || 0;
+    document.getElementById('kpiCust').textContent = d.customers || 0;
+    document.getElementById('kpiAff').textContent = d.total_affiliates || 0;
+    document.getElementById('kpiRevPend').textContent = d.pending_reviews || 0;
+    const badge = document.getElementById('navRevBadge');
+    if (d.pending_reviews > 0) { badge.textContent = d.pending_reviews; badge.classList.remove('hidden'); }
+    else badge.classList.add('hidden');
+
+    const tc = document.getElementById('topCoursesBox');
+    tc.innerHTML = (d.top_courses || []).map(x => `<div class="p-3 rounded-xl bg-white/[0.03] border border-white/10 flex justify-between"><div><div class="font-bold text-white">${esc(x.course)}</div><div class="text-slate-400">${x.count} বিক্রি</div></div><div class="font-num font-bold text-cyan-300">৳${Number(x.revenue).toLocaleString('en-US')}</div></div>`).join('') || '<p class="text-slate-500">কোনো সেলস নেই।</p>';
+
+    const ctx = document.getElementById('revChartCanvas');
+    if (revChart) revChart.destroy();
+    if (ctx && window.Chart) {
+      revChart = new Chart(ctx, {
+        type: 'line',
+        data: { labels: (d.by_day || []).map(x => x.date), datasets: [{ label: 'Revenue (৳)', data: (d.by_day || []).map(x => x.amount), borderColor: '#22D3EE', backgroundColor: 'rgba(34,211,238,0.12)', fill: true, tension: 0.35 }] },
+        options: { responsive: true, maintainAspectRatio: false, scales: { x: { ticks: { color: '#94A3B8' } }, y: { ticks: { color: '#94A3B8' } } } }
+      });
+    }
+  } catch (e) {}
+}
+
 async function refreshAll() {
-  toast('Loading...');
-  const [ord, prod, prom, aff, wd, set] = await Promise.all([
-    api('ordersList').catch(() => ({})),
-    api('productList').catch(() => ({})),
-    api('promoList').catch(() => ({})),
+  const [cmsRes, ord, rev, aff, wd, prom, reqs] = await Promise.all([
+    fetch('/api/admin?public=cms', { cache: 'no-store' }).then(r => r.json()).catch(() => null),
+    api('ordersList', { status: 'all', limit: 200 }).catch(() => ({})),
+    api('reviewList', { status: 'all' }).catch(() => ({})),
     api('affiliateList').catch(() => ({})),
     api('withdrawList').catch(() => ({})),
-    api('settingsGet').catch(() => ({}))
+    api('promoList').catch(() => ({})),
+    api('courseRequestList').catch(() => ({}))
   ]);
-
-  ALL_ORDERS = ord.orders || [];
-  let rev = 0, paid = 0, pend = 0;
-  ALL_ORDERS.forEach(o => {
-    const st = String(o.status || '').toLowerCase();
-    if (st === 'paid' || st === 'completed' || st === 'approved') {
-      paid++; rev += Number(o.amount || 0);
-    } else pend++;
-  });
-  document.getElementById('kpiRevenue').textContent = '৳' + rev.toLocaleString('bn-BD');
-  document.getElementById('kpiPaid').textContent = paid;
-  document.getElementById('kpiPending').textContent = pend;
-  document.getElementById('kpiCourses').textContent = (prod.products || []).length;
-
-  renderOrders();
-  renderProducts(prod.products || []);
-  renderCoupons(prom.promos || prom.coupons || []);
-  renderAffiliates(aff.affiliates || [], wd.withdrawals || wd.requests || []);
-  if (set && set.settings) {
-    document.getElementById('setBrandName').value = set.settings.brand_name || 'Hyper Vision Bangla';
-    document.getElementById('setPrimaryColor').value = set.settings.primary_color || '#06B6D4';
-    document.getElementById('setWhatsapp').value = set.settings.whatsapp_url || '';
-    document.getElementById('setAnnouncement').value = set.settings.announcement || '';
+  if (cmsRes && cmsRes.cms) {
+    if (Array.isArray(cmsRes.cms.courses) && cmsRes.cms.courses.length) CMS.courses = cmsRes.cms.courses;
+    if (cmsRes.cms.customLogoDataUrl) CMS.customLogoDataUrl = cmsRes.cms.customLogoDataUrl;
+    if (cmsRes.cms.theme) CMS.theme = cmsRes.cms.theme;
+    if (cmsRes.cms.announcement) CMS.announcement = cmsRes.cms.announcement;
+    if (cmsRes.cms.popup) CMS.popup = cmsRes.cms.popup;
+    if (cmsRes.cms.homepage) CMS.homepage = Object.assign(CMS.homepage, cmsRes.cms.homepage);
+    if (cmsRes.cms.site) CMS.site = Object.assign(CMS.site, cmsRes.cms.site);
   }
-  toast('Updated ✓');
+  ALL_ORDERS = ord.orders || [];
+  ALL_REVIEWS = rev.reviews || [];
+  ALL_AFFS = aff.affiliates || [];
+  ALL_WDS = wd.requests || [];
+  ALL_PROMOS = prom.promos || [];
+  ALL_REQS = reqs.requests || [];
+  if (wd.min_withdraw) document.getElementById('minWdInp').value = wd.min_withdraw;
+
+  loadDashboard(30);
+  renderCourses();
+  renderOrders();
+  renderReviews();
+  renderAffiliates();
+  renderCoupons();
+  renderRequests();
+  renderThemeStudio();
+  populateSettingsUI();
+  toast('সব লাইভ ডেটা সিঙ্ক হয়েছে ✓');
 }
 
-function orderRowHtml(o) {
-  const st = String(o.status || 'pending').toLowerCase();
-  const badge = (st === 'paid' || st === 'completed')
-    ? '<span class="px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 font-bold">Paid</span>'
-    : '<span class="px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 font-bold">' + st + '</span>';
-  return `<tr>
-    <td class="py-3 pr-3"><div class="font-bold text-white">${o.customer_name || o.name || 'Student'}</div><div class="text-slate-400">${o.contact || o.email || o.phone || ''}</div></td>
-    <td class="py-3 pr-3 text-slate-300">${o.course || o.course_slug || '-'}</td>
-    <td class="py-3 pr-3 font-bold text-cyan-300">৳${Number(o.amount || 0)}</td>
-    <td class="py-3 pr-3">${badge}</td>
-    <td class="py-3 flex gap-1.5">
-      <button onclick="markPaid('${o.id}')" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 font-bold">Approve</button>
-      <button onclick="delOrder('${o.id}')" class="px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 font-bold">Delete</button>
-    </td>
-  </tr>`;
+async function publishCms(showMsg) {
+  try {
+    await api('save_cms', { cms: CMS });
+    if (showMsg) toast('✓ লাইভ ওয়েবসাইটে সফলভাবে পাবলিশ হয়েছে!');
+  } catch (e) {
+    toast('পাবলিশ এরর: ' + e.message, true);
+  }
 }
 
-function renderOrders() {
-  const q = (document.getElementById('orderSearch').value || '').toLowerCase();
-  const filtered = ALL_ORDERS.filter(o => JSON.stringify(o).toLowerCase().includes(q));
-  document.getElementById('ordersBody').innerHTML = filtered.map(orderRowHtml).join('') || '<tr><td colspan="5" class="py-4 text-slate-500">কোনো অর্ডার পাওয়া যায়নি।</td></tr>';
-  document.getElementById('recentOrdersBody').innerHTML = ALL_ORDERS.slice(0, 6).map(orderRowHtml).join('') || '<tr><td colspan="5" class="py-4 text-slate-500">কোনো অর্ডার নেই।</td></tr>';
+/* ---- COURSES & PER-COURSE INCOME ---- */
+function renderCourses() {
+  document.getElementById('courseCount').textContent = CMS.courses.length;
+  if (!CMS.courses.find(c => c.id === selectedCourseId) && CMS.courses.length) selectedCourseId = CMS.courses[0].id;
+  document.getElementById('courseListBox').innerHTML = CMS.courses.map(c => `
+    <button type="button" onclick="selectCourse('${esc(c.id)}')" class="w-full text-left p-3.5 rounded-xl border transition ${c.id === selectedCourseId ? 'bg-cyan-500/15 border-cyan-400/40' : 'bg-white/[0.03] border-white/10 hover:bg-white/[0.06]'}">
+      <div class="flex justify-between text-xs"><span class="text-cyan-300 font-num">#${c.order || 1}</span><span class="font-num font-bold text-white">৳${c.price}</span></div>
+      <div class="font-bold text-white text-sm mt-1 truncate">${esc(c.bnTitle || c.title)}</div>
+      <div class="text-[11px] text-slate-400 mt-0.5">${c.showFbIncome !== false ? 'FB আয় ✓' : 'FB আয় ✕'} · ${c.showAffiliateIncome !== false ? 'Affiliate ✓' : 'Affiliate ✕'}</div>
+    </button>`).join('');
+
+  const c = CMS.courses.find(x => x.id === selectedCourseId);
+  const ed = document.getElementById('courseEditorBox');
+  if (!c) { ed.innerHTML = '<p class="text-xs text-slate-400">কোনো কোর্স নেই।</p>'; return; }
+  const img = c.customBannerDataUrl || c.repoBanner || '/banner-short.webp';
+  ed.innerHTML = `
+    <div class="flex items-center justify-between border-b border-white/10 pb-3">
+      <h3 class="font-bold text-white">এডিট: ${esc(c.bnTitle || c.title)}</h3>
+      ${CMS.courses.length > 1 ? `<button onclick="deleteCourse('${esc(c.id)}')" class="px-3 py-1.5 rounded-lg bg-rose-500/20 text-rose-300 text-xs font-bold">ডিলিট করুন</button>` : ''}
+    </div>
+    <div class="p-3.5 rounded-xl bg-[#05070E] border border-dashed border-cyan-400/35 flex flex-col sm:flex-row items-center gap-4">
+      <img src="${esc(driveImg(img))}" class="w-36 h-20 rounded-lg object-cover border border-white/15 shrink-0" />
+      <div class="flex-1 space-y-1">
+        <div class="text-xs font-bold text-cyan-300">থাম্বনেইল ছবি আপলোড করুন</div>
+        <input id="ceThumbFile" type="file" accept="image/*" onchange="uploadCourseThumb(this)" class="text-xs text-slate-300 w-full" />
+      </div>
+    </div>
+    <div class="grid sm:grid-cols-2 gap-3">
+      <div><label class="text-xs text-slate-400 block mb-1">কোর্সের নাম (বাংলা)</label><input id="ceBnTitle" value="${esc(c.bnTitle || c.title)}" class="inp" /></div>
+      <div><label class="text-xs text-slate-400 block mb-1">ব্যাজ (উপরে কোনায়)</label><input id="ceBadge" value="${esc(c.badge || '')}" class="inp" /></div>
+      <div><label class="text-xs text-slate-400 block mb-1">অফার মূল্য (৳)</label><input id="cePrice" type="number" value="${c.price}" class="inp" /></div>
+      <div><label class="text-xs text-slate-400 block mb-1">রেগুলার মূল্য (৳)</label><input id="ceReg" type="number" value="${c.regularPrice || c.price}" class="inp" /></div>
+      <div><label class="text-xs text-slate-400 block mb-1">সিরিয়াল নম্বর (Order)</label><input id="ceOrder" type="number" value="${c.order || 1}" class="inp" /></div>
+      <div><label class="text-xs text-slate-400 block mb-1">কোর্স URL লিংক</label><input id="ceUrl" value="${esc(c.url || ('/' + c.slug))}" class="inp" /></div>
+    </div>
+    <div><label class="text-xs text-slate-400 block mb-1">সংক্ষিপ্ত বিবরণ</label><textarea id="ceSub" rows="2" class="inp">${esc(c.subtitle || '')}</textarea></div>
+
+    <div class="p-4 rounded-xl bg-cyan-500/[0.06] border border-cyan-400/25 space-y-3">
+      <div class="text-xs font-bold text-cyan-300">💰 এই কোর্সের ইনকাম ও অ্যাভারেজ আয় সেটিংস</div>
+      <div class="flex flex-wrap gap-4 text-xs">
+        <label class="flex items-center gap-2"><input id="ceShowFb" type="checkbox" ${c.showFbIncome !== false ? 'checked' : ''} class="w-4 h-4 accent-cyan-400" /> Facebook ইনকাম দেখাবে</label>
+        <label class="flex items-center gap-2"><input id="ceShowAff" type="checkbox" ${c.showAffiliateIncome !== false ? 'checked' : ''} class="w-4 h-4 accent-cyan-400" /> Affiliate ইনকাম দেখাবে</label>
+      </div>
+      <div class="grid sm:grid-cols-2 gap-3">
+        <div><label class="text-xs text-slate-400 block mb-1">গড় মাসিক আয় (Average Income)</label><input id="ceAvgInc" value="${esc(c.avgIncome || '৳১৫,০০০ – ৳৪৫,০০০/মাস')}" class="inp" /></div>
+        <div><label class="text-xs text-slate-400 block mb-1">Affiliate কমিশন (%)</label><input id="ceAffPct" type="number" value="${c.affiliatePct || 20}" class="inp" /></div>
+      </div>
+    </div>
+    <button onclick="saveSelectedCourse()" class="btn-primary px-5 py-2.5 rounded-xl text-xs">কোর্স সেভ ও লাইভ আপডেট করুন</button>
+  `;
 }
 
-function renderProducts(list) {
-  document.getElementById('productsBody').innerHTML = list.map(p => `<tr>
-    <td class="py-3 pr-3 font-bold text-white">${p.title || p.name}</td>
-    <td class="py-3 pr-3 text-slate-400">${p.slug}</td>
-    <td class="py-3 pr-3 font-bold text-cyan-300">৳${p.price}</td>
-    <td class="py-3 text-slate-500 line-through">৳${p.regular_price || p.price}</td>
-  </tr>`).join('') || '<tr><td colspan="4" class="py-4 text-slate-500">কোনো কোর্স নেই।</td></tr>';
+function selectCourse(id) { selectedCourseId = id; renderCourses(); }
+function addNewCourse() {
+  const nid = 'course-' + Date.now();
+  CMS.courses.push({ id: nid, slug: nid, url: '/course?course=' + nid, order: CMS.courses.length + 1, badge: 'নতুন কোর্স', category: 'short', title: 'New Course', bnTitle: 'নতুন AI কোর্স', subtitle: 'কোর্সের বিস্তারিত বিবরণ', regularPrice: 800, price: 399, repoBanner: '/banner-short.webp', showFbIncome: true, showAffiliateIncome: true, avgIncome: '৳১৫,০০০ – ৳৪০,০০০/মাস', affiliatePct: 20 });
+  selectedCourseId = nid; renderCourses(); publishCms(true);
 }
-
-function renderCoupons(list) {
-  document.getElementById('couponsBody').innerHTML = list.map(c => `<tr>
-    <td class="py-3 pr-3 font-bold text-cyan-300">${c.code}</td>
-    <td class="py-3 pr-3 text-white">${c.discount || c.value || ''}</td>
-    <td class="py-3 text-emerald-400">${c.active === false ? 'Inactive' : 'Active'}</td>
-  </tr>`).join('') || '<tr><td colspan="3" class="py-4 text-slate-500">কোনো কুপন নেই।</td></tr>';
+function saveSelectedCourse() {
+  const c = CMS.courses.find(x => x.id === selectedCourseId);
+  if (!c) return;
+  c.bnTitle = document.getElementById('ceBnTitle').value.trim();
+  c.badge = document.getElementById('ceBadge').value.trim();
+  c.price = Number(document.getElementById('cePrice').value) || c.price;
+  c.regularPrice = Number(document.getElementById('ceReg').value) || c.regularPrice;
+  c.order = Number(document.getElementById('ceOrder').value) || c.order;
+  c.url = document.getElementById('ceUrl').value.trim();
+  c.subtitle = document.getElementById('ceSub').value.trim();
+  c.showFbIncome = document.getElementById('ceShowFb').checked;
+  c.showAffiliateIncome = document.getElementById('ceShowAff').checked;
+  c.avgIncome = document.getElementById('ceAvgInc').value.trim();
+  c.affiliatePct = Number(document.getElementById('ceAffPct').value) || 20;
+  renderCourses();
+  publishCms(true);
 }
-
-function renderAffiliates(affs, wds) {
-  document.getElementById('affiliatesBody').innerHTML = affs.map(a => `<tr>
-    <td class="py-3 pr-3 font-bold text-white">${a.name || a.code}</td>
-    <td class="py-3 pr-3 text-slate-400">${a.email || a.phone || ''}</td>
-    <td class="py-3 font-bold text-emerald-400">৳${Number(a.total_earned || a.balance || 0)}</td>
-  </tr>`).join('') || '<tr><td colspan="3" class="py-4 text-slate-500">কোনো অ্যাফিলিয়েট নেই।</td></tr>';
-
-  document.getElementById('withdrawBody').innerHTML = wds.map(w => `<tr>
-    <td class="py-3 pr-3 font-bold text-white">${w.affiliate_code || w.name || ''}</td>
-    <td class="py-3 pr-3 font-bold text-cyan-300">৳${Number(w.amount || 0)}</td>
-    <td class="py-3 pr-3 text-slate-400">${w.method || ''} ${w.account || ''}</td>
-    <td class="py-3"><button onclick="approveWithdraw('${w.id}')" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 font-bold">Pay</button></td>
-  </tr>`).join('') || '<tr><td colspan="4" class="py-4 text-slate-500">কোনো উইথড্র রিকোয়েস্ট নেই।</td></tr>';
+function deleteCourse(id) {
+  if (!confirm('এই কোর্সটি সত্যিই ডিলিট করবেন?')) return;
+  CMS.courses = CMS.courses.filter(x => x.id !== id);
+  renderCourses(); publishCms(true);
 }
-
-async function markPaid(id) { await api('orderMarkPaid', { id }); toast('Order Approved ✓'); refreshAll(); }
-async function delOrder(id) { if (!confirm('অর্ডারটি ডিলিট করবেন?')) return; await api('orderDelete', { id }); toast('Deleted ✓'); refreshAll(); }
-async function approveWithdraw(id) { await api('withdrawApprove', { id }); toast('Withdraw Approved ✓'); refreshAll(); }
-
-function selectPreset(primary, secondary, name) {
-  document.getElementById('setPrimaryColor').value = primary;
-  toast('Selected ' + name);
-}
-
-async function saveThemeSettings() {
-  await api('settingsSave', {
-    brand_name: document.getElementById('setBrandName').value.trim(),
-    primary_color: document.getElementById('setPrimaryColor').value.trim()
-  });
-  toast('Theme Published ✓');
-}
-
-async function saveGeneralSettings() {
-  await api('settingsSave', {
-    whatsapp_url: document.getElementById('setWhatsapp').value.trim(),
-    announcement: document.getElementById('setAnnouncement').value.trim()
-  });
-  toast('Settings Saved ✓');
-}
-
-document.getElementById('logoFileInput').addEventListener('change', async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
+function uploadCourseThumb(input) {
+  const file = input.files[0]; if (!file) return;
   const reader = new FileReader();
-  reader.onload = async () => {
-    document.getElementById('uploadMsg').textContent = 'Uploading...';
-    const res = await api('upload_image', { filename: file.name, dataUrl: reader.result });
-    document.getElementById('uploadMsg').textContent = res && res.url ? 'Uploaded: ' + res.url : 'Upload done';
+  reader.onload = () => {
+    const img = new Image();
+    img.onload = async () => {
+      let w = img.width, h = img.height;
+      if (w > 960) { h = Math.round(h * (960 / w)); w = 960; }
+      const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+      cv.getContext('2d').drawImage(img, 0, 0, w, h);
+      const dataUrl = cv.toDataURL('image/jpeg', 0.8);
+      const c = CMS.courses.find(x => x.id === selectedCourseId);
+      if (!c) return;
+      try {
+        const up = await api('upload_image', { folder: 'courses', data_url: dataUrl });
+        c.customBannerDataUrl = up.url || dataUrl;
+      } catch (e) { c.customBannerDataUrl = dataUrl; }
+      renderCourses(); publishCms(true);
+    };
+    img.src = reader.result;
   };
   reader.readAsDataURL(file);
+}
+
+/* ---- ORDERS ---- */
+function renderOrders() {
+  const q = (document.getElementById('ordSearch').value || '').toLowerCase();
+  const sf = document.getElementById('ordStatusFilter').value;
+  const list = ALL_ORDERS.filter(o => {
+    const isPaid = String(o.status || '').toLowerCase() === 'paid';
+    if (sf === 'paid' && !isPaid) return false;
+    if (sf === 'pending' && isPaid) return false;
+    return JSON.stringify(o).toLowerCase().includes(q);
+  });
+  document.getElementById('ordersBody').innerHTML = list.map(o => `
+    <tr>
+      <td class="py-2.5 pr-3"><div class="font-bold text-white">${esc(o.customer_name || 'Student')}</div><div class="text-slate-400">${esc(o.customer_contact || o.linked_email || '')}</div></td>
+      <td class="py-2.5 pr-3">${esc(o.course)}</td>
+      <td class="py-2.5 pr-3 font-num font-bold text-cyan-300">৳${Number(o.amount || 0)}</td>
+      <td class="py-2.5 pr-3"><span class="px-2 py-0.5 rounded-full ${o.status === 'paid' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300'} font-bold">${esc(o.status)}</span></td>
+      <td class="py-2.5 text-right space-x-1">
+        ${o.status !== 'paid' ? `<button onclick="markPaid('${esc(o.id)}')" class="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 font-bold">Approve</button>` : ''}
+        <button onclick="delOrder('${esc(o.id)}')" class="px-2.5 py-1 rounded bg-rose-500/20 text-rose-300 font-bold">Delete</button>
+      </td>
+    </tr>`).join('') || '<tr><td colspan="5" class="py-4 text-slate-500">কোনো অর্ডার নেই।</td></tr>';
+}
+document.getElementById('grantForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  try {
+    await api('orderGrant', { name: document.getElementById('grName').value, contact: document.getElementById('grContact').value, course: document.getElementById('grCourse').value, amount: document.getElementById('grAmount').value });
+    toast('কোর্স অ্যাকসেস চালু হয়েছে ✓'); e.target.reset(); refreshAll();
+  } catch (err) { toast(err.message, true); }
+});
+async function markPaid(id) { await api('orderMarkPaid', { id }); toast('Approved ✓'); refreshAll(); }
+async function delOrder(id) { if (!confirm('ডিলিট করবেন?')) return; await api('orderDelete', { id }); toast('Deleted ✓'); refreshAll(); }
+function exportOrdersCsv() {
+  const rows = [['Name','Contact','Course','Amount','Status','Date']].concat(ALL_ORDERS.map(o => [o.customer_name, o.customer_contact, o.course, o.amount, o.status, o.created_at]));
+  const csv = rows.map(r => r.map(x => '"' + String(x || '').replace(/"/g, '""') + '"').join(',')).join('\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' })); a.download = 'hvb-orders.csv'; a.click();
+}
+
+/* ---- REVIEWS MODERATION ---- */
+function renderReviews() {
+  const rf = document.getElementById('revFilter').value;
+  const list = ALL_REVIEWS.filter(r => rf === 'all' || String(r.status || 'pending').toLowerCase() === rf);
+  document.getElementById('reviewsListBox').innerHTML = list.map(r => {
+    const imgUrl = driveImg(r.image_url);
+    return `<div class="p-4 rounded-xl bg-white/[0.03] border border-white/10 flex flex-col sm:flex-row justify-between gap-4">
+      <div class="flex gap-3">
+        ${imgUrl ? `<a href="${esc(imgUrl)}" target="_blank" rel="noopener"><img src="${esc(imgUrl)}" class="w-20 h-20 rounded-xl object-cover border border-white/15 shrink-0" /></a>` : ''}
+        <div class="space-y-1">
+          <div class="font-bold text-white text-sm">${esc(r.name || r.email)} <span class="text-amber-400">(${r.rating || 5}★)</span> · <span class="text-cyan-300 text-xs">${esc(r.course || '')}</span></div>
+          <p class="text-xs text-slate-300 whitespace-pre-line">${esc(r.body)}</p>
+          ${r.link ? `<a href="${esc(r.link)}" target="_blank" rel="noopener" class="inline-block text-xs text-cyan-300 font-semibold hover:underline">▶ শিক্ষার্থীর ভিডিও লিংক দেখুন ↗</a>` : ''}
+        </div>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        ${r.status !== 'approved' ? `<button onclick="setRev('${esc(r.id)}','approved')" class="px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 text-xs font-bold">Approve</button>` : `<button onclick="setRev('${esc(r.id)}','hidden')" class="px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 text-xs font-bold">Hide</button>`}
+        <button onclick="delRev('${esc(r.id)}')" class="px-2.5 py-1.5 rounded-lg bg-rose-500/20 text-rose-300 text-xs font-bold">মুছুন</button>
+      </div>
+    </div>`;
+  }).join('') || '<p class="text-xs text-slate-400">কোনো রিভিউ নেই।</p>';
+}
+async function setRev(id, status) { await api('reviewSet', { id, status }); toast('Updated ✓'); refreshAll(); }
+async function delRev(id) { if (!confirm('রিভিউ মুছবেন?')) return; await api('reviewDelete', { id }); toast('Deleted ✓'); refreshAll(); }
+async function approveAllReviews() { await api('reviewApproveAll'); toast('সব রিভিউ Approve হয়েছে ✓'); refreshAll(); }
+document.getElementById('addRevForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  try {
+    await api('reviewAdd', { name: document.getElementById('arName').value, course: document.getElementById('arCourse').value, image_url: document.getElementById('arImg').value, link: document.getElementById('arLink').value, body: document.getElementById('arBody').value, rating: 5 });
+    toast('রিভিউ যোগ হয়েছে ✓'); e.target.reset(); refreshAll();
+  } catch (err) { toast(err.message, true); }
 });
 
-if (ADMIN_PASS) {
-  api('auth').then(r => { if (r && (r.ok || r.authenticated)) openShell(); });
+/* ---- AFFILIATES & WITHDRAWALS ---- */
+function renderAffiliates() {
+  document.getElementById('affCount').textContent = ALL_AFFS.length;
+  document.getElementById('affBody').innerHTML = ALL_AFFS.map(a => `
+    <tr>
+      <td class="py-2.5 pr-3"><div class="font-bold text-white">${esc(a.name)}</div><div class="text-cyan-300 font-mono">@${esc(a.ref_code)}</div></td>
+      <td class="py-2.5 pr-3"><div class="text-slate-200">${esc(a.contact || a.email)}</div><div class="text-slate-400">${esc(a.pay_method)} ${esc(a.pay_account)}</div></td>
+      <td class="py-2.5 pr-3 font-num">৳${a.totalSales || 0} (${a.orderCount || 0})</td>
+      <td class="py-2.5 pr-3"><input type="number" value="${a.commission_percent || 20}" onchange="updateAffComm('${esc(a.ref_code)}', this.value)" class="w-16 px-2 py-1 rounded bg-[#05070E] border border-white/15 text-white text-xs" />%</td>
+      <td class="py-2.5 pr-3"><div class="text-emerald-300 font-bold">পেন্ডিং: ৳${a.pending || 0}</div><div class="text-slate-400">পেইড: ৳${a.paidOut || 0}</div></td>
+      <td class="py-2.5 text-right"><button onclick="adjustAff('${esc(a.ref_code)}')" class="px-2.5 py-1 rounded bg-cyan-500/20 text-cyan-200 font-bold">+/- ব্যালেন্স</button></td>
+    </tr>`).join('') || '<tr><td colspan="6" class="py-4 text-slate-500">কোনো অ্যাফিলিয়েট নেই।</td></tr>';
+
+  document.getElementById('wdBody').innerHTML = ALL_WDS.map(w => `
+    <tr>
+      <td class="py-2.5 pr-3 font-bold text-white">@${esc(w.ref_code)} (${esc(w.name || '')})</td>
+      <td class="py-2.5 pr-3 font-num font-bold text-cyan-300">৳${w.amount}</td>
+      <td class="py-2.5 pr-3 text-slate-300">${esc(w.contact || (w.method + ' ' + w.account))}</td>
+      <td class="py-2.5 pr-3">${esc(w.status)}</td>
+      <td class="py-2.5 text-right space-x-1">
+        ${w.status === 'pending' ? `<button onclick="wdAct('${esc(w.id)}','withdrawApprove')" class="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 font-bold">Pay</button><button onclick="wdAct('${esc(w.id)}','withdrawReject')" class="px-2.5 py-1 rounded bg-rose-500/20 text-rose-300 font-bold">Reject</button>` : '✓'}
+      </td>
+    </tr>`).join('') || '<tr><td colspan="5" class="py-4 text-slate-500">কোনো উইথড্র রিকোয়েস্ট নেই।</td></tr>';
 }
+async function updateAffComm(ref, pct) { await api('affiliateUpdate', { ref_code: ref, commission_percent: Number(pct) }); toast('কমিশন আপডেট হয়েছে ✓'); }
+async function adjustAff(ref) {
+  const amt = prompt('@' + ref + '-এর ব্যালেন্সে কত টাকা যোগ বা বিয়োগ করবেন? (যেমন: 200 বা -100)');
+  if (!amt || isNaN(Number(amt))) return;
+  const note = prompt('নোট লিখুন (যেমন: Bonus):', 'Admin Bonus') || 'Admin Adjustment';
+  await api('affiliateAdjust', { ref_code: ref, amount: Number(amt), note });
+  toast('ব্যালেন্স আপডেট হয়েছে ✓'); refreshAll();
+}
+async function wdAct(id, action) { await api(action, { requestId: id }); toast('Done ✓'); refreshAll(); }
+async function saveMinWithdraw() { await api('settingsSave', { key: 'min_withdraw', value: document.getElementById('minWdInp').value }); toast('Saved ✓'); }
+
+/* ---- COUPONS ---- */
+function renderCoupons() {
+  document.getElementById('couponsBody').innerHTML = ALL_PROMOS.map(p => `
+    <div class="p-3 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-between">
+      <div><span class="font-mono font-bold text-cyan-300 text-sm">${esc(p.code)}</span> <span class="text-slate-300 ml-2">${p.discount_percent}% OFF</span></div>
+      <div class="flex gap-2">
+        <button onclick="togglePromo('${esc(p.code)}', ${!p.active})" class="px-2.5 py-1 rounded ${p.active ? 'bg-emerald-500/20 text-emerald-300' : 'bg-white/10 text-slate-400'} font-bold">${p.active ? 'Active' : 'Inactive'}</button>
+        <button onclick="delPromo('${esc(p.code)}')" class="px-2.5 py-1 rounded bg-rose-500/20 text-rose-300 font-bold">Delete</button>
+      </div>
+    </div>`).join('') || '<p class="text-slate-500">কোনো কুপন নেই।</p>';
+}
+document.getElementById('couponForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  await api('promoSave', { code: document.getElementById('cpCode').value, discount_percent: document.getElementById('cpDisc').value });
+  toast('কুপন যোগ হয়েছে ✓'); e.target.reset(); refreshAll();
+});
+async function togglePromo(code, active) { await api('promoToggle', { code, active }); refreshAll(); }
+async function delPromo(code) { await api('promoDelete', { code }); refreshAll(); }
+
+/* ---- COURSE REQUESTS ---- */
+function renderRequests() {
+  document.getElementById('requestsBody').innerHTML = ALL_REQS.map(r => `
+    <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 flex justify-between items-center gap-3 text-xs">
+      <div><div class="font-bold text-white">${esc((r.meta && r.meta.topic) || 'Course Request')}</div><div class="text-slate-400">${esc((r.meta && r.meta.name) || '')} · ${esc((r.meta && r.meta.contact) || '')} · ${esc((r.meta && r.meta.details) || '')}</div></div>
+      <button onclick="delReq('${esc(r.id)}')" class="px-2.5 py-1 rounded bg-rose-500/20 text-rose-300 font-bold">মুছুন</button>
+    </div>`).join('') || '<p class="text-xs text-slate-500">কোনো কোর্স রিকোয়েস্ট নেই।</p>';
+}
+async function delReq(id) { await api('courseRequestDelete', { id }); refreshAll(); }
+
+/* ---- VISUAL THEME STUDIO (6 LIVE WIREFRAME TEMPLATES!) ---- */
+function renderThemeStudio() {
+  const curId = (CMS.theme && CMS.theme.id) || 'cyber-cyan';
+  document.getElementById('themeGrid').innerHTML = THEME_PRESETS.map(t => {
+    const active = t.id === curId;
+    const txtCol = t.mode === 'light' ? '#0F172A' : '#F8FAFC';
+    return `<button type="button" onclick="pickTheme('${t.id}')" class="text-left rounded-2xl p-4 border transition ${active ? 'border-cyan-400 ring-2 ring-cyan-400/30 bg-cyan-500/10' : 'border-white/10 bg-[#070B14] hover:border-white/25'}">
+      <div class="rounded-xl p-3 mb-3 border border-white/10" style="background:${t.bg}">
+        <div class="flex items-center justify-between mb-2.5">
+          <div class="h-2.5 w-16 rounded-full" style="background:${t.primary}"></div>
+          <div class="flex gap-1"><span class="w-4 h-2 rounded-full" style="background:${t.card}"></span><span class="w-8 h-2.5 rounded-full" style="background:linear-gradient(90deg,${t.primary},${t.secondary})"></span></div>
+        </div>
+        <div class="grid grid-cols-3 gap-1.5">
+          <div class="h-10 rounded-lg p-1.5" style="background:${t.card}"><div class="h-1.5 w-8 rounded mb-1" style="background:${t.primary}"></div><div class="h-1 w-10 rounded opacity-40" style="background:${txtCol}"></div></div>
+          <div class="h-10 rounded-lg p-1.5" style="background:${t.card}"><div class="h-1.5 w-8 rounded mb-1" style="background:${t.secondary}"></div><div class="h-1 w-10 rounded opacity-40" style="background:${txtCol}"></div></div>
+          <div class="h-10 rounded-lg p-1.5" style="background:${t.card}"><div class="h-1.5 w-8 rounded mb-1" style="background:${t.primary}"></div><div class="h-1 w-10 rounded opacity-40" style="background:${txtCol}"></div></div>
+        </div>
+      </div>
+      <div class="flex items-center justify-between">
+        <span class="font-bold text-sm text-white">${t.name}</span>
+        ${active ? '<span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">Active</span>' : `<span class="text-[10px] text-slate-400 uppercase">${t.mode}</span>`}
+      </div>
+      <p class="text-[11px] text-slate-400 mt-1">${t.desc}</p>
+    </button>`;
+  }).join('');
+}
+function pickTheme(id) {
+  const t = THEME_PRESETS.find(x => x.id === id);
+  if (!t) return;
+  CMS.theme = t;
+  renderThemeStudio();
+  publishCms(true);
+}
+
+/* ---- MARKETING & SITE SETTINGS ---- */
+function populateSettingsUI() {
+  document.getElementById('annActive').checked = !!(CMS.announcement && CMS.announcement.active);
+  document.getElementById('annText').value = (CMS.announcement && CMS.announcement.text) || '';
+  document.getElementById('annLink').value = (CMS.announcement && CMS.announcement.link) || '/courses';
+  document.getElementById('popActive').checked = !!(CMS.popup && CMS.popup.active);
+  document.getElementById('popTitle').value = (CMS.popup && CMS.popup.title) || '';
+  document.getElementById('popBody').value = (CMS.popup && CMS.popup.body) || '';
+  document.getElementById('popCoupon').value = (CMS.popup && CMS.popup.coupon) || 'HVB50';
+  document.getElementById('popLink').value = (CMS.popup && CMS.popup.link) || '/courses';
+
+  document.getElementById('hpCourses').checked = CMS.homepage.showCourses !== false;
+  document.getElementById('hpIncome').checked = CMS.homepage.showIncome !== false;
+  document.getElementById('hpReviews').checked = CMS.homepage.showReviews !== false;
+  document.getElementById('hpSteps').checked = CMS.homepage.showSteps !== false;
+  document.getElementById('siteHeroTitle').value = (CMS.site && CMS.site.heroTitle) || '';
+  document.getElementById('siteMsgr').value = (CMS.site && CMS.site.messenger) || 'https://m.me/hypervisionbangla';
+  document.getElementById('siteFooterText').value = (CMS.site && CMS.site.footerText) || '';
+}
+function saveMarketing() {
+  CMS.announcement = { active: document.getElementById('annActive').checked, text: document.getElementById('annText').value.trim(), link: document.getElementById('annLink').value.trim() };
+  CMS.popup = { active: document.getElementById('popActive').checked, title: document.getElementById('popTitle').value.trim(), body: document.getElementById('popBody').value.trim(), coupon: document.getElementById('popCoupon').value.trim().toUpperCase(), link: document.getElementById('popLink').value.trim() };
+  publishCms(true);
+}
+function saveSiteSettings() {
+  CMS.homepage = { showCourses: document.getElementById('hpCourses').checked, showIncome: document.getElementById('hpIncome').checked, showReviews: document.getElementById('hpReviews').checked, showSteps: document.getElementById('hpSteps').checked };
+  CMS.site = { heroTitle: document.getElementById('siteHeroTitle').value.trim(), messenger: document.getElementById('siteMsgr').value.trim(), footerText: document.getElementById('siteFooterText').value.trim() };
+  publishCms(true);
+}
+document.getElementById('siteLogoFile').addEventListener('change', (e) => {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = () => { CMS.customLogoDataUrl = r.result; publishCms(true); };
+  r.readAsDataURL(f);
+});
+
+if (ADMIN_PASS) api('auth').then(() => openShell()).catch(() => {});
 if (window.lucide) lucide.createIcons();
 </script>
 </body>

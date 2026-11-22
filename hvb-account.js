@@ -139,6 +139,7 @@
 
   /* === HVB MOBILE-FIRST CLEAN POLISH === */
   html, body { max-width: 100vw; overflow-x: hidden; }
+  .hvb-hidden { display: none !important; }
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   @media (max-width: 640px) {
@@ -168,7 +169,7 @@
     }
     .hvb-acc-actions { gap: 6px !important; }
     .hvb-acc-login {
-      display: inline-flex !important;
+      display: inline-flex;
       padding: 6px 11px !important;
       font-size: 0.78rem !important;
       border-radius: 9px !important;
@@ -428,7 +429,7 @@
         var cta = actions.querySelector('#hvbTopCta');
         if (cta) cta.textContent = 'আমার কোর্স';
         var lbtn = actions.querySelector('#hvbTopLogin');
-        if (lbtn) lbtn.style.display = 'none';
+        if (lbtn) { lbtn.classList.add('hvb-hidden'); lbtn.style.setProperty('display', 'none', 'important'); }
         if (!actions.querySelector('.hvb-avatar')) {
           var av = document.createElement('button');
           av.type = 'button';
@@ -678,4 +679,92 @@
   document.readyState === 'loading'
     ? document.addEventListener('DOMContentLoaded', boot)
     : boot();
+})();
+
+/* === HVB GLOBAL LIVE THEME, ANNOUNCEMENT & POPUP SYNC === */
+(function () {
+  if (/^\/admin/i.test(location.pathname)) return;
+  fetch('/api/admin?public=cms', { cache: 'no-store' })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) {
+      if (!d || !d.cms) return;
+      var cms = d.cms;
+      // 1) Apply Custom Logo
+      if (cms.customLogoDataUrl) {
+        document.querySelectorAll('header img[src*="hvb-logo"], .hvb-custom-logo-img').forEach(function (img) {
+          img.src = cms.customLogoDataUrl;
+          img.style.display = 'block';
+        });
+      }
+      // 2) Apply Live Theme Preset (Dark or Light)
+      if (cms.theme && cms.theme.primary) {
+        var t = cms.theme;
+        var root = document.documentElement;
+        root.style.setProperty('--accent-cyan', t.primary);
+        root.style.setProperty('--cyan', t.primary);
+        if (t.secondary) {
+          root.style.setProperty('--accent-violet', t.secondary);
+          root.style.setProperty('--violet', t.secondary);
+        }
+        if (t.bg) {
+          root.style.setProperty('--bg-obsidian', t.bg);
+          root.style.setProperty('--bg', t.bg);
+          document.body.style.backgroundColor = t.bg;
+        }
+        if (t.mode === 'light') {
+          var st = document.getElementById('hvb-live-theme-css') || document.createElement('style');
+          st.id = 'hvb-live-theme-css';
+          st.textContent =
+            'body{background:' + (t.bg || '#F8FAFC') + ' !important;color:#0F172A !important;}' +
+            '.ambient-canvas{opacity:0.18 !important;}' +
+            'header,header.glass-nav{background:rgba(255,255,255,0.92) !important;border-bottom:1px solid rgba(15,23,42,0.10) !important;}' +
+            'header a,header .font-display,header nav a{color:#0F172A !important;}' +
+            '.lux-card,.card{background:#FFFFFF !important;border:1px solid rgba(15,23,42,0.10) !important;color:#0F172A !important;box-shadow:0 12px 30px -15px rgba(15,23,42,0.15) !important;}' +
+            'h1,h2,h3,h4,.text-white{color:#0F172A !important;}' +
+            '.text-slate-300,.text-slate-400,.text-slate-200{color:#475569 !important;}' +
+            '.btn-primary{background:linear-gradient(135deg,' + t.primary + ',' + (t.secondary || t.primary) + ') !important;color:#FFFFFF !important;}' +
+            '.btn-secondary{background:#F1F5F9 !important;color:#0F172A !important;border-color:#CBD5E1 !important;}' +
+            'footer{background:#F1F5F9 !important;border-top:1px solid #E2E8F0 !important;color:#334155 !important;}';
+          document.head.appendChild(st);
+        } else {
+          var st2 = document.getElementById('hvb-live-theme-css') || document.createElement('style');
+          st2.id = 'hvb-live-theme-css';
+          st2.textContent =
+            '.btn-primary{background:linear-gradient(135deg,' + t.primary + ',' + (t.secondary || '#7C3AED') + ') !important;}';
+          document.head.appendChild(st2);
+        }
+      }
+      // 3) Apply Top Announcement Bar
+      if (cms.announcement && cms.announcement.active && cms.announcement.text && !document.getElementById('hvb-live-ann')) {
+        var bar = document.createElement('div');
+        bar.id = 'hvb-live-ann';
+        bar.style.cssText = 'background:linear-gradient(90deg,' + ((cms.theme && cms.theme.primary) || '#06B6D4') + ',' + ((cms.theme && cms.theme.secondary) || '#7C3AED') + ');color:#040711;font-weight:700;font-size:12.5px;text-align:center;padding:8px 14px;position:relative;z-index:45;';
+        if (cms.announcement.link) {
+          bar.innerHTML = '<a href="' + cms.announcement.link.replace(/"/g, '') + '" style="color:inherit;text-decoration:none;">' + cms.announcement.text.replace(/</g, '&lt;') + ' →</a>';
+        } else {
+          bar.textContent = cms.announcement.text;
+        }
+        document.body.insertBefore(bar, document.body.firstChild);
+      }
+      // 4) Apply Promotional Popup (once per session)
+      if (cms.popup && cms.popup.active && cms.popup.title && !sessionStorage.getItem('hvb_popup_seen')) {
+        setTimeout(function () {
+          if (sessionStorage.getItem('hvb_popup_seen')) return;
+          sessionStorage.setItem('hvb_popup_seen', '1');
+          var ov = document.createElement('div');
+          ov.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(4,7,17,0.82);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:16px;';
+          ov.innerHTML =
+            '<div style="max-width:420px;width:100%;background:#0F172A;border:1px solid rgba(34,211,238,0.35);border-radius:22px;padding:24px;text-align:center;color:#F8FAFC;position:relative;box-shadow:0 24px 60px rgba(0,0,0,0.6);">' +
+              '<button type="button" id="hvbPopClose" style="position:absolute;top:12px;right:14px;background:rgba(255,255,255,0.08);border:0;color:#cbd5e1;width:30px;height:30px;border-radius:99px;cursor:pointer;font-size:15px;">✕</button>' +
+              '<div style="display:inline-block;padding:4px 12px;border-radius:99px;background:rgba(34,211,238,0.15);color:#22D3EE;font-size:11px;font-weight:700;margin-bottom:10px;">বিশেষ অফার 🎁</div>' +
+              '<h3 style="font-size:20px;font-weight:800;margin:0 0 8px;">' + String(cms.popup.title).replace(/</g, '&lt;') + '</h3>' +
+              '<p style="font-size:13px;color:#94A3B8;margin:0 0 16px;">' + String(cms.popup.body || '').replace(/</g, '&lt;') + '</p>' +
+              (cms.popup.coupon ? '<div style="padding:10px;border-radius:12px;background:#05070E;border:1px dashed #22D3EE;font-family:monospace;font-size:15px;font-weight:800;color:#22D3EE;margin-bottom:16px;">কুপন কোড: ' + String(cms.popup.coupon).replace(/</g, '&lt;') + '</div>' : '') +
+              '<a href="' + String(cms.popup.link || '/courses').replace(/"/g, '') + '" style="display:block;padding:12px;border-radius:12px;background:linear-gradient(135deg,#06B6D4,#3B82F6);color:#fff;font-weight:700;text-decoration:none;font-size:14px;">অফারটি নিন →</a>' +
+            '</div>';
+          document.body.appendChild(ov);
+          ov.addEventListener('click', function (e) { if (e.target === ov || e.target.id === 'hvbPopClose') ov.remove(); });
+        }, 3500);
+      }
+    }).catch(function () {});
 })();
